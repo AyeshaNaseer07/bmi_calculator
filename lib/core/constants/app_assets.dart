@@ -29,6 +29,8 @@ abstract class AppAssets {
   static const String preIcon5 = '$_imagesBase/pre_icon5.png';
   static const String preIcon6 = '$_imagesBase/pre_icon6.png';
 
+  static const String btnBg = '$_imagesBase/btn_bg.png';
+
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
 }

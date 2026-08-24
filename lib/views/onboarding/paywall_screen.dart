@@ -24,14 +24,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _isLoading = false;
 
   void _onClose() {
-    Get.offNamed(AppRoutes.languageSelection);
+    _appController.completeOnboarding();
+    Get.offAllNamed(AppRoutes.home);
   }
 
   void _onSubscribe() async {
     setState(() => _isLoading = true);
     await _appController.upgradeToPremium(_selectedPlan);
+    _appController.completeOnboarding();
     setState(() => _isLoading = false);
-    Get.offNamed(AppRoutes.languageSelection);
+    Get.offAllNamed(AppRoutes.home);
   }
 
   void _onRestore() async {

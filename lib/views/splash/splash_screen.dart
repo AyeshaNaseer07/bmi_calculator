@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _progressController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2400),
+      duration: const Duration(seconds: 10),
     );
 
     _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -37,13 +37,13 @@ class _SplashScreenState extends State<SplashScreen>
 
     _progressController.forward();
 
-    _navigationTimer = Timer(const Duration(milliseconds: 2700), () {
+    _navigationTimer = Timer(const Duration(seconds: 10), () {
       if (!mounted) return;
       final appController = Get.find<AppController>();
       if (appController.onboardingSeen.value) {
         Get.offAllNamed(AppRoutes.home);
       } else {
-        Get.offAllNamed(AppRoutes.onboarding);
+        Get.offAllNamed(AppRoutes.languageSelection);
       }
     });
   }
@@ -80,37 +80,17 @@ class _SplashScreenState extends State<SplashScreen>
                     AppAssets.splashLogo,
                     width: 220.w,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => Column(
-                      children: [
-                        Icon(
-                          Icons.speed_rounded,
-                          size: 90.sp,
-                          color: AppColors.primaryTeal,
-                        ),
-                        Text(
-                          'BMI',
-                          style: AppTypography.headlineLarge.copyWith(
-                            fontSize: 38.sp,
-                            color: const Color(0xFF1E3A8A),
-                          ),
-                        ),
-                        Text(
-                          'CALCULATOR',
-                          style: AppTypography.titleMedium.copyWith(
-                            letterSpacing: 4,
-                            color: AppColors.primaryTeal,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                   SizedBox(height: 16.h),
-                  Text(
-                    'Know Your Body. Live Healthier',
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.textBody,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
+                  Center(
+                    child: Text(
+                      'Know Your Body. Live Healthier',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 15,
+                        fontFamily: 'SF Pro',
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   const Spacer(flex: 4),

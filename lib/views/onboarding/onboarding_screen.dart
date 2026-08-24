@@ -158,20 +158,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: GestureDetector(
                   onTap: _navigateToPaywall,
                   child: Container(
-                    width: 47,
-                    height: 21,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: ShapeDecoration(
                       color: const Color(0x4F33D2AB),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
                     ),
-
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Skip',
+                          'skip'.tr,
                           style: GoogleFonts.plusJakartaSans(
                             color: const Color(0xFF0F6E60),
                             fontSize: 12,

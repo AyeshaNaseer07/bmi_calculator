@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class LanguageModel {
@@ -34,7 +36,29 @@ class LocalizationService extends Translations {
     const LanguageModel(code: 'ar', englishName: 'Arabic', nativeName: 'العربية', flag: '🇸🇦'),
     const LanguageModel(code: 'ur', englishName: 'Urdu', nativeName: 'اردو', flag: '🇵🇰'),
     const LanguageModel(code: 'tr', englishName: 'Turkish', nativeName: 'Türkçe', flag: '🇹🇷'),
+    const LanguageModel(code: 'ru', englishName: 'Russian', nativeName: 'Русский', flag: '🇷🇺'),
   ];
+
+  static final Map<String, Map<String, String>> _keys = {};
+
+  /// Loads JSON translation files asynchronously from assets/locales/
+  static Future<void> init() async {
+    for (final language in supportedLanguages) {
+      try {
+        final jsonString = await rootBundle.loadString('assets/locales/${language.code}.json');
+        final Map<String, dynamic> jsonMap = json.decode(jsonString);
+        final Map<String, String> stringMap = jsonMap.map((key, value) => MapEntry(key, value.toString()));
+
+        final locale = getLocaleFromLanguage(language.code);
+        final localeKey = '${locale.languageCode}_${locale.countryCode}';
+
+        _keys[localeKey] = stringMap;
+        _keys[language.code] = stringMap;
+      } catch (e) {
+        debugPrint('Error loading locale ${language.code}: $e');
+      }
+    }
+  }
 
   static Locale getLocaleFromLanguage(String langCode) {
     switch (langCode) {
@@ -52,81 +76,18 @@ class LocalizationService extends Translations {
       case 'ar': return const Locale('ar', 'SA');
       case 'ur': return const Locale('ur', 'PK');
       case 'tr': return const Locale('tr', 'TR');
+      case 'ru': return const Locale('ru', 'RU');
       default: return const Locale('en', 'US');
     }
   }
 
+  static LanguageModel getLanguageModel(String code) {
+    return supportedLanguages.firstWhere(
+      (element) => element.code == code,
+      orElse: () => supportedLanguages.first,
+    );
+  }
+
   @override
-  Map<String, Map<String, String>> get keys => {
-        'en_US': {
-          'app_name': 'BMI Calculator',
-          'splash_tagline': 'Know Your Body. Live Healthier',
-          'loading': 'Loading...',
-          'skip': 'Skip',
-          'next': 'Next',
-          'calculate': 'Calculate',
-          'calculate_bmi': 'Calculate BMI',
-          'reset': 'Reset',
-          'recalculate': 'Recalculate',
-          'your_bmi': 'Your BMI',
-          'underweight': 'Underweight',
-          'normal': 'Normal',
-          'overweight': 'Overweight',
-          'obese': 'Obese',
-          'weight': 'Weight',
-          'height': 'Height',
-          'age': 'Age',
-          'gender': 'Gender',
-          'male': 'Male',
-          'female': 'Female',
-          'other': 'Other',
-          'languages': 'Languages',
-          'select_lang_subtitle': 'Select your preferred language to continue.',
-          'done': 'Done',
-          'save_language': 'Save Language',
-          'unlock_premium': 'Unlock Premium',
-          'start_free_trial': 'Start Free Trial',
-          'monthly_plan': 'Monthly Plan',
-          'yearly_plan': 'Yearly Plan',
-          'history': 'History',
-          'weight_tracking': 'Weight Tracking',
-          'health_insights': 'Health Insights',
-          'profile': 'Profile',
-        },
-        'es_ES': {
-          'app_name': 'Calculadora de IMC',
-          'splash_tagline': 'Conoce tu cuerpo. Vive más saludable',
-          'loading': 'Cargando...',
-          'skip': 'Saltar',
-          'next': 'Siguiente',
-          'calculate': 'Calcular',
-          'calculate_bmi': 'Calcular IMC',
-          'reset': 'Restablecer',
-          'recalculate': 'Recalcular',
-          'your_bmi': 'Tu IMC',
-          'underweight': 'Bajo peso',
-          'normal': 'Normal',
-          'overweight': 'Sobrepeso',
-          'obese': 'Obesidad',
-          'weight': 'Peso',
-          'height': 'Altura',
-          'age': 'Edad',
-          'gender': 'Género',
-          'male': 'Hombre',
-          'female': 'Mujer',
-          'other': 'Otro',
-          'languages': 'Idiomas',
-          'select_lang_subtitle': 'Selecciona tu idioma preferido para continuar.',
-          'done': 'Listo',
-          'save_language': 'Guardar idioma',
-          'unlock_premium': 'Desbloquear Premium',
-          'start_free_trial': 'Comenzar prueba gratis',
-          'monthly_plan': 'Plan Mensual',
-          'yearly_plan': 'Plan Anual',
-          'history': 'Historial',
-          'weight_tracking': 'Seguimiento de peso',
-          'health_insights': 'Consejos de salud',
-          'profile': 'Perfil',
-        },
-      };
+  Map<String, Map<String, String>> get keys => _keys;
 }

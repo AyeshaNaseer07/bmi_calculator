@@ -33,6 +33,9 @@ void main() async {
     permanent: true,
   );
 
+  // Initialize Localization Service from JSON assets
+  await LocalizationService.init();
+
   // Determine initial locale
   final currentLocale = LocalizationService.getLocaleFromLanguage(
     appController.selectedLanguage.value,

@@ -1,32 +1,25 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
-import '../widgets/native_ad_placeholder.dart';
+import '../../data/services/localization_service.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
 
   @override
-  State<LanguageSelectionScreen> createState() => _LanguageSelectionScreenState();
+  State<LanguageSelectionScreen> createState() =>
+      _LanguageSelectionScreenState();
 }
 
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   final AppController _appController = Get.find<AppController>();
   String _selectedLang = 'en';
-
-  final List<(String code, String name, String flag)> _initialLanguages = const [
-    ('en', 'English', '🇺🇸'),
-    ('es', 'Español', '🇪🇸'),
-    ('pt', 'Português', '🇵🇹'),
-    ('fr', 'Français', '🇫🇷'),
-    ('de', 'Deutsch', '🇩🇪'),
-    ('it', 'Italiano', '🇮🇹'),
-  ];
 
   @override
   void initState() {
@@ -36,8 +29,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
   void _onDone() {
     _appController.changeLanguage(_selectedLang);
-    _appController.completeOnboarding();
-    Get.offAllNamed(AppRoutes.home);
+    Get.offNamed(AppRoutes.onboarding);
   }
 
   @override
@@ -60,15 +52,22 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Languages',
-                          style: AppTypography.headlineLarge.copyWith(fontSize: 24.sp),
+                          'languages'.tr,
+                          style: TextStyle(
+                            color: const Color(0xFF111827),
+                            fontSize: 20,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          'Select your preferred language to continue.',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.textBody,
-                            fontSize: 12.sp,
+                          'select_lang_subtitle'.tr,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -77,20 +76,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   // Done Button
                   GestureDetector(
                     onTap: _onDone,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFB9F0E1),
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      child: Text(
-                        'Done',
-                        style: TextStyle(
-                          color: const Color(0xFF0F766E),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13.sp,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(AppAssets.btnBg),
+                        Text(
+                          'done'.tr,
+                          style: TextStyle(
+                            color: const Color(0xFF0F766E),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13.sp,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
@@ -98,13 +96,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               SizedBox(height: 20.h),
 
               // Languages List
-              ..._initialLanguages.map((lang) {
-                final isSelected = _selectedLang == lang.$1;
+              ...LocalizationService.supportedLanguages.map((lang) {
+                final isSelected = _selectedLang == lang.code;
                 return Padding(
                   padding: EdgeInsets.only(bottom: 10.h),
                   child: GestureDetector(
                     onTap: () {
-                      setState(() => _selectedLang = lang.$1);
+                      setState(() => _selectedLang = lang.code);
                     },
                     child: Container(
                       height: 52.h,
@@ -130,16 +128,30 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(lang.$3, style: TextStyle(fontSize: 22.sp)),
+                          Text(lang.flag, style: TextStyle(fontSize: 22.sp)),
                           SizedBox(width: 14.w),
                           Expanded(
-                            child: Text(
-                              lang.$2,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textDark,
-                              ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  lang.nativeName,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textDark,
+                                  ),
+                                ),
+                                if (lang.nativeName != lang.englishName) ...[
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    '(${lang.englishName})',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: AppColors.textLight,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                           Container(
@@ -168,7 +180,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               SizedBox(height: 16.h),
 
               // Native Ad Placeholder
-              const NativeAdPlaceholder(),
+              // const NativeAdPlaceholder(),
               SizedBox(height: 20.h),
             ],
           ),

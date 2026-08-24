@@ -51,4 +51,6 @@ flutter:
   assets:
     - assets/images/
     - assets/lotties/
+    - assets/locales/
+
 
