@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/bmi_controller.dart';
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/user_profile_model.dart';
@@ -423,7 +424,7 @@ class BMICalculatorScreen extends StatelessWidget {
                     color: Colors.white,
                     size: 20.sp,
                   ),
-                  solidColor: const Color(0xFF1B8A7A),
+                  backgroundImage: AppAssets.btnCalculateCta,
                   onPressed: () => _onCalculate(controller),
                 ),
                 SizedBox(height: 10.h),

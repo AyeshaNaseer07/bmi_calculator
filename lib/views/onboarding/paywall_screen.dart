@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/custom_card.dart';
@@ -449,7 +448,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 20.h),
 
                   // Dynamic Remote Button Text & CTA
                   Obx(
@@ -483,7 +482,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 6.h),
 
                   // Bottom Policy Links
                   Row(

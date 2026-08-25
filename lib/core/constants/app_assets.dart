@@ -9,13 +9,13 @@ abstract class AppAssets {
   static const String crown = '$_imagesBase/crown.png';
   static const String wreathLeft = '$_imagesBase/wreath_left.png';
   static const String wreathRight = '$_imagesBase/wreath_right.png';
-  static const String homeAvatar = '$_imagesBase/avatar_alex.png';
-  static const String bestValueBadge = '$_imagesBase/best_value_badge.png';
-  static const String btnGradient = '$_imagesBase/btn_gradient.png';
-  static const String btnRectangle = '$_imagesBase/Rectangle 7.png';
-  static const String btnCalculate = '$_imagesBase/btn_calculate.png';
+  static const String homeAvatar = '$_imagesBase/home_img.png';
+  static const String btnRectangle = '$_imagesBase/btn.png';
+  static const String btnCalculateCta = '$_imagesBase/calculate-cta-btn.png';
+  static const String calcilatorIcon = '$_imagesBase/calculator.png';
+
   static const String icDiamond = '$_imagesBase/ic_diamond.png';
-  static const String icCheckCircle = '$_imagesBase/ic_check_circle.png';
+  static const String bmiGauge = '$_imagesBase/Group 10.png';
 
   // ── Onboarding ──
   static const String onboarding1 = '$_imagesBase/onboarding_1.png';
@@ -28,7 +28,11 @@ abstract class AppAssets {
   static const String preIcon3 = '$_imagesBase/pre_icon3.png';
   static const String preIcon4 = '$_imagesBase/pre_icon4.png';
   static const String preIcon5 = '$_imagesBase/pre_icon5.png';
-  static const String preIcon6 = '$_imagesBase/pre_icon6.png';
+
+  static const String homeIcon1 = '$_imagesBase/home_1.png';
+  static const String homeIcon2 = '$_imagesBase/home_2.png';
+  static const String homeIcon3 = '$_imagesBase/home_3.png';
+  static const String homeIcon4 = '$_imagesBase/home_4.png';
 
   static const String btnBg = '$_imagesBase/btn_bg.png';
   static const String premiumBg = '$_imagesBase/premium_bg.png';
@@ -36,6 +40,8 @@ abstract class AppAssets {
   static const String preDown = '$_imagesBase/pre_download.png';
   static const String bestValueCrown = '$_imagesBase/best_value_crown.png';
   static const String preOr = '$_imagesBase/pre_or.png';
+  static const String profileIcon = '$_imagesBase/profile.png';
+  static const String chevronIcon = '$_imagesBase/chevron-right.png';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

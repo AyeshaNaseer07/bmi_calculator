@@ -1,8 +1,12 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
+import '../../core/routes/app_pages.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../../data/services/bmi_service.dart';
 
@@ -29,7 +33,7 @@ class BMIGaugeWidget extends StatefulWidget {
 }
 
 class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -38,29 +42,61 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1300),
     );
     _animation = Tween<double>(
       begin: 0.0,
       end: BMIService.getGaugeProgress(widget.bmiValue),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-    _controller.forward();
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    _animateGauge();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      appRouteObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called whenever returning back to this screen from any another screen
+    _animateGauge();
+  }
+
+  @override
+  void didPush() {
+    // Called when the route is pushed
+    _animateGauge();
+  }
+
+  void _animateGauge() {
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: BMIService.getGaugeProgress(widget.bmiValue),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (mounted) {
+        _controller.forward(from: 0.0);
+      }
+    });
   }
 
   @override
   void didUpdateWidget(covariant BMIGaugeWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.bmiValue != widget.bmiValue) {
-      _animation = Tween<double>(
-        begin: _animation.value,
-        end: BMIService.getGaugeProgress(widget.bmiValue),
-      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-      _controller.forward(from: 0.0);
+      _animateGauge();
     }
   }
 
   @override
   void dispose() {
+    appRouteObserver.unsubscribe(this);
     _controller.dispose();
     super.dispose();
   }
@@ -68,58 +104,84 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
   @override
   Widget build(BuildContext context) {
     final effectiveSize = widget.size ?? 200.w;
+    final gaugeHeight = widget.showValueCenter
+        ? effectiveSize * 0.72
+        : (widget.showLabels ? effectiveSize * 0.60 : effectiveSize * 0.54);
 
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        return CustomPaint(
-          size: Size(effectiveSize, effectiveSize * 0.65),
-          painter: _BMIGaugePainter(
-            progress: _animation.value,
-            showLabels: widget.showLabels,
-            bmiValue: widget.bmiValue,
-          ),
-          child: widget.showValueCenter
-              ? SizedBox(
+        return SizedBox(
+          width: effectiveSize,
+          height: gaugeHeight,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
+            children: [
+              // Gauge background image asset
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  AppAssets.bmiGauge,
                   width: effectiveSize,
-                  height: effectiveSize * 0.65,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 4.h),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            widget.bmiValue.toStringAsFixed(1),
-                            style: AppTypography.valueLarge.copyWith(fontSize: 28.sp),
-                          ),
-                          if (widget.centerLabel != null)
-                            Text(
-                              widget.centerLabel!,
-                              style: AppTypography.bodySmall.copyWith(
-                                color: widget.category?.color ?? AppColors.normal,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+
+              // Needle and pivot painter
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _BMIGaugeNeedlePainter(
+                    progress: _animation.value,
+                    showLabels: widget.showLabels,
+                    bmiValue: widget.bmiValue,
                   ),
-                )
-              : null,
+                ),
+              ),
+
+              // Center value / label if requested
+              if (widget.showValueCenter)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        widget.bmiValue.toStringAsFixed(1),
+                        style: AppTypography.valueLarge.copyWith(
+                          fontSize: 28.sp,
+                        ),
+                      ),
+                      if (widget.centerLabel != null)
+                        Text(
+                          widget.centerLabel!,
+                          style: AppTypography.bodySmall.copyWith(
+                            color: widget.category?.color ?? AppColors.normal,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );
   }
 }
 
-class _BMIGaugePainter extends CustomPainter {
+class _BMIGaugeNeedlePainter extends CustomPainter {
   final double progress; // 0.0 to 1.0
   final bool showLabels;
   final double bmiValue;
 
-  _BMIGaugePainter({
+  _BMIGaugeNeedlePainter({
     required this.progress,
     required this.showLabels,
     required this.bmiValue,
@@ -127,50 +189,20 @@ class _BMIGaugePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height * 0.88);
-    final radius = size.width * 0.42;
-    final strokeWidth = size.width * 0.07;
+    // In Group 10.png (454x450), the semi-circle center is at (227, 225.5) / 454
+    final center = Offset(size.width / 2, size.width * (225.5 / 454.0));
+    final radius = size.width * (226.0 / 454.0);
+    final needleLength = radius * 0.74;
 
-    // Total arc is 180 degrees (from PI to 0)
-    const startAngle = math.pi;
-    const totalSweep = math.pi;
-
-    // Segments: Underweight (22%), Normal (33%), Overweight (25%), Obese (20%)
-    final segments = [
-      (0.22, AppColors.underweight),
-      (0.33, AppColors.normal),
-      (0.25, AppColors.overweight),
-      (0.20, AppColors.obese),
-    ];
-
-    double currentStart = startAngle;
-    for (int i = 0; i < segments.length; i++) {
-      final segSweep = totalSweep * segments[i].$1;
-      final paint = Paint()
-        ..color = segments[i].$2
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth
-        ..strokeCap = i == 0
-            ? StrokeCap.round
-            : (i == segments.length - 1 ? StrokeCap.round : StrokeCap.butt);
-
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        currentStart,
-        segSweep - 0.02, // subtle gap
-        false,
-        paint,
-      );
-      currentStart += segSweep;
-    }
-
-    // Needle Calculation
+    // Angle: progress 0.0 -> math.pi (pointing left)
+    // progress 0.5 -> math.pi / 2 (pointing top)
+    // progress 1.0 -> 0.0 (pointing right)
     final needleAngle = math.pi - (progress * math.pi);
-    final needleLength = radius * 0.82;
 
     final needlePaint = Paint()
       ..color = const Color(0xFF1E293B)
-      ..style = PaintingStyle.fill;
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = true;
 
     final tip = Offset(
       center.dx + needleLength * math.cos(needleAngle),
@@ -178,7 +210,7 @@ class _BMIGaugePainter extends CustomPainter {
     );
 
     final perpAngle = needleAngle + math.pi / 2;
-    final baseWidth = size.width * 0.025;
+    final baseWidth = size.width * 0.024;
     final base1 = Offset(
       center.dx + baseWidth * math.cos(perpAngle),
       center.dy - baseWidth * math.sin(perpAngle),
@@ -194,52 +226,60 @@ class _BMIGaugePainter extends CustomPainter {
       ..lineTo(base2.dx, base2.dy)
       ..close();
 
+    // Subtle drop shadow for needle
+    final shadowPaint = Paint()
+      ..color = const Color(0x33000000)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+    canvas.save();
+    canvas.translate(0.8, 1.2);
+    canvas.drawPath(path, shadowPaint);
+    canvas.restore();
+
+    // Draw Needle
     canvas.drawPath(path, needlePaint);
 
     // Pivot Circle
     final pivotOuter = Paint()..color = const Color(0xFF1E293B);
     final pivotInner = Paint()..color = const Color(0xFF2FD1A6);
 
-    final outerRadius = size.width * 0.035;
+    final outerRadius = size.width * 0.038;
     final innerRadius = size.width * 0.018;
 
     canvas.drawCircle(center, outerRadius, pivotOuter);
     canvas.drawCircle(center, innerRadius, pivotInner);
 
-    // Labels at bottom
+    // Labels below arc ends
     if (showLabels) {
-      final labelFontSize = (size.width * 0.05).clamp(8.0, 12.0);
+      final labelFontSize = (size.width * 0.055).clamp(8.0, 11.0);
+      final textStyle = TextStyle(
+        color: const Color(0xFF94A3B8),
+        fontSize: labelFontSize,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Instrument Sans',
+      );
 
       final textPainterLow = TextPainter(
-        text: TextSpan(
-          text: '18.5',
-          style: TextStyle(
-            color: const Color(0xFF64748B),
-            fontSize: labelFontSize,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        text: TextSpan(text: '18.5', style: textStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      textPainterLow.paint(canvas, Offset(size.width * 0.16, size.height * 0.90));
+      textPainterLow.paint(
+        canvas,
+        Offset(size.width * 0.12, center.dy + size.width * 0.02),
+      );
 
       final textPainterHigh = TextPainter(
-        text: TextSpan(
-          text: '24.9',
-          style: TextStyle(
-            color: const Color(0xFF64748B),
-            fontSize: labelFontSize,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        text: TextSpan(text: '24.9', style: textStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      textPainterHigh.paint(canvas, Offset(size.width * 0.74, size.height * 0.90));
+      textPainterHigh.paint(
+        canvas,
+        Offset(size.width * 0.74, center.dy + size.width * 0.02),
+      );
     }
   }
 
   @override
-  bool shouldRepaint(covariant _BMIGaugePainter oldDelegate) {
+  bool shouldRepaint(covariant _BMIGaugeNeedlePainter oldDelegate) {
     return oldDelegate.progress != progress || oldDelegate.bmiValue != bmiValue;
   }
 }

@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (!mounted) return;
       final appController = Get.find<AppController>();
       if (appController.onboardingSeen.value) {
-        Get.offAllNamed(AppRoutes.home);
+        Get.offAllNamed(AppRoutes.onboarding);
       } else {
         Get.offAllNamed(AppRoutes.languageSelection);
       }

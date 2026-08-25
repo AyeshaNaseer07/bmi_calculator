@@ -24,183 +24,140 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7FAF8),
-      body: SafeArea(
-        child: Obx(() {
-          final hasData = bmiController.bmiHistory.isNotEmpty;
-          final latest = bmiController.latestRecord.value;
-
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header: Profile Avatar, Greeting, Illustration Avatar, VIP Diamond
-                _buildHeader(hasData),
-                SizedBox(height: 16.h),
-
-                // Main BMI Card (Empty state or Active Calculated state)
-                if (!hasData || latest == null)
-                  _buildEmptyBmiCard()
-                else
-                  _buildActiveBmiCard(latest),
-
-                SizedBox(height: 16.h),
-
-                // Quick Parameters Pills (Weight, Height, Age, Gender)
-                if (hasData && latest != null) ...[
-                  _buildParameterPills(latest, bmiController),
-                  SizedBox(height: 16.h),
-
-                  // BMI Categories Row
-                  _buildBmiCategories(latest.category),
-                  SizedBox(height: 18.h),
-                ],
-
-                // Features Heading (if empty state) or 2x2 Grid Features
-                if (!hasData) ...[
-                  Text(
-                    'Features',
-                    style: AppTypography.titleMedium.copyWith(fontSize: 16.sp),
-                  ),
-                  SizedBox(height: 12.h),
-                  const NativeAdPlaceholder(),
-                  SizedBox(height: 24.h),
-                ],
-
-                // 2x2 Feature Cards Grid
-                _buildFeatureGrid(),
-                SizedBox(height: 24.h),
-              ],
+      body: Stack(
+        children: [
+          // Background Illustration (Avatar on top right)
+          Positioned(
+            top: 10,
+            left: 0,
+            right: 0,
+            child: IgnorePointer(
+              child: Image.asset(
+                AppAssets.homeAvatar,
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topRight,
+              ),
             ),
-          );
-        }),
+          ),
+
+          // Main Screen Content
+          SafeArea(
+            child: Obx(() {
+              final hasData = bmiController.bmiHistory.isNotEmpty;
+              final latest = bmiController.latestRecord.value;
+
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header: Profile Avatar, Greeting, VIP Diamond
+                    _buildHeader(hasData),
+                    SizedBox(height: 28.h),
+
+                    // Main BMI Card (Empty state or Active Calculated state)
+                    if (!hasData || latest == null)
+                      _buildEmptyBmiCard()
+                    else
+                      _buildActiveBmiCard(latest),
+
+                    SizedBox(height: 16.h),
+
+                    // Quick Parameters Pills (Weight, Height, Age, Gender)
+                    if (hasData && latest != null) ...[
+                      _buildParameterPills(latest, bmiController),
+                      SizedBox(height: 16.h),
+
+                      // BMI Categories Row
+                      _buildBmiCategories(latest.category),
+                      SizedBox(height: 18.h),
+                    ],
+
+                    // Features Heading (if empty state) or 2x2 Grid Features
+                    if (!hasData) ...[
+                      Text(
+                        'Features',
+                        style: TextStyle(
+                          color: const Color(0xFF1A252C),
+                          fontSize: 18,
+                          fontFamily: 'Instrument Sans',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      const NativeAdPlaceholder(),
+                      SizedBox(height: 24.h),
+                    ],
+
+                    // 2x2 Feature Cards Grid
+                    _buildFeatureGrid(),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildHeader(bool hasData) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left Profile Button
-        GestureDetector(
-          onTap: () => Get.toNamed(AppRoutes.profile),
-          child: Container(
-            width: 38.w,
-            height: 38.w,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F7F2),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 6.r,
-                  offset: Offset(0, 2.h),
-                ),
-              ],
-            ),
-            child: Icon(
-              CupertinoIcons.person,
-              size: 20.sp,
-              color: AppColors.textDark,
-            ),
-          ),
-        ),
-        SizedBox(width: 12.w),
-
-        // Greeting Text
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Hello, Alex',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textDark,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text('👋', style: TextStyle(fontSize: 16.sp)),
-                ],
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                hasData
-                    ? "Let's track your health today."
-                    : "Welcome! Let's begin your health journey.",
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: AppColors.textBody,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Right Avatar Illustration & VIP Diamond Button
-        Stack(
-          clipBehavior: Clip.none,
+        // Top Row: Profile Icon & Diamond Badge
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 54.w,
-              height: 54.w,
-              decoration: const BoxDecoration(shape: BoxShape.circle),
-              child: ClipOval(
-                child: Image.asset(
-                  AppAssets.homeAvatar,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => CircleAvatar(
-                    backgroundColor: const Color(0xFFD4EFE6),
-                    child: Icon(
-                      Icons.person,
-                      color: AppColors.primaryTeal,
-                      size: 24.sp,
-                    ),
-                  ),
-                ),
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.profile),
+              child: Image.asset(
+                AppAssets.profileIcon,
+                width: 30.w,
+                height: 30.w,
               ),
             ),
-            // VIP Diamond badge button
-            Positioned(
-              top: -4.h,
-              right: -4.w,
-              child: GestureDetector(
-                onTap: () => Get.toNamed(AppRoutes.paywall),
-                child: Container(
-                  width: 22.w,
-                  height: 22.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFBEB),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4.r,
-                        offset: Offset(0, 1.h),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      AppAssets.icDiamond,
-                      width: 14.w,
-                      height: 14.w,
-                      errorBuilder: (_, _, _) => Icon(
-                        Icons.diamond,
-                        size: 14.sp,
-                        color: const Color(0xFFFFB800),
-                      ),
-                    ),
-                  ),
-                ),
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.paywall),
+              child: Image.asset(
+                AppAssets.icDiamond,
+                width: 30.w,
+                height: 30.w,
               ),
             ),
           ],
+        ),
+        SizedBox(height: 30.h),
+
+        // Greeting Text Section
+        Row(
+          children: [
+            Text(
+              'Hello, Alex',
+              style: TextStyle(
+                color: const Color(0xFF1A252C),
+                fontSize: 24,
+                fontFamily: 'Instrument Sans',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Text('👋', style: TextStyle(fontSize: 24.sp)),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          hasData
+              ? "Let's track your health today."
+              : "Welcome! Let's begin your health journey.",
+          style: TextStyle(
+            color: const Color(0xFF7A8B94),
+            fontSize: 12,
+            fontFamily: 'Instrument Sans',
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ],
     );
@@ -216,10 +173,12 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 14.h),
           Text(
             'No BMI Record Yet',
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textDark,
+              color: const Color(0xFF1A252C),
+              fontSize: 18,
+              fontFamily: 'Instrument Sans',
+              fontWeight: FontWeight.w700,
             ),
           ),
           SizedBox(height: 6.h),
@@ -227,20 +186,22 @@ class HomeScreen extends StatelessWidget {
             "You haven't calculated your BMI yet. Enter your\ndetails to discover your health status.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.textBody,
-              height: 1.3,
+              color: const Color(0xFF7A8B94),
+              fontSize: 13,
+              fontFamily: 'Instrument Sans',
+              fontWeight: FontWeight.w400,
+              height: 1.40,
             ),
           ),
           SizedBox(height: 18.h),
           CustomGradientButton(
             text: 'Calculate Your BMI',
-            leadingIcon: Icon(
-              Icons.calculate_outlined,
-              color: Colors.white,
-              size: 18.sp,
+            leadingIcon: Image.asset(
+              AppAssets.calcilatorIcon,
+              width: 16.w,
+              height: 16.w,
             ),
-            solidColor: const Color(0xFF1B8A7A),
+            backgroundImage: AppAssets.btnCalculateCta,
             height: 48.h,
             onPressed: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
@@ -638,9 +599,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Expanded(
               child: _buildGridTile(
-                icon: Icons.calculate_outlined,
-                iconBg: const Color(0xFFE8F7F2),
-                iconColor: AppColors.primaryTeal,
+                imagePath: AppAssets.homeIcon1,
                 title: 'BMI Calculator',
                 subtitle: 'Calculate your BMI',
                 onTap: () => Get.toNamed(AppRoutes.bmiCalculator),
@@ -649,9 +608,7 @@ class HomeScreen extends StatelessWidget {
             SizedBox(width: 12.w),
             Expanded(
               child: _buildGridTile(
-                icon: Icons.monitor_weight_outlined,
-                iconBg: const Color(0xFFE0F2FE),
-                iconColor: const Color(0xFF0284C7),
+                imagePath: AppAssets.homeIcon2,
                 title: 'Weight Tracker',
                 subtitle: 'Record your weight',
                 onTap: () => Get.toNamed(AppRoutes.weightTracking),
@@ -664,9 +621,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Expanded(
               child: _buildGridTile(
-                icon: Icons.favorite_border,
-                iconBg: const Color(0xFFFEF3C7),
-                iconColor: const Color(0xFFD97706),
+                imagePath: AppAssets.homeIcon3,
                 title: 'Health Insights',
                 subtitle: 'Daily wellness advice',
                 onTap: () => Get.toNamed(AppRoutes.healthInsights),
@@ -675,9 +630,7 @@ class HomeScreen extends StatelessWidget {
             SizedBox(width: 12.w),
             Expanded(
               child: _buildGridTile(
-                icon: Icons.history,
-                iconBg: const Color(0xFFFCE7F3),
-                iconColor: const Color(0xFFDB2777),
+                imagePath: AppAssets.homeIcon4,
                 title: 'History',
                 subtitle: 'Monitor your journey',
                 onTap: () => Get.toNamed(AppRoutes.history),
@@ -690,9 +643,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildGridTile({
-    required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
+    required String imagePath, // Changed from IconData to String
     required String title,
     required String subtitle,
     required VoidCallback onTap,
@@ -707,19 +658,17 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 36.w,
-                height: 36.w,
-                decoration: BoxDecoration(
-                  color: iconBg,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Icon(icon, color: iconColor, size: 20.sp),
+              Image.asset(
+                imagePath,
+                width: 40.w,
+                height: 40.h,
+                fit: BoxFit.contain,
               ),
-              Icon(
-                CupertinoIcons.chevron_right,
-                size: 14.sp,
-                color: const Color(0xFF1DB59B),
+              Image.asset(
+                AppAssets.chevronIcon,
+                width: 16.w,
+                height: 16.h,
+                fit: BoxFit.contain,
               ),
             ],
           ),
@@ -727,15 +676,22 @@ class HomeScreen extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 13.5.sp,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textDark,
+              color: const Color(0xFF1A252C),
+              fontSize: 14,
+              fontFamily: 'Instrument Sans',
+              fontWeight: FontWeight.w700,
             ),
           ),
           SizedBox(height: 2.h),
           Text(
             subtitle,
-            style: TextStyle(fontSize: 10.5.sp, color: AppColors.textLight),
+            style: TextStyle(
+              color: const Color(0xFF7A8B94),
+              fontSize: 11,
+              fontFamily: 'Instrument Sans',
+              fontWeight: FontWeight.w400,
+              height: 1.30,
+            ),
           ),
         ],
       ),

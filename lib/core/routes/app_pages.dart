@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/bmi_controller.dart';
 import '../../controllers/health_insight_controller.dart';
@@ -21,6 +22,9 @@ import '../../views/splash/splash_screen.dart';
 import '../../views/weight_tracking/add_weight_screen.dart';
 import '../../views/weight_tracking/weight_tracking_screen.dart';
 import 'app_routes.dart';
+
+final RouteObserver<ModalRoute<void>> appRouteObserver =
+    RouteObserver<ModalRoute<void>>();
 
 class AppPages {
   static const initial = AppRoutes.splash;

@@ -70,6 +70,7 @@ class BMIApp extends StatelessWidget {
           fallbackLocale: LocalizationService.fallbackLocale,
           initialRoute: AppPages.initial,
           getPages: AppPages.routes,
+          navigatorObservers: [appRouteObserver],
           defaultTransition: Transition.cupertino,
         );
       },

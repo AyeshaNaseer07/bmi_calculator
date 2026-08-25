@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/constants/app_colors.dart';
-
 class CustomCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final double? width;
+  final double? height;
   final double? borderRadius;
   final Color? backgroundColor;
   final Color? borderColor;
   final List<BoxShadow>? shadows;
+  final bool showBorder;
   final VoidCallback? onTap;
 
   const CustomCard({
@@ -18,28 +19,41 @@ class CustomCard extends StatelessWidget {
     required this.child,
     this.padding,
     this.margin,
+    this.width,
+    this.height,
     this.borderRadius,
     this.backgroundColor,
     this.borderColor,
     this.shadows,
+    this.showBorder = true,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBorderRadius = borderRadius != null ? borderRadius!.r : 20.r;
+    final effectiveBorderRadius = borderRadius != null ? borderRadius!.r : 18.r;
+
+    final defaultShadows = [
+      BoxShadow(
+        color: Color(0x4C33D2AB),
+        blurRadius: 4.70,
+        offset: Offset(0, 2),
+        spreadRadius: 0,
+      ),
+    ];
 
     final cardContent = Container(
+      width: width,
+      height: height,
       margin: margin,
       padding: padding ?? EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.cardBackground,
+        color: backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
-        border: Border.all(
-          color: borderColor ?? AppColors.mintBorder.withValues(alpha: 0.6),
-          width: 1.2.w,
-        ),
-        boxShadow: shadows ?? AppColors.cardShadow,
+        border: showBorder
+            ? Border.all(color: borderColor ?? Colors.transparent, width: 1.2.w)
+            : null,
+        boxShadow: shadows ?? defaultShadows,
       ),
       child: child,
     );
