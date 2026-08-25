@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/localization_service.dart';
 
@@ -38,14 +37,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
       backgroundColor: const Color(0xFFF7FCF9),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header with Title, Subtitle, and Done Action
+              // Header with Title and Done Button
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Column(
@@ -55,17 +53,18 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                           'languages'.tr,
                           style: TextStyle(
                             color: const Color(0xFF111827),
-                            fontSize: 20,
+                            fontSize: 26.sp,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w700,
+                            height: 1.2,
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 8.h),
                         Text(
                           'select_lang_subtitle'.tr,
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
+                            color: const Color(0xFF374151),
+                            fontSize: 12.sp,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w400,
                           ),
@@ -73,19 +72,20 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(width: 16.w),
                   // Done Button
                   GestureDetector(
                     onTap: _onDone,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Image.asset(AppAssets.btnBg),
+                        Image.asset(AppAssets.btnBg, width: 70.w, height: 75.h),
                         Text(
                           'done'.tr,
                           style: TextStyle(
                             color: const Color(0xFF0F766E),
                             fontWeight: FontWeight.w700,
-                            fontSize: 13.sp,
+                            fontSize: 14.sp,
                           ),
                         ),
                       ],
@@ -93,94 +93,113 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 12.h),
 
               // Languages List
               ...LocalizationService.supportedLanguages.map((lang) {
                 final isSelected = _selectedLang == lang.code;
                 return Padding(
-                  padding: EdgeInsets.only(bottom: 10.h),
+                  padding: EdgeInsets.only(bottom: 12.h),
                   child: GestureDetector(
                     onTap: () {
                       setState(() => _selectedLang = lang.code);
                     },
                     child: Container(
-                      height: 52.h,
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      width: double.infinity,
+                      height: 56.h,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(14.r),
                         border: Border.all(
                           color: isSelected
-                              ? AppColors.primaryTealLight
-                              : const Color(0xFFE2E8F0),
-                          width: isSelected ? 1.5.w : 1.0.w,
+                              ? const Color.fromARGB(
+                                  255,
+                                  127,
+                                  213,
+                                  190,
+                                ).withValues(alpha: 0.4)
+                              : const Color(0xFFE5E7EB),
+                          width: isSelected ? 2.w : 1.w,
                         ),
+                        borderRadius: BorderRadius.circular(12.r),
                         boxShadow: [
                           BoxShadow(
                             color: isSelected
-                                ? AppColors.primaryTeal.withValues(alpha: 0.08)
-                                : Colors.black.withValues(alpha: 0.02),
-                            blurRadius: 8.r,
-                            offset: Offset(0, 2.h),
+                                ? const Color.fromARGB(
+                                    255,
+                                    175,
+                                    226,
+                                    212,
+                                  ).withValues(alpha: 0.1)
+                                : Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                            spreadRadius: 0,
                           ),
                         ],
                       ),
-                      child: Row(
-                        children: [
-                          Text(lang.flag, style: TextStyle(fontSize: 22.sp)),
-                          SizedBox(width: 14.w),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(
-                                  lang.nativeName,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textDark,
-                                  ),
-                                ),
-                                if (lang.nativeName != lang.englishName) ...[
-                                  SizedBox(width: 6.w),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Row(
+                          children: [
+                            // Flag
+                            Text(lang.flag, style: TextStyle(fontSize: 28.sp)),
+                            SizedBox(width: 12.w),
+                            // Language Name
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                   Text(
-                                    '(${lang.englishName})',
+                                    lang.nativeName,
                                     style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: AppColors.textLight,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xFF111827),
+                                      fontFamily: 'Inter',
                                     ),
                                   ),
+                                  if (lang.nativeName != lang.englishName) ...[
+                                    SizedBox(height: 2.h),
+                                    Text(
+                                      lang.englishName,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: const Color(0xFF9CA3AF),
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 22.w,
-                            height: 22.w,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isSelected
-                                  ? const Color(0xFF2FD1A6)
-                                  : const Color(0xFFE2E8F0),
+                            SizedBox(width: 12.w),
+                            // Checkmark Circle
+                            Container(
+                              width: 24.w,
+                              height: 24.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isSelected
+                                    ? const Color(0xFF2FD1A6)
+                                    : const Color(0xFFE5E7EB),
+                              ),
+                              child: isSelected
+                                  ? Icon(
+                                      CupertinoIcons.checkmark_alt,
+                                      size: 14.sp,
+                                      color: Colors.white,
+                                    )
+                                  : null,
                             ),
-                            child: isSelected
-                                ? Icon(
-                                    CupertinoIcons.checkmark_alt,
-                                    size: 14.sp,
-                                    color: Colors.white,
-                                  )
-                                : null,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 );
-              }),
-              SizedBox(height: 16.h),
-
-              // Native Ad Placeholder
-              // const NativeAdPlaceholder(),
+              }).toList(),
               SizedBox(height: 20.h),
             ],
           ),

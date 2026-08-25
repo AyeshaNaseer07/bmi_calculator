@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
 
@@ -28,12 +29,14 @@ class CalculatingDialog extends StatelessWidget {
                 width: 90.w,
                 height: 90.w,
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => SizedBox(
+                errorBuilder: (_, _, _) => SizedBox(
                   width: 48.w,
                   height: 48.w,
                   child: CircularProgressIndicator(
                     strokeWidth: 3.w,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryTealLight),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.primaryTealLight,
+                    ),
                   ),
                 ),
               ),

@@ -93,11 +93,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               final slide = _slides[index];
               return Stack(
                 children: [
-                  // Full background illustration
+                  // Full background illustration - Top to Middle
                   Positioned(
-                    left: -5,
-                    right: -5,
-
+                    top: 50,
+                    left: 0,
+                    right: 0,
+                    height: MediaQuery.of(context).size.height * 0.65,
                     child: Image.asset(slide.imagePath, fit: BoxFit.cover),
                   ),
 
@@ -154,11 +155,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.only(top: 10, right: 20),
+                padding: const EdgeInsets.only(top: 16, right: 20),
                 child: GestureDetector(
                   onTap: _navigateToPaywall,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: ShapeDecoration(
                       color: const Color(0x4F33D2AB),
                       shape: RoundedRectangleBorder(
@@ -176,10 +180,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 3),
+                        const SizedBox(width: 4),
                         const Icon(
                           Icons.chevron_right_rounded,
-                          size: 15,
+                          size: 16,
                           color: Color(0xFF0F6E60),
                         ),
                       ],
@@ -190,7 +194,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
 
-          // Bottom Controls: 6 Dots Indicator & Next Button
+          // Bottom Controls: Dot Indicator & Next Button
           Positioned(
             left: 24,
             right: 24,
@@ -200,19 +204,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 6-Dot Indicator
+                  // Dot Indicator
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(6, (index) {
+                    children: List.generate(_slides.length, (index) {
                       final isActive = index == _currentIndex;
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeInOut,
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: 8,
+                        width: isActive ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(4),
                           color: isActive
                               ? const Color(0xFF24CCA7)
                               : const Color(0xFFC7F3EA),

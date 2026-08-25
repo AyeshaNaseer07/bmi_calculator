@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../controllers/bmi_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
@@ -148,16 +149,18 @@ class HomeScreen extends StatelessWidget {
             Container(
               width: 54.w,
               height: 54.w,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(
                 child: Image.asset(
                   AppAssets.homeAvatar,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => CircleAvatar(
+                  errorBuilder: (_, _, _) => CircleAvatar(
                     backgroundColor: const Color(0xFFD4EFE6),
-                    child: Icon(Icons.person, color: AppColors.primaryTeal, size: 24.sp),
+                    child: Icon(
+                      Icons.person,
+                      color: AppColors.primaryTeal,
+                      size: 24.sp,
+                    ),
                   ),
                 ),
               ),
@@ -187,7 +190,7 @@ class HomeScreen extends StatelessWidget {
                       AppAssets.icDiamond,
                       width: 14.w,
                       height: 14.w,
-                      errorBuilder: (_, __, ___) => Icon(
+                      errorBuilder: (_, _, _) => Icon(
                         Icons.diamond,
                         size: 14.sp,
                         color: const Color(0xFFFFB800),
@@ -209,11 +212,7 @@ class HomeScreen extends StatelessWidget {
       borderRadius: 22.r,
       child: Column(
         children: [
-          BMIGaugeWidget(
-            bmiValue: 21.5,
-            size: 160.w,
-            showLabels: false,
-          ),
+          BMIGaugeWidget(bmiValue: 21.5, size: 160.w, showLabels: false),
           SizedBox(height: 14.h),
           Text(
             'No BMI Record Yet',
@@ -236,7 +235,11 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 18.h),
           CustomGradientButton(
             text: 'Calculate Your BMI',
-            leadingIcon: Icon(Icons.calculate_outlined, color: Colors.white, size: 18.sp),
+            leadingIcon: Icon(
+              Icons.calculate_outlined,
+              color: Colors.white,
+              size: 18.sp,
+            ),
             solidColor: const Color(0xFF1B8A7A),
             height: 48.h,
             onPressed: () => Get.toNamed(AppRoutes.bmiCalculator),
@@ -283,7 +286,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 3.h,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFE8F7F2),
                         borderRadius: BorderRadius.circular(12.r),
@@ -315,7 +321,10 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Text(
                               'Last Updated',
-                              style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: AppColors.textLight,
+                              ),
                             ),
                             Text(
                               formattedTime,
@@ -331,7 +340,10 @@ class HomeScreen extends StatelessWidget {
                         GestureDetector(
                           onTap: () => Get.toNamed(AppRoutes.history),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 3.h,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFFE8F7F2),
                               borderRadius: BorderRadius.circular(10.r),
@@ -339,7 +351,11 @@ class HomeScreen extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.receipt_long, size: 10.sp, color: AppColors.primaryTeal),
+                                Icon(
+                                  Icons.receipt_long,
+                                  size: 10.sp,
+                                  color: AppColors.primaryTeal,
+                                ),
                                 SizedBox(width: 3.w),
                                 Text(
                                   'View History',
@@ -479,10 +495,7 @@ class HomeScreen extends StatelessWidget {
         Container(
           width: 32.w,
           height: 32.w,
-          decoration: BoxDecoration(
-            color: iconBg,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
           child: Icon(icon, color: iconColor, size: 16.sp),
         ),
         SizedBox(height: 6.h),
@@ -496,10 +509,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 10.sp,
-            color: AppColors.textLight,
-          ),
+          style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
         ),
         SizedBox(height: 4.h),
         GestureDetector(
@@ -525,11 +535,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Container(
-      height: 44.h,
-      width: 1.w,
-      color: const Color(0xFFF1F5F9),
-    );
+    return Container(height: 44.h, width: 1.w, color: const Color(0xFFF1F5F9));
   }
 
   Widget _buildBmiCategories(BMICategory currentCategory) {
@@ -596,7 +602,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryBadge(String text, bool isCurrent, Color activeBg, Color textColor) {
+  Widget _buildCategoryBadge(
+    String text,
+    bool isCurrent,
+    Color activeBg,
+    Color textColor,
+  ) {
     return Container(
       height: 38.h,
       padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -724,10 +735,7 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 2.h),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 10.5.sp,
-              color: AppColors.textLight,
-            ),
+            style: TextStyle(fontSize: 10.5.sp, color: AppColors.textLight),
           ),
         ],
       ),
