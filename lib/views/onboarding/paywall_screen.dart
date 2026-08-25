@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,6 +25,33 @@ class _PaywallScreenState extends State<PaywallScreen> {
   final AppController _appController = Get.find<AppController>();
   SubscriptionPlan _selectedPlan = SubscriptionPlan.yearly;
   bool _isLoading = false;
+  bool _showCloseButton = false;
+  Timer? _crossDelayTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _initCrossDelay();
+  }
+
+  void _initCrossDelay() {
+    final delaySeconds = _appController.remoteConfigService.crossDelaySeconds;
+    if (delaySeconds <= 0) {
+      _showCloseButton = true;
+    } else {
+      _crossDelayTimer = Timer(Duration(seconds: delaySeconds), () {
+        if (mounted) {
+          setState(() => _showCloseButton = true);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _crossDelayTimer?.cancel();
+    super.dispose();
+  }
 
   void _onClose() {
     _appController.completeOnboarding();
@@ -31,6 +60,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   void _onSubscribe() async {
     setState(() => _isLoading = true);
+    // Purchases using the remote product ID configured for the selected plan
+    final selectedProductId = _appController.remoteConfigService.getProductId(
+      _selectedPlan,
+    );
+    debugPrint('Subscribing with remote product ID: $selectedProductId');
+
     await _appController.upgradeToPremium(_selectedPlan);
     _appController.completeOnboarding();
     setState(() => _isLoading = false);
@@ -52,400 +87,449 @@ class _PaywallScreenState extends State<PaywallScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Top Close Button
-                Row(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: GestureDetector(
-                        onTap: _onClose,
-                        child: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFC7EFE4),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            CupertinoIcons.xmark,
-                            size: 16.sp,
-                            color: Colors.black,
-                            weight: 5.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 74.w),
-                    Image.asset(AppAssets.crown, width: 130.w, height: 108.w),
-                  ],
-                ),
-                // Title
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      AppAssets.wreathRight,
-                      width: 32.w,
-                      height: 52.h,
-                    ),
-                    SizedBox(width: 8.w),
-                    RichText(
-                      text: TextSpan(
-                        style: AppTypography.headlineLarge.copyWith(
-                          fontSize: 24.sp,
-                        ),
-                        children: const [
-                          TextSpan(text: 'Unlock '),
-                          TextSpan(
-                            text: 'Premium',
-                            style: TextStyle(color: AppColors.primaryTealLight),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Image.asset(
-                      AppAssets.wreathLeft,
-                      width: 32.w,
-                      height: 52.h,
-                    ),
-                    SizedBox(width: 8.w),
-                  ],
-                ),
-                Text(
-                  'Unlock advanced health tools and enjoy\na smarter wellness experience.',
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodySmall.copyWith(
-                    color: AppColors.textBody,
-                    fontSize: 12.sp,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-
-                // Feature List Card
-                CustomCard(
-                  borderRadius: 18.r,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 8.h,
-                    horizontal: 16.w,
-                  ),
-                  child: Column(
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Centered Crown
+                  Image.asset(AppAssets.crown, width: 100.w, height: 100.w),
+                  // Title
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildFeatureRow(
-                        iconPath: AppAssets.preIcon1,
-                        fallbackIcon: Icons.history,
-                        title: 'Unlimited BMI History',
+                      Image.asset(
+                        AppAssets.wreathRight,
+                        width: 32.w,
+                        height: 52.h,
                       ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                      _buildFeatureRow(
-                        iconPath: AppAssets.preIcon2,
-                        fallbackIcon: Icons.bar_chart,
-                        title: 'Advanced Health Reports',
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Unlock ',
+                              style: TextStyle(
+                                color: const Color(0xFF111827),
+                                fontSize: 32,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Premium',
+                              style: TextStyle(
+                                color: const Color(0xFF0AA37D),
+                                fontSize: 32,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                      _buildFeatureRow(
-                        iconPath: AppAssets.preIcon3,
-                        fallbackIcon: Icons.show_chart,
-                        title: 'Weight Progress Analytics',
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                      _buildFeatureRow(
-                        iconPath: AppAssets.preIcon4,
-                        fallbackIcon: Icons.favorite_border,
-                        title: 'Personalized Health Insights',
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                      _buildFeatureRow(
-                        iconPath: AppAssets.preIcon5,
-                        fallbackIcon: Icons.picture_as_pdf_outlined,
-                        title: 'Export PDF Reports',
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                      _buildFeatureRow(
-                        iconPath: AppAssets.preIcon6,
-                        fallbackIcon: Icons.block,
-                        title: 'Ad-Free Experience',
+                      Image.asset(
+                        AppAssets.wreathLeft,
+                        width: 32.w,
+                        height: 52.h,
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 16.h),
+                  Text(
+                    'Unlock advanced health tools and enjoy \na smarter wellness experience.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: const Color(0xFF4B5563),
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      height: 1.50,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
 
-                // Plan Selection (Monthly vs Yearly)
-                Row(
-                  children: [
-                    // Monthly Plan
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(
-                          () => _selectedPlan = SubscriptionPlan.monthly,
+                  // Feature List Card
+                  CustomCard(
+                    borderRadius: 18.r,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.h,
+                      horizontal: 16.w,
+                    ),
+                    child: Column(
+                      children: [
+                        _buildFeatureRow(
+                          iconPath: AppAssets.preIcon1,
+                          fallbackIcon: Icons.history,
+                          title: 'Unlimited BMI History',
                         ),
-                        child: Container(
-                          padding: EdgeInsets.all(14.w),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16.r),
-                            border: Border.all(
-                              color: _selectedPlan == SubscriptionPlan.monthly
-                                  ? AppColors.primaryTeal
-                                  : const Color(0xFFE2E8F0),
-                              width: _selectedPlan == SubscriptionPlan.monthly
-                                  ? 1.5.w
-                                  : 1.0.w,
-                            ),
-                            boxShadow: AppColors.cardShadow,
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                        _buildFeatureRow(
+                          iconPath: AppAssets.preIcon2,
+                          fallbackIcon: Icons.bar_chart,
+                          title: 'Advanced Health Reports',
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                        _buildFeatureRow(
+                          iconPath: AppAssets.preIcon3,
+                          fallbackIcon: Icons.show_chart,
+                          title: 'Weight Progress Analytics',
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                        _buildFeatureRow(
+                          iconPath: AppAssets.preIcon4,
+                          fallbackIcon: Icons.favorite_border,
+                          title: 'Personalized Health Insights',
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                        _buildFeatureRow(
+                          iconPath: AppAssets.preIcon5,
+                          fallbackIcon: Icons.picture_as_pdf_outlined,
+                          title: 'Ad-Free Experience',
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+
+                  // Plan Selection (Monthly vs Yearly) with Remote IDs & Pricing
+                  Row(
+                    children: [
+                      // Monthly Plan
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(
+                            () => _selectedPlan = SubscriptionPlan.monthly,
                           ),
-                          child: Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  width: 18.w,
-                                  height: 18.w,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
+                          child: Container(
+                            padding: EdgeInsets.all(14.w),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r),
+                              border: Border.all(
+                                color: _selectedPlan == SubscriptionPlan.monthly
+                                    ? AppColors.primaryTeal
+                                    : const Color(0xFFE2E8F0),
+                                width: _selectedPlan == SubscriptionPlan.monthly
+                                    ? 1.5.w
+                                    : 1.0.w,
+                              ),
+                              boxShadow: AppColors.cardShadow,
+                            ),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    width: 18.w,
+                                    height: 18.w,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color:
+                                            _selectedPlan ==
+                                                SubscriptionPlan.monthly
+                                            ? AppColors.primaryTeal
+                                            : const Color(0xFFCBD5E1),
+                                        width: 1.5.w,
+                                      ),
                                       color:
                                           _selectedPlan ==
                                               SubscriptionPlan.monthly
                                           ? AppColors.primaryTeal
-                                          : const Color(0xFFCBD5E1),
-                                      width: 1.5.w,
+                                          : Colors.white,
                                     ),
-                                    color:
+                                    child:
                                         _selectedPlan ==
                                             SubscriptionPlan.monthly
-                                        ? AppColors.primaryTeal
-                                        : Colors.white,
+                                        ? Icon(
+                                            Icons.check,
+                                            size: 12.sp,
+                                            color: Colors.white,
+                                          )
+                                        : null,
                                   ),
-                                  child:
-                                      _selectedPlan == SubscriptionPlan.monthly
-                                      ? Icon(
-                                          Icons.check,
-                                          size: 12.sp,
-                                          color: Colors.white,
-                                        )
-                                      : null,
                                 ),
-                              ),
-                              SizedBox(height: 6.h),
-                              Text(
-                                'Monthly Plan',
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textDark,
+                                SizedBox(height: 6.h),
+                                Text(
+                                  'Monthly Plan',
+                                  style: TextStyle(
+                                    color: const Color(0xFF4B5563),
+                                    fontSize: 14,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                '\$4.99',
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.primaryTealLight,
+                                SizedBox(height: 4.h),
+                                Obx(
+                                  () => Text(
+                                    _appController
+                                        .remoteConfigService
+                                        .monthlyPrice,
+                                    style: TextStyle(
+                                      color: const Color(0xFF33D2AB),
+                                      fontSize: 22,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'month',
-                                style: AppTypography.bodySmall.copyWith(
-                                  fontSize: 11.sp,
+                                Text(
+                                  'month',
+                                  style: TextStyle(
+                                    color: const Color(0xFF9CA3AF),
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // OR Divider
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      child: Container(
-                        padding: EdgeInsets.all(6.w),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF1F5F9),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF64748B),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Yearly Plan (Best Value)
-                    Expanded(
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          GestureDetector(
-                            onTap: () => setState(
-                              () => _selectedPlan = SubscriptionPlan.yearly,
+                              ],
                             ),
-                            child: Container(
-                              padding: EdgeInsets.all(14.w),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(
-                                  color:
-                                      _selectedPlan == SubscriptionPlan.yearly
-                                      ? AppColors.primaryTeal
-                                      : const Color(0xFFE2E8F0),
-                                  width:
-                                      _selectedPlan == SubscriptionPlan.yearly
-                                      ? 1.5.w
-                                      : 1.0.w,
-                                ),
-                                boxShadow: AppColors.cardShadow,
+                          ),
+                        ),
+                      ),
+
+                      // OR Divider
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 8.h,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.asset(AppAssets.preOr, width: 32, height: 32),
+                            Text(
+                              'OR',
+                              style: TextStyle(
+                                color: const Color(0xFF4B5563),
+                                fontSize: 10,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w600,
                               ),
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Container(
-                                      width: 18.w,
-                                      height: 18.w,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Yearly Plan (Best Value)
+                      Expanded(
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            GestureDetector(
+                              onTap: () => setState(
+                                () => _selectedPlan = SubscriptionPlan.yearly,
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.all(14.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  border: Border.all(
+                                    color:
+                                        _selectedPlan == SubscriptionPlan.yearly
+                                        ? AppColors.primaryTeal
+                                        : const Color(0xFFE2E8F0),
+                                    width:
+                                        _selectedPlan == SubscriptionPlan.yearly
+                                        ? 1.5.w
+                                        : 1.0.w,
+                                  ),
+                                  boxShadow: AppColors.cardShadow,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        width: 18.w,
+                                        height: 18.w,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color:
+                                                _selectedPlan ==
+                                                    SubscriptionPlan.yearly
+                                                ? AppColors.primaryTeal
+                                                : const Color(0xFFCBD5E1),
+                                            width: 1.5.w,
+                                          ),
                                           color:
                                               _selectedPlan ==
                                                   SubscriptionPlan.yearly
                                               ? AppColors.primaryTeal
-                                              : const Color(0xFFCBD5E1),
-                                          width: 1.5.w,
+                                              : Colors.white,
                                         ),
-                                        color:
+                                        child:
                                             _selectedPlan ==
                                                 SubscriptionPlan.yearly
-                                            ? AppColors.primaryTeal
-                                            : Colors.white,
+                                            ? Icon(
+                                                Icons.check,
+                                                size: 12.sp,
+                                                color: Colors.white,
+                                              )
+                                            : null,
                                       ),
-                                      child:
-                                          _selectedPlan ==
-                                              SubscriptionPlan.yearly
-                                          ? Icon(
-                                              Icons.check,
-                                              size: 12.sp,
-                                              color: Colors.white,
-                                            )
-                                          : null,
                                     ),
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Text(
-                                    'Yearly Plan',
-                                    style: TextStyle(
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.textDark,
+                                    SizedBox(height: 6.h),
+                                    Text(
+                                      'Yearly Plan',
+                                      style: TextStyle(
+                                        color: const Color(0xFF4B5563),
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    '\$29.99',
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w800,
-                                      color: AppColors.primaryTealLight,
+                                    SizedBox(height: 4.h),
+                                    Obx(
+                                      () => Text(
+                                        _appController
+                                            .remoteConfigService
+                                            .yearlyPrice,
+                                        style: TextStyle(
+                                          color: const Color(0xFF33D2AB),
+                                          fontSize: 22,
+                                          fontFamily: 'Outfit',
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Year',
-                                    style: AppTypography.bodySmall.copyWith(
-                                      fontSize: 11.sp,
+                                    Text(
+                                      'Year',
+                                      style: TextStyle(
+                                        color: const Color(0xFF9CA3AF),
+                                        fontSize: 12,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          // Best Value Badge
-                          Positioned(
-                            top: -10.h,
-                            right: -4.w,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
-                                vertical: 3.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFB800),
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    size: 10.sp,
-                                    color: Colors.black,
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text(
-                                    'BEST VALUE',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 8.sp,
-                                      fontWeight: FontWeight.w900,
+                            // Best Value Badge
+                            Positioned(
+                              top: -10.h,
+                              right: -4.w,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 4.5.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFB800),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      AppAssets.bestValueCrown,
+                                      height: 10.h,
+                                      width: 10.w,
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 3.w),
+                                    Text(
+                                      'BEST VALUE',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 8,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+
+                  // Dynamic Remote Button Text & CTA
+                  Obx(
+                    () => CustomGradientButton(
+                      text: _isLoading
+                          ? 'Processing...'
+                          : _appController.remoteConfigService.buttonText,
+                      leadingIcon: Icon(
+                        Icons.diamond_outlined,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                      trailingIcon: Icon(
+                        CupertinoIcons.arrow_right,
+                        color: Colors.white,
+                        size: 18.sp,
+                      ),
+                      onPressed: _isLoading ? null : _onSubscribe,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+
+                  Obx(
+                    () => Text(
+                      _appController.remoteConfigService.trialSubtitle,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-
-                // Start Free Trial Button
-                CustomGradientButton(
-                  text: _isLoading ? 'Processing...' : 'Start Free Trial',
-                  leadingIcon: Icon(
-                    Icons.diamond_outlined,
-                    color: Colors.white,
-                    size: 20.sp,
                   ),
-                  trailingIcon: Icon(
-                    CupertinoIcons.arrow_right,
-                    color: Colors.white,
-                    size: 18.sp,
+                  SizedBox(height: 10.h),
+
+                  // Bottom Policy Links
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildFooterLink('Privacy Policy', () {}),
+                      _buildFooterDivider(),
+                      _buildFooterLink('Restore Purchase', _onRestore),
+                      _buildFooterDivider(),
+                      _buildFooterLink('Terms of Use', () {}),
+                    ],
                   ),
-                  onPressed: _isLoading ? null : _onSubscribe,
-                ),
-                SizedBox(height: 10.h),
+                  SizedBox(height: 16.h),
+                ],
+              ),
+            ),
+          ),
 
-                Text(
-                  '7 Days Free • Cancel Anytime',
-                  style: AppTypography.bodySmall.copyWith(fontSize: 12.sp),
+          // Top-Left Close Cross Button overlaid on Stack
+          Positioned(
+            top: 12.h,
+            left: 20.w,
+            child: SafeArea(
+              child: AnimatedOpacity(
+                opacity: _showCloseButton ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeInOut,
+                child: IgnorePointer(
+                  ignoring: !_showCloseButton,
+                  child: GestureDetector(
+                    onTap: _onClose,
+                    child: Container(
+                      padding: EdgeInsets.all(8.w),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFC7EFE4),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        AppAssets.preCross,
+                        width: 12.w,
+                        height: 12.w,
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(height: 16.h),
-
-                // Bottom Policy Links
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildFooterLink('Privacy Policy', () {}),
-                    _buildFooterDivider(),
-                    _buildFooterLink('Restore Purchase', _onRestore),
-                    _buildFooterDivider(),
-                    _buildFooterLink('Terms of Use', () {}),
-                  ],
-                ),
-                SizedBox(height: 16.h),
-              ],
+              ),
             ),
           ),
         ],
@@ -462,37 +546,20 @@ class _PaywallScreenState extends State<PaywallScreen> {
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         children: [
-          Container(
-            width: 32.w,
-            height: 32.w,
-            padding: EdgeInsets.all(6.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEDFAF5),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Image.asset(
-              iconPath,
-              fit: BoxFit.contain,
-              errorBuilder: (_, _, _) =>
-                  Icon(fallbackIcon, size: 18.sp, color: AppColors.primaryTeal),
-            ),
-          ),
+          Image.asset(iconPath, fit: BoxFit.contain, height: 32.h, width: 32.w),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
               title,
               style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textDark,
+                color: const Color(0xFF111827),
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          Icon(
-            CupertinoIcons.checkmark_alt_circle,
-            color: const Color(0xFF2FD1A6),
-            size: 20.sp,
-          ),
+          Image.asset(AppAssets.preDown, height: 18.h, width: 18.w),
         ],
       ),
     );

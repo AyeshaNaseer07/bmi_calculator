@@ -8,6 +8,7 @@ import 'core/routes/app_pages.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/health_kit_service.dart';
 import 'data/services/localization_service.dart';
+import 'data/services/remote_config_service.dart';
 import 'data/services/storage_service.dart';
 
 void main() async {
@@ -22,6 +23,10 @@ void main() async {
   // Initialize Storage Service (SharedPreferences)
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
+
+  // Initialize Remote Config Service
+  final remoteConfigService = await RemoteConfigService(storageService).init();
+  Get.put<RemoteConfigService>(remoteConfigService, permanent: true);
 
   // Initialize HealthKit Service (graceful optional fallback)
   final healthKitService = HealthKitService();

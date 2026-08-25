@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
 
@@ -16,6 +18,7 @@ class CustomGradientButton extends StatelessWidget {
   final Color? outlineColor;
   final TextStyle? textStyle;
   final BorderRadius? borderRadius;
+  final String? backgroundImage;
 
   const CustomGradientButton({
     super.key,
@@ -31,6 +34,7 @@ class CustomGradientButton extends StatelessWidget {
     this.outlineColor,
     this.textStyle,
     this.borderRadius,
+    this.backgroundImage,
   });
 
   @override
@@ -68,7 +72,8 @@ class CustomGradientButton extends StatelessWidget {
                     child: Text(
                       text,
                       overflow: TextOverflow.ellipsis,
-                      style: textStyle ??
+                      style:
+                          textStyle ??
                           AppTypography.buttonText.copyWith(
                             color: outlineColor ?? AppColors.primaryTeal,
                           ),
@@ -90,9 +95,14 @@ class CustomGradientButton extends StatelessWidget {
       height: effectiveHeight,
       width: width ?? double.infinity,
       decoration: BoxDecoration(
-        gradient: solidColor == null ? (gradient ?? AppColors.buttonGradient) : null,
         color: solidColor,
         borderRadius: effectiveBorderRadius,
+        image: solidColor == null
+            ? DecorationImage(
+                image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
+                fit: BoxFit.fill,
+              )
+            : null,
         boxShadow: solidColor == null ? AppColors.buttonShadow : null,
       ),
       child: Material(

@@ -199,7 +199,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
               SizedBox(height: 20.h),
             ],
           ),

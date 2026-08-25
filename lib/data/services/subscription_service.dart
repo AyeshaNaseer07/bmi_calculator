@@ -13,10 +13,24 @@ class SubscriptionService {
 
   bool get isPremium => _storageService.getIsPremium();
 
-  /// Mock purchase for testing and development
-  Future<bool> purchase(SubscriptionPlan plan) async {
+  /// Mock purchase for testing and development using remote product ID
+  Future<bool> purchase(SubscriptionPlan plan, {String? productId}) async {
     try {
-      debugPrint('Purchasing plan: ${plan.name} (development mock)');
+      final id = productId ?? plan.name;
+      debugPrint('Purchasing plan: ${plan.name} with product ID: $id (development mock)');
+      await Future.delayed(const Duration(milliseconds: 800));
+      await _storageService.setIsPremium(true);
+      return true;
+    } catch (e) {
+      debugPrint('Purchase error: $e');
+      return false;
+    }
+  }
+
+  /// Purchase directly by remote product ID
+  Future<bool> purchaseByProductId(String productId) async {
+    try {
+      debugPrint('Purchasing product ID: $productId (development mock)');
       await Future.delayed(const Duration(milliseconds: 800));
       await _storageService.setIsPremium(true);
       return true;

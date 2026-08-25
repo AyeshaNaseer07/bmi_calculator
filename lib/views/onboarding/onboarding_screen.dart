@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
@@ -95,11 +94,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   // Full background illustration - Top to Middle
                   Positioned(
-                    top: 50,
+                    top: 56,
                     left: 0,
                     right: 0,
                     height: MediaQuery.of(context).size.height * 0.65,
-                    child: Image.asset(slide.imagePath, fit: BoxFit.cover),
+                    child: Image.asset(slide.imagePath, fit: BoxFit.contain),
                   ),
 
                   // Title and Subtitle positioned above the bottom controls
@@ -137,7 +136,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
-                            fontFamily: 'Inter',
+                            fontFamily: 'SF Pro',
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -160,7 +159,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onTap: _navigateToPaywall,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
+                      horizontal: 8,
                       vertical: 6,
                     ),
                     decoration: ShapeDecoration(
@@ -174,13 +173,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         Text(
                           'skip'.tr,
-                          style: GoogleFonts.plusJakartaSans(
-                            color: const Color(0xFF0F6E60),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'SF Pro',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 2),
                         const Icon(
                           Icons.chevron_right_rounded,
                           size: 16,

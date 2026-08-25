@@ -12,6 +12,7 @@ abstract class AppAssets {
   static const String homeAvatar = '$_imagesBase/avatar_alex.png';
   static const String bestValueBadge = '$_imagesBase/best_value_badge.png';
   static const String btnGradient = '$_imagesBase/btn_gradient.png';
+  static const String btnRectangle = '$_imagesBase/Rectangle 7.png';
   static const String btnCalculate = '$_imagesBase/btn_calculate.png';
   static const String icDiamond = '$_imagesBase/ic_diamond.png';
   static const String icCheckCircle = '$_imagesBase/ic_check_circle.png';
@@ -31,6 +32,10 @@ abstract class AppAssets {
 
   static const String btnBg = '$_imagesBase/btn_bg.png';
   static const String premiumBg = '$_imagesBase/premium_bg.png';
+  static const String preCross = '$_imagesBase/pre_cross.png';
+  static const String preDown = '$_imagesBase/pre_download.png';
+  static const String bestValueCrown = '$_imagesBase/best_value_crown.png';
+  static const String preOr = '$_imagesBase/pre_or.png';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

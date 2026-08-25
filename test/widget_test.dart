@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 import 'package:bmi_calculator/controllers/app_controller.dart';
 import 'package:bmi_calculator/data/services/health_kit_service.dart';
+import 'package:bmi_calculator/data/services/remote_config_service.dart';
 import 'package:bmi_calculator/data/services/storage_service.dart';
 import 'package:bmi_calculator/main.dart';
 
@@ -12,6 +13,8 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService().init();
     Get.put<StorageService>(storage, permanent: true);
+    final remoteConfig = await RemoteConfigService(storage).init();
+    Get.put<RemoteConfigService>(remoteConfig, permanent: true);
     Get.put<HealthKitService>(HealthKitService(), permanent: true);
     Get.put<AppController>(AppController(), permanent: true);
 

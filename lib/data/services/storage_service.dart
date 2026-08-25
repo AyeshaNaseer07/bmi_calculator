@@ -13,6 +13,13 @@ class StorageService {
   static const String _keyUserProfile = 'user_profile';
   static const String _keyBmiHistory = 'bmi_history';
   static const String _keyWeightHistory = 'weight_history';
+  static const String _keyRemoteCrossDelay = 'rc_cross_delay_seconds';
+  static const String _keyRemoteMonthlyProductId = 'rc_monthly_product_id';
+  static const String _keyRemoteYearlyProductId = 'rc_yearly_product_id';
+  static const String _keyRemoteMonthlyPrice = 'rc_monthly_price';
+  static const String _keyRemoteYearlyPrice = 'rc_yearly_price';
+  static const String _keyRemoteButtonText = 'rc_button_text';
+  static const String _keyRemoteTrialSubtitle = 'rc_trial_subtitle';
 
   late SharedPreferences _prefs;
 
@@ -101,6 +108,28 @@ class StorageService {
     current.add(record);
     await saveWeightHistory(current);
   }
+
+  // ── Remote Config ──
+  int? getRemoteCrossDelay() => _prefs.getInt(_keyRemoteCrossDelay);
+  Future<void> setRemoteCrossDelay(int seconds) => _prefs.setInt(_keyRemoteCrossDelay, seconds);
+
+  String? getRemoteMonthlyProductId() => _prefs.getString(_keyRemoteMonthlyProductId);
+  Future<void> setRemoteMonthlyProductId(String id) => _prefs.setString(_keyRemoteMonthlyProductId, id);
+
+  String? getRemoteYearlyProductId() => _prefs.getString(_keyRemoteYearlyProductId);
+  Future<void> setRemoteYearlyProductId(String id) => _prefs.setString(_keyRemoteYearlyProductId, id);
+
+  String? getRemoteMonthlyPrice() => _prefs.getString(_keyRemoteMonthlyPrice);
+  Future<void> setRemoteMonthlyPrice(String price) => _prefs.setString(_keyRemoteMonthlyPrice, price);
+
+  String? getRemoteYearlyPrice() => _prefs.getString(_keyRemoteYearlyPrice);
+  Future<void> setRemoteYearlyPrice(String price) => _prefs.setString(_keyRemoteYearlyPrice, price);
+
+  String? getRemoteButtonText() => _prefs.getString(_keyRemoteButtonText);
+  Future<void> setRemoteButtonText(String text) => _prefs.setString(_keyRemoteButtonText, text);
+
+  String? getRemoteTrialSubtitle() => _prefs.getString(_keyRemoteTrialSubtitle);
+  Future<void> setRemoteTrialSubtitle(String subtitle) => _prefs.setString(_keyRemoteTrialSubtitle, subtitle);
 
   Future<void> clearAll() async {
     await _prefs.clear();
