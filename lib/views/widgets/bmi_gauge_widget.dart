@@ -121,8 +121,8 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
               // Gauge background image asset
               Positioned(
                 top: 0,
-                left: 0,
-                right: 0,
+                left: 4,
+                right: 4,
                 child: Image.asset(
                   AppAssets.bmiGauge,
                   width: effectiveSize,
@@ -239,23 +239,27 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
     canvas.drawPath(path, needlePaint);
 
     // Pivot Circle
+    final pivotHalo = Paint()
+      ..color = const Color(0xFF2FD1A6).withValues(alpha: 0.25)
+      ..style = PaintingStyle.fill;
     final pivotOuter = Paint()..color = const Color(0xFF1E293B);
     final pivotInner = Paint()..color = const Color(0xFF2FD1A6);
 
     final outerRadius = size.width * 0.038;
-    final innerRadius = size.width * 0.018;
+    final innerRadius = size.width * 0.020;
 
+    canvas.drawCircle(center, outerRadius * 1.5, pivotHalo);
     canvas.drawCircle(center, outerRadius, pivotOuter);
     canvas.drawCircle(center, innerRadius, pivotInner);
 
     // Labels below arc ends
     if (showLabels) {
-      final labelFontSize = (size.width * 0.055).clamp(8.0, 11.0);
+      final labelFontSize = (size.width * 0.07).clamp(9.0, 13.0);
       final textStyle = TextStyle(
-        color: const Color(0xFF94A3B8),
+        color: const Color(0xFF1E2D2F),
         fontSize: labelFontSize,
-        fontWeight: FontWeight.w600,
-        fontFamily: 'Instrument Sans',
+        fontWeight: FontWeight.w700,
+        fontFamily: 'Outfit',
       );
 
       final textPainterLow = TextPainter(
@@ -264,7 +268,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       )..layout();
       textPainterLow.paint(
         canvas,
-        Offset(size.width * 0.12, center.dy + size.width * 0.02),
+        Offset(size.width * 0.06, center.dy + size.width * 0.03),
       );
 
       final textPainterHigh = TextPainter(
@@ -273,7 +277,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       )..layout();
       textPainterHigh.paint(
         canvas,
-        Offset(size.width * 0.74, center.dy + size.width * 0.02),
+        Offset(size.width * 0.74, center.dy + size.width * 0.03),
       );
     }
   }

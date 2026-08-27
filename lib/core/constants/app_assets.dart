@@ -55,6 +55,13 @@ abstract class AppAssets {
   static const String ageicon = '$_imagesBase/age.png';
   static const String gendericon = '$_imagesBase/gender.png';
   static const String bmiHearticon = '$_imagesBase/bmi_heart.png';
+  static const String weightTrackingicon = '$_imagesBase/weight_icon.png';
+  static const String addDataicon = '$_imagesBase/add_my_data.png';
+  static const String sedentaryIcon = '$_imagesBase/sedentary.png';
+  static const String lightActiveIcon = '$_imagesBase/light_active.png';
+  static const String moderateActiveIcon = '$_imagesBase/moderate_active.png';
+  static const String veryActiveIcon = '$_imagesBase/very_active.png';
+  static const String extraActiveIcon = '$_imagesBase/extra_active.png';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

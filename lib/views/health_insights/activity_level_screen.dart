@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,35 +17,37 @@ class ActivityLevelScreen extends StatelessWidget {
     final HealthInsightController controller =
         Get.find<HealthInsightController>();
 
-    final List<(ActivityLevel level, IconData icon, String title, String desc)>
+    final List<
+      (ActivityLevel level, String assetPath, String title, String desc)
+    >
     levels = [
       (
         ActivityLevel.sedentary,
-        Icons.chair_outlined,
+        AppAssets.sedentaryIcon,
         'Sedentary',
         'Little or no exercise. Desk job or spending most of the day sitting.',
       ),
       (
         ActivityLevel.lightlyActive,
-        Icons.directions_walk,
+        AppAssets.lightActiveIcon,
         'Lightly Active',
         'Light exercise or sports 1-3 days per week.',
       ),
       (
         ActivityLevel.moderatelyActive,
-        Icons.directions_run,
+        AppAssets.moderateActiveIcon,
         'Moderately Active',
         'Moderate exercise or sports 3-5 days per week.',
       ),
       (
         ActivityLevel.veryActive,
-        Icons.fitness_center,
+        AppAssets.veryActiveIcon,
         'Very Active',
         'Hard exercise or sports 6-7 days per week.',
       ),
       (
         ActivityLevel.extraActive,
-        Icons.sports_gymnastics,
+        AppAssets.extraActiveIcon,
         'Extra Active',
         'Very hard exercise, physical job or training twice a day',
       ),
@@ -66,30 +68,34 @@ class ActivityLevelScreen extends StatelessWidget {
               children: [
                 // Header Banner
                 Container(
+                  width: double.infinity,
                   padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 12.h,
+                    horizontal: 16.w,
+                    vertical: 14.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE8F7F2),
-                    borderRadius: BorderRadius.circular(14.r),
+                    color: const Color(0xFFE9FAF5),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        CupertinoIcons.heart_circle,
-                        color: const Color(0xFF1DB59B),
-                        size: 32.sp,
+                      Image.asset(
+                        AppAssets.bmiHearticon,
+                        width: 48.w,
+                        height: 48.h,
+                        fit: BoxFit.contain,
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: 14.w),
                       Expanded(
                         child: Text(
-                          'Select your daily activity level to get better insights.',
+                          'Select your daily activity level\nto get better insights.',
                           style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF0F766E),
-                            height: 1.3,
+                            color: const Color(0xFF4B5563),
+                            fontSize: 14.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            height: 1.35,
                           ),
                         ),
                       ),
@@ -119,20 +125,13 @@ class ActivityLevelScreen extends StatelessWidget {
                           boxShadow: AppColors.cardShadow,
                         ),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              width: 36.w,
-                              height: 36.w,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE8F7F2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                item.$2,
-                                color: const Color(0xFF1DB59B),
-                                size: 18.sp,
-                              ),
+                            Image.asset(
+                              item.$2,
+                              width: 46.w,
+                              height: 46.h,
+                              fit: BoxFit.contain,
                             ),
                             SizedBox(width: 12.w),
                             Expanded(
@@ -142,18 +141,21 @@ class ActivityLevelScreen extends StatelessWidget {
                                   Text(
                                     item.$3,
                                     style: TextStyle(
-                                      fontSize: 13.5.sp,
+                                      color: const Color(0xFF111827),
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
-                                      color: AppColors.textDark,
                                     ),
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
                                     item.$4,
                                     style: TextStyle(
-                                      fontSize: 11.sp,
-                                      color: AppColors.textBody,
-                                      height: 1.3,
+                                      color: const Color(0xFF111827)
+                                          .withOpacity(0.64),
+                                      fontSize: 13,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ],
@@ -194,7 +196,7 @@ class ActivityLevelScreen extends StatelessWidget {
                 // Continue Button
                 CustomGradientButton(
                   text: 'Continue',
-                  solidColor: const Color(0xFF1B8A7A),
+                  backgroundImage: AppAssets.calculateButton,
                   onPressed: () => Get.back(),
                 ),
                 SizedBox(height: 24.h),

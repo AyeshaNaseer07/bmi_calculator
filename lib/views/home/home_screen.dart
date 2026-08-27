@@ -210,7 +210,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildActiveBmiCard(BMIRecord record) {
-    final formattedTime = DateFormat('Today, h:mm a').format(record.date);
+    final isToday = DateUtils.isSameDay(record.date, DateTime.now());
+    final formattedTime = isToday
+        ? 'Today, ${DateFormat('h:mm a').format(record.date)}'
+        : DateFormat('MMM d, h:mm a').format(record.date);
 
     return CustomCard(
       padding: EdgeInsets.all(16.w),
@@ -221,134 +224,124 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Left: "Your BMI", Large value, Category badge
-              Expanded(
-                flex: 4,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your BMI',
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Your BMI',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    record.bmiValue.toStringAsFixed(1),
+                    style: TextStyle(
+                      color: const Color(0xFF33D2AB),
+                      fontSize: 36,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFFE2F7F2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.r),
+                      ),
+                    ),
+                    child: Text(
+                      record.category.label,
                       style: TextStyle(
-                        color: const Color(0xFF1E2D2F),
-                        fontSize: 16,
-                        fontFamily: 'Outfit',
+                        color: const Color(0xFF07A981),
+                        fontSize: 12,
+                        fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      record.bmiValue.toStringAsFixed(1),
-                      style: TextStyle(
-                        color: const Color(0xFF25C6A5),
-                        fontSize: 38,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w800,
-                      ),
+                  ),
+                ],
+              ),
+
+              // Center: Gauge
+              Expanded(
+                child: Center(
+                  child: BMIGaugeWidget(
+                    bmiValue: record.bmiValue,
+                    size: 142.w,
+                    showLabels: true,
+                  ),
+                ),
+              ),
+
+              // Right: Last Updated & View History
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Last Updated',
+                    style: TextStyle(
+                      color: const Color(0xFF96ADB0),
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
                     ),
-                    SizedBox(height: 4.h),
-                    Container(
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    formattedTime,
+                    style: TextStyle(
+                      color: const Color(0xFF1E2D2F),
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  GestureDetector(
+                    onTap: () => Get.toNamed(AppRoutes.history),
+                    child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 14.w,
+                        horizontal: 8.w,
                         vertical: 4.h,
                       ),
                       decoration: ShapeDecoration(
                         color: const Color(0xFFE2F7F2),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(50.r),
                         ),
                       ),
-                      child: Text(
-                        record.category.label,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontFamily: 'Outfit',
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF07A981),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Center-Right: Gauge & Last Updated / View History
-              Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Last Updated',
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFF8E9BAE),
-                              ),
-                            ),
-                            Text(
-                              formattedTime,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF1E2D2F),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 6.w),
-                        GestureDetector(
-                          onTap: () => Get.toNamed(AppRoutes.history),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFE2F7F2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  CupertinoIcons.calendar,
-                                  size: 13.sp,
-                                  color: const Color(0xFF07A981),
-                                ),
-                                SizedBox(width: 3.w),
-                                Text(
-                                  'View History',
-                                  style: TextStyle(
-                                    fontSize: 9.5.sp,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF07A981),
-                                  ),
-                                ),
-                              ],
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            CupertinoIcons.calendar,
+                            size: 10.sp,
+                            color: const Color(0xFF07A981),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            'View History',
+                            style: TextStyle(
+                              color: const Color(0xFF06A981),
+                              fontSize: 8,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 6.h),
-                    BMIGaugeWidget(
-                      bmiValue: record.bmiValue,
-                      size: 155.w,
-                      showLabels: true,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -358,36 +351,44 @@ class HomeScreen extends StatelessWidget {
           GestureDetector(
             onTap: () => Get.toNamed(AppRoutes.healthInsights),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              width: 328,
+              height: 54,
               decoration: ShapeDecoration(
                 color: const Color(0xFFE8F9F7),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: Row(
-                children: [
-                  Image.asset(AppAssets.shieldicon, width: 22.w, height: 22.h),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Text(
-                      record.category.feedbackMessage,
-                      style: TextStyle(
-                        color: const Color(0xFF1E2D2F),
-                        fontSize: 11.5.sp,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w400,
-                        height: 1.35,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      AppAssets.shieldicon,
+                      width: 22.w,
+                      height: 22.h,
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Text(
+                        record.category.feedbackMessage,
+                        style: TextStyle(
+                          color: const Color(0xFF1E2D2F),
+                          fontSize: 11.5.sp,
+                          fontFamily: 'Outfit',
+                          fontWeight: FontWeight.w400,
+                          height: 1.35,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 6.w),
-                  Icon(
-                    CupertinoIcons.arrow_right,
-                    size: 18.sp,
-                    color: const Color(0xFF25C6A5),
-                  ),
-                ],
+                    SizedBox(width: 6.w),
+                    Icon(
+                      CupertinoIcons.arrow_right,
+                      size: 18.sp,
+                      color: const Color(0xFF25C6A5),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -476,7 +477,7 @@ class HomeScreen extends StatelessWidget {
             width: 52,
             height: 23,
             decoration: ShapeDecoration(
-              color: const Color(0xFF33D2AB).withOpacity(0.15),
+              color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
               ),

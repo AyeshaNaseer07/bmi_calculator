@@ -1,3 +1,4 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/weight_tracker_controller.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
@@ -34,17 +34,31 @@ class WeightTrackingScreen extends StatelessWidget {
             final xLabels = controller.getXAxisLabels();
 
             final hasRecords = controller.weightHistory.isNotEmpty;
-            final currentStr = hasRecords ? '${current.toStringAsFixed(1)}kg' : '00.0kg';
-            final goalStr = hasRecords ? '${goal.toStringAsFixed(1)}kg' : '00.0kg';
-            final centerValStr = hasRecords ? current.toStringAsFixed(1) : '00.0';
-            final progressVal = hasRecords && goal > 0 ? (current / goal).clamp(0.0, 1.0) : 0.0;
+            final currentStr = hasRecords
+                ? '${current.toStringAsFixed(1)}kg'
+                : '00.0kg';
+            final goalStr = hasRecords
+                ? '${goal.toStringAsFixed(1)}kg'
+                : '00.0kg';
+            final centerValStr = hasRecords
+                ? current.toStringAsFixed(1)
+                : '00.0';
+            final progressVal = hasRecords && goal > 0
+                ? (current / goal).clamp(0.0, 1.0)
+                : 0.0;
 
             final pWeek = controller.progressThisWeek.value;
             final pMonth = controller.progressThisMonth.value;
             final pTotal = controller.progressTotal.value;
-            final weekStr = pWeek == 0.0 ? '-0.0kg' : '${pWeek > 0 ? '+' : ''}${pWeek.toStringAsFixed(1)}kg';
-            final monthStr = pMonth == 0.0 ? '-0.0kg' : '${pMonth > 0 ? '+' : ''}${pMonth.toStringAsFixed(1)}kg';
-            final totalStr = pTotal == 0.0 ? '-0.0kg' : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
+            final weekStr = pWeek == 0.0
+                ? '-0.0kg'
+                : '${pWeek > 0 ? '+' : ''}${pWeek.toStringAsFixed(1)}kg';
+            final monthStr = pMonth == 0.0
+                ? '-0.0kg'
+                : '${pMonth > 0 ? '+' : ''}${pMonth.toStringAsFixed(1)}kg';
+            final totalStr = pTotal == 0.0
+                ? '-0.0kg'
+                : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,17 +77,20 @@ class WeightTrackingScreen extends StatelessWidget {
                           Text(
                             'Current weight',
                             style: TextStyle(
-                              fontSize: 11.sp,
-                              color: AppColors.textLight,
+                              color: const Color(0xFF111827),
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           SizedBox(height: 2.h),
                           Text(
                             currentStr,
                             style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFF1DB59B),
+                              color: const Color(0xFF33D2AB),
+                              fontSize: 24,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -102,25 +119,30 @@ class WeightTrackingScreen extends StatelessWidget {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.scale_outlined,
-                                  size: 16.sp,
-                                  color: const Color(0xFF1DB59B),
+                                Image.asset(
+                                  AppAssets.weightTrackingicon,
+                                  height: 24.h,
+                                  width: 24.w,
                                 ),
                                 SizedBox(height: 2.h),
                                 Text(
                                   centerValStr,
                                   style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w800,
-                                    color: AppColors.textDark,
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.30,
                                   ),
                                 ),
                                 Text(
                                   'kg',
                                   style: TextStyle(
-                                    fontSize: 9.sp,
-                                    color: AppColors.textLight,
+                                    color: Colors.black,
+                                    fontSize: 11,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.30,
                                   ),
                                 ),
                               ],
@@ -136,17 +158,20 @@ class WeightTrackingScreen extends StatelessWidget {
                           Text(
                             'Goal weight',
                             style: TextStyle(
-                              fontSize: 11.sp,
-                              color: AppColors.textLight,
+                              color: const Color(0xFF111827),
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           SizedBox(height: 2.h),
                           Text(
                             goalStr,
                             style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFF1DB59B),
+                              color: const Color(0xFF33D2AB),
+                              fontSize: 24,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -164,7 +189,7 @@ class WeightTrackingScreen extends StatelessWidget {
                     color: Colors.white,
                     size: 18.sp,
                   ),
-                  solidColor: const Color(0xFF1B8A7A),
+                  backgroundImage: AppAssets.calculateButton,
                   onPressed: () => Get.toNamed(AppRoutes.addWeight),
                 ),
                 SizedBox(height: 16.h),
@@ -183,19 +208,21 @@ class WeightTrackingScreen extends StatelessWidget {
                           Text(
                             'Weight Progress',
                             style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.textDark,
+                              color: const Color(0xFF111827),
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(3.w),
+                            padding: EdgeInsets.all(6.w),
                             decoration: BoxDecoration(
                               color: const Color(0xFFE8F7F2),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
+
                             child: Row(
-                              children: ['week', 'Month', 'Year'].map((tab) {
+                              children: ['Week', 'Month', 'Year'].map((tab) {
                                 final isSelected = timeframe == tab;
                                 return GestureDetector(
                                   onTap: () => controller.setTimeframe(tab),
@@ -212,7 +239,9 @@ class WeightTrackingScreen extends StatelessWidget {
                                       boxShadow: isSelected
                                           ? [
                                               BoxShadow(
-                                                color: Colors.black.withValues(alpha: 0.04),
+                                                color: Colors.black.withValues(
+                                                  alpha: 0.04,
+                                                ),
                                                 blurRadius: 4.r,
                                               ),
                                             ]
@@ -221,13 +250,14 @@ class WeightTrackingScreen extends StatelessWidget {
                                     child: Text(
                                       tab,
                                       style: TextStyle(
-                                        fontSize: 11.sp,
+                                        fontSize: 12.sp,
                                         fontWeight: isSelected
-                                            ? FontWeight.w700
+                                            ? FontWeight.w500
                                             : FontWeight.w500,
+                                        fontFamily: 'Inter',
                                         color: isSelected
-                                            ? const Color(0xFF1DB59B)
-                                            : const Color(0xFF64748B),
+                                            ? const Color(0xFF33D2AB)
+                                            : const Color(0xFF797979),
                                       ),
                                     ),
                                   ),
@@ -258,8 +288,9 @@ class WeightTrackingScreen extends StatelessWidget {
                                         child: Text(
                                           xLabels[index],
                                           style: TextStyle(
-                                            fontSize: 9.sp,
-                                            color: const Color(0xFF64748B),
+                                            color: const Color(0xFF797979),
+                                            fontSize: 11,
+                                            fontFamily: 'Inter',
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -278,8 +309,10 @@ class WeightTrackingScreen extends StatelessWidget {
                                     return Text(
                                       value.toInt().toString(),
                                       style: TextStyle(
-                                        fontSize: 9.sp,
-                                        color: const Color(0xFF94A3B8),
+                                        color: const Color(0xFF797979),
+                                        fontSize: 11,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     );
                                   },
@@ -338,8 +371,10 @@ class WeightTrackingScreen extends StatelessWidget {
                                         show: true,
                                         gradient: LinearGradient(
                                           colors: [
-                                            const Color(0xFF2FD1A6).withValues(alpha: 0.3),
-                                            const Color(0xFF2FD1A6).withValues(alpha: 0.0),
+                                            const Color(0xFF2FD1A6)
+                                                .withValues(alpha: 0.3),
+                                            const Color(0xFF2FD1A6)
+                                                .withValues(alpha: 0.0),
                                           ],
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
@@ -400,21 +435,27 @@ class WeightTrackingScreen extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textDark,
+            color: Colors.black,
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
           ),
         ),
         SizedBox(height: 2.h),
         Text(
           label,
-          style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 11,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildProgressDivider() {
-    return Container(height: 28.h, width: 1.w, color: const Color(0xFFD4EFE6));
+    return Container(height: 28.h, width: 1.w, color: Colors.grey);
   }
 }

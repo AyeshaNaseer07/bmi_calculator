@@ -91,7 +91,7 @@ class BMIResultScreen extends StatelessWidget {
                     Text(
                       'Your BMI',
                       style: TextStyle(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         fontSize: 12,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
@@ -104,7 +104,7 @@ class BMIResultScreen extends StatelessWidget {
                       width: 61,
                       height: 26,
                       decoration: ShapeDecoration(
-                        color: const Color(0xFF33D2AB).withOpacity(0.15),
+                        color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),

@@ -1,3 +1,5 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
+import 'package:bmi_calculator/views/widgets/custom_gradient_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +8,6 @@ import 'package:get/get.dart';
 import '../../controllers/weight_tracker_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../widgets/custom_app_bar.dart';
-import '../widgets/custom_gradient_button.dart';
 
 class AddWeightScreen extends StatefulWidget {
   const AddWeightScreen({super.key});
@@ -48,164 +49,214 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: const CustomAppBar(title: 'Weight Tracking'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-          child: Column(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        if (_isGenderMenuOpen) {
+          setState(() => _isGenderMenuOpen = false);
+        }
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF7FAF8),
+        appBar: const CustomAppBar(title: 'Weight Tracking'),
+        body: SafeArea(
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              // Weight Input Field
-              _buildInputField(
-                controller: _weightController,
-                label: 'Weight',
-                hint: '00',
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                child: Column(
+                  children: [
+                    // Weight Input Field
+                    _buildInputField(
+                      controller: _weightController,
+                      label: 'Weight',
+                      hint: '00',
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+
+                    // Gender Dropdown Field
+                    GestureDetector(
+                      onTap: () => setState(
+                        () => _isGenderMenuOpen = !_isGenderMenuOpen,
+                      ),
+                      child: _buildCardContainer(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  _selectedGender,
+                                  style: const TextStyle(
+                                    color: Color(0xFF4B5563),
+                                    fontSize: 17,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(width: 4.w),
+                                Icon(
+                                  CupertinoIcons.chevron_down,
+                                  size: 13.sp,
+                                  color: const Color(0xFF6B7280),
+                                ),
+                              ],
+                            ),
+                            const Text(
+                              'Gender',
+                              style: TextStyle(
+                                color: Color(0xFF6B7280),
+                                fontSize: 17,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+
+                    // Age Input Field
+                    _buildInputField(
+                      controller: _ageController,
+                      label: 'Age',
+                      hint: '00',
+                      keyboardType: TextInputType.number,
+                    ),
+                    SizedBox(height: 16.h),
+
+                    // Height Input Field
+                    _buildInputField(
+                      controller: _heightController,
+                      label: 'Height',
+                      hint: '0,0',
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                    ),
+                    SizedBox(height: 32.h),
+
+                    // Save Button
+                    CustomGradientButton(
+                      text: 'Save Weight',
+                      backgroundImage: AppAssets.calculateButton,
+                      onPressed: _onSave,
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 14.h),
 
-              // Gender Dropdown Field (with popup)
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  GestureDetector(
-                    onTap: () =>
-                        setState(() => _isGenderMenuOpen = !_isGenderMenuOpen),
+              // Floating Gender Dropdown Popup Overlay
+              if (_isGenderMenuOpen)
+                Positioned(
+                  top: 114.h,
+                  left: 90.w,
+                  child: Material(
+                    color: Colors.transparent,
                     child: Container(
-                      height: 56.h,
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(color: const Color(0xFFD4EFE6)),
-                        boxShadow: [
+                      width: 144,
+                      height: 137,
+                      decoration: ShapeDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment(0.50, -0.00),
+                          end: Alignment(0.50, 1.00),
+                          colors: [const Color(0xFFD9F8F1), Colors.white],
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        shadows: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.02),
-                            blurRadius: 8.r,
-                            offset: Offset(0, 2.h),
+                            color: Color(0x3F000000),
+                            blurRadius: 8.60,
+                            offset: Offset(0, 2),
+                            spreadRadius: 0,
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                _selectedGender,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textDark,
-                                ),
-                              ),
-                              SizedBox(width: 4.w),
-                              Icon(
-                                CupertinoIcons.chevron_down,
-                                size: 14.sp,
-                                color: AppColors.textLight,
-                              ),
-                            ],
+                          _buildGenderOption('Male'),
+                          const Divider(
+                            height: 1,
+                            thickness: 0.9,
+                            color: Color(0xFF9EBFB8),
+                            indent: 14,
+                            endIndent: 14,
                           ),
-                          Text(
-                            'Gender',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textLight,
-                            ),
+                          _buildGenderOption('Female'),
+                          const Divider(
+                            height: 1,
+                            thickness: 0.9,
+                            color: Color(0xFF9EBFB8),
+                            indent: 14,
+                            endIndent: 14,
                           ),
+                          _buildGenderOption('Other'),
                         ],
                       ),
                     ),
                   ),
-
-                  // Gender Dropdown Popup
-                  if (_isGenderMenuOpen)
-                    Positioned(
-                      top: 60.h,
-                      left: 40.w,
-                      child: Material(
-                        elevation: 8,
-                        borderRadius: BorderRadius.circular(14.r),
-                        color: const Color(0xFFF0FAF6),
-                        child: Container(
-                          width: 140.w,
-                          padding: EdgeInsets.symmetric(vertical: 6.h),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF0FAF6),
-                            borderRadius: BorderRadius.circular(14.r),
-                            border: Border.all(color: const Color(0xFFD4EFE6)),
-                          ),
-                          child: Column(
-                            children: ['Male', 'Female', 'Other'].map((gender) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedGender = gender;
-                                    _isGenderMenuOpen = false;
-                                  });
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8.h,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      gender,
-                                      style: TextStyle(
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.textDark,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              SizedBox(height: 14.h),
-
-              // Age Input Field
-              _buildInputField(
-                controller: _ageController,
-                label: 'Age',
-                hint: '00',
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 14.h),
-
-              // Height Input Field
-              _buildInputField(
-                controller: _heightController,
-                label: 'Height',
-                hint: '0,0',
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
                 ),
-              ),
-              SizedBox(height: 32.h),
-
-              // Save Button
-              CustomGradientButton(
-                text: 'Save Weight',
-                solidColor: const Color(0xFF1B8A7A),
-                onPressed: _onSave,
-              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildGenderOption(String gender) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        setState(() {
+          _selectedGender = gender;
+          _isGenderMenuOpen = false;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 8.5.h),
+        child: Center(
+          child: Text(
+            gender,
+            style: TextStyle(
+              color: const Color(0xFF111827),
+              fontSize: 16,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardContainer({required Widget child}) {
+    return Container(
+      height: 64.h,
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3833D2AB),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 
@@ -215,21 +266,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     required String hint,
     required TextInputType keyboardType,
   }) {
-    return Container(
-      height: 56.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFD4EFE6)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
+    return _buildCardContainer(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -237,29 +274,33 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
             child: TextField(
               controller: controller,
               keyboardType: keyboardType,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textDark,
+              style: const TextStyle(
+                color: Color(0xFF4B5563),
+                fontSize: 17,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: TextStyle(
-                  fontSize: 14.sp,
+                hintStyle: const TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 17,
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textLight,
                 ),
                 border: InputBorder.none,
                 isDense: true,
+                contentPadding: EdgeInsets.zero,
               ),
             ),
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 13.sp,
+            style: const TextStyle(
+              color: Color(0xFF6B7280),
+              fontSize: 17,
+              fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
-              color: AppColors.textLight,
             ),
           ),
         ],

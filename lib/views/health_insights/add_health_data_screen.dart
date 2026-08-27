@@ -1,3 +1,4 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,44 +49,49 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                 // Top Insights Intro Card
                 CustomCard(
                   borderRadius: 20.r,
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 14.h,
+                  ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 50.w,
-                        height: 50.w,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8F7F2),
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            CupertinoIcons.heart_circle_fill,
-                            color: const Color(0xFF2FD1A6),
-                            size: 36.sp,
+                      SizedBox(
+                        width: 98.w,
+                        height: 98.h,
+                        child: OverflowBox(
+                          maxWidth: 190.w,
+                          maxHeight: 190.h,
+                          child: Image.asset(
+                            AppAssets.addDataicon,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
-                      SizedBox(width: 14.w),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               'Your Health Insights',
                               style: TextStyle(
-                                fontSize: 13.5.sp,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.textDark,
+                                color: const Color(0xFF111827),
+                                fontSize: 16.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(height: 3.h),
+                            SizedBox(height: 5.h),
                             Text(
-                              'Add accurate details to receive better insights and track your health journey.',
+                              'Add accurate details to receive\nbetter insights and track your\nhealth journey.',
                               style: TextStyle(
-                                fontSize: 10.5.sp,
-                                color: AppColors.textBody,
-                                height: 1.3,
+                                color: const Color(0xFF4B5563),
+                                fontSize: 12.5.sp,
+                                height: 1.35,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ],
@@ -162,7 +168,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                       Icon(
                                         CupertinoIcons.chevron_down,
                                         size: 14.sp,
-                                        color: AppColors.textLight,
+                                        color: Colors.black,
                                       ),
                                     ],
                                   ),
@@ -181,7 +187,9 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFF0FAF6),
-                                        borderRadius: BorderRadius.circular(12.r),
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ),
                                         border: Border.all(
                                           color: const Color(0xFFD4EFE6),
                                         ),
@@ -197,10 +205,9 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                             },
                                             child: Container(
                                               width: double.infinity,
-                                              padding:
-                                                  EdgeInsets.symmetric(
-                                                    vertical: 8.h,
-                                                  ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 8.h,
+                                              ),
                                               child: Center(
                                                 child: Text(
                                                   g.displayName,
@@ -271,7 +278,8 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          selectedActivity?.title ?? 'Select your activity level',
+                          selectedActivity?.title ??
+                              'Select your activity level',
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: selectedActivity != null
@@ -285,7 +293,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         Icon(
                           CupertinoIcons.chevron_right,
                           size: 14.sp,
-                          color: AppColors.textLight,
+                          color: Colors.black,
                         ),
                       ],
                     ),
@@ -323,7 +331,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         Icon(
                           CupertinoIcons.chevron_right,
                           size: 14.sp,
-                          color: AppColors.textLight,
+                          color: Colors.black,
                         ),
                       ],
                     ),
@@ -334,7 +342,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                 // Save & Get Insights Button
                 CustomGradientButton(
                   text: 'Save & Get Insights',
-                  solidColor: const Color(0xFF1B8A7A),
+                  backgroundImage: AppAssets.calculateButton,
                   onPressed: _onSave,
                 ),
                 SizedBox(height: 24.h),
@@ -352,9 +360,10 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 12.5.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textDark,
+          color: const Color(0xFF111827),
+          fontSize: 13,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
