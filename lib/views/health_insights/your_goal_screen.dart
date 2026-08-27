@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,29 +17,29 @@ class YourGoalScreen extends StatelessWidget {
     final HealthInsightController controller =
         Get.find<HealthInsightController>();
 
-    final List<(HealthGoal goal, IconData icon, String title, String desc)>
+    final List<(HealthGoal goal, String assetPath, String title, String desc)>
     goals = [
       (
         HealthGoal.loseWeight,
-        Icons.scale_outlined,
+        AppAssets.loseWeightIcon,
         'Lose Weight',
         'I want to lose weight and improve my health.',
       ),
       (
         HealthGoal.buildMuscle,
-        Icons.balance_outlined,
+        AppAssets.buildMuscleIcon,
         'Build Muscle',
         'I want to build muscle and gain strength.',
       ),
       (
         HealthGoal.maintainWeight,
-        Icons.favorite_outline,
+        AppAssets.maintainWeightIcon,
         'Maintain Weight',
         'I want to maintain my current weight and stay healthy.',
       ),
       (
         HealthGoal.improveHealth,
-        Icons.fitness_center_outlined,
+        AppAssets.improveHealthIcon,
         'Improve Health',
         'I want to improve my overall health and wellness.',
       ),
@@ -60,30 +60,34 @@ class YourGoalScreen extends StatelessWidget {
               children: [
                 // Header Banner
                 Container(
+                  width: double.infinity,
                   padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 12.h,
+                    horizontal: 16.w,
+                    vertical: 14.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE8F7F2),
-                    borderRadius: BorderRadius.circular(14.r),
+                    color: const Color(0xFFE9FAF5),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        CupertinoIcons.heart_circle,
-                        color: const Color(0xFF1DB59B),
-                        size: 32.sp,
+                      Image.asset(
+                        AppAssets.bmiHearticon,
+                        width: 48.w,
+                        height: 48.h,
+                        fit: BoxFit.contain,
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: 14.w),
                       Expanded(
                         child: Text(
                           'Choose your main goal so we can personalize your experience.',
                           style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF0F766E),
-                            height: 1.3,
+                            color: const Color(0xFF4B5563),
+                            fontSize: 14.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            height: 1.35,
                           ),
                         ),
                       ),
@@ -113,20 +117,13 @@ class YourGoalScreen extends StatelessWidget {
                           boxShadow: AppColors.cardShadow,
                         ),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              width: 36.w,
-                              height: 36.w,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE8F7F2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                item.$2,
-                                color: const Color(0xFF1DB59B),
-                                size: 18.sp,
-                              ),
+                            Image.asset(
+                              item.$2,
+                              width: 46.w,
+                              height: 46.h,
+                              fit: BoxFit.contain,
                             ),
                             SizedBox(width: 12.w),
                             Expanded(
@@ -136,18 +133,21 @@ class YourGoalScreen extends StatelessWidget {
                                   Text(
                                     item.$3,
                                     style: TextStyle(
-                                      fontSize: 13.5.sp,
+                                      color: const Color(0xFF111827),
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
-                                      color: AppColors.textDark,
                                     ),
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
                                     item.$4,
                                     style: TextStyle(
-                                      fontSize: 11.sp,
-                                      color: AppColors.textBody,
-                                      height: 1.3,
+                                      color: const Color(0xFF111827)
+                                          .withValues(alpha: 0.64),
+                                      fontSize: 13,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ],
@@ -188,7 +188,7 @@ class YourGoalScreen extends StatelessWidget {
                 // Continue Button
                 CustomGradientButton(
                   text: 'Continue',
-                  solidColor: const Color(0xFF1B8A7A),
+                  backgroundImage: AppAssets.calculateButton,
                   onPressed: () => Get.back(),
                 ),
                 SizedBox(height: 24.h),

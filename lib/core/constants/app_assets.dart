@@ -62,6 +62,13 @@ abstract class AppAssets {
   static const String moderateActiveIcon = '$_imagesBase/moderate_active.png';
   static const String veryActiveIcon = '$_imagesBase/very_active.png';
   static const String extraActiveIcon = '$_imagesBase/extra_active.png';
+  static const String loseWeightIcon = '$_imagesBase/lose_weight.png';
+  static const String buildMuscleIcon = '$_imagesBase/build_muscle.png';
+  static const String maintainWeightIcon = '$_imagesBase/maintain_weight.png';
+  static const String improveHealthIcon = '$_imagesBase/improve_health.png';
+  static const String historyIcon = '$_imagesBase/history_bg.png';
+  static const String historyUp = '$_imagesBase/history_up.png';
+  static const String historyCalander = '$_imagesBase/calander_history.png';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

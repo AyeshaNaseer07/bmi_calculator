@@ -1,7 +1,9 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+
 import '../../../core/constants/app_colors.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
@@ -24,15 +26,29 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   bool _showMonthDropdown = false;
 
   final List<String> _months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   @override
   void initState() {
     super.initState();
     _selectedDate = widget.selectedDate;
-    _currentMonth = DateTime(widget.selectedDate.year, widget.selectedDate.month, 1);
+    _currentMonth = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      1,
+    );
   }
 
   void _previousMonth() {
@@ -53,136 +69,141 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
     final year = _currentMonth.year;
 
     // Calculate calendar grid
-    final daysInMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 0).day;
-    final firstWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday; // 1 = Mon, 7 = Sun
-    final prevMonthDays = DateTime(_currentMonth.year, _currentMonth.month, 0).day;
+    final daysInMonth = DateTime(
+      _currentMonth.year,
+      _currentMonth.month + 1,
+      0,
+    ).day;
+    final firstWeekday = DateTime(
+      _currentMonth.year,
+      _currentMonth.month,
+      1,
+    ).weekday; // 1 = Mon, 7 = Sun
+    final prevMonthDays = DateTime(
+      _currentMonth.year,
+      _currentMonth.month,
+      0,
+    ).day;
+
+    final startOffset = firstWeekday - 1;
+    final totalDays = startOffset + daysInMonth;
+    final totalRows = (totalDays / 7).ceil();
+    final totalCells = totalRows * 7;
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F5),
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Drag Handle
-          Container(
-            width: 36.w,
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(2.r),
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Header Row: Month / Year with Dropdown & Prev/Next Chevrons
+          // Header Row: "Month Year >" and navigation chevrons
           Stack(
             clipBehavior: Clip.none,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Prev Chevron
+                  // Month & Year title with arrow
                   GestureDetector(
-                    onTap: _previousMonth,
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(CupertinoIcons.chevron_left, size: 16.sp, color: AppColors.textDark),
+                    onTap: () {
+                      setState(() {
+                        _showMonthDropdown = !_showMonthDropdown;
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$monthName $year',
+                          style: TextStyle(
+                            color: const Color(0xFF111827),
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Image.asset(AppAssets.ageForward, height: 14.h),
+                      ],
                     ),
                   ),
 
-                  // Month & Year Selector Chips
+                  // Circular Prev / Next navigation buttons
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => setState(() => _showMonthDropdown = !_showMonthDropdown),
+                        onTap: _previousMonth,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                          width: 36.w,
+                          height: 36.w,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                monthName,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textDark,
-                                ),
-                              ),
-                              SizedBox(width: 4.w),
-                              Icon(
-                                CupertinoIcons.chevron_down,
-                                size: 12.sp,
-                                color: AppColors.primaryTeal,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFFF1F5F9),
+                              width: 1.w,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.04),
+                                blurRadius: 6.r,
+                                offset: Offset(0, 2.h),
                               ),
                             ],
+                          ),
+                          child: Center(
+                            child: Image.asset(AppAssets.ageBack, height: 14.h),
                           ),
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              '$year',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.textDark,
+                      GestureDetector(
+                        onTap: _nextMonth,
+                        child: Container(
+                          width: 36.w,
+                          height: 36.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFFF1F5F9),
+                              width: 1.w,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.04),
+                                blurRadius: 6.r,
+                                offset: Offset(0, 2.h),
                               ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              AppAssets.ageForward,
+                              height: 14.h,
                             ),
-                            SizedBox(width: 4.w),
-                            Icon(
-                              CupertinoIcons.chevron_down,
-                              size: 12.sp,
-                              color: AppColors.primaryTeal,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-
-                  // Next Chevron
-                  GestureDetector(
-                    onTap: _nextMonth,
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(CupertinoIcons.chevron_right, size: 16.sp, color: AppColors.textDark),
-                    ),
-                  ),
                 ],
               ),
 
-              // Month Dropdown Popup (matching screenshot 32)
+              // Month Selection Dropdown
               if (_showMonthDropdown)
                 Positioned(
-                  top: 44.h,
-                  left: 70.w,
+                  top: 36.h,
+                  left: 0,
                   child: Material(
-                    elevation: 12,
+                    elevation: 8,
                     borderRadius: BorderRadius.circular(14.r),
                     color: Colors.white,
                     child: Container(
-                      width: 140.w,
+                      width: 150.w,
                       height: 200.h,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -196,22 +217,36 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                           return GestureDetector(
                             onTap: () {
                               setState(() {
-                                _currentMonth = DateTime(_currentMonth.year, idx + 1, 1);
+                                _currentMonth = DateTime(
+                                  _currentMonth.year,
+                                  idx + 1,
+                                  1,
+                                );
                                 _showMonthDropdown = false;
                               });
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                              color: isCurrent ? const Color(0xFFF0FAF6) : Colors.transparent,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 14.w,
+                                vertical: 8.h,
+                              ),
+                              color: isCurrent
+                                  ? const Color(0xFFF0FAF6)
+                                  : Colors.transparent,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     _months[idx],
                                     style: TextStyle(
                                       fontSize: 13.sp,
-                                      fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
-                                      color: isCurrent ? AppColors.primaryTeal : AppColors.textDark,
+                                      fontWeight: isCurrent
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
+                                      color: isCurrent
+                                          ? AppColors.primaryTeal
+                                          : AppColors.textDark,
                                     ),
                                   ),
                                   if (isCurrent)
@@ -231,43 +266,57 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 ),
             ],
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 22.h),
 
-          // Weekdays Row
+          // Weekdays Row (Mo, Tu, We, Th, Fr, Sa, Su)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text('Mo', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-              Text('Tu', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-              Text('We', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-              Text('Th', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-              Text('Fr', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-              Text('Sa', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-              Text('Su', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
-            ],
+            children: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+                .map(
+                  (day) => Expanded(
+                    child: Center(
+                      child: Text(
+                        day,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.w500,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 14.h),
 
-          // Days Grid (6 rows x 7 cols)
+          // Days Grid (5 or 6 rows x 7 cols)
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
-              mainAxisSpacing: 8.h,
-              crossAxisSpacing: 8.w,
-              childAspectRatio: 1.1,
+              mainAxisSpacing: 10.h,
+              crossAxisSpacing: 10.w,
+              childAspectRatio: 1.0,
             ),
-            itemCount: 42,
+            itemCount: totalCells,
             itemBuilder: (context, index) {
-              final dayOffset = index - (firstWeekday - 1);
+              final dayOffset = index - startOffset;
               if (dayOffset < 0) {
                 // Prev month days
                 final prevDay = prevMonthDays + dayOffset + 1;
                 return Center(
                   child: Text(
                     '$prevDay',
-                    style: TextStyle(fontSize: 12.sp, color: const Color(0xFFCBD5E1)),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFFCBD5E1),
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 );
               } else if (dayOffset >= daysInMonth) {
@@ -276,14 +325,24 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 return Center(
                   child: Text(
                     '$nextDay',
-                    style: TextStyle(fontSize: 12.sp, color: const Color(0xFFCBD5E1)),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFFCBD5E1),
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 );
               }
 
               final currentDay = dayOffset + 1;
-              final cellDate = DateTime(_currentMonth.year, _currentMonth.month, currentDay);
-              final isSelected = cellDate.year == _selectedDate.year &&
+              final cellDate = DateTime(
+                _currentMonth.year,
+                _currentMonth.month,
+                currentDay,
+              );
+              final isSelected =
+                  cellDate.year == _selectedDate.year &&
                   cellDate.month == _selectedDate.month &&
                   cellDate.day == _selectedDate.day;
 
@@ -296,24 +355,40 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: isSelected ? const Color(0xFF2FD1A6) : Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: isSelected
+                        ? null
+                        : Border.all(
+                            color: const Color(0xFFF1F5F9),
+                            width: 1.w,
+                          ),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: const Color(0xFF2FD1A6).withValues(alpha: 0.3),
+                              color: const Color(0xFF2FD1A6)
+                                  .withValues(alpha: 0.35),
                               blurRadius: 6.r,
                               offset: Offset(0, 2.h),
                             ),
                           ]
-                        : null,
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.03),
+                              blurRadius: 4.r,
+                              offset: Offset(0, 1.h),
+                            ),
+                          ],
                   ),
                   child: Center(
                     child: Text(
                       '$currentDay',
                       style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                        color: isSelected ? Colors.white : AppColors.textDark,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isSelected
+                            ? Colors.white
+                            : const Color(0xFF0F172A),
+                        fontFamily: 'Inter',
                       ),
                     ),
                   ),
@@ -321,7 +396,6 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               );
             },
           ),
-          SizedBox(height: 20.h),
         ],
       ),
     );

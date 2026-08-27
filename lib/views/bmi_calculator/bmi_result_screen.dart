@@ -101,8 +101,8 @@ class BMIResultScreen extends StatelessWidget {
 
                     // Status Pill
                     Container(
-                      width: 61,
-                      height: 26,
+                      width: 80.w,
+                      height: 26.h,
                       decoration: ShapeDecoration(
                         color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
                         shape: RoundedRectangleBorder(
@@ -125,8 +125,8 @@ class BMIResultScreen extends StatelessWidget {
 
                     // Status Feedback Message Card
                     Container(
-                      width: 329,
-                      height: 54,
+                      width: 329.w,
+                      height: 60.h,
                       decoration: ShapeDecoration(
                         color: const Color(0xFFE8F9F7),
                         shape: RoundedRectangleBorder(

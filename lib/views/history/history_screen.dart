@@ -1,3 +1,4 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,27 +58,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
               children: [
                 // Top "Your Progress" Card
                 CustomCard(
-                  borderRadius: 22.r,
-                  padding: EdgeInsets.all(18.w),
+                  borderRadius: 24.r,
+                  padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 14.h),
+                  shadows: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 18.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                    BoxShadow(
+                      color: const Color(0xFF1DB59B).withValues(alpha: 0.05),
+                      blurRadius: 12.r,
+                      offset: Offset(0, 2.h),
+                    ),
+                  ],
                   child: Column(
                     children: [
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 36.w,
-                            height: 36.w,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFD3F4EA),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.trending_up,
-                              color: const Color(0xFF0F766E),
-                              size: 20.sp,
-                            ),
+                          Image.asset(
+                            AppAssets.historyUp,
+                            width: 32.w,
+                            height: 32.h,
                           ),
-                          SizedBox(width: 12.w),
+                          SizedBox(width: 10.w),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,77 +90,87 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 Text(
                                   'Your Progress',
                                   style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w800,
-                                    color: AppColors.textDark,
+                                    color: const Color(0xFF111827),
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                SizedBox(height: 2.h),
-                                Text(
-                                  'Keep tracking to reach\nyour health goals.',
-                                  style: TextStyle(
-                                    fontSize: 11.sp,
-                                    color: AppColors.textLight,
-                                    height: 1.3,
+                                SizedBox(height: 3.h),
+                                Opacity(
+                                  opacity: 0.71,
+                                  child: Text(
+                                    'Keep tracking to reach \nyour health goals.',
+                                    style: TextStyle(
+                                      color: const Color(0xFF111827),
+                                      fontSize: 11,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           // Graphic clipboard
-                          Container(
-                            width: 54.w,
-                            height: 54.w,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE8F7F2),
-                              borderRadius: BorderRadius.circular(16.r),
-                            ),
-                            child: Icon(
-                              Icons.assignment_turned_in_outlined,
-                              color: const Color(0xFF1DB59B),
-                              size: 32.sp,
+                          SizedBox(
+                            width: 98.w,
+                            height: 98.h,
+                            child: OverflowBox(
+                              maxWidth: 190.w,
+                              maxHeight: 190.h,
+                              child: Image.asset(
+                                AppAssets.historyIcon,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 12.h),
                       Container(
                         padding: EdgeInsets.symmetric(
-                          vertical: 10.h,
+                          vertical: 14.h,
                           horizontal: 8.w,
                         ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF0FAF6),
-                          borderRadius: BorderRadius.circular(14.r),
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFFF0F9F8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildSummaryItem(
-                              value: '${records.length}',
-                              subtitle: 'Total',
-                              label: 'Records',
-                              valueColor: const Color(0xFF0F766E),
+                            Expanded(
+                              child: _buildSummaryItem(
+                                label: 'Records',
+                                value: '${records.length}',
+                                subtitle: 'Total',
+                              ),
                             ),
                             _buildDivider(),
-                            _buildSummaryItem(
-                              value: hasRecords
-                                  ? records.first.bmiValue.toStringAsFixed(1)
-                                  : '0.0',
-                              subtitle: hasRecords
-                                  ? records.first.category.label
-                                  : 'None',
-                              label: 'BMI',
-                              valueColor: const Color(0xFF1DB59B),
+                            Expanded(
+                              child: _buildSummaryItem(
+                                label: 'BMI',
+                                value: hasRecords
+                                    ? records.first.bmiValue.toStringAsFixed(1)
+                                    : '22.5',
+                                subtitle: hasRecords
+                                    ? records.first.category.label
+                                    : 'Normal',
+                              ),
                             ),
                             _buildDivider(),
-                            _buildSummaryItem(
-                              value: hasRecords
-                                  ? records.first.bmiValue.toStringAsFixed(1)
-                                  : '0.0',
-                              subtitle: 'Today',
-                              label: 'Latest',
-                              valueColor: const Color(0xFF0F766E),
+                            Expanded(
+                              child: _buildSummaryItem(
+                                label: 'Latest',
+                                value: hasRecords
+                                    ? records.first.bmiValue.toStringAsFixed(1)
+                                    : '23.4',
+                                subtitle: hasRecords
+                                    ? _getLatestSubtitle(records.first.date)
+                                    : 'Today',
+                              ),
                             ),
                           ],
                         ),
@@ -172,24 +187,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Text(
                       'BMI History',
                       style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textDark,
+                        color: const Color(0xFF111827),
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     GestureDetector(
                       onTap: () => _openCalendar(context),
-                      child: Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD4EFE6),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Icon(
-                          CupertinoIcons.calendar,
-                          size: 16.sp,
-                          color: const Color(0xFF0F766E),
-                        ),
+                      child: Image.asset(
+                        AppAssets.historyCalander,
+                        width: 32.w,
+                        height: 32.h,
                       ),
                     ),
                   ],
@@ -234,21 +243,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
           children: [
             // Date column
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   dayStr,
                   style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF1DB59B),
+                    color: const Color(0xFF33D2AB),
+                    fontSize: 20,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
                   monthYearStr,
                   style: TextStyle(
-                    fontSize: 9.sp,
-                    color: AppColors.textLight,
+                    color: const Color(0xFF111827).withOpacity(0.44),
+                    fontSize: 8,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -259,15 +271,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
               children: [
                 Text(
                   'BMI',
-                  style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+                  style: TextStyle(
+                    color: const Color(0xFF111827).withOpacity(.62),
+                    fontSize: 11,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   record.bmiValue.toStringAsFixed(1),
                   style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w800,
-                    color: statusColor,
+                    color: const Color(0xFF33D2AB),
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -278,15 +296,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
               children: [
                 Text(
                   'Weight',
-                  style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+                  style: TextStyle(
+                    color: const Color(0xFF111827).withOpacity(.62),
+                    fontSize: 11,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   '${record.weightKg.toStringAsFixed(1)}kg',
                   style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w800,
-                    color: statusColor,
+                    color: const Color(0xFF33D2AB),
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -308,36 +332,59 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildSummaryItem({
+    required String label,
     required String value,
     required String subtitle,
-    required String label,
-    required Color valueColor,
   }) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+          style: TextStyle(
+            color: const Color(0xFF111827),
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
         ),
         SizedBox(height: 2.h),
         Text(
           value,
           style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w900,
-            color: valueColor,
+            color: const Color(0xFF33D2AB),
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w700,
           ),
         ),
+        SizedBox(height: 1.h),
         Text(
           subtitle,
-          style: TextStyle(fontSize: 9.sp, color: AppColors.textLight),
+          style: TextStyle(
+            color: const Color(0xFF111827).withOpacity(.44),
+            fontSize: 8,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildDivider() {
-    return Container(height: 32.h, width: 1.w, color: const Color(0xFFD4EFE6));
+    return Container(height: 38.h, width: 1.w, color: const Color(0xFFD1E7DD));
+  }
+
+  String _getLatestSubtitle(DateTime date) {
+    final now = DateTime.now();
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return 'Today';
+    }
+    return DateFormat('MMM d').format(date);
   }
 
   Widget _buildEmptyHistorySection() {
@@ -531,7 +578,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     SizedBox(height: 2.h),
                     Text(
                       'Get advanced insights, reports &\nmore',
-                      style: TextStyle(color: Colors.white70, fontSize: 10.sp, height: 1.2),
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 10.sp,
+                        height: 1.2,
+                      ),
                     ),
                   ],
                 ),
@@ -552,7 +603,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
                 child: Text(
                   'Go Premium',
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -582,11 +636,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: const Color(0xFF1DB59B),
-              size: 18.sp,
-            ),
+            child: Icon(icon, color: const Color(0xFF1DB59B), size: 18.sp),
           ),
           SizedBox(width: 14.w),
           Column(
@@ -603,10 +653,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               SizedBox(height: 2.h),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  color: AppColors.textLight,
-                ),
+                style: TextStyle(fontSize: 10.5.sp, color: AppColors.textLight),
               ),
             ],
           ),
