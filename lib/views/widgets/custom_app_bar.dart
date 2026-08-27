@@ -1,9 +1,8 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -36,37 +35,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   onTap: onBackPressed ?? () => Get.back(),
-                  child: Container(
-                    height: 42.w,
-                    width: 42.w,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.06),
-                          blurRadius: 10.r,
-                          offset: Offset(0, 3.h),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      CupertinoIcons.arrow_left,
-                      size: 18.sp,
-                      color: AppColors.textDark,
-                    ),
+                  child: Image.asset(
+                    AppAssets.bmiCalBackIcon,
+                    height: 34.h,
+                    width: 34.w,
                   ),
                 ),
               ),
             Text(
               title,
-              style: AppTypography.titleLarge,
+              style: TextStyle(
+                color: const Color(0xFF111827),
+                fontSize: 20,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w700,
+              ),
             ),
             if (trailing != null)
-              Align(
-                alignment: Alignment.centerRight,
-                child: trailing!,
-              ),
+              Align(alignment: Alignment.centerRight, child: trailing!),
           ],
         ),
       ),

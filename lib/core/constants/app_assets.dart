@@ -12,10 +12,11 @@ abstract class AppAssets {
   static const String homeAvatar = '$_imagesBase/home_img.png';
   static const String btnRectangle = '$_imagesBase/btn.png';
   static const String btnCalculateCta = '$_imagesBase/calculate-cta-btn.png';
+  static const String calculateButton = '$_imagesBase/calculate-button.png';
   static const String calcilatorIcon = '$_imagesBase/calculator.png';
 
   static const String icDiamond = '$_imagesBase/ic_diamond.png';
-  static const String bmiGauge = '$_imagesBase/Group 10.png';
+  static const String bmiGauge = '$_imagesBase/gaugae.png';
 
   // ── Onboarding ──
   static const String onboarding1 = '$_imagesBase/onboarding_1.png';
@@ -42,6 +43,18 @@ abstract class AppAssets {
   static const String preOr = '$_imagesBase/pre_or.png';
   static const String profileIcon = '$_imagesBase/profile.png';
   static const String chevronIcon = '$_imagesBase/chevron-right.png';
+  static const String bmiCalIcon = '$_imagesBase/bmi_cal_bg.png';
+  static const String bmiCalBackIcon = '$_imagesBase/bmi_cal_back.png';
+  static const String ageBack = '$_imagesBase/age_back.png';
+  static const String ageForward = '$_imagesBase/age_forward.png';
+  static const String settingicon = '$_imagesBase/setting.png';
+  static const String hearticon = '$_imagesBase/heart.png';
+  static const String shieldicon = '$_imagesBase/shield.png';
+  static const String weighticon = '$_imagesBase/weight.png';
+  static const String heighticon = '$_imagesBase/height.png';
+  static const String ageicon = '$_imagesBase/age.png';
+  static const String gendericon = '$_imagesBase/gender.png';
+  static const String bmiHearticon = '$_imagesBase/bmi_heart.png';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

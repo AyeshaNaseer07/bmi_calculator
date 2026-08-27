@@ -35,417 +35,437 @@ class BMICalculatorScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF7FAF8),
       appBar: const CustomAppBar(title: 'BMI Calculator'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-          child: Obx(() {
-            final isMale = controller.selectedGender.value == Gender.male;
-            final isFemale = controller.selectedGender.value == Gender.female;
-            final age = controller.age.value;
-            final heightCm = controller.heightCm.value;
-            final weightKg = controller.weightKg.value;
-            final isCm = controller.isCm.value;
-            final isKg = controller.isKg.value;
+      body: Stack(
+        children: [
+          // Background Illustration (Calculator background at top right)
+          Positioned(
+            top: -10,
+            right: -18,
+            child: Image.asset(
+              AppAssets.bmiCalIcon,
+              height: 165.h,
+              fit: BoxFit.contain,
+              alignment: Alignment.topRight,
+            ),
+          ),
 
-            // Height display text
-            String heightDisplay;
-            if (isCm) {
-              heightDisplay = '${heightCm.toStringAsFixed(0)} cm';
-            } else {
-              final (ft, inches) = BMIService.cmToFeetAndInches(heightCm);
-              heightDisplay = "$ft'$inches\"";
-            }
+          // Main Screen Content
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 2.h),
+            child: Obx(() {
+              final isMale = controller.selectedGender.value == Gender.male;
+              final isFemale = controller.selectedGender.value == Gender.female;
+              final age = controller.age.value;
+              final heightCm = controller.heightCm.value;
+              final weightKg = controller.weightKg.value;
+              final isCm = controller.isCm.value;
+              final isKg = controller.isKg.value;
 
-            // Weight display text
-            String weightDisplay;
-            if (isKg) {
-              weightDisplay = '${weightKg.toStringAsFixed(1)} kg';
-            } else {
-              final lb = BMIService.kgToLbs(weightKg);
-              weightDisplay = '${lb.toStringAsFixed(1)} lb';
-            }
+              // Height display text
+              String heightDisplay;
+              if (isCm) {
+                heightDisplay = '${heightCm.toStringAsFixed(0)} cm';
+              } else {
+                final (ft, inches) = BMIService.cmToFeetAndInches(heightCm);
+                heightDisplay = "$ft'$inches\"";
+              }
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Banner: Subtitle & 3D Calculator illustration
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Enter your details below to\ncalculate your Body Mass Index.',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors.textBody,
-                          height: 1.3,
-                        ),
-                      ),
+              // Weight display text
+              String weightDisplay;
+              if (isKg) {
+                weightDisplay = '${weightKg.toStringAsFixed(1)} kg';
+              } else {
+                final lb = BMIService.kgToLbs(weightKg);
+                weightDisplay = '${lb.toStringAsFixed(1)} lb';
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Subtitle Header
+                  SizedBox(height: 35.h),
+                  Text(
+                    'Enter your details below to\ncalculate your Body Mass Index.',
+                    style: TextStyle(
+                      color: const Color(0xFF6B7280),
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      height: 1.69,
                     ),
-                    Container(
-                      width: 54.w,
-                      height: 54.w,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8F7F2),
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.calculate,
-                          size: 34.sp,
-                          color: AppColors.primaryTeal,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 14.h),
+                  ),
+                  SizedBox(height: 52.h),
 
-                // Card 1: Gender
-                CustomCard(
-                  padding: EdgeInsets.all(14.w),
-                  borderRadius: 18.r,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gender',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textDark,
+                  // Card 1: Gender
+                  CustomCard(
+                    padding: EdgeInsets.all(14.w),
+                    borderRadius: 18.r,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Gender',
+                          style: TextStyle(
+                            color: const Color(0xFF111827),
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildGenderButton(
-                              icon: Icons.person_outline,
-                              label: 'Male',
-                              isSelected: isMale,
-                              onTap: () => controller.setGender(Gender.male),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildGenderButton(
+                                icon: Icons.person_outline,
+                                label: 'Male',
+                                isSelected: isMale,
+                                onTap: () => controller.setGender(Gender.male),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: _buildGenderButton(
+                                icon: Icons.person_outline,
+                                label: 'Female',
+                                isSelected: isFemale,
+                                onTap: () =>
+                                    controller.setGender(Gender.female),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+
+                  // Card 2: Age (with interactive tooltip stepper)
+                  CustomCard(
+                    padding: EdgeInsets.all(14.w),
+                    borderRadius: 18.r,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Age',
+                          style: TextStyle(
+                            color: const Color(0xFF111827),
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        GestureDetector(
+                          onTap: () => controller.toggleAgePicker(),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 12.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(14.r),
+                              border: Border.all(
+                                color: const Color(0xFFE2E8F0),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  CupertinoIcons.calendar,
+                                  size: 18.sp,
+                                  color: AppColors.textBody,
+                                ),
+                                SizedBox(width: 10.w),
+                                Expanded(
+                                  child: Text(
+                                    '$age Years',
+                                    style: TextStyle(
+                                      color: const Color(0xFF111827),
+                                      fontSize: 15,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  controller.isAgePickerVisible.value
+                                      ? CupertinoIcons.chevron_up
+                                      : CupertinoIcons.chevron_down,
+                                  size: 16.sp,
+                                  color: AppColors.textLight,
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(width: 12.w),
-                          Expanded(
-                            child: _buildGenderButton(
-                              icon: Icons.person_outline,
-                              label: 'Female',
-                              isSelected: isFemale,
-                              onTap: () => controller.setGender(Gender.female),
+                        ),
+                        if (controller.isAgePickerVisible.value) ...[
+                          SizedBox(height: 10.h),
+                          Center(
+                            child: AgePickerPopup(
+                              currentAge: age,
+                              onAgeChanged: (val) => controller.setAge(val),
+                              onClose: () => controller.toggleAgePicker(),
                             ),
                           ),
                         ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 12.h),
+                  SizedBox(height: 12.h),
 
-                // Card 2: Age (with interactive tooltip stepper)
-                CustomCard(
-                  padding: EdgeInsets.all(14.w),
-                  borderRadius: 18.r,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Age',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textDark,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      GestureDetector(
-                        onTap: () => controller.toggleAgePicker(),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 14.w,
-                            vertical: 12.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(14.r),
-                            border: Border.all(color: const Color(0xFFE2E8F0)),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                CupertinoIcons.calendar,
-                                size: 18.sp,
-                                color: AppColors.textBody,
+                  // Card 3: Height Slider
+                  CustomCard(
+                    padding: EdgeInsets.all(14.w),
+                    borderRadius: 18.r,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Height',
+                              style: TextStyle(
+                                color: const Color(0xFF111827),
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
                               ),
-                              SizedBox(width: 10.w),
-                              Expanded(
-                                child: Text(
-                                  '$age Years',
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textDark,
-                                  ),
+                            ),
+                            _buildUnitToggle(
+                              leftLabel: 'cm',
+                              rightLabel: 'ft',
+                              isLeftSelected: isCm,
+                              onToggle: (val) =>
+                                  controller.toggleHeightUnit(val),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          heightDisplay,
+                          style: TextStyle(
+                            color: const Color(0xFF2EC4B6),
+                            fontSize: 36,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: const Color(0xFF2FD1A6),
+                            inactiveTrackColor: const Color(0xFFE2E8F0),
+                            thumbColor: Colors.white,
+                            thumbShape: RoundSliderThumbShape(
+                              enabledThumbRadius: 10.r,
+                              elevation: 2,
+                            ),
+                            overlayShape: RoundSliderOverlayShape(
+                              overlayRadius: 18.r,
+                            ),
+                            trackHeight: 6.h,
+                          ),
+                          child: Slider(
+                            value: heightCm.clamp(120.0, 220.0),
+                            min: 120.0,
+                            max: 220.0,
+                            onChanged: (val) => controller.setHeight(val),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '120 cm',
+                                style: TextStyle(
+                                  color: const Color(0xFF6B7280),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Icon(
-                                controller.isAgePickerVisible.value
-                                    ? CupertinoIcons.chevron_up
-                                    : CupertinoIcons.chevron_down,
-                                size: 14.sp,
-                                color: AppColors.textLight,
+                              Text(
+                                '220 cm',
+                                style: TextStyle(
+                                  color: const Color(0xFF6B7280),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      if (controller.isAgePickerVisible.value) ...[
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+
+                  // Card 4: Weight Slider
+                  CustomCard(
+                    padding: EdgeInsets.all(14.w),
+                    borderRadius: 18.r,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Weight',
+                              style: TextStyle(
+                                color: const Color(0xFF111827),
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            _buildUnitToggle(
+                              leftLabel: 'kg',
+                              rightLabel: 'lb',
+                              isLeftSelected: isKg,
+                              onToggle: (val) =>
+                                  controller.toggleWeightUnit(val),
+                            ),
+                          ],
+                        ),
                         SizedBox(height: 10.h),
-                        Center(
-                          child: AgePickerPopup(
-                            currentAge: age,
-                            onAgeChanged: (val) => controller.setAge(val),
-                            onClose: () => controller.toggleAgePicker(),
+                        Text(
+                          weightDisplay,
+                          style: TextStyle(
+                            color: const Color(0xFF2EC4B6),
+                            fontSize: 36,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: const Color(0xFF2FD1A6),
+                            inactiveTrackColor: const Color(0xFFE2E8F0),
+                            thumbColor: Colors.white,
+                            thumbShape: RoundSliderThumbShape(
+                              enabledThumbRadius: 10.r,
+                              elevation: 2,
+                            ),
+                            overlayShape: RoundSliderOverlayShape(
+                              overlayRadius: 18.r,
+                            ),
+                            trackHeight: 6.h,
+                          ),
+                          child: Slider(
+                            value: weightKg.clamp(30.0, 130.0),
+                            min: 30.0,
+                            max: 130.0,
+                            onChanged: (val) => controller.setWeight(val),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '30 kg',
+                                style: TextStyle(
+                                  color: const Color(0xFF6B7280),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                '130 kg',
+                                style: TextStyle(
+                                  color: const Color(0xFF6B7280),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 12.h),
+                  SizedBox(height: 12.h),
 
-                // Card 3: Height Slider
-                CustomCard(
-                  padding: EdgeInsets.all(14.w),
-                  borderRadius: 18.r,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // Tip Banner
+                  Container(
+                    width: 360,
+                    height: 68,
+                    decoration: ShapeDecoration(
+                      color: const Color(0x142EC4B6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         children: [
-                          Text(
-                            'Height',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textDark,
-                            ),
+                          Icon(
+                            CupertinoIcons.lightbulb,
+                            size: 22.sp,
+                            color: const Color(0xFF1DB59B),
                           ),
-                          _buildUnitToggle(
-                            leftLabel: 'cm',
-                            rightLabel: 'ft',
-                            isLeftSelected: isCm,
-                            onToggle: (val) => controller.toggleHeightUnit(val),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Text(
+                              'Tip: Make sure to enter accurate details for precise BMI calculation.',
+                              style: TextStyle(
+                                color: const Color(0xFF1D9A8D),
+                                fontSize: 13,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                height: 1.38,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        heightDisplay,
-                        style: TextStyle(
-                          fontSize: 26.sp,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1DB59B),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: const Color(0xFF2FD1A6),
-                          inactiveTrackColor: const Color(0xFFE2E8F0),
-                          thumbColor: Colors.white,
-                          thumbShape: RoundSliderThumbShape(
-                            enabledThumbRadius: 10.r,
-                            elevation: 2,
-                          ),
-                          overlayShape: RoundSliderOverlayShape(
-                            overlayRadius: 18.r,
-                          ),
-                          trackHeight: 6.h,
-                        ),
-                        child: Slider(
-                          value: heightCm.clamp(120.0, 220.0),
-                          min: 120.0,
-                          max: 220.0,
-                          onChanged: (val) => controller.setHeight(val),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '120 cm',
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: AppColors.textLight,
-                              ),
-                            ),
-                            Text(
-                              '220 cm',
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: AppColors.textLight,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 12.h),
+                  SizedBox(height: 16.h),
 
-                // Card 4: Weight Slider
-                CustomCard(
-                  padding: EdgeInsets.all(14.w),
-                  borderRadius: 18.r,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Weight',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textDark,
-                            ),
-                          ),
-                          _buildUnitToggle(
-                            leftLabel: 'kg',
-                            rightLabel: 'lb',
-                            isLeftSelected: isKg,
-                            onToggle: (val) => controller.toggleWeightUnit(val),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        weightDisplay,
-                        style: TextStyle(
-                          fontSize: 26.sp,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1DB59B),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: const Color(0xFF2FD1A6),
-                          inactiveTrackColor: const Color(0xFFE2E8F0),
-                          thumbColor: Colors.white,
-                          thumbShape: RoundSliderThumbShape(
-                            enabledThumbRadius: 10.r,
-                            elevation: 2,
-                          ),
-                          overlayShape: RoundSliderOverlayShape(
-                            overlayRadius: 18.r,
-                          ),
-                          trackHeight: 6.h,
-                        ),
-                        child: Slider(
-                          value: weightKg.clamp(30.0, 130.0),
-                          min: 30.0,
-                          max: 130.0,
-                          onChanged: (val) => controller.setWeight(val),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '30 kg',
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: AppColors.textLight,
-                              ),
-                            ),
-                            Text(
-                              '130 kg',
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: AppColors.textLight,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  // Calculate BMI Button
+                  CustomGradientButton(
+                    text: 'Calculate BMI',
+                    leadingIcon: Image.asset(
+                      AppAssets.calcilatorIcon,
+                      width: 16.w,
+                      height: 16.w,
+                    ),
+                    backgroundImage: AppAssets.calculateButton,
+                    onPressed: () => _onCalculate(controller),
                   ),
-                ),
-                SizedBox(height: 12.h),
+                  SizedBox(height: 10.h),
 
-                // Tip Banner
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 10.h,
+                  // Reset Button
+                  CustomGradientButton(
+                    text: 'Reset',
+                    leadingIcon: Icon(
+                      Icons.refresh,
+                      color: const Color(0xFF2EC4B6),
+                      size: 18.sp,
+                    ),
+                    isOutlined: true,
+                    outlineColor: const Color(0xFF2EC4B6),
+                    onPressed: () => controller.resetInputs(),
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0FAF6),
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(color: const Color(0xFFD4EFE6)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.lightbulb,
-                        size: 18.sp,
-                        color: const Color(0xFF1DB59B),
-                      ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: Text(
-                          'Tip: Make sure to enter accurate details for precise BMI calculation.',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: const Color(0xFF0F766E),
-                            fontWeight: FontWeight.w500,
-                            height: 1.3,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16.h),
-
-                // Calculate BMI Button
-                CustomGradientButton(
-                  text: 'Calculate BMI',
-                  leadingIcon: Icon(
-                    Icons.calculate_outlined,
-                    color: Colors.white,
-                    size: 20.sp,
-                  ),
-                  backgroundImage: AppAssets.btnCalculateCta,
-                  onPressed: () => _onCalculate(controller),
-                ),
-                SizedBox(height: 10.h),
-
-                // Reset Button
-                CustomGradientButton(
-                  text: 'Reset',
-                  leadingIcon: Icon(
-                    Icons.refresh,
-                    color: const Color(0xFF1DB59B),
-                    size: 18.sp,
-                  ),
-                  isOutlined: true,
-                  outlineColor: const Color(0xFF1DB59B),
-                  onPressed: () => controller.resetInputs(),
-                ),
-                SizedBox(height: 24.h),
-              ],
-            );
-          }),
-        ),
+                  SizedBox(height: 24.h),
+                ],
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
@@ -476,16 +496,16 @@ class BMICalculatorScreen extends StatelessWidget {
             Icon(
               icon,
               size: 18.sp,
-              color: isSelected ? const Color(0xFF1DB59B) : AppColors.textBody,
+              color: isSelected ? const Color(0xFF2EC4B6) : AppColors.textBody,
             ),
             SizedBox(width: 8.w),
             Text(
               label,
               style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 15.sp,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFF1DB59B)
+                    ? const Color(0xFF2EC4B6)
                     : AppColors.textBody,
               ),
             ),
@@ -523,11 +543,11 @@ class BMICalculatorScreen extends StatelessWidget {
               child: Text(
                 leftLabel,
                 style: TextStyle(
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
                   color: isLeftSelected
                       ? Colors.white
-                      : const Color(0xFF64748B),
+                      : const Color(0xFF6B7280),
                 ),
               ),
             ),

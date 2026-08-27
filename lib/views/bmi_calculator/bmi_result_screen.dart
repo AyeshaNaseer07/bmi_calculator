@@ -1,3 +1,4 @@
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,26 +44,7 @@ class BMIResultScreen extends StatelessWidget {
               colorText: Colors.white,
             );
           },
-          child: Container(
-            height: 42.w,
-            width: 42.w,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 10.r,
-                  offset: Offset(0, 3.h),
-                ),
-              ],
-            ),
-            child: Icon(
-              CupertinoIcons.share,
-              size: 18.sp,
-              color: AppColors.textDark,
-            ),
-          ),
+          child: Image.asset(AppAssets.settingicon, height: 34.h, width: 34.w),
         ),
       ),
       body: SafeArea(
@@ -81,17 +63,10 @@ class BMIResultScreen extends StatelessWidget {
                     // Top Right Heart Icon Badge
                     Align(
                       alignment: Alignment.topRight,
-                      child: Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFE8F7F2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          CupertinoIcons.heart_circle,
-                          color: const Color(0xFF1DB59B),
-                          size: 20.sp,
-                        ),
+                      child: Image.asset(
+                        AppAssets.hearticon,
+                        height: 41.h,
+                        width: 41.w,
                       ),
                     ),
 
@@ -107,37 +82,42 @@ class BMIResultScreen extends StatelessWidget {
                     Text(
                       record.bmiValue.toStringAsFixed(1),
                       style: TextStyle(
-                        fontSize: 38.sp,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF1DB59B),
-                        letterSpacing: -1,
+                        color: const Color(0xFF33D2AB),
+                        fontSize: 32,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       'Your BMI',
                       style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.textLight,
+                        color: Colors.black.withOpacity(0.5),
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(height: 6.h),
 
                     // Status Pill
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 14.w,
-                        vertical: 4.h,
+                      width: 61,
+                      height: 26,
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFF33D2AB).withOpacity(0.15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8F7F2),
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                      child: Text(
-                        record.category.label,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: record.category.color,
+                      child: Center(
+                        child: Text(
+                          record.category.label,
+                          style: TextStyle(
+                            color: const Color(0xFF07A981),
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
@@ -145,35 +125,38 @@ class BMIResultScreen extends StatelessWidget {
 
                     // Status Feedback Message Card
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 10.h,
+                      width: 329,
+                      height: 54,
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFE8F9F7),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0FAF6),
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: const Color(0xFFD4EFE6)),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            CupertinoIcons.shield_lefthalf_fill,
-                            size: 18.sp,
-                            color: const Color(0xFF1DB59B),
-                          ),
-                          SizedBox(width: 10.w),
-                          Expanded(
-                            child: Text(
-                              record.category.feedbackMessage,
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                color: AppColors.textDark,
-                                fontWeight: FontWeight.w500,
-                                height: 1.3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              AppAssets.shieldicon,
+                              width: 19.w,
+                              height: 19.h,
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Text(
+                                record.category.feedbackMessage,
+                                style: TextStyle(
+                                  color: const Color(0xFF1E2D2F),
+                                  fontSize: 11,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.40,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -191,9 +174,10 @@ class BMIResultScreen extends StatelessWidget {
                     Text(
                       'Your Details',
                       style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textDark,
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     SizedBox(height: 14.h),
@@ -201,34 +185,26 @@ class BMIResultScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildDetailColumn(
-                          icon: Icons.scale,
-                          iconBg: const Color(0xFFD3F4EA),
-                          iconColor: const Color(0xFF0F766E),
+                          imageAsset: AppAssets.weighticon,
                           value: '${record.weightKg.toStringAsFixed(1)} kg',
                           label: 'Weight',
                           showUnderline: true,
                         ),
                         _buildDetailDivider(),
                         _buildDetailColumn(
-                          icon: Icons.straighten,
-                          iconBg: const Color(0xFFE0F2FE),
-                          iconColor: const Color(0xFF0284C7),
+                          imageAsset: AppAssets.heighticon,
                           value: '${record.heightCm.toStringAsFixed(0)} cm',
                           label: 'Height',
                         ),
                         _buildDetailDivider(),
                         _buildDetailColumn(
-                          icon: Icons.cake_outlined,
-                          iconBg: const Color(0xFFFEF3C7),
-                          iconColor: const Color(0xFFD97706),
+                          imageAsset: AppAssets.ageicon,
                           value: '${record.age} Yrs',
                           label: 'Age',
                         ),
                         _buildDetailDivider(),
                         _buildDetailColumn(
-                          icon: Icons.person_outline,
-                          iconBg: const Color(0xFFCCFBF1),
-                          iconColor: const Color(0xFF0D9488),
+                          imageAsset: AppAssets.gendericon,
                           value: record.gender,
                           label: 'Gender',
                         ),
@@ -249,9 +225,10 @@ class BMIResultScreen extends StatelessWidget {
                     Text(
                       'Health Advice',
                       style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textDark,
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -281,18 +258,10 @@ class BMIResultScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8.w),
-                        Container(
-                          width: 54.w,
-                          height: 54.w,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFE8F7F2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            CupertinoIcons.heart_fill,
-                            color: const Color(0xFF2FD1A6),
-                            size: 28.sp,
-                          ),
+                        Image.asset(
+                          AppAssets.bmiHearticon,
+                          height: 77.h,
+                          width: 77.w,
                         ),
                       ],
                     ),
@@ -304,12 +273,12 @@ class BMIResultScreen extends StatelessWidget {
               // Recalculate Button
               CustomGradientButton(
                 text: 'Recalculate',
-                leadingIcon: Icon(
-                  Icons.calculate_outlined,
-                  color: Colors.white,
-                  size: 20.sp,
+                leadingIcon: Image.asset(
+                  AppAssets.calcilatorIcon,
+                  width: 16.w,
+                  height: 16.w,
                 ),
-                solidColor: const Color(0xFF1B8A7A),
+                backgroundImage: AppAssets.calculateButton,
                 onPressed: () => Get.offNamed(AppRoutes.bmiCalculator),
               ),
               SizedBox(height: 24.h),
@@ -321,40 +290,36 @@ class BMIResultScreen extends StatelessWidget {
   }
 
   Widget _buildDetailColumn({
-    required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
+    required String imageAsset,
     required String value,
     required String label,
     bool showUnderline = false,
   }) {
     return Column(
       children: [
-        Container(
-          width: 32.w,
-          height: 32.w,
-          decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
-          child: Icon(icon, color: iconColor, size: 16.sp),
-        ),
+        Image.asset(imageAsset, width: 39.w, height: 39.w),
         SizedBox(height: 6.h),
         Text(
           value,
           style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textDark,
+            color: const Color(0xFF1E2D2F),
+            fontSize: 12,
+            fontFamily: 'Outfit',
+            fontWeight: FontWeight.w700,
           ),
         ),
         SizedBox(height: 2.h),
         Text(
           label,
           style: TextStyle(
-            fontSize: 10.sp,
             color: showUnderline
                 ? const Color(0xFF0284C7)
                 : AppColors.textLight,
             decoration: showUnderline ? TextDecoration.underline : null,
             decorationColor: const Color(0xFF0284C7),
+            fontSize: 11,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],
@@ -371,20 +336,17 @@ class BMIResultScreen extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 2.h),
-          child: Icon(
-            CupertinoIcons.checkmark_circle,
-            size: 14.sp,
-            color: const Color(0xFF1DB59B),
-          ),
+          child: Image.asset(AppAssets.preDown, height: 11.h, width: 11.w),
         ),
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 11.sp,
-              color: AppColors.textBody,
-              height: 1.3,
+              color: const Color(0xFF647E80),
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),

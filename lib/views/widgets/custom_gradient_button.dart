@@ -19,6 +19,7 @@ class CustomGradientButton extends StatelessWidget {
   final TextStyle? textStyle;
   final BorderRadius? borderRadius;
   final String? backgroundImage;
+  final List<BoxShadow>? boxShadow;
 
   const CustomGradientButton({
     super.key,
@@ -35,6 +36,7 @@ class CustomGradientButton extends StatelessWidget {
     this.textStyle,
     this.borderRadius,
     this.backgroundImage,
+    this.boxShadow,
   });
 
   @override
@@ -53,6 +55,7 @@ class CustomGradientButton extends StatelessWidget {
             color: outlineColor ?? AppColors.primaryTeal,
             width: 1.5.w,
           ),
+          boxShadow: boxShadow,
         ),
         child: Material(
           color: Colors.transparent,
@@ -75,7 +78,7 @@ class CustomGradientButton extends StatelessWidget {
                       style:
                           textStyle ??
                           AppTypography.buttonText.copyWith(
-                            color: outlineColor ?? AppColors.primaryTeal,
+                            color: outlineColor ?? Color(0xFF2EC4B6),
                           ),
                     ),
                   ),
@@ -99,11 +102,11 @@ class CustomGradientButton extends StatelessWidget {
         borderRadius: effectiveBorderRadius,
         image: solidColor == null
             ? DecorationImage(
-                image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
+                image: AssetImage(backgroundImage ?? AppAssets.calculateButton),
                 fit: BoxFit.fill,
               )
             : null,
-        boxShadow: solidColor == null ? AppColors.buttonShadow : null,
+        boxShadow: boxShadow,
       ),
       child: Material(
         color: Colors.transparent,

@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
 
 class AgePickerPopup extends StatelessWidget {
   final int currentAge;
@@ -22,7 +20,7 @@ class AgePickerPopup extends StatelessWidget {
       width: 210.w,
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F5),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -41,28 +39,23 @@ class AgePickerPopup extends StatelessWidget {
             children: [
               Text(
                 'Your Age',
-                style: AppTypography.titleMedium.copyWith(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              GestureDetector(
-                onTap: onClose,
-                child: Icon(
-                  CupertinoIcons.xmark,
-                  size: 14.sp,
-                  color: AppColors.textLight,
+                style: TextStyle(
+                  color: const Color(0xFF111827),
+                  fontSize: 20,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
           SizedBox(height: 2.h),
           Text(
-            'Your age helps calculate your BMI accurately.',
-            style: AppTypography.bodySmall.copyWith(
-              fontSize: 10.sp,
-              color: AppColors.textBody,
-              height: 1.2,
+            'Your age helps calculate your BMI\naccurately.',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 11,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
             ),
           ),
           SizedBox(height: 10.h),
@@ -74,18 +67,7 @@ class AgePickerPopup extends StatelessWidget {
                 onTap: () {
                   if (currentAge > 1) onAgeChanged(currentAge - 1);
                 },
-                child: Container(
-                  padding: EdgeInsets.all(6.w),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    CupertinoIcons.chevron_left,
-                    size: 14.sp,
-                    color: AppColors.textDark,
-                  ),
-                ),
+                child: Image.asset(AppAssets.ageBack, height: 24, width: 24),
               ),
               // Previous age
               Text(
@@ -102,9 +84,10 @@ class AgePickerPopup extends StatelessWidget {
                 child: Text(
                   '$currentAge',
                   style: TextStyle(
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.primaryTeal,
+                    color: const Color(0xFF33D2AB),
+                    fontSize: 48,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -122,18 +105,7 @@ class AgePickerPopup extends StatelessWidget {
                 onTap: () {
                   if (currentAge < 120) onAgeChanged(currentAge + 1);
                 },
-                child: Container(
-                  padding: EdgeInsets.all(6.w),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    CupertinoIcons.chevron_right,
-                    size: 14.sp,
-                    color: AppColors.textDark,
-                  ),
-                ),
+                child: Image.asset(AppAssets.ageForward, height: 24, width: 24),
               ),
             ],
           ),

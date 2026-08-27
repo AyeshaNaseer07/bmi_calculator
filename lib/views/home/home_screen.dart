@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import '../../controllers/bmi_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../widgets/bmi_gauge_widget.dart';
@@ -153,9 +152,9 @@ class HomeScreen extends StatelessWidget {
               ? "Let's track your health today."
               : "Welcome! Let's begin your health journey.",
           style: TextStyle(
-            color: const Color(0xFF7A8B94),
+            color: const Color(0xFF647E80),
             fontSize: 12,
-            fontFamily: 'Instrument Sans',
+            fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -201,7 +200,7 @@ class HomeScreen extends StatelessWidget {
               width: 16.w,
               height: 16.w,
             ),
-            backgroundImage: AppAssets.btnCalculateCta,
+            backgroundImage: AppAssets.calculateButton,
             height: 48.h,
             onPressed: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
@@ -230,37 +229,41 @@ class HomeScreen extends StatelessWidget {
                     Text(
                       'Your BMI',
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        color: const Color(0xFF1E2D2F),
+                        fontSize: 16,
+                        fontFamily: 'Outfit',
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textDark,
                       ),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       record.bmiValue.toStringAsFixed(1),
                       style: TextStyle(
-                        fontSize: 34.sp,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF1DB59B),
-                        letterSpacing: -1,
+                        color: const Color(0xFF25C6A5),
+                        fontSize: 38,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                     SizedBox(height: 4.h),
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 3.h,
+                        horizontal: 14.w,
+                        vertical: 4.h,
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8F7F2),
-                        borderRadius: BorderRadius.circular(12.r),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFE2F7F2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
                       ),
                       child: Text(
                         record.category.label,
                         style: TextStyle(
-                          fontSize: 11.sp,
+                          fontSize: 12.sp,
+                          fontFamily: 'Outfit',
                           fontWeight: FontWeight.w700,
-                          color: record.category.color,
+                          color: const Color(0xFF07A981),
                         ),
                       ),
                     ),
@@ -283,16 +286,19 @@ class HomeScreen extends StatelessWidget {
                             Text(
                               'Last Updated',
                               style: TextStyle(
-                                fontSize: 10.sp,
-                                color: AppColors.textLight,
+                                fontSize: 11.sp,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF8E9BAE),
                               ),
                             ),
                             Text(
                               formattedTime,
                               style: TextStyle(
-                                fontSize: 10.sp,
+                                fontSize: 12.sp,
+                                fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.textDark,
+                                color: const Color(0xFF1E2D2F),
                               ),
                             ),
                           ],
@@ -303,27 +309,30 @@ class HomeScreen extends StatelessWidget {
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 8.w,
-                              vertical: 3.h,
+                              vertical: 4.h,
                             ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE8F7F2),
-                              borderRadius: BorderRadius.circular(10.r),
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFE2F7F2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.receipt_long,
-                                  size: 10.sp,
-                                  color: AppColors.primaryTeal,
+                                  CupertinoIcons.calendar,
+                                  size: 13.sp,
+                                  color: const Color(0xFF07A981),
                                 ),
                                 SizedBox(width: 3.w),
                                 Text(
                                   'View History',
                                   style: TextStyle(
-                                    fontSize: 9.sp,
+                                    fontSize: 9.5.sp,
+                                    fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.primaryTeal,
+                                    color: const Color(0xFF07A981),
                                   ),
                                 ),
                               ],
@@ -332,10 +341,10 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 6.h),
                     BMIGaugeWidget(
                       bmiValue: record.bmiValue,
-                      size: 150.w,
+                      size: 155.w,
                       showLabels: true,
                     ),
                   ],
@@ -349,38 +358,34 @@ class HomeScreen extends StatelessWidget {
           GestureDetector(
             onTap: () => Get.toNamed(AppRoutes.healthInsights),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF0FAF6),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: const Color(0xFFD4EFE6)),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              decoration: ShapeDecoration(
+                color: const Color(0xFFE8F9F7),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(
-                    CupertinoIcons.shield_lefthalf_fill,
-                    size: 16.sp,
-                    color: const Color(0xFF1DB59B),
-                  ),
-                  SizedBox(width: 8.w),
+                  Image.asset(AppAssets.shieldicon, width: 22.w, height: 22.h),
+                  SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
                       record.category.feedbackMessage,
                       style: TextStyle(
-                        fontSize: 10.5.sp,
-                        color: AppColors.textDark,
-                        fontWeight: FontWeight.w500,
-                        height: 1.3,
+                        color: const Color(0xFF1E2D2F),
+                        fontSize: 11.5.sp,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w400,
+                        height: 1.35,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  SizedBox(width: 4.w),
+                  SizedBox(width: 6.w),
                   Icon(
                     CupertinoIcons.arrow_right,
-                    size: 14.sp,
-                    color: const Color(0xFF1DB59B),
+                    size: 18.sp,
+                    color: const Color(0xFF25C6A5),
                   ),
                 ],
               ),
@@ -404,36 +409,28 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildParamItem(
-            icon: Icons.scale,
-            iconBg: const Color(0xFFD3F4EA),
-            iconColor: const Color(0xFF0F766E),
+            imageAsset: AppAssets.weighticon,
             value: '${record.weightKg.toStringAsFixed(1)} kg',
             label: 'Weight',
             onTapUpdate: () => Get.toNamed(AppRoutes.addWeight),
           ),
           _buildDivider(),
           _buildParamItem(
-            icon: Icons.straighten,
-            iconBg: const Color(0xFFE0F2FE),
-            iconColor: const Color(0xFF0284C7),
+            imageAsset: AppAssets.heighticon,
             value: '${record.heightCm.toStringAsFixed(0)} cm',
             label: 'Height',
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
           _buildDivider(),
           _buildParamItem(
-            icon: Icons.cake_outlined,
-            iconBg: const Color(0xFFFEF3C7),
-            iconColor: const Color(0xFFD97706),
+            imageAsset: AppAssets.ageicon,
             value: '${record.age} Yrs',
             label: 'Age',
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
           _buildDivider(),
           _buildParamItem(
-            icon: Icons.person_outline,
-            iconBg: const Color(0xFFCCFBF1),
-            iconColor: const Color(0xFF0D9488),
+            imageAsset: AppAssets.gendericon,
             value: record.gender,
             label: 'Gender',
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
@@ -444,49 +441,55 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildParamItem({
-    required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
+    required String imageAsset,
     required String value,
     required String label,
     required VoidCallback onTapUpdate,
   }) {
     return Column(
       children: [
-        Container(
-          width: 32.w,
-          height: 32.w,
-          decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
-          child: Icon(icon, color: iconColor, size: 16.sp),
-        ),
+        Image.asset(imageAsset, width: 39.w, height: 39.w),
         SizedBox(height: 6.h),
         Text(
           value,
           style: TextStyle(
-            fontSize: 11.5.sp,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textDark,
+            color: const Color(0xFF1E2D2F),
+            fontSize: 12,
+            fontFamily: 'Outfit',
+            fontWeight: FontWeight.w700,
           ),
         ),
+        SizedBox(height: 2.h),
         Text(
           label,
-          style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+          style: TextStyle(
+            color: const Color(0xFF647E80),
+            fontSize: 11,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
         ),
         SizedBox(height: 4.h),
         GestureDetector(
           onTap: onTapUpdate,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F7F2),
-              borderRadius: BorderRadius.circular(8.r),
+            width: 52,
+            height: 23,
+            decoration: ShapeDecoration(
+              color: const Color(0xFF33D2AB).withOpacity(0.15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
             ),
-            child: Text(
-              'Update',
-              style: TextStyle(
-                fontSize: 9.sp,
-                color: AppColors.primaryTeal,
-                fontWeight: FontWeight.w700,
+            child: Center(
+              child: Text(
+                'Update',
+                style: TextStyle(
+                  color: const Color(0xFF2EC4B6),
+                  fontSize: 10,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -503,58 +506,70 @@ class HomeScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-          text: TextSpan(
-            style: AppTypography.titleMedium.copyWith(fontSize: 15.sp),
-            children: const [
-              TextSpan(text: 'BMI '),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'BMI ',
+                style: TextStyle(
+                  color: const Color(0xFF1E2D2F),
+                  fontSize: 20,
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               TextSpan(
                 text: 'Categories',
-                style: TextStyle(color: Color(0xFF1DB59B)),
+                style: TextStyle(
+                  color: const Color(0xFF33D2AB),
+                  fontSize: 20,
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: 12.h),
         Row(
           children: [
             Expanded(
               child: _buildCategoryBadge(
                 'Underweight (<18.5)',
                 currentCategory == BMICategory.underweight,
-                const Color(0xFFE0F2FE),
-                const Color(0xFF0369A1),
+                inactiveBg: const Color(0xFFEAF5FD),
+                activeBg: const Color(0xFF25C6A5),
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
                 'Normal (18.5–24.9)',
                 currentCategory == BMICategory.normal,
-                const Color(0xFF1DB59B),
-                Colors.white,
+                inactiveBg: const Color(0xFFE6F8F4),
+                activeBg: const Color(0xFF25C6A5),
               ),
             ),
           ],
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 10.h),
         Row(
           children: [
             Expanded(
               child: _buildCategoryBadge(
                 'Overweight (25–29.9)',
                 currentCategory == BMICategory.overweight,
-                const Color(0xFFFEF3C7),
-                const Color(0xFFB45309),
+                inactiveBg: const Color(0xFFFEF6E9),
+                activeBg: const Color(0xFF25C6A5),
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
                 'Obese (30–34.9)',
                 currentCategory == BMICategory.obese,
-                const Color(0xFFFEE2E2),
-                const Color(0xFFB91C1C),
+                inactiveBg: const Color(0xFFFFEDE6),
+                activeBg: const Color(0xFF25C6A5),
               ),
             ),
           ],
@@ -565,28 +580,25 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildCategoryBadge(
     String text,
-    bool isCurrent,
-    Color activeBg,
-    Color textColor,
-  ) {
+    bool isCurrent, {
+    required Color inactiveBg,
+    required Color activeBg,
+  }) {
     return Container(
-      height: 38.h,
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      height: 40.h,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: isCurrent ? activeBg : const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: isCurrent ? Colors.transparent : const Color(0xFFE2E8F0),
-        ),
+        color: isCurrent ? activeBg : inactiveBg,
+        borderRadius: BorderRadius.circular(20.r),
       ),
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 11.sp,
-            fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
-            color: isCurrent ? textColor : const Color(0xFF64748B),
-          ),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontFamily: 'Outfit',
+          fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
+          color: isCurrent ? Colors.white : const Color(0xFF1E2D2F),
         ),
       ),
     );
