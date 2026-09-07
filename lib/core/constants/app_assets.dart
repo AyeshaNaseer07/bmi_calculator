@@ -6,6 +6,7 @@ abstract class AppAssets {
   // ── Images ──
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
+  static const String selectLanguage = '$_imagesBase/select_language.png';
   static const String crown = '$_imagesBase/crown.webp';
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
@@ -20,7 +21,7 @@ abstract class AppAssets {
 
   // ── Onboarding ──
   static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
-  static const String onboarding2 = '$_imagesBase/onboarding_2.webp';
+  static const String onboarding2 = '$_imagesBase/onboarding_2.png';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
   // ── Paywall Premium Feature Icons ──
@@ -69,6 +70,15 @@ abstract class AppAssets {
   static const String historyIcon = '$_imagesBase/history_bg.webp';
   static const String historyUp = '$_imagesBase/history_up.webp';
   static const String historyCalander = '$_imagesBase/calander_history.webp';
+
+  // ── Health Insights ──
+  static const String healthHeight = '$_imagesBase/health_height.png';
+  static const String healthWeight = '$_imagesBase/health_weight.png';
+
+  static const String lastUpdated = '$_imagesBase/last_updated.png';
+  static const String happyHealth = '$_imagesBase/happy_health.png';
+  static const String eatHealthy = '$_imagesBase/eat_healthy.png';
+  static const String stayHydrated = '$_imagesBase/stay_hydrated.png';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

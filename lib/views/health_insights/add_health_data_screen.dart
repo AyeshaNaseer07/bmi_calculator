@@ -130,102 +130,109 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildFieldLabel('Gender'),
-                          Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              GestureDetector(
-                                onTap: () => setState(
-                                  () => _isGenderMenuOpen = !_isGenderMenuOpen,
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              popupMenuTheme: PopupMenuThemeData(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14.r),
+                                  side: const BorderSide(
+                                    color: Color(0xFFD4EFE6),
+                                  ),
                                 ),
-                                child: Container(
-                                  height: 48.h,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 14.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(14.r),
-                                    border: Border.all(
-                                      color: const Color(0xFFD4EFE6),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        selectedGender?.displayName ?? 'Select',
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          fontWeight: selectedGender != null
-                                              ? FontWeight.w600
-                                              : FontWeight.w400,
-                                          color: selectedGender != null
-                                              ? AppColors.textDark
-                                              : AppColors.textLight,
+                                elevation: 6,
+                                shadowColor: Colors.black.withValues(alpha: 0.1),
+                              ),
+                            ),
+                            child: PopupMenuButton<Gender>(
+                              onSelected: (Gender g) {
+                                _controller.setGender(g);
+                                setState(() => _isGenderMenuOpen = false);
+                              },
+                              onCanceled: () {
+                                setState(() => _isGenderMenuOpen = false);
+                              },
+                              onOpened: () {
+                                setState(() => _isGenderMenuOpen = true);
+                              },
+                              offset: Offset(0, 52.h),
+                              constraints: BoxConstraints(
+                                minWidth: 140.w,
+                              ),
+                              itemBuilder: (context) {
+                                return Gender.values.map((g) {
+                                  final isSelected = selectedGender == g;
+                                  return PopupMenuItem<Gender>(
+                                    value: g,
+                                    height: 40.h,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          g.displayName,
+                                          style: TextStyle(
+                                            fontSize: 13.sp,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w600
+                                                : FontWeight.w500,
+                                            color: isSelected
+                                                ? const Color(0xFF0F766E)
+                                                : AppColors.textDark,
+                                          ),
                                         ),
-                                      ),
-                                      Icon(
-                                        CupertinoIcons.chevron_down,
-                                        size: 14.sp,
-                                        color: Colors.black,
-                                      ),
-                                    ],
+                                        if (isSelected)
+                                          Icon(
+                                            CupertinoIcons.checkmark_alt,
+                                            size: 14.sp,
+                                            color: const Color(0xFF2FD1A6),
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList();
+                              },
+                              child: Container(
+                                height: 48.h,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(14.r),
+                                  border: Border.all(
+                                    color: _isGenderMenuOpen
+                                        ? const Color(0xFF2FD1A6)
+                                        : const Color(0xFFD4EFE6),
                                   ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      selectedGender?.displayName ?? 'Select',
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: selectedGender != null
+                                            ? FontWeight.w600
+                                            : FontWeight.w400,
+                                        color: selectedGender != null
+                                            ? AppColors.textDark
+                                            : AppColors.textLight,
+                                      ),
+                                    ),
+                                    Icon(
+                                      _isGenderMenuOpen
+                                          ? CupertinoIcons.chevron_up
+                                          : CupertinoIcons.chevron_down,
+                                      size: 14.sp,
+                                      color: Colors.black,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              // Gender Dropdown Menu
-                              if (_isGenderMenuOpen)
-                                Positioned(
-                                  top: 52.h,
-                                  left: 0,
-                                  right: 0,
-                                  child: Material(
-                                    elevation: 8,
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    color: const Color(0xFFF0FAF6),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF0FAF6),
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
-                                        ),
-                                        border: Border.all(
-                                          color: const Color(0xFFD4EFE6),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: Gender.values.map((g) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              _controller.setGender(g);
-                                              setState(
-                                                () => _isGenderMenuOpen = false,
-                                              );
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 8.h,
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  g.displayName,
-                                                  style: TextStyle(
-                                                    fontSize: 13.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.textDark,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
+                            ),
                           ),
                         ],
                       ),

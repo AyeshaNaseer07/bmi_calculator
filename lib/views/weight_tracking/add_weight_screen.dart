@@ -81,43 +81,107 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     SizedBox(height: 16.h),
 
                     // Gender Dropdown Field
-                    GestureDetector(
-                      onTap: () => setState(
-                        () => _isGenderMenuOpen = !_isGenderMenuOpen,
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        popupMenuTheme: PopupMenuThemeData(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14.r),
+                            side: const BorderSide(
+                              color: Color(0xFFD4EFE6),
+                            ),
+                          ),
+                          elevation: 6,
+                          shadowColor: Colors.black.withValues(alpha: 0.1),
+                        ),
                       ),
-                      child: _buildCardContainer(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  _selectedGender,
-                                  style: const TextStyle(
-                                    color: Color(0xFF4B5563),
-                                    fontSize: 17,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w500,
+                      child: PopupMenuButton<String>(
+                        onSelected: (String gender) {
+                          setState(() {
+                            _selectedGender = gender;
+                            _isGenderMenuOpen = false;
+                          });
+                        },
+                        onCanceled: () {
+                          setState(() => _isGenderMenuOpen = false);
+                        },
+                        onOpened: () {
+                          setState(() => _isGenderMenuOpen = true);
+                        },
+                        offset: Offset(0, 68.h),
+                        constraints: BoxConstraints(
+                          minWidth: 160.w,
+                        ),
+                        itemBuilder: (context) {
+                          return ['Male', 'Female', 'Other'].map((g) {
+                            final isSelected = _selectedGender == g;
+                            return PopupMenuItem<String>(
+                              value: g,
+                              height: 40.h,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    g,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? const Color(0xFF0F766E)
+                                          : const Color(0xFF111827),
+                                      fontSize: 15.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 4.w),
-                                Icon(
-                                  CupertinoIcons.chevron_down,
-                                  size: 13.sp,
-                                  color: const Color(0xFF6B7280),
-                                ),
-                              ],
-                            ),
-                            const Text(
-                              'Gender',
-                              style: TextStyle(
-                                color: Color(0xFF6B7280),
-                                fontSize: 17,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                                  if (isSelected)
+                                    Icon(
+                                      CupertinoIcons.checkmark_alt,
+                                      size: 14.sp,
+                                      color: const Color(0xFF2FD1A6),
+                                    ),
+                                ],
                               ),
-                            ),
-                          ],
+                            );
+                          }).toList();
+                        },
+                        child: _buildCardContainer(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    _selectedGender,
+                                    style: const TextStyle(
+                                      color: Color(0xFF4B5563),
+                                      fontSize: 17,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Icon(
+                                    _isGenderMenuOpen
+                                        ? CupertinoIcons.chevron_up
+                                        : CupertinoIcons.chevron_down,
+                                    size: 13.sp,
+                                    color: const Color(0xFF6B7280),
+                                  ),
+                                ],
+                              ),
+                              const Text(
+                                'Gender',
+                                style: TextStyle(
+                                  color: Color(0xFF6B7280),
+                                  fontSize: 17,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -152,89 +216,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                   ],
                 ),
               ),
-
-              // Floating Gender Dropdown Popup Overlay
-              if (_isGenderMenuOpen)
-                Positioned(
-                  top: 114.h,
-                  left: 90.w,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      width: 144,
-                      height: 137,
-                      decoration: ShapeDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(0.50, -0.00),
-                          end: Alignment(0.50, 1.00),
-                          colors: [const Color(0xFFD9F8F1), Colors.white],
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(11),
-                        ),
-                        shadows: [
-                          BoxShadow(
-                            color: Color(0x3F000000),
-                            blurRadius: 8.60,
-                            offset: Offset(0, 2),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildGenderOption('Male'),
-                          const Divider(
-                            height: 1,
-                            thickness: 0.9,
-                            color: Color(0xFF9EBFB8),
-                            indent: 14,
-                            endIndent: 14,
-                          ),
-                          _buildGenderOption('Female'),
-                          const Divider(
-                            height: 1,
-                            thickness: 0.9,
-                            color: Color(0xFF9EBFB8),
-                            indent: 14,
-                            endIndent: 14,
-                          ),
-                          _buildGenderOption('Other'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenderOption(String gender) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        setState(() {
-          _selectedGender = gender;
-          _isGenderMenuOpen = false;
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 8.5.h),
-        child: Center(
-          child: Text(
-            gender,
-            style: TextStyle(
-              color: const Color(0xFF111827),
-              fontSize: 16,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
-            ),
           ),
         ),
       ),

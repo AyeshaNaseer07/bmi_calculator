@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "395401843957",
+    "project_id": "bmi-calculator-cae46",
+    "storage_bucket": "bmi-calculator-cae46.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395401843957:android:8ca7da8af69c41ddd721bc",
+        "android_client_info": {
+          "package_name": "com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABC11dBj2QxMFOHXResrWCMput9xvsaDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

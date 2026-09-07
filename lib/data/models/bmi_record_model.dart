@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/constants/app_colors.dart';
 
 enum BMICategory {
@@ -16,7 +17,7 @@ enum BMICategory {
       case BMICategory.overweight:
         return 'Overweight';
       case BMICategory.obese:
-        return 'Obese';
+        return 'Obesity';
     }
   }
 

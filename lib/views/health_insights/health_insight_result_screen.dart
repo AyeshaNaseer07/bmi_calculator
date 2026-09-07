@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/health_insight_controller.dart';
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/services/bmi_service.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_app_bar.dart';
-import '../widgets/custom_card.dart';
 
 class HealthInsightResultScreen extends StatelessWidget {
   const HealthInsightResultScreen({super.key});
@@ -36,70 +35,99 @@ class HealthInsightResultScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top Understand Your Health Card
-              CustomCard(
-                borderRadius: 22.r,
-                padding: EdgeInsets.all(18.w),
-                child: Column(
-                  children: [
-                    Text(
-                      'Understand your health better every day.',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.textBody,
-                        fontWeight: FontWeight.w500,
-                      ),
+              Container(
+                width: 343,
+                height: 187,
+                decoration: ShapeDecoration(
+                  color: const Color(0xFF33D2AB).withValues(alpha: 0.05),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(
+                      width: 0.25,
+                      color: Color(0xFF33D2AB),
                     ),
-                    SizedBox(height: 12.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Your BMI',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: AppColors.textLight,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              bmi.toStringAsFixed(1),
-                              style: TextStyle(
-                                fontSize: 32.sp,
-                                fontWeight: FontWeight.w900,
-                                color: const Color(0xFF1DB59B),
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              category.label,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w700,
-                                color: category.color,
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              'Great! You are in a healthy\nBMI range.',
-                              style: TextStyle(
-                                fontSize: 9.5.sp,
-                                color: AppColors.textLight,
-                                height: 1.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                        BMIGaugeWidget(
-                          bmiValue: bmi,
-                          size: 150.w,
-                          showLabels: true,
-                        ),
-                      ],
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  shadows: [
+                    BoxShadow(
+                      color: const Color(0x3A33D2AB).withValues(alpha: 0.05),
+                      blurRadius: 6.80,
+                      offset: const Offset(0, 4),
+                      spreadRadius: 0,
                     ),
                   ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(18.w),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Understand your health better every day.',
+                        style: TextStyle(
+                          color: const Color(0xFF111827)
+                              .withValues(alpha: 0.64),
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Your BMI',
+                                style: const TextStyle(
+                                  color: Color(0xFF111827),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                bmi.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  color: Color(0xFF33D2AB),
+                                  fontSize: 32,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                category.label,
+                                style: const TextStyle(
+                                  color: Color(0xFF33D2AB),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                'Great! You are in a healthy\nBMI range.',
+                                style: TextStyle(
+                                  color: const Color(0xFF111827)
+                                      .withValues(alpha: 0.64),
+                                  fontSize: 10,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                          BMIGaugeWidget(
+                            bmiValue: bmi,
+                            size: 150.w,
+                            showLabels: true,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 16.h),
@@ -107,10 +135,11 @@ class HealthInsightResultScreen extends StatelessWidget {
               // Health Summary Section
               Text(
                 'Health Summary',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+                style: const TextStyle(
+                  color: Color(0xFF111827),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               SizedBox(height: 10.h),
@@ -118,7 +147,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildSummaryCard(
-                      icon: Icons.scale_outlined,
+                      imagePath: AppAssets.healthWeight,
                       label: 'Weight',
                       value: '${weight.toStringAsFixed(1)}kg',
                       valueColor: const Color(0xFF1DB59B),
@@ -127,7 +156,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: _buildSummaryCard(
-                      icon: Icons.accessibility_new,
+                      imagePath: AppAssets.healthHeight,
                       label: 'Height',
                       value: '${height.toStringAsFixed(0)}cm',
                       valueColor: const Color(0xFF1DB59B),
@@ -136,7 +165,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: _buildSummaryCard(
-                      icon: Icons.calendar_today_outlined,
+                      imagePath: AppAssets.lastUpdated,
                       label: 'Last Updated',
                       value: 'Today',
                       valueColor: const Color(0xFF1DB59B),
@@ -150,9 +179,10 @@ class HealthInsightResultScreen extends StatelessWidget {
               Text(
                 'What It Means',
                 style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+                  color: const Color(0xFF111827),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               SizedBox(height: 10.h),
@@ -166,18 +196,11 @@ class HealthInsightResultScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      width: 38.w,
-                      height: 38.w,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE8F7F2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        CupertinoIcons.smiley,
-                        color: const Color(0xFF1DB59B),
-                        size: 22.sp,
-                      ),
+                    Image.asset(
+                      AppAssets.happyHealth,
+                      fit: BoxFit.contain,
+                      height: 42.h,
+                      width: 42.w,
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
@@ -187,18 +210,20 @@ class HealthInsightResultScreen extends StatelessWidget {
                           Text(
                             "You're doing great!",
                             style: TextStyle(
-                              fontSize: 13.sp,
+                              color: const Color(0xFF111827),
+                              fontSize: 11,
+                              fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textDark,
                             ),
                           ),
                           SizedBox(height: 2.h),
                           Text(
                             'Your BMI is in the normal range. Keep maintaining a healthy lifestyle.',
                             style: TextStyle(
-                              fontSize: 10.5.sp,
-                              color: AppColors.textBody,
-                              height: 1.3,
+                              color: const Color(0xFF111827),
+                              fontSize: 10,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],
@@ -220,19 +245,19 @@ class HealthInsightResultScreen extends StatelessWidget {
               ),
               SizedBox(height: 10.h),
               _buildTipItem(
-                icon: Icons.directions_run,
+                imagePath: AppAssets.veryActiveIcon,
                 title: 'Stay Active',
                 description: '30 minutes of exercise daily can improve your overall health.',
               ),
               SizedBox(height: 10.h),
               _buildTipItem(
-                icon: Icons.restaurant_outlined,
+                imagePath: AppAssets.eatHealthy,
                 title: 'Eat Healthy',
                 description: 'Choose balanced meals with more fruits, vegetables and whole grains.',
               ),
               SizedBox(height: 10.h),
               _buildTipItem(
-                icon: Icons.water_drop_outlined,
+                imagePath: AppAssets.stayHydrated,
                 title: 'Stay Hydrated',
                 description: 'Drink enough water throughout the day to keep your body functioning well.',
               ),
@@ -245,7 +270,7 @@ class HealthInsightResultScreen extends StatelessWidget {
   }
 
   Widget _buildSummaryCard({
-    required IconData icon,
+    required String imagePath,
     required String label,
     required String value,
     required Color valueColor,
@@ -260,26 +285,30 @@ class HealthInsightResultScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: const BoxDecoration(
-              color: Color(0xFFE8F7F2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: 18.sp, color: const Color(0xFF1DB59B)),
+          Image.asset(
+            imagePath,
+            fit: BoxFit.contain,
+            height: 42.h,
+            width: 42.w,
           ),
           SizedBox(height: 8.h),
           Text(
             label,
-            style: TextStyle(fontSize: 10.sp, color: AppColors.textLight),
+            style: TextStyle(
+              color: const Color(0xFF111827),
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
           ),
           SizedBox(height: 2.h),
           Text(
             value,
             style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w800,
-              color: valueColor,
+              color: const Color(0xFF33D2AB),
+              fontSize: 12,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
@@ -288,7 +317,7 @@ class HealthInsightResultScreen extends StatelessWidget {
   }
 
   Widget _buildTipItem({
-    required IconData icon,
+    required String imagePath,
     required String title,
     required String description,
   }) {
@@ -303,14 +332,11 @@ class HealthInsightResultScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 36.w,
-            height: 36.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFFE8F7F2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: const Color(0xFF1DB59B), size: 18.sp),
+          Image.asset(
+            imagePath,
+            fit: BoxFit.contain,
+            height: 42.h,
+            width: 42.w,
           ),
           SizedBox(width: 12.w),
           Expanded(
@@ -320,18 +346,20 @@ class HealthInsightResultScreen extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 13.sp,
+                    color: const Color(0xFF111827),
+                    fontSize: 11,
+                    fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textDark,
                   ),
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   description,
                   style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.textBody,
-                    height: 1.3,
+                    color: const Color(0xFF111827),
+                    fontSize: 10,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],

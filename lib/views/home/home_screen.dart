@@ -12,7 +12,6 @@ import '../../data/models/bmi_record_model.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
-import '../widgets/native_ad_placeholder.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -85,8 +84,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 12.h),
-                      const NativeAdPlaceholder(),
-                      SizedBox(height: 24.h),
                     ],
 
                     // 2x2 Feature Cards Grid
@@ -351,44 +348,42 @@ class HomeScreen extends StatelessWidget {
           GestureDetector(
             onTap: () => Get.toNamed(AppRoutes.healthInsights),
             child: Container(
-              width: 328,
-              height: 54,
-              decoration: ShapeDecoration(
+              width: double.infinity,
+              constraints: BoxConstraints(minHeight: 54.h),
+              decoration: BoxDecoration(
                 color: const Color(0xFFE8F9F7),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                borderRadius: BorderRadius.circular(16.r),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      AppAssets.shieldicon,
-                      width: 22.w,
-                      height: 22.h,
-                    ),
-                    SizedBox(width: 10.w),
-                    Expanded(
-                      child: Text(
-                        record.category.feedbackMessage,
-                        style: TextStyle(
-                          color: const Color(0xFF1E2D2F),
-                          fontSize: 11.5.sp,
-                          fontFamily: 'Outfit',
-                          fontWeight: FontWeight.w400,
-                          height: 1.35,
-                        ),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    AppAssets.shieldicon,
+                    width: 22.w,
+                    height: 22.w,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      record.category.feedbackMessage,
+                      style: TextStyle(
+                        color: const Color(0xFF1E2D2F),
+                        fontSize: 11.5.sp,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w400,
+                        height: 1.35,
                       ),
                     ),
-                    SizedBox(width: 6.w),
-                    Icon(
-                      CupertinoIcons.arrow_right,
-                      size: 18.sp,
-                      color: const Color(0xFF25C6A5),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 6.w),
+                  Icon(
+                    CupertinoIcons.arrow_right,
+                    size: 18.sp,
+                    color: const Color(0xFF25C6A5),
+                  ),
+                ],
               ),
             ),
           ),

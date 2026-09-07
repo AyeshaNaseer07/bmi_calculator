@@ -152,7 +152,7 @@ class ActivityLevelScreen extends StatelessWidget {
                                     item.$4,
                                     style: TextStyle(
                                       color: const Color(0xFF111827)
-                                          .withOpacity(0.64),
+                                          .withValues(alpha: 0.64),
                                       fontSize: 13,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w400,

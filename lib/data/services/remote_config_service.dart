@@ -10,10 +10,7 @@ import 'subscription_service.dart';
 class RemoteConfigService extends GetxService {
   final StorageService? _storage;
 
-  // Key for JSON configuration payload in remote config
   static const String keyRemoteConfig = 'bmi_calculator_remote_config';
-
-  // Reactive holder for remote model
   final Rx<RemoteModel> model = RemoteModel.defaults().obs;
 
   RemoteConfigService([this._storage]);
@@ -38,7 +35,7 @@ class RemoteConfigService extends GetxService {
   void loadCachedConfig() {
     if (_storage == null) return;
     try {
-      final cachedJson = _storage.getRemoteButtonText(); // or persistent config
+      final cachedJson = _storage.getRemoteButtonText();
       if (cachedJson != null && cachedJson.isNotEmpty) {
         try {
           final decoded = jsonDecode(cachedJson) as Map<String, dynamic>;
@@ -52,22 +49,11 @@ class RemoteConfigService extends GetxService {
     }
   }
 
-  /// Initialize and fetch with retry, falling back to default values if failed
   Future<void> fetchRemoteConfig({int attempts = 2}) async {
     log('Fetching RemoteConfig values...');
     for (int i = 0; i < attempts; i++) {
       try {
-        // Simulated or actual remote fetch
         await Future.delayed(const Duration(milliseconds: 100));
-
-        // When Firebase Remote Config is plugged in:
-        // final remoteConfig = FirebaseRemoteConfig.instance;
-        // final raw = remoteConfig.getString(keyRemoteConfig);
-        // if (raw.isNotEmpty) {
-        //   final map = jsonDecode(raw) as Map<String, dynamic>;
-        //   updateWithMap(map);
-        // }
-
         log(
           'RemoteConfig fetched successfully: crossDelay=${model.value.splashProductCrossDelay}, buttonText="${model.value.splashProductBtnText}", monthlyId="${model.value.splashProductId}", yearlyId="${model.value.splashYearlyProductId}"',
         );
@@ -79,7 +65,6 @@ class RemoteConfigService extends GetxService {
         }
       }
     }
-    // Fallback safely to default values on complete failure
     log('Remote config fetch failed; ensuring default values are active');
     if (model.value.splashProductId.isEmpty) {
       final defaults = RemoteModel.defaults();
@@ -88,7 +73,6 @@ class RemoteConfigService extends GetxService {
     }
   }
 
-  /// Update remote config from raw map (e.g. from Firebase Remote Config or JSON)
   void updateWithMap(Map<String, dynamic> remoteConfigMap) {
     final parsed = RemoteModel.fromRemoteConfig(remoteConfigMap);
     model.value = parsed;
@@ -96,7 +80,6 @@ class RemoteConfigService extends GetxService {
     _storage?.setRemoteButtonText(jsonEncode(parsed.toJson()));
   }
 
-  /// Update remote config values programmatically
   void updateModel(RemoteModel newModel) {
     model.value = newModel;
     remoteModel = newModel;

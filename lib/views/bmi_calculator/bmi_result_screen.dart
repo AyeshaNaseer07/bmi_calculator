@@ -1,5 +1,4 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -125,38 +124,39 @@ class BMIResultScreen extends StatelessWidget {
 
                     // Status Feedback Message Card
                     Container(
-                      width: 329.w,
-                      height: 60.h,
-                      decoration: ShapeDecoration(
+                      width: double.infinity,
+                      constraints: BoxConstraints(minHeight: 54.h),
+                      decoration: BoxDecoration(
                         color: const Color(0xFFE8F9F7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60),
-                        ),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              AppAssets.shieldicon,
-                              width: 19.w,
-                              height: 19.h,
-                            ),
-                            SizedBox(width: 10.w),
-                            Expanded(
-                              child: Text(
-                                record.category.feedbackMessage,
-                                style: TextStyle(
-                                  color: const Color(0xFF1E2D2F),
-                                  fontSize: 11,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.40,
-                                ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 10.h,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            AppAssets.shieldicon,
+                            width: 20.w,
+                            height: 20.w,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Text(
+                              record.category.feedbackMessage,
+                              style: TextStyle(
+                                color: const Color(0xFF1E2D2F),
+                                fontSize: 11.5.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                                height: 1.40,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

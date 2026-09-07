@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../data/models/user_profile_model.dart';
 import '../data/services/storage_service.dart';
 
@@ -25,7 +26,6 @@ class HealthInsightController extends GetxController {
 
   void loadProfile() {
     final profile = _storage.getUserProfile();
-    // Only prefill if user previously saved
     if (profile.name != 'Alex' || profile.heightCm != 175.0) {
       fullNameController.text = profile.name;
       ageController.text = profile.age.toString();
@@ -52,7 +52,9 @@ class HealthInsightController extends GetxController {
 
   Future<void> saveProfileAndInsights() async {
     final profile = UserProfile(
-      name: fullNameController.text.trim().isEmpty ? 'Alex' : fullNameController.text.trim(),
+      name: fullNameController.text.trim().isEmpty
+          ? 'Alex'
+          : fullNameController.text.trim(),
       age: int.tryParse(ageController.text.trim()) ?? 25,
       gender: selectedGender.value ?? Gender.male,
       heightCm: double.tryParse(heightController.text.trim()) ?? 175.0,

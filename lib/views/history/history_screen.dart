@@ -1,5 +1,4 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -257,7 +256,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   monthYearStr,
                   style: TextStyle(
-                    color: const Color(0xFF111827).withOpacity(0.44),
+                    color: const Color(0xFF111827).withValues(alpha: 0.44),
                     fontSize: 8,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -272,7 +271,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   'BMI',
                   style: TextStyle(
-                    color: const Color(0xFF111827).withOpacity(.62),
+                    color: const Color(0xFF111827).withValues(alpha: .62),
                     fontSize: 11,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -297,7 +296,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   'Weight',
                   style: TextStyle(
-                    color: const Color(0xFF111827).withOpacity(.62),
+                    color: const Color(0xFF111827).withValues(alpha: .62),
                     fontSize: 11,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -363,7 +362,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Text(
           subtitle,
           style: TextStyle(
-            color: const Color(0xFF111827).withOpacity(.44),
+            color: const Color(0xFF111827).withValues(alpha: .44),
             fontSize: 8,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
