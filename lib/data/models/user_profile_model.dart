@@ -111,7 +111,7 @@ class UserProfile {
   final HealthGoal healthGoal;
 
   const UserProfile({
-    this.name = 'Alex',
+    this.name = '',
     this.age = 25,
     this.gender = Gender.male,
     this.heightCm = 175.0,
@@ -120,6 +120,11 @@ class UserProfile {
     this.activityLevel = ActivityLevel.sedentary,
     this.healthGoal = HealthGoal.loseWeight,
   });
+
+  String get displayName =>
+      (name.trim().isEmpty || name.trim().toLowerCase() == 'alex')
+          ? ''
+          : name.trim();
 
   UserProfile copyWith({
     String? name,
@@ -157,8 +162,9 @@ class UserProfile {
   }
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
+    final rawName = json['name'] as String? ?? '';
     return UserProfile(
-      name: json['name'] as String? ?? 'Alex',
+      name: rawName == 'Alex' ? '' : rawName,
       age: json['age'] as int? ?? 25,
       gender: Gender.values.firstWhere(
         (e) => e.name == json['gender'],

@@ -70,6 +70,7 @@ abstract class AppAssets {
   static const String historyIcon = '$_imagesBase/history_bg.webp';
   static const String historyUp = '$_imagesBase/history_up.webp';
   static const String historyCalander = '$_imagesBase/calander_history.webp';
+  static const String historyRestart = '$_imagesBase/history_restart.png';
 
   // ── Health Insights ──
   static const String healthHeight = '$_imagesBase/health_height.png';

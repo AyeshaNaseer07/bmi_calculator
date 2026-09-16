@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../controllers/bmi_controller.dart';
+import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
@@ -19,6 +20,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BMIController bmiController = Get.find<BMIController>();
+    final ProfileController profileController = Get.find<ProfileController>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7FAF8),
@@ -51,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Header: Profile Avatar, Greeting, VIP Diamond
-                    _buildHeader(hasData),
+                    _buildHeader(hasData, profileController),
                     SizedBox(height: 28.h),
 
                     // Main BMI Card (Empty state or Active Calculated state)
@@ -99,7 +101,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(bool hasData) {
+  Widget _buildHeader(bool hasData, ProfileController profileController) {
+    final userName = profileController.userProfile.value.displayName;
+    final greeting = userName.isNotEmpty ? 'Hello, $userName' : 'Hello, Guest';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -130,13 +135,17 @@ class HomeScreen extends StatelessWidget {
         // Greeting Text Section
         Row(
           children: [
-            Text(
-              'Hello, Alex',
-              style: TextStyle(
-                color: const Color(0xFF1A252C),
-                fontSize: 24,
-                fontFamily: 'Instrument Sans',
-                fontWeight: FontWeight.w700,
+            Flexible(
+              child: Text(
+                greeting,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: const Color(0xFF1A252C),
+                  fontSize: 24,
+                  fontFamily: 'Instrument Sans',
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             SizedBox(width: 8.w),

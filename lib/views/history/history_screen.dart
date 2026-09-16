@@ -10,7 +10,6 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
-import '../widgets/custom_gradient_button.dart';
 import 'widgets/calendar_bottom_sheet.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -393,7 +392,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
         // Top empty card with clipboard graphic
         CustomCard(
           borderRadius: 22.r,
-          padding: EdgeInsets.all(18.w),
+          padding: EdgeInsets.fromLTRB(18.w, 18.h, 0, 18.h),
+          shadows: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 16.r,
+              offset: Offset(0, 4.h),
+            ),
+            BoxShadow(
+              color: const Color(0xFF1DB59B).withValues(alpha: 0.06),
+              blurRadius: 12.r,
+              offset: Offset(0, 2.h),
+            ),
+          ],
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -401,61 +412,91 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 32.w,
-                      height: 32.w,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD3F4EA),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.history,
-                        color: const Color(0xFF0F766E),
-                        size: 18.sp,
-                      ),
+                    // Circular history icon
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          AppAssets.historyRestart,
+                          width: 36.w,
+                          height: 36.w,
+                          fit: BoxFit.contain,
+                        ),
+                        SizedBox(
+                          width: 12.w,
+                        ), // Add spacing between image and text
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'No records yet',
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textDark,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                'Calculate your BMI to see\nyour history here.',
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  color: AppColors.textLight,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 10.h),
-                    Text(
-                      'No records yet',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textDark,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Calculate your BMI to see\nyour history here.',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: AppColors.textLight,
-                        height: 1.3,
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    SizedBox(
-                      width: 140.w,
-                      child: CustomGradientButton(
-                        text: 'Calculate BMI',
-                        solidColor: const Color(0xFF1B8A7A),
-                        height: 36.h,
-                        onPressed: () => Get.toNamed(AppRoutes.bmiCalculator),
+                    GestureDetector(
+                      onTap: () => Get.toNamed(AppRoutes.bmiCalculator),
+                      child: Container(
+                        width: 117,
+                        height: 36,
+                        decoration: ShapeDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment(0.50, 0.00),
+                            end: Alignment(0.50, 1.00),
+                            colors: [
+                              const Color(0xFF33D2AB),
+                              const Color(0xFF00946F),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Calculate BMI',
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                width: 90.w,
-                height: 90.w,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8F7F2),
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Icon(
-                  Icons.assignment_turned_in_outlined,
-                  color: const Color(0xFF1DB59B),
-                  size: 48.sp,
+              // BMI illustration — overflows card edge like in the image
+              SizedBox(
+                width: 110.w,
+                height: 110.w,
+                child: OverflowBox(
+                  maxWidth: 160.w,
+                  maxHeight: 160.w,
+                  child: Image.asset(
+                    AppAssets.historyIcon,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ],
@@ -483,26 +524,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(6.w),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFD3F4EA),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.trending_up,
-                  color: const Color(0xFF0F766E),
-                  size: 16.sp,
-                ),
-              ),
+              Image.asset(AppAssets.historyUp, height: 30.h, width: 30.w),
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
                   'Your BMI history helps you understand your health journey over time and stay on track with your goals.',
                   style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.textBody,
-                    height: 1.35,
+                    color: const Color(0xFF111827),
+                    fontSize: 11,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
@@ -542,15 +573,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
         // Unlock Premium Banner (Screenshot 19)
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1DB59B),
-            borderRadius: BorderRadius.circular(18.r),
-            boxShadow: [
+          width: 343,
+          padding: const EdgeInsets.all(20),
+          decoration: ShapeDecoration(
+            color: const Color(0xFFFDFDFE),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            shadows: [
               BoxShadow(
-                color: const Color(0xFF1DB59B).withValues(alpha: 0.3),
-                blurRadius: 10.r,
-                offset: Offset(0, 4.h),
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
               ),
             ],
           ),
@@ -569,7 +604,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Text(
                       'Unlock Premium',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.w800,
                         fontSize: 13.sp,
                       ),
@@ -578,7 +613,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Text(
                       'Get advanced insights, reports &\nmore',
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: Colors.black,
                         fontSize: 10.sp,
                         height: 1.2,
                       ),
@@ -644,15 +679,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textDark,
+                  color: Colors.black,
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               SizedBox(height: 2.h),
               Text(
                 subtitle,
-                style: TextStyle(fontSize: 10.5.sp, color: AppColors.textLight),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),

@@ -29,6 +29,184 @@ class ProfileScreen extends StatelessWidget {
     showDialog(context: context, builder: (_) => const UnitsDialog());
   }
 
+  void _showEditProfileBottomSheet(
+    BuildContext context,
+    ProfileController controller,
+  ) {
+    final textController = TextEditingController(
+      text: controller.userProfile.value.displayName,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          ),
+          padding: EdgeInsets.only(
+            left: 20.w,
+            right: 20.w,
+            top: 14.h,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 24.h,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1D5DB),
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                'Edit Profile Name',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Instrument Sans',
+                  color: AppColors.textDark,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'Enter your name to personalize your health journey.',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.textLight,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Container(
+                height: 48.h,
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7FAF8),
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(color: const Color(0xFFD4EFE6)),
+                ),
+                child: Center(
+                  child: TextField(
+                    controller: textController,
+                    autofocus: true,
+                    textCapitalization: TextCapitalization.words,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Enter your name',
+                      hintStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textLight,
+                      ),
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        side: const BorderSide(color: Color(0xFFD4EFE6)),
+                      ),
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: AppColors.textLight,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1DB59B),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: () async {
+                        final newName = textController.text.trim();
+                        await controller.updateName(newName);
+                        if (ctx.mounted) Navigator.pop(ctx);
+                        Get.snackbar(
+                          'Success',
+                          newName.isNotEmpty
+                              ? 'Profile updated for $newName'
+                              : 'Profile name cleared',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: const Color(0xFF10B981),
+                          colorText: Colors.white,
+                          duration: const Duration(seconds: 2),
+                        );
+                      },
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              Center(
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Get.toNamed(AppRoutes.healthInsights);
+                  },
+                  icon: Icon(
+                    Icons.tune,
+                    size: 16.sp,
+                    color: const Color(0xFF1DB59B),
+                  ),
+                  label: Text(
+                    'Update Full Health & Body Details',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(0xFF1DB59B),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AppController appController = Get.find<AppController>();
@@ -45,109 +223,134 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // User Info Card
-              CustomCard(
-                borderRadius: 20.r,
-                padding: EdgeInsets.all(16.w),
-                child: Row(
-                  children: [
-                    // Avatar with edit icon badge
-                    Stack(
-                      children: [
-                        Container(
-                          width: 54.w,
-                          height: 54.w,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFD3F4EA),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            CupertinoIcons.person_fill,
-                            color: const Color(0xFF0F766E),
-                            size: 28.sp,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: EdgeInsets.all(3.w),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF1DB59B),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 10.sp,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 14.w),
+              Obx(() {
+                final name = profileController.userProfile.value.displayName;
+                final displayName = name.isNotEmpty ? name : 'Guest User';
+                final tagline = name.isNotEmpty
+                    ? 'Manage your health profile'
+                    : 'Start your health journey\nby adding your details.';
 
-                    // Name and Tagline
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Guest User',
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.textDark,
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            'Start your health journey\nby adding your details.',
-                            style: TextStyle(
-                              fontSize: 10.5.sp,
-                              color: AppColors.textLight,
-                              height: 1.3,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Edit Profile Pill
-                    GestureDetector(
-                      onTap: () => Get.toNamed(AppRoutes.healthInsights),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.h,
+                return CustomCard(
+                  borderRadius: 20.r,
+                  padding: EdgeInsets.all(16.w),
+                  child: Row(
+                    children: [
+                      // Avatar with edit icon badge
+                      GestureDetector(
+                        onTap: () => _showEditProfileBottomSheet(
+                          context,
+                          profileController,
                         ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8F7F2),
-                          borderRadius: BorderRadius.circular(16.r),
-                          border: Border.all(color: const Color(0xFF2FD1A6)),
-                        ),
-                        child: Row(
+                        child: Stack(
                           children: [
-                            Icon(
-                              Icons.edit_outlined,
-                              size: 12.sp,
-                              color: const Color(0xFF1DB59B),
+                            Container(
+                              width: 54.w,
+                              height: 54.w,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFD3F4EA),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                CupertinoIcons.person_fill,
+                                color: const Color(0xFF0F766E),
+                                size: 28.sp,
+                              ),
                             ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              'Edit Profile',
-                              style: TextStyle(
-                                fontSize: 10.5.sp,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF1DB59B),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                padding: EdgeInsets.all(3.w),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF1DB59B),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 10.sp,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                      SizedBox(width: 14.w),
+
+                      // Name and Tagline
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => _showEditProfileBottomSheet(
+                            context,
+                            profileController,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                displayName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textDark,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                tagline,
+                                style: TextStyle(
+                                  fontSize: 10.5.sp,
+                                  color: AppColors.textLight,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Edit Profile Pill
+                      GestureDetector(
+                        onTap: () => _showEditProfileBottomSheet(
+                          context,
+                          profileController,
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE8F7F2),
+                            borderRadius: BorderRadius.circular(16.r),
+                            border: Border.all(color: const Color(0xFF2FD1A6)),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit_outlined,
+                                size: 12.sp,
+                                color: const Color(0xFF1DB59B),
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  fontSize: 10.5.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF1DB59B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
               SizedBox(height: 18.h),
 
               // Account Section

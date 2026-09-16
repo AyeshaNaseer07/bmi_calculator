@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/storage_service.dart';
 
+import 'profile_controller.dart';
+
 class HealthInsightController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
 
@@ -26,8 +28,9 @@ class HealthInsightController extends GetxController {
 
   void loadProfile() {
     final profile = _storage.getUserProfile();
-    if (profile.name != 'Alex' || profile.heightCm != 175.0) {
-      fullNameController.text = profile.name;
+    final name = profile.displayName;
+    if (name.isNotEmpty || profile.heightCm != 175.0) {
+      fullNameController.text = name;
       ageController.text = profile.age.toString();
       heightController.text = profile.heightCm.toStringAsFixed(0);
       weightController.text = profile.weightKg.toStringAsFixed(1);
@@ -52,9 +55,7 @@ class HealthInsightController extends GetxController {
 
   Future<void> saveProfileAndInsights() async {
     final profile = UserProfile(
-      name: fullNameController.text.trim().isEmpty
-          ? 'Alex'
-          : fullNameController.text.trim(),
+      name: fullNameController.text.trim(),
       age: int.tryParse(ageController.text.trim()) ?? 25,
       gender: selectedGender.value ?? Gender.male,
       heightCm: double.tryParse(heightController.text.trim()) ?? 175.0,
@@ -64,6 +65,9 @@ class HealthInsightController extends GetxController {
     );
 
     await _storage.saveUserProfile(profile);
+    if (Get.isRegistered<ProfileController>()) {
+      Get.find<ProfileController>().loadProfile();
+    }
     hasInsights.value = true;
   }
 

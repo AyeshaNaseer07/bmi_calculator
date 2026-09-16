@@ -23,6 +23,18 @@ class ProfileController extends GetxController {
     userProfile.value = _storage.getUserProfile();
   }
 
+  Future<void> updateName(String newName) async {
+    final current = userProfile.value;
+    final updated = current.copyWith(name: newName.trim());
+    userProfile.value = updated;
+    await _storage.saveUserProfile(updated);
+  }
+
+  Future<void> updateProfile(UserProfile updated) async {
+    userProfile.value = updated;
+    await _storage.saveUserProfile(updated);
+  }
+
   Future<bool> changePassword() async {
     final current = currentPasswordController.text.trim();
     final newPass = newPasswordController.text.trim();

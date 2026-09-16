@@ -87,9 +87,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14.r),
-                            side: const BorderSide(
-                              color: Color(0xFFD4EFE6),
-                            ),
+                            side: const BorderSide(color: Color(0xFFD4EFE6)),
                           ),
                           elevation: 6,
                           shadowColor: Colors.black.withValues(alpha: 0.1),
@@ -109,9 +107,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                           setState(() => _isGenderMenuOpen = true);
                         },
                         offset: Offset(0, 68.h),
-                        constraints: BoxConstraints(
-                          minWidth: 160.w,
-                        ),
+                        constraints: BoxConstraints(minWidth: 160.w),
                         itemBuilder: (context) {
                           return ['Male', 'Female', 'Other'].map((g) {
                             final isSelected = _selectedGender == g;
