@@ -11,6 +11,7 @@ import '../../data/models/user_profile_model.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../widgets/gender_popup_menu.dart';
 
 class AddHealthDataScreen extends StatefulWidget {
   const AddHealthDataScreen({super.key});
@@ -132,16 +133,12 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                           _buildFieldLabel('Gender'),
                           Theme(
                             data: Theme.of(context).copyWith(
-                              popupMenuTheme: PopupMenuThemeData(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14.r),
-                                  side: const BorderSide(
-                                    color: Color(0xFFD4EFE6),
-                                  ),
-                                ),
-                                elevation: 6,
-                                shadowColor: Colors.black.withValues(alpha: 0.1),
+                              popupMenuTheme: const PopupMenuThemeData(
+                                color: Colors.transparent,
+                                surfaceTintColor: Colors.transparent,
+                                elevation: 0,
+                                shadowColor: Colors.transparent,
+                                menuPadding: EdgeInsets.zero,
                               ),
                             ),
                             child: PopupMenuButton<Gender>(
@@ -157,40 +154,20 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                               },
                               offset: Offset(0, 52.h),
                               constraints: BoxConstraints(
-                                minWidth: 140.w,
+                                minWidth: 144.w,
+                                maxWidth: 144.w,
                               ),
                               itemBuilder: (context) {
-                                return Gender.values.map((g) {
-                                  final isSelected = selectedGender == g;
-                                  return PopupMenuItem<Gender>(
-                                    value: g,
-                                    height: 40.h,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          g.displayName,
-                                          style: TextStyle(
-                                            fontSize: 13.sp,
-                                            fontWeight: isSelected
-                                                ? FontWeight.w600
-                                                : FontWeight.w500,
-                                            color: isSelected
-                                                ? const Color(0xFF0F766E)
-                                                : AppColors.textDark,
-                                          ),
-                                        ),
-                                        if (isSelected)
-                                          Icon(
-                                            CupertinoIcons.checkmark_alt,
-                                            size: 14.sp,
-                                            color: const Color(0xFF2FD1A6),
-                                          ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList();
+                                return [
+                                  GenderPopupMenuEntry<Gender>(
+                                    items: Gender.values.map((g) {
+                                      return GenderPopupMenuItem(
+                                        value: g,
+                                        label: g.displayName,
+                                      );
+                                    }).toList(),
+                                  ),
+                                ];
                               },
                               child: Container(
                                 height: 48.h,

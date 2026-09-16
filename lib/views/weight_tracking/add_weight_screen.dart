@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../controllers/weight_tracker_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/gender_popup_menu.dart';
 
 class AddWeightScreen extends StatefulWidget {
   const AddWeightScreen({super.key});
@@ -83,14 +84,12 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     // Gender Dropdown Field
                     Theme(
                       data: Theme.of(context).copyWith(
-                        popupMenuTheme: PopupMenuThemeData(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14.r),
-                            side: const BorderSide(color: Color(0xFFD4EFE6)),
-                          ),
-                          elevation: 6,
-                          shadowColor: Colors.black.withValues(alpha: 0.1),
+                        popupMenuTheme: const PopupMenuThemeData(
+                          color: Colors.transparent,
+                          surfaceTintColor: Colors.transparent,
+                          elevation: 0,
+                          shadowColor: Colors.transparent,
+                          menuPadding: EdgeInsets.zero,
                         ),
                       ),
                       child: PopupMenuButton<String>(
@@ -107,40 +106,29 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                           setState(() => _isGenderMenuOpen = true);
                         },
                         offset: Offset(0, 68.h),
-                        constraints: BoxConstraints(minWidth: 160.w),
+                        constraints: BoxConstraints(
+                          minWidth: 144.w,
+                          maxWidth: 144.w,
+                        ),
                         itemBuilder: (context) {
-                          return ['Male', 'Female', 'Other'].map((g) {
-                            final isSelected = _selectedGender == g;
-                            return PopupMenuItem<String>(
-                              value: g,
-                              height: 40.h,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    g,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? const Color(0xFF0F766E)
-                                          : const Color(0xFF111827),
-                                      fontSize: 15.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.w500,
-                                    ),
-                                  ),
-                                  if (isSelected)
-                                    Icon(
-                                      CupertinoIcons.checkmark_alt,
-                                      size: 14.sp,
-                                      color: const Color(0xFF2FD1A6),
-                                    ),
-                                ],
-                              ),
-                            );
-                          }).toList();
+                          return const [
+                            GenderPopupMenuEntry<String>(
+                              items: [
+                                GenderPopupMenuItem(
+                                  value: 'Male',
+                                  label: 'Male',
+                                ),
+                                GenderPopupMenuItem(
+                                  value: 'Female',
+                                  label: 'Female',
+                                ),
+                                GenderPopupMenuItem(
+                                  value: 'Other',
+                                  label: 'Other',
+                                ),
+                              ],
+                            ),
+                          ];
                         },
                         child: _buildCardContainer(
                           child: Row(
