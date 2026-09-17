@@ -17,10 +17,16 @@ class NativeAdCard extends StatefulWidget {
   final String? adUnitId;
   final EdgeInsetsGeometry? margin;
 
+  /// Fired once the ad finishes loading (true) or fails to load (false),
+  /// so a parent that wraps this in extra chrome (e.g. a bottom bar
+  /// container) can collapse that chrome entirely on failure.
+  final ValueChanged<bool>? onAdAvailabilityChanged;
+
   const NativeAdCard({
     super.key,
     this.adUnitId,
     this.margin,
+    this.onAdAvailabilityChanged,
   });
 
   @override
@@ -66,6 +72,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
             _isLoaded = true;
             _isFailed = false;
           });
+          widget.onAdAvailabilityChanged?.call(true);
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('❌ NativeAd failed to load: ${error.message} (code: ${error.code})');
@@ -75,6 +82,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
             _isLoaded = false;
             _isFailed = true;
           });
+          widget.onAdAvailabilityChanged?.call(false);
         },
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
           logAdRevenue(

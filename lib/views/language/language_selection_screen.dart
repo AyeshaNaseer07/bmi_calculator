@@ -26,6 +26,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     with TickerProviderStateMixin {
   final AppController _appController = Get.find<AppController>();
   String _selectedLang = 'en';
+  bool _bottomAdAvailable = true;
 
   // Keys for position tracking
   final GlobalKey _doneButtonKey = GlobalKey();
@@ -342,8 +343,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                   ),
 
                   SizedBox(height: 8.h),
-                  const NativeAdCard(),
-                  SizedBox(height: 20.h),
                 ],
               ),
             ),
@@ -381,6 +380,27 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
             ),
         ],
       ),
+      // ── Native ad pinned where the bottom nav bar would sit ──
+      // Always visible (independent of list scroll position) while an ad
+      // is loading/loaded; collapses entirely if the fill fails.
+      bottomNavigationBar: _bottomAdAvailable
+          ? SafeArea(
+              top: false,
+              child: Container(
+                width: double.infinity,
+                color: const Color(0xFFF7FCF9),
+                padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 10.h),
+                child: NativeAdCard(
+                  onAdAvailabilityChanged: (available) {
+                    if (!mounted) return;
+                    if (_bottomAdAvailable != available) {
+                      setState(() => _bottomAdAvailable = available);
+                    }
+                  },
+                ),
+              ),
+            )
+          : null,
     );
   }
 }
