@@ -194,7 +194,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     // Save Button
                     CustomGradientButton(
                       text: 'Save Weight',
-                      backgroundImage: AppAssets.calculateButton,
+                      backgroundImage: AppAssets.btnRectangle,
                       onPressed: _onSave,
                     ),
                   ],

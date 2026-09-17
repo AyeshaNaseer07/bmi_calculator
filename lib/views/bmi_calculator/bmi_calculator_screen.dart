@@ -443,7 +443,7 @@ class BMICalculatorScreen extends StatelessWidget {
                       width: 16.w,
                       height: 16.w,
                     ),
-                    backgroundImage: AppAssets.calculateButton,
+                    backgroundImage: AppAssets.btnRectangle,
                     onPressed: () => _onCalculate(controller),
                   ),
                   SizedBox(height: 10.h),

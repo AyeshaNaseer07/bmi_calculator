@@ -196,7 +196,7 @@ class ActivityLevelScreen extends StatelessWidget {
                 // Continue Button
                 CustomGradientButton(
                   text: 'Continue',
-                  backgroundImage: AppAssets.calculateButton,
+                  backgroundImage: AppAssets.btnRectangle,
                   onPressed: () => Get.back(),
                 ),
                 SizedBox(height: 24.h),

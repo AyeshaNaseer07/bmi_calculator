@@ -456,6 +456,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       text: _isLoading
                           ? 'Processing...'
                           : _appController.remoteConfigService.buttonText,
+                      backgroundImage: AppAssets.btnRectangle,
                       leadingIcon: Icon(
                         Icons.diamond_outlined,
                         color: Colors.white,

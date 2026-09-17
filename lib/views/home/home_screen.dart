@@ -206,7 +206,7 @@ class HomeScreen extends StatelessWidget {
               width: 16.w,
               height: 16.w,
             ),
-            backgroundImage: AppAssets.calculateButton,
+            backgroundImage: AppAssets.btnRectangle,
             height: 48.h,
             onPressed: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),

@@ -189,7 +189,7 @@ class WeightTrackingScreen extends StatelessWidget {
                     color: Colors.white,
                     size: 18.sp,
                   ),
-                  backgroundImage: AppAssets.calculateButton,
+                  backgroundImage: AppAssets.btnRectangle,
                   onPressed: () => Get.toNamed(AppRoutes.addWeight),
                 ),
                 SizedBox(height: 16.h),

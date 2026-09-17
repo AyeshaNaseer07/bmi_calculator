@@ -42,7 +42,7 @@ class CustomGradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveHeight = height ?? 54.h;
-    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(28.r);
+    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(12.r);
 
     if (isOutlined) {
       return Container(
@@ -102,7 +102,7 @@ class CustomGradientButton extends StatelessWidget {
         borderRadius: effectiveBorderRadius,
         image: solidColor == null
             ? DecorationImage(
-                image: AssetImage(backgroundImage ?? AppAssets.calculateButton),
+                image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
                 fit: BoxFit.fill,
               )
             : null,

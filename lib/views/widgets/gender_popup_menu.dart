@@ -28,61 +28,78 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 144.w,
-      height: 137.h,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment(0.50, 0.0),
-          end: Alignment(0.50, 1.0),
-          colors: [Color(0xFFD9F8F1), Colors.white],
-        ),
-        borderRadius: BorderRadius.circular(11.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 8.60,
-            offset: Offset(0, 2),
-            spreadRadius: 0,
-          ),
-        ],
+      width: 144,
+      height: 137,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          for (int i = 0; i < widget.items.length; i++) ...[
-            Expanded(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.vertical(
-                    top: i == 0 ? Radius.circular(11.r) : Radius.zero,
-                    bottom: i == widget.items.length - 1
-                        ? Radius.circular(11.r)
-                        : Radius.zero,
+          Positioned(
+            left: 0,
+            top: 0,
+            child: Container(
+              width: 144,
+              height: 137,
+              decoration: ShapeDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(0.50, -2.0),
+                  end: Alignment(0.50, 1.00),
+                  colors: [const Color(0xFFD9F8F1), Colors.white],
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x3F000000),
+                    blurRadius: 8.60,
+                    offset: Offset(0, 2),
+                    spreadRadius: 0,
                   ),
-                  onTap: () {
-                    Navigator.of(context).pop(widget.items[i].value);
-                  },
-                  child: Center(
-                    child: Text(
-                      widget.items[i].label,
-                      style: TextStyle(
-                        color: const Color(0xFF111827),
-                        fontSize: 16.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+                ],
+              ),
+              child: Column(
+                children: [
+                  for (int i = 0; i < widget.items.length; i++) ...[
+                    Expanded(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.vertical(
+                            top: i == 0 ? Radius.circular(11.r) : Radius.zero,
+                            bottom: i == widget.items.length - 1
+                                ? Radius.circular(11.r)
+                                : Radius.zero,
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop(widget.items[i].value);
+                          },
+                          child: Center(
+                            child: Text(
+                              widget.items[i].label,
+                              style: TextStyle(
+                                color: const Color(0xFF111827),
+                                fontSize: 16.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                    if (i < widget.items.length - 1)
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 14.w),
+                        height: 1,
+                        color: const Color(0xFF9CA3AF).withValues(alpha: 0.5),
+                      ),
+                  ],
+                ],
               ),
             ),
-            if (i < widget.items.length - 1)
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 14.w),
-                height: 1,
-                color: const Color(0xFF9CA3AF).withValues(alpha: 0.5),
-              ),
-          ],
+          ),
         ],
       ),
     );

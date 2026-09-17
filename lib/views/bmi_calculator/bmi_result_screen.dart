@@ -278,7 +278,7 @@ class BMIResultScreen extends StatelessWidget {
                   width: 16.w,
                   height: 16.w,
                 ),
-                backgroundImage: AppAssets.calculateButton,
+                backgroundImage: AppAssets.btnRectangle,
                 onPressed: () => Get.offNamed(AppRoutes.bmiCalculator),
               ),
               SizedBox(height: 24.h),

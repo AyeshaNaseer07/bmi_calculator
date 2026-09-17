@@ -171,9 +171,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                               },
                               child: Container(
                                 height: 48.h,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.w,
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 14.w),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(14.r),
@@ -326,7 +324,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                 // Save & Get Insights Button
                 CustomGradientButton(
                   text: 'Save & Get Insights',
-                  backgroundImage: AppAssets.calculateButton,
+                  backgroundImage: AppAssets.btnRectangle,
                   onPressed: _onSave,
                 ),
                 SizedBox(height: 24.h),
@@ -359,32 +357,40 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Container(
-      height: 48.h,
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
-      decoration: BoxDecoration(
+      width: 343,
+      height: 46,
+      decoration: ShapeDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFD4EFE6)),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 0.25, color: const Color(0xFF33D2AB)),
+          borderRadius: BorderRadius.circular(7),
+        ),
+        shadows: [
+          BoxShadow(
+            color: Color(0x3A33D2AB),
+            blurRadius: 6.80,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          ),
+        ],
       ),
-      child: Center(
-        child: TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          style: TextStyle(
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        style: TextStyle(
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textDark,
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
             fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textDark,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textLight,
           ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textLight,
-            ),
-            border: InputBorder.none,
-            isDense: true,
-          ),
+          border: InputBorder.none,
+          isDense: true,
         ),
       ),
     );

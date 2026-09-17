@@ -159,8 +159,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onTap: _navigateToPaywall,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 6,
+                      horizontal: 14,
+                      vertical: 5,
                     ),
                     decoration: ShapeDecoration(
                       color: const Color(0x4F33D2AB),
@@ -179,12 +179,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             fontFamily: 'SF Pro',
                             fontWeight: FontWeight.w500,
                           ),
-                        ),
-                        const SizedBox(width: 2),
-                        const Icon(
-                          Icons.chevron_right_rounded,
-                          size: 16,
-                          color: Color(0xFF0F6E60),
                         ),
                       ],
                     ),
@@ -229,6 +223,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   // Next Gradient Button
                   CustomGradientButton(
                     text: 'Next',
+                    backgroundImage: AppAssets.btnRectangle,
+                    borderRadius: BorderRadius.circular(12.r),
                     trailingIcon: const Icon(
                       Icons.arrow_forward_rounded,
                       color: Colors.white,
