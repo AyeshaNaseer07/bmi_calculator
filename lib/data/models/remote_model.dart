@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 class RemoteModel {
@@ -12,7 +14,12 @@ class RemoteModel {
   int premiumDiscountCrossDelay;
   String premiumDiscountBtnText;
   String premiumDiscountOfferProductId;
+
   String onboardingDefaultSelection;
+  String nativeAdId;
+  static String get defaultNativeAdId => Platform.isIOS
+      ? 'ca-app-pub-3940256099942544/3986624511'
+      : 'ca-app-pub-3940256099942544/2247696110';
 
   RemoteModel({
     required this.splashProductId,
@@ -27,6 +34,7 @@ class RemoteModel {
     required this.premiumDiscountBtnText,
     required this.premiumDiscountOfferProductId,
     required this.onboardingDefaultSelection,
+    required this.nativeAdId,
   });
 
   static String _parseString(dynamic val, String defaultValue) {
@@ -55,37 +63,32 @@ class RemoteModel {
     try {
       return RemoteModel(
         splashProductId: _parseString(
-          remoteConfig['splash_product_id'] ?? remoteConfig['monthly_product_id'],
+          remoteConfig['splash_product_id'] ??
+              remoteConfig['monthly_product_id'],
           'com.monthly.bmi.calculator',
         ),
         splashYearlyProductId: _parseString(
-          remoteConfig['splashYearlyProductId'] ?? remoteConfig['yearly_product_id'],
+          remoteConfig['splashYearlyProductId'] ??
+              remoteConfig['yearly_product_id'],
           'com.yearly.bmi.calculator',
         ),
         splashProductCrossDelay: _parseInt(
-          remoteConfig['splash_product_cross_delay'] ?? remoteConfig['cross_delay'],
+          remoteConfig['splash_product_cross_delay'] ??
+              remoteConfig['cross_delay'],
           3,
         ),
         splashProductBtnText: _parseString(
-          remoteConfig['splash_product_btn_text'] ?? remoteConfig['button_text'],
+          remoteConfig['splash_product_btn_text'] ??
+              remoteConfig['button_text'],
           'Start Free Trial',
         ),
-        monthlyPrice: _parseString(
-          remoteConfig['monthly_price'],
-          '\$4.99',
-        ),
-        yearlyPrice: _parseString(
-          remoteConfig['yearly_price'],
-          '\$29.99',
-        ),
+        monthlyPrice: _parseString(remoteConfig['monthly_price'], '\$4.99'),
+        yearlyPrice: _parseString(remoteConfig['yearly_price'], '\$29.99'),
         trialSubtitle: _parseString(
           remoteConfig['trial_subtitle'],
           '7 Days Free • Cancel Anytime',
         ),
-        onboarding: _parseString(
-          remoteConfig['onboarding'],
-          'on',
-        ),
+        onboarding: _parseString(remoteConfig['onboarding'], 'on'),
         premiumDiscountCrossDelay: _parseInt(
           remoteConfig['premium_discount_cross_delay'],
           3,
@@ -101,6 +104,12 @@ class RemoteModel {
         onboardingDefaultSelection: _parseString(
           remoteConfig['onboarding_default_selection'],
           'com.yearly.bmi.calculator',
+        ),
+        nativeAdId: _parseString(
+          remoteConfig['native_ad_id'] ??
+              remoteConfig['native_ad_unit_id'] ??
+              remoteConfig['nativeAdId'],
+          defaultNativeAdId,
         ),
       );
     } catch (e, stackTrace) {
@@ -126,6 +135,7 @@ class RemoteModel {
       premiumDiscountBtnText: 'Start Free Trial',
       premiumDiscountOfferProductId: 'com.offer.bmi.calculator',
       onboardingDefaultSelection: 'com.yearly.bmi.calculator',
+      nativeAdId: defaultNativeAdId,
     );
   }
 
@@ -143,6 +153,7 @@ class RemoteModel {
       'premium_discount_btn_text': premiumDiscountBtnText,
       'premium_discount_offer_product_id': premiumDiscountOfferProductId,
       'onboarding_default_selection': onboardingDefaultSelection,
+      'native_ad_id': nativeAdId,
     };
   }
 }

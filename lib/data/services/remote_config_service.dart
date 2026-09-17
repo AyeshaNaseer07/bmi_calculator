@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 
 import '../models/remote_model.dart';
@@ -25,6 +26,7 @@ class RemoteConfigService extends GetxService {
   String get yearlyPrice => model.value.yearlyPrice;
   String get buttonText => model.value.splashProductBtnText;
   String get trialSubtitle => model.value.trialSubtitle;
+  String get nativeAdId => model.value.nativeAdId;
 
   Future<RemoteConfigService> init() async {
     loadCachedConfig();
@@ -53,7 +55,10 @@ class RemoteConfigService extends GetxService {
     log('Fetching RemoteConfig values...');
     for (int i = 0; i < attempts; i++) {
       try {
-        await Future.delayed(const Duration(milliseconds: 100));
+        final map = RemoteConfig.getAllValuesAsMap();
+        if (map.isNotEmpty) {
+          updateWithMap(map);
+        }
         log(
           'RemoteConfig fetched successfully: crossDelay=${model.value.splashProductCrossDelay}, buttonText="${model.value.splashProductBtnText}", monthlyId="${model.value.splashProductId}", yearlyId="${model.value.splashYearlyProductId}"',
         );
@@ -103,4 +108,77 @@ class RemoteConfigService extends GetxService {
         return model.value.yearlyPrice;
     }
   }
+}
+
+class RemoteConfig {
+  static final FirebaseRemoteConfig remoteConfig =
+      FirebaseRemoteConfig.instance;
+
+  static const String _key = RemoteConfigService.keyRemoteConfig;
+
+  static Future<String> initialize() async {
+    try {
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 15),
+          minimumFetchInterval: Duration.zero,
+        ),
+      );
+      final activated = await remoteConfig.fetchAndActivate();
+      log(
+        activated
+            ? 'RemoteConfig fetched & activated fresh values'
+            : 'RemoteConfig fetch succeeded, using activated values',
+      );
+      final configMap = getAllValuesAsMap();
+      if (configMap.isNotEmpty && Get.isRegistered<RemoteConfigService>()) {
+        RemoteConfigService.to.updateWithMap(configMap);
+      }
+      return 'success';
+    } catch (e) {
+      log('RemoteConfig.initialize failed: $e');
+      return 'failed: $e';
+    }
+  }
+
+  static Map<String, dynamic> getAllValuesAsMap() {
+    final Map<String, dynamic> result = {};
+
+    final val = remoteConfig.getString(_key).trim();
+    if (val.isNotEmpty && val != "{}" && val != "off") {
+      try {
+        final decoded = json.decode(val);
+        if (decoded is Map<String, dynamic>) {
+          result.addAll(decoded);
+        }
+      } catch (e) {
+        log('RemoteConfig: failed to decode bundle JSON string: $e');
+      }
+    }
+
+    final allParams = remoteConfig.getAll();
+    for (final entry in allParams.entries) {
+      if (entry.key == _key) continue;
+      final rawStr = entry.value.asString().trim();
+      if (rawStr.isNotEmpty) {
+        if (rawStr.startsWith('{') && rawStr.endsWith('}')) {
+          try {
+            final parsed = json.decode(rawStr);
+            if (parsed is Map && parsed.containsKey('value')) {
+              result[entry.key] = parsed['value'];
+              continue;
+            }
+          } catch (_) {}
+        }
+        result[entry.key] = rawStr;
+      }
+    }
+
+    return result;
+  }
+
+  static String getString(String key) => remoteConfig.getString(key);
+  static int getInt(String key) => remoteConfig.getInt(key);
+  static bool getBool(String key) => remoteConfig.getBool(key);
+  static double getDouble(String key) => remoteConfig.getDouble(key);
 }

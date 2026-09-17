@@ -10,8 +10,8 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/subscription_service.dart';
+import '../widgets/animated_cta_button.dart';
 import '../widgets/custom_card.dart';
-import '../widgets/custom_gradient_button.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -140,7 +140,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: const Color(0xFF4B5563),
-                      fontSize: 12,
+                      fontSize: 12.5,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
                       height: 1.50,
@@ -450,13 +450,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   ),
                   SizedBox(height: 20.h),
 
-                  // Dynamic Remote Button Text & CTA
+                  // Dynamic Remote Button Text & CTA with eye-catching animations
                   Obx(
-                    () => CustomGradientButton(
+                    () => AnimatedCtaButton(
                       text: _isLoading
                           ? 'Processing...'
                           : _appController.remoteConfigService.buttonText,
                       backgroundImage: AppAssets.btnRectangle,
+                      isLoading: _isLoading,
                       leadingIcon: Icon(
                         Icons.diamond_outlined,
                         color: Colors.white,

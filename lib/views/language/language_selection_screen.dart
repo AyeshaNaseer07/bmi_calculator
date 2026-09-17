@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../controllers/app_controller.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/localization_service.dart';
+import '../widgets/ads/native_ad_card.dart';
 
 // Hand is in one of four phases
 enum _HandPhase { tapping, movingToDone, tappingDone, hidden }
@@ -43,8 +44,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   // Center of Done button in screen coords (set during _flyToDone)
   Offset? _doneButtonCenter;
 
-  // Cache .w value to use outside build()
-  double _hand40w = 40;
+  // Cache hand offsets on first tile to use outside build()
+  double _handOffsetX = 70;
+  double _handOffsetY = 16;
 
   @override
   void initState() {
@@ -101,23 +103,23 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     final tileGlobal = tileBox.localToGlobal(Offset.zero);
     final doneGlobal = doneBox.localToGlobal(Offset.zero);
 
-    // Start: centre of first tile + the 40.w right-offset used in the hand overlay
+    // Start: centre of first tile + offsets used in the hand overlay
     final startPos = Offset(
-      tileGlobal.dx + tileBox.size.width / 2 + _hand40w,
-      tileGlobal.dy + tileBox.size.height / 2,
+      tileGlobal.dx + tileBox.size.width / 2 + _handOffsetX,
+      tileGlobal.dy + tileBox.size.height / 2 + _handOffsetY,
     );
 
-    // End: centre of the Done button
+    // End: centre of the Done button with offset to place fingertip on button
     final endPos = Offset(
-      doneGlobal.dx + doneBox.size.width / 2,
-      doneGlobal.dy + doneBox.size.height / 2,
+      doneGlobal.dx + doneBox.size.width / 2 + 14.w,
+      doneGlobal.dy + doneBox.size.height / 2 + 20.h,
     );
 
     _moveAnimation = Tween<Offset>(begin: startPos, end: endPos).animate(
       CurvedAnimation(parent: _moveController, curve: Curves.easeInOutCubic),
     );
 
-    // Store Done button centre so tappingDone overlay can use it
+    // Store Done button hand target centre so tappingDone overlay can use it
     _doneButtonCenter = endPos;
 
     setState(() => _handPhase = _HandPhase.movingToDone);
@@ -139,7 +141,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   @override
   Widget build(BuildContext context) {
     // Cache for use in _flyToDone (which runs without a BuildContext)
-    _hand40w = 40.w;
+    _handOffsetX = 70.w;
+    _handOffsetY = 16.h;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7FCF9),
@@ -325,6 +328,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                               child: IgnorePointer(
                                 child: _TapHandHint(
                                   controller: _handController,
+                                  offsetX: _handOffsetX,
+                                  offsetY: _handOffsetY,
                                 ),
                               ),
                             ),
@@ -336,6 +341,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                     },
                   ),
 
+                  SizedBox(height: 8.h),
+                  const NativeAdCard(),
                   SizedBox(height: 20.h),
                 ],
               ),
@@ -384,8 +391,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
 class _TapHandHint extends StatelessWidget {
   final AnimationController controller;
+  final double offsetX;
+  final double offsetY;
 
-  const _TapHandHint({required this.controller});
+  const _TapHandHint({
+    required this.controller,
+    required this.offsetX,
+    required this.offsetY,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +433,7 @@ class _TapHandHint extends StatelessWidget {
       builder: (context, child) {
         return Center(
           child: Transform.translate(
-            offset: Offset(40.w, floatY.value),
+            offset: Offset(offsetX, offsetY + floatY.value),
             child: Transform.scale(
               scale: tapScale.value,
               alignment: Alignment.topCenter,
@@ -460,11 +473,23 @@ class _SparklePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-    final center = Offset(size.width / 2, size.height / 2 - 4);
-    const lineCount = 8;
+    // Index fingertip position within the 96x96 asset
+    final center = Offset(
+      size.width * (19.5 / 96.0),
+      size.height * (14.0 / 96.0),
+    );
 
-    for (int i = 0; i < lineCount; i++) {
-      final angle = (i * 2 * math.pi) / lineCount;
+    // Sparkle rays radiating from the index fingertip
+    const angles = [
+      -math.pi, // left (-180°)
+      -2.443, // up-left (-140°)
+      -math.pi / 2, // straight up (-90°)
+      -math.pi / 4, // up-right (-45°)
+      -0.175, // right (-10°)
+      2.531, // down-left (+145°)
+    ];
+
+    for (final angle in angles) {
       final innerR = radius * 0.45;
       final outerR = radius;
       final start = Offset(
@@ -530,9 +555,8 @@ class _DoneButtonHandOverlay extends StatelessWidget {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
-        // Anchor at centre, apply float offset
-        final left = center.dx - 12.w;
-        final top = center.dy - 26.h + 20.h + floatY.value;
+        final left = center.dx - 26.w;
+        final top = center.dy - 26.h + floatY.value;
 
         return Positioned(
           left: left,

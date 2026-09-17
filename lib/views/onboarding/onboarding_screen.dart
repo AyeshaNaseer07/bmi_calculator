@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
+import '../widgets/ads/full_screen_native_ad_page.dart';
+import '../widgets/ads/native_ad_card.dart';
 import '../widgets/custom_gradient_button.dart';
 
 class OnboardingItem {
@@ -31,31 +33,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<OnboardingItem> _slides = const [
-    OnboardingItem(
-      imagePath: AppAssets.onboarding1,
-      titlePrefix: 'BMI ',
-      titleHighlight: 'Calculator',
-      subtitle: 'Track your BMI, monitor your progress,\nand stay healthy with personalized insights.',
-    ),
-    OnboardingItem(
-      imagePath: AppAssets.onboarding2,
-      titlePrefix: 'Weight ',
-      titleHighlight: 'Tracking',
-      subtitle:
-          'Monitor your daily, weekly and monthly\nweight journey effortlessly',
-    ),
-    OnboardingItem(
-      imagePath: AppAssets.onboarding3,
-      titlePrefix: 'Health ',
-      titleHighlight: 'Insights',
-      subtitle:
-          'Get personalized insights to build\nhealthier habits every day.',
-    ),
-  ];
+  // 4 steps:
+  // 0: BMI Calculator with Bottom Native Ad
+  // 1: Full-Screen Native Ad
+  // 2: Weight Tracking
+  // 3: Health Insights
+  static const int _totalPages = 4;
 
   void _onNext() {
-    if (_currentIndex < _slides.length - 1) {
+    if (_currentIndex < _totalPages - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
@@ -81,163 +67,232 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // PageView for full-bleed artwork & animated title/subtitle
-          PageView.builder(
+          // PageView for Onboarding flow
+          PageView(
             controller: _pageController,
             onPageChanged: (index) {
               setState(() => _currentIndex = index);
             },
-            itemCount: _slides.length,
-            itemBuilder: (context, index) {
-              final slide = _slides[index];
-              return Stack(
-                children: [
-                  // Full background illustration - Top to Middle
-                  Positioned(
-                    top: 56,
-                    left: 0,
-                    right: 0,
-                    height: MediaQuery.of(context).size.height * 0.65,
-                    child: Image.asset(slide.imagePath, fit: BoxFit.contain),
-                  ),
+            children: [
+              // Page 0: BMI Screen with Bottom Native Ad (iPhone 13 mini - 55)
+              _buildBmiAdSlide(),
 
-                  // Title and Subtitle positioned above the bottom controls
-                  Positioned(
-                    left: 24,
-                    right: 24,
-                    bottom: 126,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 32,
-                              fontFamily: 'Outfit',
-                              fontWeight: FontWeight.w700,
-                            ),
-                            children: [
-                              TextSpan(text: slide.titlePrefix),
-                              TextSpan(
-                                text: slide.titleHighlight,
-                                style: const TextStyle(
-                                  color: Color(0xFF24CCA7),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 14.h),
-                        Text(
-                          slide.subtitle,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: 'SF Pro',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(height: 22.h),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
+              // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
+              FullScreenNativeAdPage(
+                onNext: _onNext,
+                onAdFailed: () {
+                  // If ad fails to load and user is on page 1, advance smoothly
+                  if (_currentIndex == 1) {
+                    _onNext();
+                  }
+                },
+              ),
+
+              // Page 2: Weight Tracking (iPhone 13 mini - 65)
+              _buildContentSlide(
+                imagePath: AppAssets.onboarding2,
+                titlePrefix: 'Weight ',
+                titleHighlight: 'Tracking',
+                subtitle:
+                    'Monitor your daily, weekly and monthly\nweight journey effortlessly',
+              ),
+
+              // Page 3: Health Insights (iPhone 13 mini - 63)
+              _buildContentSlide(
+                imagePath: AppAssets.onboarding3,
+                titlePrefix: 'Health ',
+                titleHighlight: 'Insights',
+                subtitle:
+                    'Get personalized insights to build\nhealthier habits every day.',
+              ),
+            ],
           ),
 
-          // Top Right Skip Button Chip
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16, right: 20),
-                child: GestureDetector(
-                  onTap: _navigateToPaywall,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 5,
-                    ),
-                    decoration: ShapeDecoration(
-                      color: const Color(0x4F33D2AB),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+          // Top Right Skip Button (visible on content slides)
+          if (_currentIndex != 1)
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16, right: 20),
+                  child: GestureDetector(
+                    onTap: _navigateToPaywall,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 5,
                       ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'skip'.tr,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: 'SF Pro',
-                            fontWeight: FontWeight.w500,
-                          ),
+                      decoration: ShapeDecoration(
+                        color: const Color(0x4F33D2AB),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
                         ),
-                      ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'skip'.tr,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontFamily: 'SF Pro',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          // Bottom Controls: Dot Indicator & Next Button
-          Positioned(
-            left: 24,
-            right: 24,
-            bottom: 20,
-            child: SafeArea(
-              top: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Dot Indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(_slides.length, (index) {
-                      final isActive = index == _currentIndex;
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeInOut,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: isActive ? 24 : 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: isActive
-                              ? const Color(0xFF24CCA7)
-                              : const Color(0xFFC7F3EA),
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Next Gradient Button
-                  CustomGradientButton(
-                    text: 'Next',
-                    backgroundImage: AppAssets.btnRectangle,
-                    borderRadius: BorderRadius.circular(12.r),
-                    trailingIcon: const Icon(
-                      Icons.arrow_forward_rounded,
-                      color: Colors.white,
-                      size: 18,
+          // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
+          if (_currentIndex >= 2)
+            Positioned(
+              left: 24,
+              right: 24,
+              bottom: 20,
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Dot Indicator (4 dots matching Figma)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(_totalPages, (index) {
+                        final isActive = index == _currentIndex;
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: isActive ? 24 : 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: isActive
+                                ? const Color(0xFF24CCA7)
+                                : const Color(0xFFC7F3EA),
+                          ),
+                        );
+                      }),
                     ),
-                    onPressed: _onNext,
-                  ),
-                ],
+                    const SizedBox(height: 20),
+
+                    // Next Gradient Button
+                    CustomGradientButton(
+                      text: 'Next',
+                      backgroundImage: AppAssets.btnRectangle,
+                      borderRadius: BorderRadius.circular(12.r),
+                      trailingIcon: const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                      onPressed: _onNext,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds Onboarding Slide 1 with illustration at top and native ad card at bottom
+  Widget _buildBmiAdSlide() {
+    return SafeArea(
+      child: Column(
+        children: [
+          SizedBox(height: 10.h),
+          // Top Illustration
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Image.asset(
+                AppAssets.onboarding1,
+                fit: BoxFit.contain,
               ),
             ),
           ),
+          SizedBox(height: 10.h),
+
+          // Bottom Native Ad Card
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+            child: const NativeAdCard(),
+          ),
+          SizedBox(height: 6.h),
         ],
       ),
+    );
+  }
+
+  /// Builds standard Onboarding Content Slide (Weight Tracking, Health Insights)
+  Widget _buildContentSlide({
+    required String imagePath,
+    required String titlePrefix,
+    required String titleHighlight,
+    required String subtitle,
+  }) {
+    return Stack(
+      children: [
+        // Full background illustration - Top to Middle
+        Positioned(
+          top: 56,
+          left: 0,
+          right: 0,
+          height: MediaQuery.of(context).size.height * 0.58,
+          child: Image.asset(imagePath, fit: BoxFit.contain),
+        ),
+
+        // Title and Subtitle positioned above the bottom controls
+        Positioned(
+          left: 24,
+          right: 24,
+          bottom: 126,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 32,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w700,
+                  ),
+                  children: [
+                    TextSpan(text: titlePrefix),
+                    TextSpan(
+                      text: titleHighlight,
+                      style: const TextStyle(
+                        color: Color(0xFF24CCA7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 14.h),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontFamily: 'SF Pro',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 22.h),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

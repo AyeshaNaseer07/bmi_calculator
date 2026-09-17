@@ -13,6 +13,7 @@ import '../../data/models/bmi_record_model.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../widgets/ads/native_ad_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -86,10 +87,16 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 12.h),
+                      const NativeAdCard(),
+                      SizedBox(height: 16.h),
                     ],
 
                     // 2x2 Feature Cards Grid
                     _buildFeatureGrid(),
+                    if (hasData) ...[
+                      SizedBox(height: 16.h),
+                      const NativeAdCard(),
+                    ],
                     SizedBox(height: 24.h),
                   ],
                 ),
