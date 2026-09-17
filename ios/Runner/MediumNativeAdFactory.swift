@@ -4,15 +4,17 @@ import google_mobile_ads
 
 class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
     func createNativeAd(_ nativeAd: NativeAd, customOptions: [AnyHashable : Any]? = nil) -> NativeAdView? {
+        print("📢 [MediumNativeAdFactory] createNativeAd invoked: headline='\(nativeAd.headline ?? "N/A")', advertiser='\(nativeAd.advertiser ?? "N/A")', hasCallToAction='\(nativeAd.callToAction ?? "N/A")'")
         let nativeAdView = NativeAdView()
         nativeAdView.backgroundColor = .white
         nativeAdView.layer.cornerRadius = 18
-        nativeAdView.layer.masksToBounds = true
-        nativeAdView.translatesAutoresizingMaskIntoConstraints = false
+        nativeAdView.clipsToBounds = true
+        nativeAdView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         // Card Container with padding
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.clipsToBounds = true
         nativeAdView.addSubview(containerView)
 
         // 1. Top Row: Icon, Headline/Body Stack, AD Badge
@@ -39,7 +41,7 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         textStack.translatesAutoresizingMaskIntoConstraints = false
         textStack.axis = .vertical
         textStack.spacing = 2
-        textStack.alignment = .leading
+        textStack.alignment = .fill
         textStack.distribution = .fill
         containerView.addSubview(textStack)
 
@@ -47,12 +49,38 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         headlineLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         headlineLabel.textColor = UIColor(red: 0x1A/255.0, green: 0x25/255.0, blue: 0x2C/255.0, alpha: 1.0)
         headlineLabel.numberOfLines = 1
+        headlineLabel.lineBreakMode = .byTruncatingTail
         textStack.addArrangedSubview(headlineLabel)
+
+        // ADDED: Stars Rating Stack
+        let starsStack = UIStackView()
+        starsStack.axis = .horizontal
+        starsStack.spacing = 2
+        starsStack.alignment = .center
+        starsStack.distribution = .fillEqually
+        textStack.addArrangedSubview(starsStack)
+
+        let starRating = nativeAd.starRating?.doubleValue ?? 4.5
+        let fullStars = Int(starRating.rounded())
+        for _ in 0..<fullStars {
+            let starLabel = UILabel()
+            starLabel.text = "★"
+            starLabel.textColor = UIColor(red: 0xFA/255.0, green: 0xB0/255.0, blue: 0x05/255.0, alpha: 1.0) // Gold
+            starLabel.font = UIFont.systemFont(ofSize: 13)
+            starsStack.addArrangedSubview(starLabel)
+        }
+        for _ in fullStars..<5 {
+            let starLabel = UILabel()
+            starLabel.text = "★"
+            starLabel.textColor = UIColor(white: 0.85, alpha: 1.0)
+            starLabel.font = UIFont.systemFont(ofSize: 13)
+            starsStack.addArrangedSubview(starLabel)
+        }
 
         let bodyLabel = UILabel()
         bodyLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         bodyLabel.textColor = UIColor(red: 0x7A/255.0, green: 0x8B/255.0, blue: 0x94/255.0, alpha: 1.0)
-        bodyLabel.numberOfLines = 2
+        bodyLabel.numberOfLines = 1
         bodyLabel.lineBreakMode = .byTruncatingTail
         textStack.addArrangedSubview(bodyLabel)
 
@@ -63,14 +91,14 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         mediaView.layer.masksToBounds = true
         mediaView.backgroundColor = UIColor(red: 0xEE/255.0, green: 0xF2/255.0, blue: 0xF2/255.0, alpha: 1.0)
         mediaView.contentMode = .scaleAspectFill
+        mediaView.clipsToBounds = true
         containerView.addSubview(mediaView)
 
-        // 3. CTA Button
-        let ctaButton = UIButton(type: .custom)
+        // 3. CTA Button with Gradient
+        let ctaButton = GradientButton(type: .custom)
         ctaButton.translatesAutoresizingMaskIntoConstraints = false
         ctaButton.layer.cornerRadius = 23
         ctaButton.layer.masksToBounds = true
-        ctaButton.backgroundColor = UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0) // Blue Pill
         ctaButton.setTitleColor(.white, for: .normal)
         ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         ctaButton.isUserInteractionEnabled = false // Let GADNativeAdView handle touch events
@@ -78,11 +106,11 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
 
         // Constraints
         NSLayoutConstraint.activate([
-            // Container edges
-            containerView.topAnchor.constraint(equalTo: nativeAdView.topAnchor, constant: 12),
+            // Container edges pinned to nativeAdView bounds
+            containerView.topAnchor.constraint(equalTo: nativeAdView.topAnchor, constant: 10),
             containerView.leadingAnchor.constraint(equalTo: nativeAdView.leadingAnchor, constant: 12),
             containerView.trailingAnchor.constraint(equalTo: nativeAdView.trailingAnchor, constant: -12),
-            containerView.bottomAnchor.constraint(equalTo: nativeAdView.bottomAnchor, constant: -12),
+            containerView.bottomAnchor.constraint(equalTo: nativeAdView.bottomAnchor, constant: -10),
 
             // Icon
             iconImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -102,17 +130,16 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
             textStack.trailingAnchor.constraint(equalTo: adBadge.leadingAnchor, constant: -8),
             textStack.bottomAnchor.constraint(lessThanOrEqualTo: iconImageView.bottomAnchor),
 
-            // Media View
-            mediaView.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 10),
+            // Media View (flexibly fills space between icon row and CTA button)
+            mediaView.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
             mediaView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             mediaView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            mediaView.heightAnchor.constraint(equalToConstant: 136),
+            mediaView.bottomAnchor.constraint(equalTo: ctaButton.topAnchor, constant: -8),
 
-            // CTA Button
-            ctaButton.topAnchor.constraint(equalTo: mediaView.bottomAnchor, constant: 10),
+            // CTA Button pinned to bottom of container
             ctaButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             ctaButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            ctaButton.heightAnchor.constraint(equalToConstant: 46),
+            ctaButton.heightAnchor.constraint(equalToConstant: 44),
             ctaButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
 
@@ -122,6 +149,7 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         nativeAdView.iconView = iconImageView
         nativeAdView.mediaView = mediaView
         nativeAdView.callToActionView = ctaButton
+        nativeAdView.starRatingView = starsStack
 
         // Populate Native Ad Content
         headlineLabel.text = nativeAd.headline
@@ -143,6 +171,38 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         mediaView.mediaContent = nativeAd.mediaContent
 
         nativeAdView.nativeAd = nativeAd
+        print("✅ [MediumNativeAdFactory] nativeAdView successfully configured and returned")
         return nativeAdView
+    }
+}
+
+// Helper gradient button matching the Onboarding Next button styling
+class GradientButton: UIButton {
+    private let gradientLayer = CAGradientLayer()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupGradient()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupGradient()
+    }
+
+    private func setupGradient() {
+        gradientLayer.colors = [
+            UIColor(red: 0x24/255.0, green: 0xCC/255.0, blue: 0xA7/255.0, alpha: 1.0).cgColor, // App Teal
+            UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0).cgColor  // Sky Blue
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+        gradientLayer.cornerRadius = layer.cornerRadius
     }
 }

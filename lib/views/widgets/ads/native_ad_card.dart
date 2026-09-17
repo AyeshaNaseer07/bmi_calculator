@@ -8,7 +8,15 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
+import 'ad_logger.dart';
 import 'ad_shimmer.dart';
+
+/// Must stay in sync with MediumNativeAdFactory.swift's hardcoded content
+/// sum (icon 44 + gap 10 + media 136 + gap 10 + stars 15 + body 10 + CTA 46 + 24pt margins).
+/// Deliberately a fixed, device-independent point value — NOT ScreenUtil's
+/// `.h` (which scales with device screen height and would drift away from
+/// the native side's fixed layout, corrupting the Auto Layout constraints).
+const double _kNativeAdHeight = 285;
 
 /// Renders a medium native ad card matching the app design system.
 /// Displays a shimmer skeleton while loading, displays AdWidget when loaded,
@@ -61,12 +69,20 @@ class _NativeAdCardState extends State<NativeAdCard> {
   }
 
   void _loadAd() {
+    final adUnitId = _effectiveAdUnitId;
+    AdLogHelper.logRequest(
+      tag: 'NativeAdCard',
+      adUnitId: adUnitId,
+      factoryId: 'mediumNativeAd',
+    );
+
     _nativeAd = NativeAd(
-      adUnitId: _effectiveAdUnitId,
+      adUnitId: adUnitId,
       factoryId: 'mediumNativeAd',
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
+          AdLogHelper.logLoaded(tag: 'NativeAdCard', ad: ad as NativeAd);
           if (!mounted) return;
           setState(() {
             _isLoaded = true;
@@ -75,7 +91,11 @@ class _NativeAdCardState extends State<NativeAdCard> {
           widget.onAdAvailabilityChanged?.call(true);
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('❌ NativeAd failed to load: ${error.message} (code: ${error.code})');
+          AdLogHelper.logFailed(
+            tag: 'NativeAdCard',
+            ad: ad as NativeAd,
+            error: error,
+          );
           ad.dispose();
           if (!mounted) return;
           setState(() {
@@ -84,7 +104,26 @@ class _NativeAdCardState extends State<NativeAdCard> {
           });
           widget.onAdAvailabilityChanged?.call(false);
         },
+        onAdOpened: (ad) {
+          debugPrint(
+            '👀 [NativeAdCard] onAdOpened (user opened ad overlay/content)',
+          );
+        },
+        onAdClosed: (ad) {
+          debugPrint(
+            '🔒 [NativeAdCard] onAdClosed (user closed ad overlay/content)',
+          );
+        },
+        onAdImpression: (ad) {
+          debugPrint('👁️ [NativeAdCard] onAdImpression logged');
+        },
+        onAdClicked: (ad) {
+          debugPrint('👆 [NativeAdCard] onAdClicked');
+        },
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
+          debugPrint(
+            '💰 [NativeAdCard] onPaidEvent: $valueMicros $currencyCode',
+          );
           logAdRevenue(
             adNetwork: 'AdMob',
             revenue: valueMicros,
@@ -114,37 +153,58 @@ class _NativeAdCardState extends State<NativeAdCard> {
       return const SizedBox.shrink();
     }
 
-    final content = AnimatedCrossFade(
-      duration: const Duration(milliseconds: 300),
-      crossFadeState:
-          _isLoaded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-      firstChild: const MediumNativeAdShimmer(),
-      secondChild: _isLoaded && _nativeAd != null
-          ? Container(
-              height: 270.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(color: const Color(0xFFE8F7F2)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: AdWidget(ad: _nativeAd!),
-            )
-          : const SizedBox.shrink(),
+    // AdWidget hosts a native platform view and must always receive a
+    // bounded, explicit width — leaving width unconstrained lets the
+    // platform view size itself off its (unbounded) intrinsic content and
+    // bleed past the screen edge, which is what caused the cropped ad.
+    final content = SizedBox(
+      width: double.infinity,
+      child: AnimatedCrossFade(
+        duration: const Duration(milliseconds: 300),
+        crossFadeState: _isLoaded
+            ? CrossFadeState.showSecond
+            : CrossFadeState.showFirst,
+        firstChild: const SizedBox(
+          width: double.infinity,
+          child: MediumNativeAdShimmer(),
+        ),
+        // Fixed, UNSCALED height — deliberately not `.h` (ScreenUtil scales
+        // that relative to device screen height, which varies device to
+        // device). MediumNativeAdFactory.swift lays its content out with
+        // hardcoded native points (icon 44 + gap 10 + media 136 + gap 10 +
+        // stars 15 + body 10 + CTA 46 + 24pt margins = 285), so the Flutter-side
+        // frame handed to the platform view must be exactly that many real points
+        // on every device, or Auto Layout's fixed constraint chain on the native
+        // side conflicts and the ad renders corrupted/oversized.
+        secondChild: _isLoaded && _nativeAd != null
+            ? Container(
+                width: double.infinity,
+                height: _kNativeAdHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18.r),
+                  border: Border.all(color: const Color(0xFFE8F7F2)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: _kNativeAdHeight,
+                  child: AdWidget(ad: _nativeAd!),
+                ),
+              )
+            : const SizedBox(width: double.infinity, height: 0),
+      ),
     );
 
     if (widget.margin != null) {
-      return Padding(
-        padding: widget.margin!,
-        child: content,
-      );
+      return Padding(padding: widget.margin!, child: content);
     }
     return content;
   }

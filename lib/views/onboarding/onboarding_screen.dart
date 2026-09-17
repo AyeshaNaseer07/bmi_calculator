@@ -52,7 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToPaywall() {
-    Get.toNamed(AppRoutes.paywall);
+    Get.offNamed(AppRoutes.paywall);
   }
 
   @override
@@ -93,8 +93,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 imagePath: AppAssets.onboarding2,
                 titlePrefix: 'Weight ',
                 titleHighlight: 'Tracking',
-                subtitle:
-                    'Monitor your daily, weekly and monthly\nweight journey effortlessly',
+                subtitle: 'Monitor your daily, weekly and monthly\nweight journey effortlessly',
               ),
 
               // Page 3: Health Insights (iPhone 13 mini - 63)
@@ -102,101 +101,62 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 imagePath: AppAssets.onboarding3,
                 titlePrefix: 'Health ',
                 titleHighlight: 'Insights',
-                subtitle:
-                    'Get personalized insights to build\nhealthier habits every day.',
+                subtitle: 'Get personalized insights to build\nhealthier habits every day.',
               ),
             ],
           ),
 
           // Top Right Skip Button (visible on content slides)
           if (_currentIndex != 1)
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16, right: 20),
-                  child: GestureDetector(
-                    onTap: _navigateToPaywall,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 5,
-                      ),
-                      decoration: ShapeDecoration(
-                        color: const Color(0x4F33D2AB),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'skip'.tr,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontFamily: 'SF Pro',
-                              fontWeight: FontWeight.w500,
+            // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
+            if (_currentIndex >= 2)
+              Positioned(
+                left: 24,
+                right: 24,
+                bottom: 20,
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Dot Indicator (4 dots matching Figma)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_totalPages, (index) {
+                          final isActive = index == _currentIndex;
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeInOut,
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: isActive ? 24 : 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: isActive
+                                  ? const Color(0xFF24CCA7)
+                                  : const Color(0xFFC7F3EA),
                             ),
-                          ),
-                        ],
+                          );
+                        }),
                       ),
-                    ),
+                      const SizedBox(height: 20),
+
+                      // Next Gradient Button
+                      CustomGradientButton(
+                        text: 'Next',
+                        backgroundImage: AppAssets.btnRectangle,
+                        borderRadius: BorderRadius.circular(12.r),
+                        trailingIcon: const Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        onPressed: _onNext,
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-
-          // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
-          if (_currentIndex >= 2)
-            Positioned(
-              left: 24,
-              right: 24,
-              bottom: 20,
-              child: SafeArea(
-                top: false,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Dot Indicator (4 dots matching Figma)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_totalPages, (index) {
-                        final isActive = index == _currentIndex;
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeInOut,
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: isActive ? 24 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: isActive
-                                ? const Color(0xFF24CCA7)
-                                : const Color(0xFFC7F3EA),
-                          ),
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Next Gradient Button
-                    CustomGradientButton(
-                      text: 'Next',
-                      backgroundImage: AppAssets.btnRectangle,
-                      borderRadius: BorderRadius.circular(12.r),
-                      trailingIcon: const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      onPressed: _onNext,
-                    ),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -212,10 +172,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Image.asset(
-                AppAssets.onboarding1,
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset(AppAssets.onboarding1, fit: BoxFit.contain),
             ),
           ),
           SizedBox(height: 10.h),
@@ -270,9 +227,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     TextSpan(text: titlePrefix),
                     TextSpan(
                       text: titleHighlight,
-                      style: const TextStyle(
-                        color: Color(0xFF24CCA7),
-                      ),
+                      style: const TextStyle(color: Color(0xFF24CCA7)),
                     ),
                   ],
                 ),

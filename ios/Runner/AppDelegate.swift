@@ -8,6 +8,20 @@ import google_mobile_ads
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    let mediumAdFactory = MediumNativeAdFactory()
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+      self,
+      factoryId: "mediumNativeAd",
+      nativeAdFactory: mediumAdFactory
+    )
+
+    let fullScreenAdFactory = FullScreenNativeAdFactory()
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+      self,
+      factoryId: "fullScreenNativeAd",
+      nativeAdFactory: fullScreenAdFactory
+    )
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 

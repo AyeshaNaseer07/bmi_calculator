@@ -41,6 +41,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.paywall,
       page: () => const PaywallScreen(),
+      popGesture: false,
     ),
     GetPage(
       name: AppRoutes.languageSelection,

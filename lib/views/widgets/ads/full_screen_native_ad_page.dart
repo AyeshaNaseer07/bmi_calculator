@@ -7,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
+import 'ad_logger.dart';
 import 'ad_shimmer.dart';
 
 class FullScreenNativeAdPage extends StatefulWidget {
@@ -53,12 +54,23 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   }
 
   void _loadAd() {
+    final adUnitId = _effectiveAdUnitId;
+    AdLogHelper.logRequest(
+      tag: 'FullScreenNativeAdPage',
+      adUnitId: adUnitId,
+      factoryId: 'fullScreenNativeAd',
+    );
+
     _nativeAd = NativeAd(
-      adUnitId: _effectiveAdUnitId,
+      adUnitId: adUnitId,
       factoryId: 'fullScreenNativeAd',
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
+          AdLogHelper.logLoaded(
+            tag: 'FullScreenNativeAdPage',
+            ad: ad as NativeAd,
+          );
           if (!mounted) return;
           setState(() {
             _isLoaded = true;
@@ -66,7 +78,11 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
           });
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('❌ FullScreen NativeAd failed to load: ${error.message}');
+          AdLogHelper.logFailed(
+            tag: 'FullScreenNativeAdPage',
+            ad: ad as NativeAd,
+            error: error,
+          );
           ad.dispose();
           if (!mounted) return;
           setState(() {
@@ -75,13 +91,26 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
           });
           widget.onAdFailed?.call();
         },
+        onAdOpened: (ad) {
+          debugPrint('👀 [FullScreenNativeAdPage] onAdOpened (user opened ad overlay/content)');
+        },
+        onAdClosed: (ad) {
+          debugPrint('🔒 [FullScreenNativeAdPage] onAdClosed (user closed ad overlay/content)');
+        },
+        onAdImpression: (ad) {
+          debugPrint('👁️ [FullScreenNativeAdPage] onAdImpression logged');
+        },
+        onAdClicked: (ad) {
+          debugPrint('👆 [FullScreenNativeAdPage] onAdClicked');
+        },
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
+          debugPrint('💰 [FullScreenNativeAdPage] onPaidEvent: $valueMicros $currencyCode');
           logAdRevenue(
             adNetwork: 'AdMob',
             revenue: valueMicros,
             currency: currencyCode,
             adFormat: 'native',
-            adUnitId: _effectiveAdUnitId,
+            adUnitId: ad.adUnitId,
             mediationNetwork: 'GoogleAdMob',
             adType: 'FullScreenNativeAd',
           );

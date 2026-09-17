@@ -4,19 +4,23 @@ import google_mobile_ads
 
 class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
     func createNativeAd(_ nativeAd: NativeAd, customOptions: [AnyHashable : Any]? = nil) -> NativeAdView? {
+        print("📢 [FullScreenNativeAdFactory] createNativeAd invoked: headline='\(nativeAd.headline ?? "N/A")', advertiser='\(nativeAd.advertiser ?? "N/A")', hasCallToAction='\(nativeAd.callToAction ?? "N/A")'")
         let nativeAdView = NativeAdView()
         nativeAdView.backgroundColor = .white
-        nativeAdView.translatesAutoresizingMaskIntoConstraints = false
+        nativeAdView.clipsToBounds = true
+        nativeAdView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         // 1. Top Section: Media Container (takes ~68% of screen)
         let topMediaContainer = UIView()
         topMediaContainer.translatesAutoresizingMaskIntoConstraints = false
         topMediaContainer.backgroundColor = UIColor(red: 0xEE/255.0, green: 0xF0/255.0, blue: 0xF0/255.0, alpha: 1.0)
+        topMediaContainer.clipsToBounds = true
         nativeAdView.addSubview(topMediaContainer)
 
         let mediaView = MediaView()
         mediaView.translatesAutoresizingMaskIntoConstraints = false
         mediaView.contentMode = .scaleAspectFit
+        mediaView.clipsToBounds = true
         topMediaContainer.addSubview(mediaView)
 
         let adBadge = UILabel()
@@ -34,6 +38,7 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         let bottomCard = UIView()
         bottomCard.translatesAutoresizingMaskIntoConstraints = false
         bottomCard.backgroundColor = .white
+        bottomCard.clipsToBounds = true
         nativeAdView.addSubview(bottomCard)
 
         let iconImageView = UIImageView()
@@ -48,7 +53,11 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         textStack.translatesAutoresizingMaskIntoConstraints = false
         textStack.axis = .vertical
         textStack.spacing = 3
-        textStack.alignment = .leading
+        // `.fill` makes headline/stars/body stretch to the stack's own width
+        // (which is pinned to bottomCard's bounds) so long ad copy wraps or
+        // truncates instead of laying out at unconstrained intrinsic width
+        // and bleeding past the card — and off the actual screen edge.
+        textStack.alignment = .fill
         textStack.distribution = .fill
         bottomCard.addSubview(textStack)
 
@@ -56,12 +65,15 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         headlineLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         headlineLabel.textColor = UIColor(red: 0x1A/255.0, green: 0x25/255.0, blue: 0x2C/255.0, alpha: 1.0)
         headlineLabel.numberOfLines = 1
+        headlineLabel.lineBreakMode = .byTruncatingTail
         textStack.addArrangedSubview(headlineLabel)
 
+        // VERIFIED: Stars Rating Stack
         let starsStack = UIStackView()
         starsStack.axis = .horizontal
         starsStack.spacing = 2
         starsStack.alignment = .center
+        starsStack.distribution = .fillEqually
         textStack.addArrangedSubview(starsStack)
 
         let starRating = nativeAd.starRating?.doubleValue ?? 4.5
@@ -170,37 +182,7 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         mediaView.mediaContent = nativeAd.mediaContent
 
         nativeAdView.nativeAd = nativeAd
+        print("✅ [FullScreenNativeAdFactory] nativeAdView successfully configured and returned")
         return nativeAdView
-    }
-}
-
-// Helper gradient button matching the Onboarding Next button styling
-class GradientButton: UIButton {
-    private let gradientLayer = CAGradientLayer()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupGradient()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupGradient()
-    }
-
-    private func setupGradient() {
-        gradientLayer.colors = [
-            UIColor(red: 0x24/255.0, green: 0xCC/255.0, blue: 0xA7/255.0, alpha: 1.0).cgColor, // App Teal
-            UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0).cgColor  // Sky Blue
-        ]
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        layer.insertSublayer(gradientLayer, at: 0)
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer.frame = bounds
-        gradientLayer.cornerRadius = layer.cornerRadius
     }
 }

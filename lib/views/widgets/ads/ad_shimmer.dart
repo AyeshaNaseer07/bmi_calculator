@@ -120,6 +120,22 @@ class MediumNativeAdShimmer extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 6.h),
+                      // ADDED: Stars skeleton
+                      Row(
+                        children: List.generate(
+                          5,
+                          (index) => Container(
+                            width: 12.w,
+                            height: 12.w,
+                            margin: EdgeInsets.only(right: 2.w),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFE0E5E5),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
                       Container(
                         width: double.infinity,
                         height: 10.h,
@@ -266,13 +282,14 @@ class FullScreenNativeAdShimmer extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 6.h),
+                              // ADDED: Stars skeleton
                               Row(
                                 children: List.generate(
                                   5,
                                   (index) => Container(
-                                    width: 14.w,
-                                    height: 14.w,
-                                    margin: EdgeInsets.only(right: 3.w),
+                                    width: 13.w,
+                                    height: 13.w,
+                                    margin: EdgeInsets.only(right: 2.w),
                                     decoration: const BoxDecoration(
                                       color: Color(0xFFE0E5E5),
                                       shape: BoxShape.circle,
