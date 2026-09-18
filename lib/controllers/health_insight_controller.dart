@@ -46,11 +46,19 @@ class HealthInsightController extends GetxController {
   }
 
   void setActivity(ActivityLevel level) {
-    selectedActivity.value = level;
+    if (selectedActivity.value == level) {
+      selectedActivity.value = null;
+    } else {
+      selectedActivity.value = level;
+    }
   }
 
   void setGoal(HealthGoal goal) {
-    selectedGoal.value = goal;
+    if (selectedGoal.value == goal) {
+      selectedGoal.value = null;
+    } else {
+      selectedGoal.value = goal;
+    }
   }
 
   Future<void> saveProfileAndInsights() async {
@@ -60,8 +68,8 @@ class HealthInsightController extends GetxController {
       gender: selectedGender.value ?? Gender.male,
       heightCm: double.tryParse(heightController.text.trim()) ?? 175.0,
       weightKg: double.tryParse(weightController.text.trim()) ?? 70.0,
-      activityLevel: selectedActivity.value ?? ActivityLevel.sedentary,
-      healthGoal: selectedGoal.value ?? HealthGoal.loseWeight,
+      activityLevel: selectedActivity.value,
+      healthGoal: selectedGoal.value,
     );
 
     await _storage.saveUserProfile(profile);

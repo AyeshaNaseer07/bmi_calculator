@@ -26,7 +26,55 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
       Get.find<HealthInsightController>();
   bool _isGenderMenuOpen = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller.fullNameController.addListener(_onTextChanged);
+    _controller.ageController.addListener(_onTextChanged);
+    _controller.heightController.addListener(_onTextChanged);
+    _controller.weightController.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _controller.fullNameController.removeListener(_onTextChanged);
+    _controller.ageController.removeListener(_onTextChanged);
+    _controller.heightController.removeListener(_onTextChanged);
+    _controller.weightController.removeListener(_onTextChanged);
+    super.dispose();
+  }
+
+  bool get _isFormValid {
+    final name = _controller.fullNameController.text.trim();
+    final ageText = _controller.ageController.text.trim();
+    final heightText = _controller.heightController.text.trim();
+    final weightText = _controller.weightController.text.trim();
+
+    final isNameValid = name.isNotEmpty;
+    final isAgeValid = ageText.isNotEmpty && (int.tryParse(ageText) ?? 0) > 0;
+    final isGenderValid = _controller.selectedGender.value != null;
+    final isHeightValid =
+        heightText.isNotEmpty && (double.tryParse(heightText) ?? 0) > 0;
+    final isWeightValid =
+        weightText.isNotEmpty && (double.tryParse(weightText) ?? 0) > 0;
+    final isActivityValid = _controller.selectedActivity.value != null;
+    final isGoalValid = _controller.selectedGoal.value != null;
+
+    return isNameValid &&
+        isAgeValid &&
+        isGenderValid &&
+        isHeightValid &&
+        isWeightValid &&
+        isActivityValid &&
+        isGoalValid;
+  }
+
   void _onSave() async {
+    if (!_isFormValid) return;
     await _controller.saveProfileAndInsights();
     Get.toNamed(AppRoutes.healthInsightResult);
   }
@@ -143,6 +191,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                   menuPadding: EdgeInsets.zero,
                                 ),
                               ),
+
                               child: PopupMenuButton<Gender>(
                                 onSelected: (Gender g) {
                                   _controller.setGender(g);
@@ -379,23 +428,28 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
           ),
         ],
       ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        style: TextStyle(
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textDark,
-        ),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textLight,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark,
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textLight,
+              ),
+              border: InputBorder.none,
+              isDense: true,
+            ),
           ),
-          border: InputBorder.none,
-          isDense: true,
         ),
       ),
     );

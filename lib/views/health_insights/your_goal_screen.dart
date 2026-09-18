@@ -191,7 +191,7 @@ class YourGoalScreen extends StatelessWidget {
                 CustomGradientButton(
                   text: 'Continue',
                   backgroundImage: AppAssets.btnRectangle,
-                  onPressed: () => Get.back(),
+                  onPressed: selected != null ? () => Get.back() : null,
                 ),
                 SizedBox(height: 24.h),
               ],

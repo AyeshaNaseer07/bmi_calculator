@@ -107,8 +107,8 @@ class UserProfile {
   final double heightCm;
   final double weightKg;
   final double goalWeightKg;
-  final ActivityLevel activityLevel;
-  final HealthGoal healthGoal;
+  final ActivityLevel? activityLevel;
+  final HealthGoal? healthGoal;
 
   const UserProfile({
     this.name = '',
@@ -117,14 +117,14 @@ class UserProfile {
     this.heightCm = 175.0,
     this.weightKg = 70.0,
     this.goalWeightKg = 60.0,
-    this.activityLevel = ActivityLevel.sedentary,
-    this.healthGoal = HealthGoal.loseWeight,
+    this.activityLevel,
+    this.healthGoal,
   });
 
   String get displayName =>
       (name.trim().isEmpty || name.trim().toLowerCase() == 'alex')
-          ? ''
-          : name.trim();
+      ? ''
+      : name.trim();
 
   UserProfile copyWith({
     String? name,
@@ -156,8 +156,8 @@ class UserProfile {
       'heightCm': heightCm,
       'weightKg': weightKg,
       'goalWeightKg': goalWeightKg,
-      'activityLevel': activityLevel.name,
-      'healthGoal': healthGoal.name,
+      'activityLevel': activityLevel?.name,
+      'healthGoal': healthGoal?.name,
     };
   }
 
@@ -173,14 +173,18 @@ class UserProfile {
       heightCm: (json['heightCm'] as num?)?.toDouble() ?? 175.0,
       weightKg: (json['weightKg'] as num?)?.toDouble() ?? 70.0,
       goalWeightKg: (json['goalWeightKg'] as num?)?.toDouble() ?? 60.0,
-      activityLevel: ActivityLevel.values.firstWhere(
-        (e) => e.name == json['activityLevel'],
-        orElse: () => ActivityLevel.sedentary,
-      ),
-      healthGoal: HealthGoal.values.firstWhere(
-        (e) => e.name == json['healthGoal'],
-        orElse: () => HealthGoal.loseWeight,
-      ),
+      activityLevel: json['activityLevel'] == null
+          ? null
+          : ActivityLevel.values.cast<ActivityLevel?>().firstWhere(
+              (e) => e?.name == json['activityLevel'],
+              orElse: () => null,
+            ),
+      healthGoal: json['healthGoal'] == null
+          ? null
+          : HealthGoal.values.cast<HealthGoal?>().firstWhere(
+              (e) => e?.name == json['healthGoal'],
+              orElse: () => null,
+            ),
     );
   }
 }

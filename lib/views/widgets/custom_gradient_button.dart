@@ -43,19 +43,37 @@ class CustomGradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveHeight = height ?? 54.h;
     final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(12.r);
+    final isEnabled = onPressed != null;
+
+    const disabledBgColor = Color(0xFFE2E8F0);
+    const disabledTextColor = Color(0xFF94A3B8);
+
+    final effectiveTextStyle = (textStyle ?? AppTypography.buttonText).copyWith(
+      color: isEnabled
+          ? (textStyle?.color ??
+              (isOutlined
+                  ? (outlineColor ?? const Color(0xFF2EC4B6))
+                  : Colors.white))
+          : disabledTextColor,
+    );
+
+    Widget buttonContent;
 
     if (isOutlined) {
-      return Container(
+      buttonContent = AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         height: effectiveHeight,
         width: width ?? double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isEnabled ? Colors.white : const Color(0xFFF8FAFC),
           borderRadius: effectiveBorderRadius,
           border: Border.all(
-            color: outlineColor ?? AppColors.primaryTeal,
+            color: isEnabled
+                ? (outlineColor ?? AppColors.primaryTeal)
+                : const Color(0xFFCBD5E1),
             width: 1.5.w,
           ),
-          boxShadow: boxShadow,
+          boxShadow: isEnabled ? boxShadow : null,
         ),
         child: Material(
           color: Colors.transparent,
@@ -68,23 +86,86 @@ class CustomGradientButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (leadingIcon != null) ...[
-                    leadingIcon!,
+                    IconTheme(
+                      data: IconThemeData(
+                        color: isEnabled ? null : disabledTextColor,
+                      ),
+                      child: leadingIcon!,
+                    ),
                     SizedBox(width: 8.w),
                   ],
                   Flexible(
                     child: Text(
                       text,
                       overflow: TextOverflow.ellipsis,
-                      style:
-                          textStyle ??
-                          AppTypography.buttonText.copyWith(
-                            color: outlineColor ?? Color(0xFF2EC4B6),
-                          ),
+                      style: effectiveTextStyle,
                     ),
                   ),
                   if (trailingIcon != null) ...[
                     SizedBox(width: 8.w),
-                    trailingIcon!,
+                    IconTheme(
+                      data: IconThemeData(
+                        color: isEnabled ? null : disabledTextColor,
+                      ),
+                      child: trailingIcon!,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      buttonContent = AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: effectiveHeight,
+        width: width ?? double.infinity,
+        decoration: BoxDecoration(
+          color: isEnabled ? solidColor : disabledBgColor,
+          borderRadius: effectiveBorderRadius,
+          image: isEnabled && solidColor == null
+              ? DecorationImage(
+                  image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
+                  fit: BoxFit.fill,
+                )
+              : null,
+          boxShadow: isEnabled ? boxShadow : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: effectiveBorderRadius,
+            onTap: onPressed,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (leadingIcon != null) ...[
+                    IconTheme(
+                      data: IconThemeData(
+                        color: isEnabled ? null : disabledTextColor,
+                      ),
+                      child: leadingIcon!,
+                    ),
+                    SizedBox(width: 8.w),
+                  ],
+                  Flexible(
+                    child: Text(
+                      text,
+                      overflow: TextOverflow.ellipsis,
+                      style: effectiveTextStyle,
+                    ),
+                  ),
+                  if (trailingIcon != null) ...[
+                    SizedBox(width: 8.w),
+                    IconTheme(
+                      data: IconThemeData(
+                        color: isEnabled ? null : disabledTextColor,
+                      ),
+                      child: trailingIcon!,
+                    ),
                   ],
                 ],
               ),
@@ -94,50 +175,6 @@ class CustomGradientButton extends StatelessWidget {
       );
     }
 
-    return Container(
-      height: effectiveHeight,
-      width: width ?? double.infinity,
-      decoration: BoxDecoration(
-        color: solidColor,
-        borderRadius: effectiveBorderRadius,
-        image: solidColor == null
-            ? DecorationImage(
-                image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
-                fit: BoxFit.fill,
-              )
-            : null,
-        boxShadow: boxShadow,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: effectiveBorderRadius,
-          onTap: onPressed,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (leadingIcon != null) ...[
-                  leadingIcon!,
-                  SizedBox(width: 8.w),
-                ],
-                Flexible(
-                  child: Text(
-                    text,
-                    overflow: TextOverflow.ellipsis,
-                    style: textStyle ?? AppTypography.buttonText,
-                  ),
-                ),
-                if (trailingIcon != null) ...[
-                  SizedBox(width: 8.w),
-                  trailingIcon!,
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return buttonContent;
   }
 }

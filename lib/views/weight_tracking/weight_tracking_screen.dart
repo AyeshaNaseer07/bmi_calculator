@@ -66,6 +66,50 @@ class WeightTrackingScreen extends StatelessWidget {
                   ? '-0.0kg'
                   : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
 
+              double calculatedMinY = 66.0;
+              double calculatedMaxY = 74.0;
+              double calculatedInterval = 2.0;
+
+              if (spots.isNotEmpty) {
+                final yVals = spots.map((s) => s.y).toList();
+                final minW = yVals.reduce(math.min);
+                final maxW = yVals.reduce(math.max);
+                final span = maxW - minW;
+
+                if (span <= 3.0) {
+                  calculatedInterval = 2.0;
+                  calculatedMinY = (minW - 3.0).floorToDouble();
+                  calculatedMaxY = (maxW + 3.0).ceilToDouble();
+                  if (calculatedMinY.toInt() % 2 != 0) calculatedMinY -= 1.0;
+                  if (calculatedMaxY.toInt() % 2 != 0) calculatedMaxY += 1.0;
+                } else if (span <= 12.0) {
+                  calculatedInterval = 2.0;
+                  final pad = (span * 0.2).clamp(2.0, 4.0);
+                  calculatedMinY = ((minW - pad) / 2).floor() * 2.0;
+                  calculatedMaxY = ((maxW + pad) / 2).ceil() * 2.0;
+                } else if (span <= 25.0) {
+                  calculatedInterval = 5.0;
+                  final pad = (span * 0.15).clamp(3.0, 5.0);
+                  calculatedMinY = ((minW - pad) / 5).floor() * 5.0;
+                  calculatedMaxY = ((maxW + pad) / 5).ceil() * 5.0;
+                } else if (span <= 50.0) {
+                  calculatedInterval = 10.0;
+                  final pad = (span * 0.15).clamp(5.0, 10.0);
+                  calculatedMinY = ((minW - pad) / 10).floor() * 10.0;
+                  calculatedMaxY = ((maxW + pad) / 10).ceil() * 10.0;
+                } else {
+                  calculatedInterval = 20.0;
+                  final pad = (span * 0.12).clamp(8.0, 15.0);
+                  calculatedMinY = ((minW - pad) / 20).floor() * 20.0;
+                  calculatedMaxY = ((maxW + pad) / 20).ceil() * 20.0;
+                }
+
+                calculatedMinY = calculatedMinY.clamp(0.0, double.infinity);
+                if (calculatedMaxY - calculatedMinY < calculatedInterval * 3) {
+                  calculatedMaxY = calculatedMinY + calculatedInterval * 4;
+                }
+              }
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -226,8 +270,10 @@ class WeightTrackingScreen extends StatelessWidget {
                               ),
 
                               child: Row(
-                                children: ['Week', 'Month', 'Year'].map((tab) {
-                                  final isSelected = timeframe == tab;
+                                children: ['week', 'Month', 'Year'].map((tab) {
+                                  final isSelected =
+                                      timeframe.toLowerCase() ==
+                                      tab.toLowerCase();
                                   return GestureDetector(
                                     onTap: () => controller.setTimeframe(tab),
                                     child: Container(
@@ -256,9 +302,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                         tab,
                                         style: TextStyle(
                                           fontSize: 12.sp,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w500
-                                              : FontWeight.w500,
+                                          fontWeight: FontWeight.w500,
                                           fontFamily: 'Inter',
                                           color: isSelected
                                               ? const Color(0xFF33D2AB)
@@ -276,15 +320,19 @@ class WeightTrackingScreen extends StatelessWidget {
 
                         // FL Chart Container
                         SizedBox(
-                          height: 170.h,
+                          height: 175.h,
                           child: LineChart(
                             LineChartData(
+                              clipData: const FlClipData.all(),
                               gridData: const FlGridData(show: false),
+                              lineTouchData: const LineTouchData(
+                                enabled: false,
+                              ),
                               titlesData: FlTitlesData(
                                 bottomTitles: AxisTitles(
                                   sideTitles: SideTitles(
                                     showTitles: true,
-                                    reservedSize: 22.h,
+                                    reservedSize: 24.h,
                                     getTitlesWidget: (value, meta) {
                                       final index = value.toInt();
                                       if (index >= 0 &&
@@ -309,9 +357,13 @@ class WeightTrackingScreen extends StatelessWidget {
                                 leftTitles: AxisTitles(
                                   sideTitles: SideTitles(
                                     showTitles: true,
-                                    reservedSize: 24.w,
-                                    interval: 2,
+                                    reservedSize: 28.w,
+                                    interval: calculatedInterval,
                                     getTitlesWidget: (value, meta) {
+                                      if (value < calculatedMinY ||
+                                          value > calculatedMaxY) {
+                                        return const SizedBox.shrink();
+                                      }
                                       return Text(
                                         value.toInt().toString(),
                                         style: TextStyle(
@@ -346,16 +398,17 @@ class WeightTrackingScreen extends StatelessWidget {
                               ),
                               minX: 0,
                               maxX: (xLabels.length - 1).toDouble(),
-                              minY: 66,
-                              maxY: 74,
+                              minY: calculatedMinY,
+                              maxY: calculatedMaxY,
                               lineBarsData: spots.isEmpty
                                   ? []
                                   : [
                                       LineChartBarData(
                                         spots: spots,
                                         isCurved: true,
+                                        curveSmoothness: 0.35,
                                         color: const Color(0xFF2FD1A6),
-                                        barWidth: 2.5.w,
+                                        barWidth: 2.2.w,
                                         isStrokeCapRound: true,
                                         dotData: FlDotData(
                                           show: true,
@@ -363,13 +416,14 @@ class WeightTrackingScreen extends StatelessWidget {
                                               (spot, percent, barData, index) {
                                                 final isLast =
                                                     index == spots.length - 1;
-                                                return FlDotCirclePainter(
-                                                  radius: isLast ? 4.r : 3.r,
-                                                  color: Colors.white,
+                                                return _WeightDotPainter(
+                                                  radius: 3.5.r,
+                                                  dotColor: Colors.white,
+                                                  strokeColor: const Color(
+                                                    0xFF2FD1A6,
+                                                  ),
                                                   strokeWidth: 2.w,
-                                                  strokeColor: isLast
-                                                      ? const Color(0xFF1DB59B)
-                                                      : const Color(0xFF2FD1A6),
+                                                  isLast: isLast,
                                                 );
                                               },
                                         ),
@@ -378,7 +432,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                           gradient: LinearGradient(
                                             colors: [
                                               const Color(0xFF2FD1A6)
-                                                  .withValues(alpha: 0.3),
+                                                  .withValues(alpha: 0.22),
                                               const Color(0xFF2FD1A6)
                                                   .withValues(alpha: 0.0),
                                             ],
@@ -529,4 +583,141 @@ class _GradientCircularProgressPainter extends CustomPainter {
         oldDelegate.strokeWidth != strokeWidth ||
         oldDelegate.backgroundColor != backgroundColor;
   }
+}
+
+class _WeightDotPainter extends FlDotPainter {
+  final double radius;
+  final Color dotColor;
+  final Color strokeColor;
+  final double strokeWidth;
+  final bool isLast;
+
+  _WeightDotPainter({
+    required this.radius,
+    required this.dotColor,
+    required this.strokeColor,
+    required this.strokeWidth,
+    required this.isLast,
+  });
+
+  @override
+  void draw(Canvas canvas, FlSpot spot, Offset offset) {
+    // 1. Draw the circle dot
+    final fillPaint = Paint()
+      ..color = dotColor
+      ..style = PaintingStyle.fill;
+    final strokePaint = Paint()
+      ..color = strokeColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    canvas.drawCircle(offset, radius, fillPaint);
+    canvas.drawCircle(offset, radius, strokePaint);
+
+    // 2. Draw label above the dot
+    final valueStr = spot.y.toStringAsFixed(1);
+
+    if (isLast) {
+      final isNearTop = offset.dy < 24.0;
+      final badgeCenterY = isNearTop ? offset.dy + 18.0 : offset.dy - 16.0;
+
+      // Draw highlighted teal pill badge with downward pointer
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: valueStr,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 9.0,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      final badgeWidth = textPainter.width + 10.0;
+      final badgeHeight = textPainter.height + 4.0;
+      final badgeRect = RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: Offset(offset.dx, badgeCenterY),
+          width: badgeWidth,
+          height: badgeHeight,
+        ),
+        const Radius.circular(3.0),
+      );
+
+      final badgePaint = Paint()
+        ..color = const Color(0xFF33D2AB)
+        ..style = PaintingStyle.fill;
+
+      // Draw rounded rectangle badge
+      canvas.drawRRect(badgeRect, badgePaint);
+
+      // Draw pointer (pointing down if badge above dot, pointing up if below dot)
+      final pointerPath = Path();
+      if (isNearTop) {
+        pointerPath
+          ..moveTo(offset.dx - 3.0, badgeCenterY - (badgeHeight / 2))
+          ..lineTo(offset.dx + 3.0, badgeCenterY - (badgeHeight / 2))
+          ..lineTo(offset.dx, offset.dy + 4.5)
+          ..close();
+      } else {
+        pointerPath
+          ..moveTo(offset.dx - 3.0, badgeCenterY + (badgeHeight / 2))
+          ..lineTo(offset.dx + 3.0, badgeCenterY + (badgeHeight / 2))
+          ..lineTo(offset.dx, offset.dy - 4.5)
+          ..close();
+      }
+      canvas.drawPath(pointerPath, badgePaint);
+
+      // Draw text inside badge
+      textPainter.paint(
+        canvas,
+        Offset(
+          offset.dx - (textPainter.width / 2),
+          badgeCenterY - (textPainter.height / 2),
+        ),
+      );
+    } else {
+      final isNearTop = offset.dy < 18.0;
+      final textY = isNearTop ? offset.dy + 10.0 : offset.dy - 14.0;
+
+      // Draw normal floating text above dot
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: valueStr,
+          style: const TextStyle(
+            color: Color(0xFF1E293B),
+            fontSize: 9.0,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      textPainter.paint(
+        canvas,
+        Offset(offset.dx - (textPainter.width / 2), textY),
+      );
+    }
+  }
+
+  @override
+  Size getSize(FlSpot spot) => Size(radius * 2, radius * 2);
+
+  @override
+  Color get mainColor => strokeColor;
+
+  @override
+  List<Object?> get props => [
+    radius,
+    dotColor,
+    strokeColor,
+    strokeWidth,
+    isLast,
+  ];
+
+  @override
+  FlDotPainter lerp(FlDotPainter a, FlDotPainter b, double t) => b;
 }
