@@ -11,7 +11,6 @@ import '../../core/routes/app_routes.dart';
 import '../../data/services/localization_service.dart';
 import '../widgets/ads/native_ad_card.dart';
 
-// Hand is in one of four phases
 enum _HandPhase { tapping, movingToDone, tappingDone, hidden }
 
 class LanguageSelectionScreen extends StatefulWidget {
@@ -28,24 +27,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   String _selectedLang = 'en';
   bool _bottomAdAvailable = true;
 
-  // Keys for position tracking
   final GlobalKey _doneButtonKey = GlobalKey();
   final GlobalKey _firstTileKey = GlobalKey();
 
   _HandPhase _handPhase = _HandPhase.tapping;
 
-  // Repeating tap animation (while on tile)
   late AnimationController _handController;
 
-  // One-shot fly-to-done animation
   late AnimationController _moveController;
   Animation<Offset>? _moveAnimation;
   Animation<double>? _moveFade;
 
-  // Center of Done button in screen coords (set during _flyToDone)
   Offset? _doneButtonCenter;
 
-  // Cache hand offsets on first tile to use outside build()
   double _handOffsetX = 70;
   double _handOffsetY = 16;
 
@@ -104,13 +98,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     final tileGlobal = tileBox.localToGlobal(Offset.zero);
     final doneGlobal = doneBox.localToGlobal(Offset.zero);
 
-    // Start: centre of first tile + offsets used in the hand overlay
     final startPos = Offset(
       tileGlobal.dx + tileBox.size.width / 2 + _handOffsetX,
       tileGlobal.dy + tileBox.size.height / 2 + _handOffsetY,
     );
 
-    // End: centre of the Done button with offset to place fingertip on button
     final endPos = Offset(
       doneGlobal.dx + doneBox.size.width / 2 + 14.w,
       doneGlobal.dy + doneBox.size.height / 2 + 20.h,
@@ -120,14 +112,12 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       CurvedAnimation(parent: _moveController, curve: Curves.easeInOutCubic),
     );
 
-    // Store Done button hand target centre so tappingDone overlay can use it
     _doneButtonCenter = endPos;
 
     setState(() => _handPhase = _HandPhase.movingToDone);
 
     _moveController.forward(from: 0).then((_) {
       if (mounted) {
-        // Switch to tapping-on-done phase and loop the hand again
         setState(() => _handPhase = _HandPhase.tappingDone);
         _handController.repeat();
       }
@@ -141,7 +131,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Cache for use in _flyToDone (which runs without a BuildContext)
     _handOffsetX = 70.w;
     _handOffsetY = 16.h;
 
@@ -372,7 +361,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
               },
             ),
 
-          // ── Tapping-on-done hand overlay (tappingDone phase) ──
           if (_handPhase == _HandPhase.tappingDone && _doneButtonCenter != null)
             _DoneButtonHandOverlay(
               controller: _handController,
@@ -380,9 +368,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
             ),
         ],
       ),
-      // ── Native ad pinned where the bottom nav bar would sit ──
-      // Always visible (independent of list scroll position) while an ad
-      // is loading/loaded; collapses entirely if the fill fails.
       bottomNavigationBar: _bottomAdAvailable
           ? SafeArea(
               top: false,
@@ -404,10 +389,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Tap Hand Hint — tap-down + sparkle lines, loops until language is selected
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _TapHandHint extends StatelessWidget {
   final AnimationController controller;
@@ -493,20 +474,17 @@ class _SparklePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-    // Index fingertip position within the 96x96 asset
     final center = Offset(
       size.width * (19.5 / 96.0),
       size.height * (14.0 / 96.0),
     );
-
-    // Sparkle rays radiating from the index fingertip
     const angles = [
-      -math.pi, // left (-180°)
-      -2.443, // up-left (-140°)
-      -math.pi / 2, // straight up (-90°)
-      -math.pi / 4, // up-right (-45°)
-      -0.175, // right (-10°)
-      2.531, // down-left (+145°)
+      -math.pi,
+      -2.443,
+      -math.pi / 2,
+      -math.pi / 4,
+      -0.175,
+      2.531,
     ];
 
     for (final angle in angles) {
@@ -529,12 +507,6 @@ class _SparklePainter extends CustomPainter {
       old.opacity != opacity || old.radius != radius;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Done Button Hand Overlay — tap animation looped on the Done button
-// ─────────────────────────────────────────────────────────────────────────────
-
-/// Renders the hand image with the same tap+sparkle cycle, but absolutely
-/// positioned at [center] in screen coordinates (inside a [Stack] on Scaffold).
 class _DoneButtonHandOverlay extends StatelessWidget {
   final AnimationController controller;
   final Offset center;

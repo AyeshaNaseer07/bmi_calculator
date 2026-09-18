@@ -52,7 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToPaywall() {
-    Get.offNamed(AppRoutes.paywall);
+    Get.toNamed(AppRoutes.paywall);
   }
 
   @override
@@ -67,7 +67,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // PageView for Onboarding flow
           PageView(
             controller: _pageController,
             onPageChanged: (index) {
@@ -106,7 +105,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ],
           ),
 
-          // Top Right Skip Button (visible on content slides)
           if (_currentIndex != 1)
             // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
             if (_currentIndex >= 2)

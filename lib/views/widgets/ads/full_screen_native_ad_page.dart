@@ -92,10 +92,14 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
           widget.onAdFailed?.call();
         },
         onAdOpened: (ad) {
-          debugPrint('👀 [FullScreenNativeAdPage] onAdOpened (user opened ad overlay/content)');
+          debugPrint(
+            '👀 [FullScreenNativeAdPage] onAdOpened (user opened ad overlay/content)',
+          );
         },
         onAdClosed: (ad) {
-          debugPrint('🔒 [FullScreenNativeAdPage] onAdClosed (user closed ad overlay/content)');
+          debugPrint(
+            '🔒 [FullScreenNativeAdPage] onAdClosed (user closed ad overlay/content)',
+          );
         },
         onAdImpression: (ad) {
           debugPrint('👁️ [FullScreenNativeAdPage] onAdImpression logged');
@@ -104,7 +108,9 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
           debugPrint('👆 [FullScreenNativeAdPage] onAdClicked');
         },
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
-          debugPrint('💰 [FullScreenNativeAdPage] onPaidEvent: $valueMicros $currencyCode');
+          debugPrint(
+            '💰 [FullScreenNativeAdPage] onPaidEvent: $valueMicros $currencyCode',
+          );
           logAdRevenue(
             adNetwork: 'AdMob',
             revenue: valueMicros,
@@ -142,51 +148,6 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
             child: _isLoaded && _nativeAd != null
                 ? AdWidget(ad: _nativeAd!)
                 : const FullScreenNativeAdShimmer(),
-          ),
-
-          // Top Left Skip / Close Action (pill matching onboarding style)
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 14, left: 18),
-                child: GestureDetector(
-                  onTap: widget.onNext,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 5,
-                    ),
-                    decoration: ShapeDecoration(
-                      color: const Color(0x4F33D2AB),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'skip'.tr,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: 'SF Pro',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 11,
-                          color: Colors.black87,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),

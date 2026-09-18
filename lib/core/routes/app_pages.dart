@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/bmi_controller.dart';
 import '../../controllers/health_insight_controller.dart';
 import '../../controllers/profile_controller.dart';
@@ -30,14 +31,8 @@ class AppPages {
   static const initial = AppRoutes.splash;
 
   static final routes = [
-    GetPage(
-      name: AppRoutes.splash,
-      page: () => const SplashScreen(),
-    ),
-    GetPage(
-      name: AppRoutes.onboarding,
-      page: () => const OnboardingScreen(),
-    ),
+    GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
+    GetPage(name: AppRoutes.onboarding, page: () => const OnboardingScreen()),
     GetPage(
       name: AppRoutes.paywall,
       page: () => const PaywallScreen(),
@@ -69,22 +64,13 @@ class AppPages {
       name: AppRoutes.bmiCalculator,
       page: () => const BMICalculatorScreen(),
     ),
-    GetPage(
-      name: AppRoutes.bmiResult,
-      page: () => const BMIResultScreen(),
-    ),
+    GetPage(name: AppRoutes.bmiResult, page: () => const BMIResultScreen()),
     GetPage(
       name: AppRoutes.weightTracking,
       page: () => const WeightTrackingScreen(),
     ),
-    GetPage(
-      name: AppRoutes.addWeight,
-      page: () => const AddWeightScreen(),
-    ),
-    GetPage(
-      name: AppRoutes.history,
-      page: () => const HistoryScreen(),
-    ),
+    GetPage(name: AppRoutes.addWeight, page: () => const AddWeightScreen()),
+    GetPage(name: AppRoutes.history, page: () => const HistoryScreen()),
     GetPage(
       name: AppRoutes.healthInsights,
       page: () => const AddHealthDataScreen(),
@@ -93,18 +79,12 @@ class AppPages {
       name: AppRoutes.activityLevel,
       page: () => const ActivityLevelScreen(),
     ),
-    GetPage(
-      name: AppRoutes.yourGoal,
-      page: () => const YourGoalScreen(),
-    ),
+    GetPage(name: AppRoutes.yourGoal, page: () => const YourGoalScreen()),
     GetPage(
       name: AppRoutes.healthInsightResult,
       page: () => const HealthInsightResultScreen(),
     ),
-    GetPage(
-      name: AppRoutes.profile,
-      page: () => const ProfileScreen(),
-    ),
+    GetPage(name: AppRoutes.profile, page: () => const ProfileScreen()),
     GetPage(
       name: AppRoutes.changePassword,
       page: () => const ChangePasswordScreen(),

@@ -17,11 +17,15 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         topMediaContainer.clipsToBounds = true
         nativeAdView.addSubview(topMediaContainer)
 
-        let mediaView = MediaView()
+        let mediaView = FullScreenAdMediaView()
         mediaView.translatesAutoresizingMaskIntoConstraints = false
         mediaView.contentMode = .scaleAspectFit
         mediaView.clipsToBounds = true
         topMediaContainer.addSubview(mediaView)
+
+        let adChoicesView = AdChoicesView()
+        adChoicesView.translatesAutoresizingMaskIntoConstraints = false
+        topMediaContainer.addSubview(adChoicesView)
 
         let adBadge = UILabel()
         adBadge.translatesAutoresizingMaskIntoConstraints = false
@@ -53,10 +57,6 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         textStack.translatesAutoresizingMaskIntoConstraints = false
         textStack.axis = .vertical
         textStack.spacing = 3
-        // `.fill` makes headline/stars/body stretch to the stack's own width
-        // (which is pinned to bottomCard's bounds) so long ad copy wraps or
-        // truncates instead of laying out at unconstrained intrinsic width
-        // and bleeding past the card — and off the actual screen edge.
         textStack.alignment = .fill
         textStack.distribution = .fill
         bottomCard.addSubview(textStack)
@@ -118,9 +118,15 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
             topMediaContainer.trailingAnchor.constraint(equalTo: nativeAdView.trailingAnchor),
             topMediaContainer.heightAnchor.constraint(equalTo: nativeAdView.heightAnchor, multiplier: 0.68),
 
-            // AD Badge at top right of media area
-            adBadge.topAnchor.constraint(equalTo: topMediaContainer.safeAreaLayoutGuide.topAnchor, constant: 14),
-            adBadge.trailingAnchor.constraint(equalTo: topMediaContainer.trailingAnchor, constant: -16),
+            // AdChoices View (safe from notch and screen corners)
+            adChoicesView.topAnchor.constraint(equalTo: topMediaContainer.safeAreaLayoutGuide.topAnchor, constant: 14),
+            adChoicesView.trailingAnchor.constraint(equalTo: topMediaContainer.trailingAnchor, constant: -16),
+            adChoicesView.widthAnchor.constraint(greaterThanOrEqualToConstant: 16),
+            adChoicesView.heightAnchor.constraint(equalToConstant: 18),
+
+            // AD Badge to the left of AdChoices
+            adBadge.centerYAnchor.constraint(equalTo: adChoicesView.centerYAnchor),
+            adBadge.trailingAnchor.constraint(equalTo: adChoicesView.leadingAnchor, constant: -8),
             adBadge.widthAnchor.constraint(equalToConstant: 32),
             adBadge.heightAnchor.constraint(equalToConstant: 18),
 
@@ -161,6 +167,7 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         nativeAdView.mediaView = mediaView
         nativeAdView.callToActionView = ctaButton
         nativeAdView.starRatingView = starsStack
+        nativeAdView.adChoicesView = adChoicesView
 
         // Populate content
         headlineLabel.text = nativeAd.headline
@@ -184,5 +191,29 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         nativeAdView.nativeAd = nativeAd
         print("✅ [FullScreenNativeAdFactory] nativeAdView successfully configured and returned")
         return nativeAdView
+    }
+}
+
+// MediaView subclass enforcing aspect-fit scaling on all image/video subviews to prevent cutting off ad creative
+private class FullScreenAdMediaView: MediaView {
+    override func didAddSubview(_ subview: UIView) {
+        super.didAddSubview(subview)
+        applyAspectFit(to: subview)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        for subview in subviews {
+            applyAspectFit(to: subview)
+        }
+    }
+
+    private func applyAspectFit(to view: UIView) {
+        view.contentMode = .scaleAspectFit
+        view.clipsToBounds = true
+        for child in view.subviews {
+            child.contentMode = .scaleAspectFit
+            child.clipsToBounds = true
+        }
     }
 }

@@ -11,23 +11,11 @@ import '../../../main.dart';
 import 'ad_logger.dart';
 import 'ad_shimmer.dart';
 
-/// Must stay in sync with MediumNativeAdFactory.swift's hardcoded content
-/// sum (icon 44 + gap 10 + media 136 + gap 10 + stars 15 + body 10 + CTA 46 + 24pt margins).
-/// Deliberately a fixed, device-independent point value — NOT ScreenUtil's
-/// `.h` (which scales with device screen height and would drift away from
-/// the native side's fixed layout, corrupting the Auto Layout constraints).
 const double _kNativeAdHeight = 285;
 
-/// Renders a medium native ad card matching the app design system.
-/// Displays a shimmer skeleton while loading, displays AdWidget when loaded,
-/// and dismisses/collapses cleanly if the ad fails to load.
 class NativeAdCard extends StatefulWidget {
   final String? adUnitId;
   final EdgeInsetsGeometry? margin;
-
-  /// Fired once the ad finishes loading (true) or fails to load (false),
-  /// so a parent that wraps this in extra chrome (e.g. a bottom bar
-  /// container) can collapse that chrome entirely on failure.
   final ValueChanged<bool>? onAdAvailabilityChanged;
 
   const NativeAdCard({
@@ -148,15 +136,9 @@ class _NativeAdCardState extends State<NativeAdCard> {
 
   @override
   Widget build(BuildContext context) {
-    // If ad failed, dismiss completely and collapse space
     if (_isFailed) {
       return const SizedBox.shrink();
     }
-
-    // AdWidget hosts a native platform view and must always receive a
-    // bounded, explicit width — leaving width unconstrained lets the
-    // platform view size itself off its (unbounded) intrinsic content and
-    // bleed past the screen edge, which is what caused the cropped ad.
     final content = SizedBox(
       width: double.infinity,
       child: AnimatedCrossFade(
@@ -168,14 +150,6 @@ class _NativeAdCardState extends State<NativeAdCard> {
           width: double.infinity,
           child: MediumNativeAdShimmer(),
         ),
-        // Fixed, UNSCALED height — deliberately not `.h` (ScreenUtil scales
-        // that relative to device screen height, which varies device to
-        // device). MediumNativeAdFactory.swift lays its content out with
-        // hardcoded native points (icon 44 + gap 10 + media 136 + gap 10 +
-        // stars 15 + body 10 + CTA 46 + 24pt margins = 285), so the Flutter-side
-        // frame handed to the platform view must be exactly that many real points
-        // on every device, or Auto Layout's fixed constraint chain on the native
-        // side conflicts and the ad renders corrupted/oversized.
         secondChild: _isLoaded && _nativeAd != null
             ? Container(
                 width: double.infinity,

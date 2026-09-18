@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Base animated shimmer effect that sweeps across child widgets.
 class ShimmerLoading extends StatefulWidget {
   final Widget child;
 
@@ -66,7 +65,6 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
   }
 }
 
-/// Medium Native Ad Shimmer Skeleton matching MediumNativeAdFactory layout
 class MediumNativeAdShimmer extends StatelessWidget {
   const MediumNativeAdShimmer({super.key});
 
@@ -91,7 +89,6 @@ class MediumNativeAdShimmer extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Row: Icon, Headline/Body placeholder, AD badge
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

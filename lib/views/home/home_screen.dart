@@ -123,16 +123,16 @@ class HomeScreen extends StatelessWidget {
               onTap: () => Get.toNamed(AppRoutes.profile),
               child: Image.asset(
                 AppAssets.profileIcon,
-                width: 30.w,
-                height: 30.w,
+                width: 32.w,
+                height: 32.w,
               ),
             ),
             GestureDetector(
               onTap: () => Get.toNamed(AppRoutes.paywall),
               child: Image.asset(
                 AppAssets.icDiamond,
-                width: 30.w,
-                height: 30.w,
+                width: 32.w,
+                height: 32.w,
               ),
             ),
           ],
