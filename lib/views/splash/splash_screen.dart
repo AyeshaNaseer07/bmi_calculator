@@ -9,6 +9,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
+import '../widgets/app_background.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -57,97 +58,98 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // — Full Screen Background —
-          Positioned(
-            left: -5,
-            right: -5,
-            child: Image.asset(AppAssets.splashBg, fit: BoxFit.cover),
-          ),
-          // Center Logo & Tagline
-          SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(flex: 3),
-                  Image.asset(
-                    AppAssets.splashLogo,
-                    width: 220.w,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 16.h),
-                  Center(
-                    child: Text(
-                      'Know Your Body. Live Healthier',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                        fontFamily: 'SF Pro',
-                        fontWeight: FontWeight.w400,
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            // — Full Screen Background —
+            Positioned(
+              left: -5,
+              right: -5,
+              child: Image.asset(AppAssets.splashBg, fit: BoxFit.cover),
+            ),
+            // Center Logo & Tagline
+            SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(flex: 3),
+                    Image.asset(
+                      AppAssets.splashLogo,
+                      width: 220.w,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: 16.h),
+                    Center(
+                      child: Text(
+                        'Know Your Body. Live Healthier',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontFamily: 'SF Pro',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-                  const Spacer(flex: 4),
+                    const Spacer(flex: 4),
 
-                  // Bottom Progress Bar & Loading Text
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 48.w),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 8.h,
-                          width: 140.w,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(4.r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.04),
-                                blurRadius: 4.r,
-                                offset: Offset(0, 1.h),
-                              ),
-                            ],
-                          ),
-                          child: AnimatedBuilder(
-                            animation: _progressAnimation,
-                            builder: (context, child) {
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  width: 140.w * _progressAnimation.value,
-                                  height: 8.h,
-                                  decoration: BoxDecoration(
-                                    gradient: AppColors.buttonGradient,
-                                    borderRadius: BorderRadius.circular(4.r),
-                                  ),
+                    // Bottom Progress Bar & Loading Text
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 48.w),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 8.h,
+                            width: 140.w,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.04),
+                                  blurRadius: 4.r,
+                                  offset: Offset(0, 1.h),
                                 ),
-                              );
-                            },
+                              ],
+                            ),
+                            child: AnimatedBuilder(
+                              animation: _progressAnimation,
+                              builder: (context, child) {
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    width: 140.w * _progressAnimation.value,
+                                    height: 8.h,
+                                    decoration: BoxDecoration(
+                                      gradient: AppColors.buttonGradient,
+                                      borderRadius: BorderRadius.circular(4.r),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          'Loading...',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.textLight,
-                            fontSize: 12.sp,
+                          SizedBox(height: 8.h),
+                          Text(
+                            'Loading...',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.textLight,
+                              fontSize: 12.sp,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 36.h),
-                ],
+                    SizedBox(height: 36.h),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

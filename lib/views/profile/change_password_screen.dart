@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_colors.dart';
+import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_gradient_button.dart';
 
@@ -14,52 +15,54 @@ class ChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProfileController controller = Get.find<ProfileController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: const CustomAppBar(title: 'Change Password'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildFieldLabel('Current Password'),
-              _buildPasswordInput(
-                controller: controller.currentPasswordController,
-                hint: 'Enter your current password',
-              ),
-              SizedBox(height: 16.h),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const CustomAppBar(title: 'Change Password'),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildFieldLabel('Current Password'),
+                _buildPasswordInput(
+                  controller: controller.currentPasswordController,
+                  hint: 'Enter your current password',
+                ),
+                SizedBox(height: 16.h),
 
-              _buildFieldLabel('New Password'),
-              _buildPasswordInput(
-                controller: controller.newPasswordController,
-                hint: 'Enter your new password',
-              ),
-              SizedBox(height: 16.h),
+                _buildFieldLabel('New Password'),
+                _buildPasswordInput(
+                  controller: controller.newPasswordController,
+                  hint: 'Enter your new password',
+                ),
+                SizedBox(height: 16.h),
 
-              _buildFieldLabel('Confirm Password'),
-              _buildPasswordInput(
-                controller: controller.confirmPasswordController,
-                hint: 'Re-enter your new password',
-              ),
-              SizedBox(height: 32.h),
+                _buildFieldLabel('Confirm Password'),
+                _buildPasswordInput(
+                  controller: controller.confirmPasswordController,
+                  hint: 'Re-enter your new password',
+                ),
+                SizedBox(height: 32.h),
 
-              Obx(() {
-                return CustomGradientButton(
-                  text: controller.isPasswordUpdating.value
-                      ? 'Updating...'
-                      : 'Confirm',
-                  solidColor: const Color(0xFF1B8A7A),
-                  onPressed: controller.isPasswordUpdating.value
-                      ? null
-                      : () async {
-                          final ok = await controller.changePassword();
-                          if (ok) Get.back();
-                        },
-                );
-              }),
-            ],
+                Obx(() {
+                  return CustomGradientButton(
+                    text: controller.isPasswordUpdating.value
+                        ? 'Updating...'
+                        : 'Confirm',
+                    solidColor: const Color(0xFF1B8A7A),
+                    onPressed: controller.isPasswordUpdating.value
+                        ? null
+                        : () async {
+                            final ok = await controller.changePassword();
+                            if (ok) Get.back();
+                          },
+                  );
+                }),
+              ],
+            ),
           ),
         ),
       ),

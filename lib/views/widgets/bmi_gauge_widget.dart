@@ -254,30 +254,58 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
 
     // Labels below arc ends
     if (showLabels) {
-      final labelFontSize = (size.width * 0.07).clamp(9.0, 13.0);
-      final textStyle = TextStyle(
+      final numFontSize = (size.width * 0.068).clamp(10.0, 13.0);
+      final subFontSize = (size.width * 0.055).clamp(8.5, 11.0);
+
+      final numStyle = TextStyle(
         color: const Color(0xFF1E2D2F),
-        fontSize: labelFontSize,
+        fontSize: numFontSize,
         fontWeight: FontWeight.w700,
         fontFamily: 'Outfit',
+        height: 1.15,
+      );
+      final subStyle = TextStyle(
+        color: const Color(0xFF8C9EA0),
+        fontSize: subFontSize,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Inter',
+        height: 1.25,
       );
 
       final textPainterLow = TextPainter(
-        text: TextSpan(text: '18.5', style: textStyle),
+        text: TextSpan(
+          children: [
+            TextSpan(text: '18.5\n', style: numStyle),
+            TextSpan(text: 'Low', style: subStyle),
+          ],
+        ),
+        textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
       textPainterLow.paint(
         canvas,
-        Offset(size.width * 0.06, center.dy + size.width * 0.03),
+        Offset(
+          (size.width * 0.125) - (textPainterLow.width / 2),
+          center.dy + size.width * 0.015,
+        ),
       );
 
       final textPainterHigh = TextPainter(
-        text: TextSpan(text: '24.9', style: textStyle),
+        text: TextSpan(
+          children: [
+            TextSpan(text: '24.9\n', style: numStyle),
+            TextSpan(text: 'High', style: subStyle),
+          ],
+        ),
+        textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
       textPainterHigh.paint(
         canvas,
-        Offset(size.width * 0.74, center.dy + size.width * 0.03),
+        Offset(
+          (size.width * 0.875) - (textPainterHigh.width / 2),
+          center.dy + size.width * 0.015,
+        ),
       );
     }
   }

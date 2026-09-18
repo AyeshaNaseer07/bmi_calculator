@@ -10,10 +10,11 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
+import '../widgets/ads/native_ad_card.dart';
+import '../widgets/app_background.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
-import '../widgets/ads/native_ad_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,122 +24,144 @@ class HomeScreen extends StatelessWidget {
     final BMIController bmiController = Get.find<BMIController>();
     final ProfileController profileController = Get.find<ProfileController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      body: Stack(
-        children: [
-          // Background Illustration (Avatar on top right)
-          Positioned(
-            top: 10,
-            left: 0,
-            right: 0,
-            child: IgnorePointer(
-              child: Image.asset(
-                AppAssets.homeAvatar,
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.topRight,
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            // Background Illustration (Avatar on top right)
+            Positioned(
+              top: 10,
+              left: 0,
+              right: 0,
+              child: IgnorePointer(
+                child: Image.asset(
+                  AppAssets.homeAvatar,
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.topRight,
+                ),
               ),
             ),
-          ),
 
-          // Main Screen Content
-          SafeArea(
-            child: Obx(() {
-              final hasData = bmiController.bmiHistory.isNotEmpty;
-              final latest = bmiController.latestRecord.value;
+            // Main Screen Content
+            SafeArea(
+              child: Column(
+                children: [
+                  // Fixed Header: Profile & Diamond Icons + Greeting & Welcome (Non-scrollable)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 12.h),
+                        _buildTopBar(),
+                        SizedBox(height: 30.h),
+                        Obx(() {
+                          final hasData = bmiController.bmiHistory.isNotEmpty;
+                          return _buildGreeting(hasData, profileController);
+                        }),
+                        SizedBox(height: 20.h),
+                      ],
+                    ),
+                  ),
 
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header: Profile Avatar, Greeting, VIP Diamond
-                    _buildHeader(hasData, profileController),
-                    SizedBox(height: 28.h),
+                  // Scrollable Content
+                  Expanded(
+                    child: Obx(() {
+                      final hasData = bmiController.bmiHistory.isNotEmpty;
+                      final latest = bmiController.latestRecord.value;
 
-                    // Main BMI Card (Empty state or Active Calculated state)
-                    if (!hasData || latest == null)
-                      _buildEmptyBmiCard()
-                    else
-                      _buildActiveBmiCard(latest),
-
-                    SizedBox(height: 16.h),
-
-                    // Quick Parameters Pills (Weight, Height, Age, Gender)
-                    if (hasData && latest != null) ...[
-                      _buildParameterPills(latest, bmiController),
-                      SizedBox(height: 16.h),
-
-                      // BMI Categories Row
-                      _buildBmiCategories(latest.category),
-                      SizedBox(height: 18.h),
-                    ],
-
-                    // Features Heading (if empty state) or 2x2 Grid Features
-                    if (!hasData) ...[
-                      Text(
-                        'Features',
-                        style: TextStyle(
-                          color: const Color(0xFF1A252C),
-                          fontSize: 18,
-                          fontFamily: 'Instrument Sans',
-                          fontWeight: FontWeight.w700,
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.only(
+                          left: 18.w,
+                          right: 18.w,
+                          top: 4.h,
+                          bottom: 24.h,
                         ),
-                      ),
-                      SizedBox(height: 12.h),
-                      const NativeAdCard(),
-                      SizedBox(height: 16.h),
-                    ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Main BMI Card (Empty state or Active Calculated state)
+                            if (!hasData || latest == null)
+                              _buildEmptyBmiCard()
+                            else
+                              _buildActiveBmiCard(latest),
 
-                    // 2x2 Feature Cards Grid
-                    _buildFeatureGrid(),
-                    if (hasData) ...[
-                      SizedBox(height: 16.h),
-                      const NativeAdCard(),
-                    ],
-                    SizedBox(height: 24.h),
-                  ],
-                ),
-              );
-            }),
-          ),
-        ],
+                            SizedBox(height: 16.h),
+
+                            // Quick Parameters Pills (Weight, Height, Age, Gender)
+                            if (hasData && latest != null) ...[
+                              _buildParameterPills(latest, bmiController),
+                              SizedBox(height: 16.h),
+
+                              // BMI Categories Row
+                              _buildBmiCategories(latest.category),
+                              SizedBox(height: 18.h),
+                            ],
+
+                            // Features Heading (if empty state) or 2x2 Grid Features
+                            if (!hasData) ...[
+                              Text(
+                                'Features',
+                                style: TextStyle(
+                                  color: const Color(0xFF1A252C),
+                                  fontSize: 18,
+                                  fontFamily: 'Instrument Sans',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: 12.h),
+                              const NativeAdCard(),
+                              SizedBox(height: 16.h),
+                            ],
+
+                            // 2x2 Feature Cards Grid
+                            _buildFeatureGrid(),
+                            if (hasData) ...[
+                              SizedBox(height: 16.h),
+                              const NativeAdCard(),
+                            ],
+                            SizedBox(height: 24.h),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildHeader(bool hasData, ProfileController profileController) {
+  Widget _buildTopBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Get.toNamed(AppRoutes.profile),
+          child: Image.asset(AppAssets.profileIcon, width: 32.w, height: 32.w),
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Get.toNamed(AppRoutes.paywall),
+          child: Image.asset(AppAssets.icDiamond, width: 32.w, height: 32.w),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGreeting(bool hasData, ProfileController profileController) {
     final userName = profileController.userProfile.value.displayName;
     final greeting = userName.isNotEmpty ? 'Hello, $userName' : 'Hello, Guest';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top Row: Profile Icon & Diamond Badge
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () => Get.toNamed(AppRoutes.profile),
-              child: Image.asset(
-                AppAssets.profileIcon,
-                width: 32.w,
-                height: 32.w,
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Get.toNamed(AppRoutes.paywall),
-              child: Image.asset(
-                AppAssets.icDiamond,
-                width: 32.w,
-                height: 32.w,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 30.h),
-
         // Greeting Text Section
         Row(
           children: [
@@ -147,8 +170,8 @@ class HomeScreen extends StatelessWidget {
                 greeting,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: const Color(0xFF1A252C),
+                style: const TextStyle(
+                  color: Color(0xFF1A252C),
                   fontSize: 24,
                   fontFamily: 'Instrument Sans',
                   fontWeight: FontWeight.w700,
@@ -164,8 +187,8 @@ class HomeScreen extends StatelessWidget {
           hasData
               ? "Let's track your health today."
               : "Welcome! Let's begin your health journey.",
-          style: TextStyle(
-            color: const Color(0xFF647E80),
+          style: const TextStyle(
+            color: Color(0xFF647E80),
             fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,

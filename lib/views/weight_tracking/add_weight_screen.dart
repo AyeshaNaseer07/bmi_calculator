@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/weight_tracker_controller.dart';
 import '../../core/constants/app_colors.dart';
+import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/gender_popup_menu.dart';
 
@@ -50,157 +51,162 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        if (_isGenderMenuOpen) {
-          setState(() => _isGenderMenuOpen = false);
-        }
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7FAF8),
-        appBar: const CustomAppBar(title: 'Weight Tracking'),
-        body: SafeArea(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: Column(
-                  children: [
-                    // Weight Input Field
-                    _buildInputField(
-                      controller: _weightController,
-                      label: 'Weight',
-                      hint: '00',
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
+    return AppBackground(
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          if (_isGenderMenuOpen) {
+            setState(() => _isGenderMenuOpen = false);
+          }
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: const CustomAppBar(title: 'Weight Tracking'),
+          body: SafeArea(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
+                  child: Column(
+                    children: [
+                      // Weight Input Field
+                      _buildInputField(
+                        controller: _weightController,
+                        label: 'Weight',
+                        hint: '00',
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 16.h),
+                      SizedBox(height: 16.h),
 
-                    // Gender Dropdown Field
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        popupMenuTheme: const PopupMenuThemeData(
-                          color: Colors.transparent,
-                          surfaceTintColor: Colors.transparent,
-                          elevation: 0,
-                          shadowColor: Colors.transparent,
-                          menuPadding: EdgeInsets.zero,
+                      // Gender Dropdown Field
+                      Theme(
+                        data: Theme.of(context).copyWith(
+                          popupMenuTheme: const PopupMenuThemeData(
+                            color: Colors.transparent,
+                            surfaceTintColor: Colors.transparent,
+                            elevation: 0,
+                            shadowColor: Colors.transparent,
+                            menuPadding: EdgeInsets.zero,
+                          ),
                         ),
-                      ),
-                      child: PopupMenuButton<String>(
-                        onSelected: (String gender) {
-                          setState(() {
-                            _selectedGender = gender;
-                            _isGenderMenuOpen = false;
-                          });
-                        },
-                        onCanceled: () {
-                          setState(() => _isGenderMenuOpen = false);
-                        },
-                        onOpened: () {
-                          setState(() => _isGenderMenuOpen = true);
-                        },
-                        offset: Offset(0, 68.h),
-                        constraints: BoxConstraints(
-                          minWidth: 144.w,
-                          maxWidth: 144.w,
-                        ),
-                        itemBuilder: (context) {
-                          return const [
-                            GenderPopupMenuEntry<String>(
-                              items: [
-                                GenderPopupMenuItem(
-                                  value: 'Male',
-                                  label: 'Male',
-                                ),
-                                GenderPopupMenuItem(
-                                  value: 'Female',
-                                  label: 'Female',
-                                ),
-                                GenderPopupMenuItem(
-                                  value: 'Other',
-                                  label: 'Other',
-                                ),
-                              ],
-                            ),
-                          ];
-                        },
-                        child: _buildCardContainer(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    _selectedGender,
-                                    style: const TextStyle(
-                                      color: Color(0xFF4B5563),
-                                      fontSize: 17,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                        child: PopupMenuButton<String>(
+                          onSelected: (String gender) {
+                            setState(() {
+                              _selectedGender = gender;
+                              _isGenderMenuOpen = false;
+                            });
+                          },
+                          onCanceled: () {
+                            setState(() => _isGenderMenuOpen = false);
+                          },
+                          onOpened: () {
+                            setState(() => _isGenderMenuOpen = true);
+                          },
+                          offset: Offset(0, 68.h),
+                          constraints: BoxConstraints(
+                            minWidth: 144.w,
+                            maxWidth: 144.w,
+                          ),
+                          itemBuilder: (context) {
+                            return const [
+                              GenderPopupMenuEntry<String>(
+                                items: [
+                                  GenderPopupMenuItem(
+                                    value: 'Male',
+                                    label: 'Male',
                                   ),
-                                  SizedBox(width: 4.w),
-                                  Icon(
-                                    _isGenderMenuOpen
-                                        ? CupertinoIcons.chevron_up
-                                        : CupertinoIcons.chevron_down,
-                                    size: 13.sp,
-                                    color: const Color(0xFF6B7280),
+                                  GenderPopupMenuItem(
+                                    value: 'Female',
+                                    label: 'Female',
+                                  ),
+                                  GenderPopupMenuItem(
+                                    value: 'Other',
+                                    label: 'Other',
                                   ),
                                 ],
                               ),
-                              const Text(
-                                'Gender',
-                                style: TextStyle(
-                                  color: Color(0xFF6B7280),
-                                  fontSize: 17,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
+                            ];
+                          },
+                          child: _buildCardContainer(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      _selectedGender,
+                                      style: const TextStyle(
+                                        color: Color(0xFF4B5563),
+                                        fontSize: 17,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Icon(
+                                      _isGenderMenuOpen
+                                          ? CupertinoIcons.chevron_up
+                                          : CupertinoIcons.chevron_down,
+                                      size: 13.sp,
+                                      color: const Color(0xFF6B7280),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                                const Text(
+                                  'Gender',
+                                  style: TextStyle(
+                                    color: Color(0xFF6B7280),
+                                    fontSize: 17,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 16.h),
+                      SizedBox(height: 16.h),
 
-                    // Age Input Field
-                    _buildInputField(
-                      controller: _ageController,
-                      label: 'Age',
-                      hint: '00',
-                      keyboardType: TextInputType.number,
-                    ),
-                    SizedBox(height: 16.h),
-
-                    // Height Input Field
-                    _buildInputField(
-                      controller: _heightController,
-                      label: 'Height',
-                      hint: '0,0',
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
+                      // Age Input Field
+                      _buildInputField(
+                        controller: _ageController,
+                        label: 'Age',
+                        hint: '00',
+                        keyboardType: TextInputType.number,
                       ),
-                    ),
-                    SizedBox(height: 32.h),
+                      SizedBox(height: 16.h),
 
-                    // Save Button
-                    CustomGradientButton(
-                      text: 'Save Weight',
-                      backgroundImage: AppAssets.btnRectangle,
-                      onPressed: _onSave,
-                    ),
-                  ],
+                      // Height Input Field
+                      _buildInputField(
+                        controller: _heightController,
+                        label: 'Height',
+                        hint: '0,0',
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // Save Button
+                      CustomGradientButton(
+                        text: 'Save Weight',
+                        backgroundImage: AppAssets.btnRectangle,
+                        onPressed: _onSave,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

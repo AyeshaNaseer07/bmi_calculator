@@ -95,7 +95,7 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         mediaView.layer.cornerRadius = 12
         mediaView.layer.masksToBounds = true
         mediaView.backgroundColor = UIColor(red: 0xF5/255.0, green: 0xF7/255.0, blue: 0xF8/255.0, alpha: 1.0)
-        mediaView.contentMode = .scaleAspectFit
+        mediaView.contentMode = .scaleAspectFill
         mediaView.clipsToBounds = true
         containerView.addSubview(mediaView)
 
@@ -193,25 +193,25 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
     }
 }
 
-// MediaView subclass enforcing aspect-fit scaling on all image/video subviews to prevent cutting off ad creative
+// MediaView subclass enforcing aspect-fill scaling on all image/video subviews to fill container edge-to-edge
 private class MediumAdMediaView: MediaView {
     override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
-        applyAspectFit(to: subview)
+        applyAspectFill(to: subview)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         for subview in subviews {
-            applyAspectFit(to: subview)
+            applyAspectFill(to: subview)
         }
     }
 
-    private func applyAspectFit(to view: UIView) {
-        view.contentMode = .scaleAspectFit
+    private func applyAspectFill(to view: UIView) {
+        view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         for child in view.subviews {
-            child.contentMode = .scaleAspectFit
+            child.contentMode = .scaleAspectFill
             child.clipsToBounds = true
         }
     }

@@ -80,15 +80,21 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FCF9),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF7FCF9),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.w,
+                right: 20.w,
+                top: 55.h,
+                bottom: 10.h,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -501,39 +507,39 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 ],
               ),
             ),
-          ),
 
-          // Top-Left Close Cross Button overlaid on Stack
-          Positioned(
-            top: 12.h,
-            left: 20.w,
-            child: SafeArea(
-              child: AnimatedOpacity(
-                opacity: _showCloseButton ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 350),
-                curve: Curves.easeInOut,
-                child: IgnorePointer(
-                  ignoring: !_showCloseButton,
-                  child: GestureDetector(
-                    onTap: _onClose,
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFC7EFE4),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.asset(
-                        AppAssets.preCross,
-                        width: 12.w,
-                        height: 12.w,
+            // Top-Left Close Cross Button overlaid on Stack
+            Positioned(
+              top: 12.h,
+              left: 20.w,
+              child: SafeArea(
+                child: AnimatedOpacity(
+                  opacity: _showCloseButton ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 350),
+                  curve: Curves.easeInOut,
+                  child: IgnorePointer(
+                    ignoring: !_showCloseButton,
+                    child: GestureDetector(
+                      onTap: _onClose,
+                      child: Container(
+                        padding: EdgeInsets.all(8.w),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFC7EFE4),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.asset(
+                          AppAssets.preCross,
+                          width: 12.w,
+                          height: 12.w,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

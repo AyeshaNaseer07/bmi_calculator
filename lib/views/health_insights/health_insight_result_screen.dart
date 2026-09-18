@@ -6,6 +6,7 @@ import '../../controllers/health_insight_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/services/bmi_service.dart';
+import '../widgets/app_background.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_app_bar.dart';
 
@@ -24,9 +25,10 @@ class HealthInsightResultScreen extends StatelessWidget {
     final bmi = BMIService.calculateBMI(weightKg: weight, heightCm: height);
     final category = BMIService.getCategory(bmi);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: const CustomAppBar(title: 'Health Insight'),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const CustomAppBar(title: 'Health Insight'),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -266,8 +268,9 @@ class HealthInsightResultScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSummaryCard({
     required String imagePath,

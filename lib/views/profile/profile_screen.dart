@@ -7,6 +7,7 @@ import '../../controllers/app_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
+import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import 'dialogs/units_dialog.dart';
@@ -218,9 +219,10 @@ class ProfileScreen extends StatelessWidget {
     final AppController appController = Get.find<AppController>();
     final ProfileController profileController = Get.find<ProfileController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: const CustomAppBar(title: 'Profile'),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const CustomAppBar(title: 'Profile'),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -578,8 +580,9 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildAccountRow({
     required IconData icon,

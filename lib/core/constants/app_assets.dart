@@ -4,6 +4,8 @@ abstract class AppAssets {
   static const String _lottiesBase = 'assets/lotties';
 
   // ── Images ──
+  static const String appBg = '$_imagesBase/bg.png';
+  static const String bg = '$_imagesBase/bg.png';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
   static const String selectLanguage = '$_imagesBase/select_language.png';
@@ -15,8 +17,10 @@ abstract class AppAssets {
   static const String btnCalculateCta = '$_imagesBase/calculate-cta-btn.webp';
   static const String calculateButton = '$_imagesBase/calculate-button.webp';
   static const String calcilatorIcon = '$_imagesBase/calculator.webp';
+  static const String tipIcon = '$_imagesBase/tip.png';
+  static const String resetIcon = '$_imagesBase/reset.png';
 
-  static const String icDiamond = '$_imagesBase/ic_diamond.webp';
+  static const String icDiamond = '$_imagesBase/ic_diamond.png';
   static const String bmiGauge = '$_imagesBase/gaugae.webp';
 
   // ── Onboarding ──
@@ -55,6 +59,9 @@ abstract class AppAssets {
   static const String heighticon = '$_imagesBase/height.webp';
   static const String ageicon = '$_imagesBase/age.webp';
   static const String gendericon = '$_imagesBase/gender.webp';
+  static const String iconFemale = '$_imagesBase/icon_female.png';
+  static const String iconMale = '$_imagesBase/icon_male.png';
+  static const String iconAge = '$_imagesBase/icon_age.png';
   static const String bmiHearticon = '$_imagesBase/bmi_heart.webp';
   static const String weightTrackingicon = '$_imagesBase/weight_icon.webp';
   static const String addDataicon = '$_imagesBase/add_my_data.webp';

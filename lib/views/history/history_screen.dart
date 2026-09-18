@@ -8,6 +8,7 @@ import '../../controllers/bmi_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
+import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import 'widgets/calendar_bottom_sheet.dart';
@@ -40,181 +41,187 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     final BMIController bmiController = Get.find<BMIController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: const CustomAppBar(title: 'History'),
-      body: SafeArea(
-        child: Obx(() {
-          final records = bmiController.bmiHistory;
-          final hasRecords = records.isNotEmpty;
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const CustomAppBar(title: 'History'),
+        body: SafeArea(
+          child: Obx(() {
+            final records = bmiController.bmiHistory;
+            final hasRecords = records.isNotEmpty;
 
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top "Your Progress" Card
-                CustomCard(
-                  borderRadius: 24.r,
-                  padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 14.h),
-                  shadows: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 18.r,
-                      offset: Offset(0, 4.h),
-                    ),
-                    BoxShadow(
-                      color: const Color(0xFF1DB59B).withValues(alpha: 0.05),
-                      blurRadius: 12.r,
-                      offset: Offset(0, 2.h),
-                    ),
-                  ],
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            AppAssets.historyUp,
-                            width: 32.w,
-                            height: 32.h,
-                          ),
-                          SizedBox(width: 10.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Your Progress',
-                                  style: TextStyle(
-                                    color: const Color(0xFF111827),
-                                    fontSize: 15,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                SizedBox(height: 3.h),
-                                Opacity(
-                                  opacity: 0.71,
-                                  child: Text(
-                                    'Keep tracking to reach \nyour health goals.',
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top "Your Progress" Card
+                  CustomCard(
+                    borderRadius: 24.r,
+                    padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 14.h),
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 18.r,
+                        offset: Offset(0, 4.h),
+                      ),
+                      BoxShadow(
+                        color: const Color(0xFF1DB59B).withValues(alpha: 0.05),
+                        blurRadius: 12.r,
+                        offset: Offset(0, 2.h),
+                      ),
+                    ],
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AppAssets.historyUp,
+                              width: 32.w,
+                              height: 32.h,
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Your Progress',
                                     style: TextStyle(
                                       color: const Color(0xFF111827),
-                                      fontSize: 11,
+                                      fontSize: 15,
                                       fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
+                                  SizedBox(height: 3.h),
+                                  Opacity(
+                                    opacity: 0.71,
+                                    child: Text(
+                                      'Keep tracking to reach \nyour health goals.',
+                                      style: TextStyle(
+                                        color: const Color(0xFF111827),
+                                        fontSize: 11,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Graphic clipboard
+                            SizedBox(
+                              width: 98.w,
+                              height: 98.h,
+                              child: OverflowBox(
+                                maxWidth: 190.w,
+                                maxHeight: 190.h,
+                                child: Image.asset(
+                                  AppAssets.historyIcon,
+                                  fit: BoxFit.contain,
                                 ),
-                              ],
-                            ),
-                          ),
-                          // Graphic clipboard
-                          SizedBox(
-                            width: 98.w,
-                            height: 98.h,
-                            child: OverflowBox(
-                              maxWidth: 190.w,
-                              maxHeight: 190.h,
-                              child: Image.asset(
-                                AppAssets.historyIcon,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 14.h,
-                          horizontal: 8.w,
-                        ),
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFF0F9F8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _buildSummaryItem(
-                                label: 'Records',
-                                value: '${records.length}',
-                                subtitle: 'Total',
-                              ),
-                            ),
-                            _buildDivider(),
-                            Expanded(
-                              child: _buildSummaryItem(
-                                label: 'BMI',
-                                value: hasRecords
-                                    ? records.first.bmiValue.toStringAsFixed(1)
-                                    : '22.5',
-                                subtitle: hasRecords
-                                    ? records.first.category.label
-                                    : 'Normal',
-                              ),
-                            ),
-                            _buildDivider(),
-                            Expanded(
-                              child: _buildSummaryItem(
-                                label: 'Latest',
-                                value: hasRecords
-                                    ? records.first.bmiValue.toStringAsFixed(1)
-                                    : '23.4',
-                                subtitle: hasRecords
-                                    ? _getLatestSubtitle(records.first.date)
-                                    : 'Today',
                               ),
                             ),
                           ],
                         ),
+                        SizedBox(height: 12.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 8.w,
+                          ),
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFFF0F9F8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _buildSummaryItem(
+                                  label: 'Records',
+                                  value: '${records.length}',
+                                  subtitle: 'Total',
+                                ),
+                              ),
+                              _buildDivider(),
+                              Expanded(
+                                child: _buildSummaryItem(
+                                  label: 'BMI',
+                                  value: hasRecords
+                                      ? records.first.bmiValue.toStringAsFixed(
+                                          1,
+                                        )
+                                      : '22.5',
+                                  subtitle: hasRecords
+                                      ? records.first.category.label
+                                      : 'Normal',
+                                ),
+                              ),
+                              _buildDivider(),
+                              Expanded(
+                                child: _buildSummaryItem(
+                                  label: 'Latest',
+                                  value: hasRecords
+                                      ? records.first.bmiValue.toStringAsFixed(
+                                          1,
+                                        )
+                                      : '23.4',
+                                  subtitle: hasRecords
+                                      ? _getLatestSubtitle(records.first.date)
+                                      : 'Today',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+
+                  // BMI History Header with Calendar Action
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'BMI History',
+                        style: TextStyle(
+                          color: const Color(0xFF111827),
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _openCalendar(context),
+                        child: Image.asset(
+                          AppAssets.historyCalander,
+                          width: 32.w,
+                          height: 32.h,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 16.h),
+                  SizedBox(height: 12.h),
 
-                // BMI History Header with Calendar Action
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'BMI History',
-                      style: TextStyle(
-                        color: const Color(0xFF111827),
-                        fontSize: 15,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => _openCalendar(context),
-                      child: Image.asset(
-                        AppAssets.historyCalander,
-                        width: 32.w,
-                        height: 32.h,
-                      ),
-                    ),
+                  // List of Records or Empty State
+                  if (hasRecords)
+                    ...records.map((record) => _buildHistoryRow(record))
+                  else ...[
+                    _buildEmptyHistorySection(),
                   ],
-                ),
-                SizedBox(height: 12.h),
 
-                // List of Records or Empty State
-                if (hasRecords)
-                  ...records.map((record) => _buildHistoryRow(record))
-                else ...[
-                  _buildEmptyHistorySection(),
+                  SizedBox(height: 24.h),
                 ],
-
-                SizedBox(height: 24.h),
-              ],
-            ),
-          );
-        }),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

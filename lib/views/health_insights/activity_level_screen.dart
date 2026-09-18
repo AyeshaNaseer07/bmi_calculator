@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../controllers/health_insight_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/models/user_profile_model.dart';
+import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_gradient_button.dart';
 
@@ -53,9 +54,10 @@ class ActivityLevelScreen extends StatelessWidget {
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: const CustomAppBar(title: 'Activity Level'),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const CustomAppBar(title: 'Activity Level'),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -205,6 +207,7 @@ class ActivityLevelScreen extends StatelessWidget {
           }),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

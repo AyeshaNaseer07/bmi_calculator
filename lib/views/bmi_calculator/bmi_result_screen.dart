@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
+import '../widgets/app_background.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
@@ -29,260 +30,281 @@ class BMIResultScreen extends StatelessWidget {
           date: DateTime.now(),
         );
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAF8),
-      appBar: CustomAppBar(
-        title: 'BMI Result',
-        trailing: GestureDetector(
-          onTap: () {
-            Get.snackbar(
-              'Share',
-              'Sharing BMI Result (${record.bmiValue})',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: AppColors.primaryTeal,
-              colorText: Colors.white,
-            );
-          },
-          child: Image.asset(AppAssets.settingicon, height: 34.h, width: 34.w),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: CustomAppBar(
+          title: 'BMI Result',
+          trailing: GestureDetector(
+            onTap: () {
+              Get.snackbar(
+                'Share',
+                'Sharing BMI Result (${record.bmiValue})',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: AppColors.primaryTeal,
+                colorText: Colors.white,
+              );
+            },
+            child: Image.asset(
+              AppAssets.settingicon,
+              height: 34.h,
+              width: 34.w,
+            ),
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Main Gauge & BMI Result Card
-              CustomCard(
-                borderRadius: 22.r,
-                padding: EdgeInsets.all(18.w),
-                child: Column(
-                  children: [
-                    // Top Right Heart Icon Badge
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Image.asset(
-                        AppAssets.hearticon,
-                        height: 41.h,
-                        width: 41.w,
-                      ),
-                    ),
-
-                    // Gauge Widget
-                    BMIGaugeWidget(
-                      bmiValue: record.bmiValue,
-                      size: 200.w,
-                      showLabels: true,
-                    ),
-                    SizedBox(height: 8.h),
-
-                    // BMI Numeric Value
-                    Text(
-                      record.bmiValue.toStringAsFixed(1),
-                      style: TextStyle(
-                        color: const Color(0xFF33D2AB),
-                        fontSize: 32,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      'Your BMI',
-                      style: TextStyle(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-
-                    // Status Pill
-                    Container(
-                      width: 80.w,
-                      height: 26.h,
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(18.w, 6.h, 18.w, 16.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Main Gauge & BMI Result Card
+                CustomCard(
+                  borderRadius: 22.r,
+                  padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 10.h),
+                  child: Stack(
+                    children: [
+                      // Top Right Heart Icon Badge
+                      Positioned(
+                        top: 4.h,
+                        right: 4.w,
+                        child: Image.asset(
+                          AppAssets.hearticon,
+                          height: 34.h,
+                          width: 34.w,
                         ),
                       ),
-                      child: Center(
-                        child: Text(
-                          record.category.label,
-                          style: TextStyle(
-                            color: const Color(0xFF07A981),
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
 
-                    // Status Feedback Message Card
-                    Container(
-                      width: double.infinity,
-                      constraints: BoxConstraints(minHeight: 54.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8F9F7),
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 10.h,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      Column(
                         children: [
-                          Image.asset(
-                            AppAssets.shieldicon,
-                            width: 20.w,
-                            height: 20.w,
-                            fit: BoxFit.contain,
+                          // Gauge Widget
+                          BMIGaugeWidget(
+                            bmiValue: record.bmiValue,
+                            size: 160.w,
+                            showLabels: true,
                           ),
-                          SizedBox(width: 10.w),
-                          Expanded(
-                            child: Text(
-                              record.category.feedbackMessage,
-                              style: TextStyle(
-                                color: const Color(0xFF1E2D2F),
-                                fontSize: 11.5.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w400,
-                                height: 1.40,
+                          SizedBox(height: 4.h),
+
+                          // BMI Numeric Value
+                          Text(
+                            record.bmiValue.toStringAsFixed(1),
+                            style: TextStyle(
+                              color: const Color(0xFF33D2AB),
+                              fontSize: 28,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            'Your BMI',
+                            style: TextStyle(
+                              color: Colors.black.withValues(alpha: 0.5),
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+
+                          // Status Pill
+                          Container(
+                            width: 78.w,
+                            height: 24.h,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFF33D2AB)
+                                  .withValues(alpha: 0.15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
                               ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                record.category.label,
+                                style: TextStyle(
+                                  color: const Color(0xFF07A981),
+                                  fontSize: 11.5,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+
+                          // Status Feedback Message Card
+                          Container(
+                            width: double.infinity,
+                            constraints: BoxConstraints(minHeight: 42.h),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE8F9F7),
+                              borderRadius: BorderRadius.circular(14.r),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 8.h,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  AppAssets.shieldicon,
+                                  width: 18.w,
+                                  height: 18.w,
+                                  fit: BoxFit.contain,
+                                ),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    record.category.feedbackMessage,
+                                    style: TextStyle(
+                                      color: const Color(0xFF1E2D2F),
+                                      fontSize: 11.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.35,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 14.h),
 
-              // Your Details Card
-              CustomCard(
-                borderRadius: 20.r,
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your Details',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
+                // Your Details Card
+                CustomCard(
+                  borderRadius: 20.r,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 12.h,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Details',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 14.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildDetailColumn(
-                          imageAsset: AppAssets.weighticon,
-                          value: '${record.weightKg.toStringAsFixed(1)} kg',
-                          label: 'Weight',
-                          showUnderline: true,
-                        ),
-                        _buildDetailDivider(),
-                        _buildDetailColumn(
-                          imageAsset: AppAssets.heighticon,
-                          value: '${record.heightCm.toStringAsFixed(0)} cm',
-                          label: 'Height',
-                        ),
-                        _buildDetailDivider(),
-                        _buildDetailColumn(
-                          imageAsset: AppAssets.ageicon,
-                          value: '${record.age} Yrs',
-                          label: 'Age',
-                        ),
-                        _buildDetailDivider(),
-                        _buildDetailColumn(
-                          imageAsset: AppAssets.gendericon,
-                          value: record.gender,
-                          label: 'Gender',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 14.h),
-
-              // Health Advice Card
-              CustomCard(
-                borderRadius: 20.r,
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Health Advice',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildAdviceBullet(
-                                'Eat a balanced diet rich in nutrients.',
-                              ),
-                              SizedBox(height: 6.h),
-                              _buildAdviceBullet(
-                                'Stay active for at least 30 minutes daily.',
-                              ),
-                              SizedBox(height: 6.h),
-                              _buildAdviceBullet(
-                                'Drink plenty of water and get enough sleep.',
-                              ),
-                              SizedBox(height: 6.h),
-                              _buildAdviceBullet(
-                                'Track your progress regularly.',
-                              ),
-                            ],
+                      SizedBox(height: 10.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildDetailColumn(
+                            imageAsset: AppAssets.weighticon,
+                            value: '${record.weightKg.toStringAsFixed(1)} kg',
+                            label: 'Weight',
+                            showUnderline: true,
                           ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Image.asset(
-                          AppAssets.bmiHearticon,
-                          height: 77.h,
-                          width: 77.w,
-                        ),
-                      ],
-                    ),
-                  ],
+                          _buildDetailDivider(),
+                          _buildDetailColumn(
+                            imageAsset: AppAssets.heighticon,
+                            value: '${record.heightCm.toStringAsFixed(0)} cm',
+                            label: 'Height',
+                          ),
+                          _buildDetailDivider(),
+                          _buildDetailColumn(
+                            imageAsset: AppAssets.ageicon,
+                            value: '${record.age} Yrs',
+                            label: 'Age',
+                          ),
+                          _buildDetailDivider(),
+                          _buildDetailColumn(
+                            imageAsset: AppAssets.gendericon,
+                            value: record.gender,
+                            label: 'Gender',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20.h),
 
-              // Recalculate Button
-              CustomGradientButton(
-                text: 'Recalculate',
-                leadingIcon: Image.asset(
-                  AppAssets.calcilatorIcon,
-                  width: 16.w,
-                  height: 16.w,
+                // Health Advice Card
+                CustomCard(
+                  borderRadius: 20.r,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 12.h,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Health Advice',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildAdviceBullet(
+                                  'Eat a balanced diet rich in nutrients.',
+                                ),
+                                SizedBox(height: 4.h),
+                                _buildAdviceBullet(
+                                  'Stay active for at least 30 minutes daily.',
+                                ),
+                                SizedBox(height: 4.h),
+                                _buildAdviceBullet(
+                                  'Drink plenty of water and get enough sleep.',
+                                ),
+                                SizedBox(height: 4.h),
+                                _buildAdviceBullet(
+                                  'Track your progress regularly.',
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Image.asset(
+                            AppAssets.bmiHearticon,
+                            height: 64.h,
+                            width: 64.w,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                backgroundImage: AppAssets.btnRectangle,
-                onPressed: () => Get.offNamed(AppRoutes.bmiCalculator),
-              ),
-              SizedBox(height: 24.h),
-            ],
+
+                // Recalculate Button
+                CustomGradientButton(
+                  text: 'Recalculate',
+                  height: 52.h,
+                  leadingIcon: Image.asset(
+                    AppAssets.calcilatorIcon,
+                    width: 16.w,
+                    height: 16.w,
+                  ),
+                  backgroundImage: AppAssets.btnRectangle,
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Get.back();
+                    } else {
+                      Get.offNamed(AppRoutes.bmiCalculator);
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -297,8 +319,8 @@ class BMIResultScreen extends StatelessWidget {
   }) {
     return Column(
       children: [
-        Image.asset(imageAsset, width: 39.w, height: 39.w),
-        SizedBox(height: 6.h),
+        Image.asset(imageAsset, width: 34.w, height: 34.w),
+        SizedBox(height: 5.h),
         Text(
           value,
           style: TextStyle(
@@ -312,11 +334,7 @@ class BMIResultScreen extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: showUnderline
-                ? const Color(0xFF0284C7)
-                : AppColors.textLight,
-            decoration: showUnderline ? TextDecoration.underline : null,
-            decorationColor: const Color(0xFF0284C7),
+            color: AppColors.textLight,
             fontSize: 11,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
@@ -327,7 +345,7 @@ class BMIResultScreen extends StatelessWidget {
   }
 
   Widget _buildDetailDivider() {
-    return Container(height: 38.h, width: 1.w, color: const Color(0xFFF1F5F9));
+    return Container(height: 32.h, width: 1.w, color: const Color(0xFFF1F5F9));
   }
 
   Widget _buildAdviceBullet(String text) {
@@ -344,7 +362,7 @@ class BMIResultScreen extends StatelessWidget {
             text,
             style: TextStyle(
               color: const Color(0xFF647E80),
-              fontSize: 10,
+              fontSize: 10.5,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),

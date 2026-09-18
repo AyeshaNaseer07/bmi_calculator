@@ -6,6 +6,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
 import '../widgets/ads/full_screen_native_ad_page.dart';
 import '../widgets/ads/native_ad_card.dart';
+import '../widgets/app_background.dart';
 import '../widgets/custom_gradient_button.dart';
 
 class OnboardingItem {
@@ -63,99 +64,101 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() => _currentIndex = index);
-            },
-            children: [
-              // Page 0: BMI Screen with Bottom Native Ad (iPhone 13 mini - 55)
-              _buildBmiAdSlide(),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() => _currentIndex = index);
+              },
+              children: [
+                // Page 0: BMI Screen with Bottom Native Ad (iPhone 13 mini - 55)
+                _buildBmiAdSlide(),
 
-              // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
-              FullScreenNativeAdPage(
-                onNext: _onNext,
-                onAdFailed: () {
-                  // If ad fails to load and user is on page 1, advance smoothly
-                  if (_currentIndex == 1) {
-                    _onNext();
-                  }
-                },
-              ),
+                // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
+                FullScreenNativeAdPage(
+                  onNext: _onNext,
+                  onAdFailed: () {
+                    // If ad fails to load and user is on page 1, advance smoothly
+                    if (_currentIndex == 1) {
+                      _onNext();
+                    }
+                  },
+                ),
 
-              // Page 2: Weight Tracking (iPhone 13 mini - 65)
-              _buildContentSlide(
-                imagePath: AppAssets.onboarding2,
-                titlePrefix: 'Weight ',
-                titleHighlight: 'Tracking',
-                subtitle: 'Monitor your daily, weekly and monthly\nweight journey effortlessly',
-              ),
+                // Page 2: Weight Tracking (iPhone 13 mini - 65)
+                _buildContentSlide(
+                  imagePath: AppAssets.onboarding2,
+                  titlePrefix: 'Weight ',
+                  titleHighlight: 'Tracking',
+                  subtitle: 'Monitor your daily, weekly and monthly\nweight journey effortlessly',
+                ),
 
-              // Page 3: Health Insights (iPhone 13 mini - 63)
-              _buildContentSlide(
-                imagePath: AppAssets.onboarding3,
-                titlePrefix: 'Health ',
-                titleHighlight: 'Insights',
-                subtitle: 'Get personalized insights to build\nhealthier habits every day.',
-              ),
-            ],
-          ),
+                // Page 3: Health Insights (iPhone 13 mini - 63)
+                _buildContentSlide(
+                  imagePath: AppAssets.onboarding3,
+                  titlePrefix: 'Health ',
+                  titleHighlight: 'Insights',
+                  subtitle: 'Get personalized insights to build\nhealthier habits every day.',
+                ),
+              ],
+            ),
 
-          if (_currentIndex != 1)
-            // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
-            if (_currentIndex >= 2)
-              Positioned(
-                left: 24,
-                right: 24,
-                bottom: 20,
-                child: SafeArea(
-                  top: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Dot Indicator (4 dots matching Figma)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(_totalPages, (index) {
-                          final isActive = index == _currentIndex;
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeInOut,
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: isActive ? 24 : 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: isActive
-                                  ? const Color(0xFF24CCA7)
-                                  : const Color(0xFFC7F3EA),
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Next Gradient Button
-                      CustomGradientButton(
-                        text: 'Next',
-                        backgroundImage: AppAssets.btnRectangle,
-                        borderRadius: BorderRadius.circular(12.r),
-                        trailingIcon: const Icon(
-                          Icons.arrow_forward_rounded,
-                          color: Colors.white,
-                          size: 18,
+            if (_currentIndex != 1)
+              // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
+              if (_currentIndex >= 2)
+                Positioned(
+                  left: 24,
+                  right: 24,
+                  bottom: 20,
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Dot Indicator (4 dots matching Figma)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(_totalPages, (index) {
+                            final isActive = index == _currentIndex;
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: isActive ? 24 : 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: isActive
+                                    ? const Color(0xFF24CCA7)
+                                    : const Color(0xFFC7F3EA),
+                              ),
+                            );
+                          }),
                         ),
-                        onPressed: _onNext,
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+
+                        // Next Gradient Button
+                        CustomGradientButton(
+                          text: 'Next',
+                          backgroundImage: AppAssets.btnRectangle,
+                          borderRadius: BorderRadius.circular(12.r),
+                          trailingIcon: const Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          onPressed: _onNext,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-        ],
+          ],
+        ),
       ),
     );
   }

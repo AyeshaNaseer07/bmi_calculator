@@ -10,6 +10,7 @@ import '../../controllers/app_controller.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/localization_service.dart';
 import '../widgets/ads/native_ad_card.dart';
+import '../widgets/app_background.dart';
 
 enum _HandPhase { tapping, movingToDone, tappingDone, hidden }
 
@@ -134,9 +135,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     _handOffsetX = 70.w;
     _handOffsetY = 16.h;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FCF9),
-      body: Stack(
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
         children: [
           // ── Main content ──
           SafeArea(
@@ -373,7 +375,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
               top: false,
               child: Container(
                 width: double.infinity,
-                color: const Color(0xFFF7FCF9),
+                color: Colors.transparent,
                 padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 10.h),
                 child: NativeAdCard(
                   onAdAvailabilityChanged: (available) {
@@ -386,6 +388,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
               ),
             )
           : null,
+      ),
     );
   }
 }

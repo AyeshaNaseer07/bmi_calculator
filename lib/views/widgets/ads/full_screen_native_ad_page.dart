@@ -140,7 +140,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // Ad or Shimmer View

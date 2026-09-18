@@ -19,7 +19,7 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
 
         let mediaView = FullScreenAdMediaView()
         mediaView.translatesAutoresizingMaskIntoConstraints = false
-        mediaView.contentMode = .scaleAspectFit
+        mediaView.contentMode = .scaleAspectFill
         mediaView.clipsToBounds = true
         topMediaContainer.addSubview(mediaView)
 
@@ -194,25 +194,25 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
     }
 }
 
-// MediaView subclass enforcing aspect-fit scaling on all image/video subviews to prevent cutting off ad creative
+// MediaView subclass enforcing aspect-fill scaling on all image/video subviews to fill container edge-to-edge
 private class FullScreenAdMediaView: MediaView {
     override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
-        applyAspectFit(to: subview)
+        applyAspectFill(to: subview)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         for subview in subviews {
-            applyAspectFit(to: subview)
+            applyAspectFill(to: subview)
         }
     }
 
-    private func applyAspectFit(to view: UIView) {
-        view.contentMode = .scaleAspectFit
+    private func applyAspectFill(to view: UIView) {
+        view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         for child in view.subviews {
-            child.contentMode = .scaleAspectFit
+            child.contentMode = .scaleAspectFill
             child.clipsToBounds = true
         }
     }
