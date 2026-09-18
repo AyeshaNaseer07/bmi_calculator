@@ -1,7 +1,10 @@
+import 'package:bmi_calculator/core/constants/app_strings.dart';
+import 'package:bmi_calculator/data/services/logger_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../controllers/profile_controller.dart';
@@ -10,7 +13,6 @@ import '../../core/routes/app_routes.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
-import 'dialogs/feedback_dialog.dart';
 import 'dialogs/rate_us_dialog.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -31,8 +33,28 @@ class ProfileScreen extends StatelessWidget {
     showDialog(context: context, builder: (_) => const RateUsDialog());
   }
 
-  void _openFeedbackDialog(BuildContext context) {
-    showDialog(context: context, builder: (_) => const FeedbackDialog());
+  void sendFeedback() {
+    const String email = AppStrings.feedbackEmail;
+    const String subject = 'BMI Calculator Feedback';
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      query: 'subject=$subject',
+    );
+    _launchUrl(emailLaunchUri.toString());
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        AppLogger.e('Could not launch $url');
+      }
+    } catch (e) {
+      AppLogger.e('Error launching $url', e);
+    }
   }
 
   void _showEditProfileBottomSheet(
@@ -508,7 +530,7 @@ class ProfileScreen extends StatelessWidget {
                           icon: Icons.chat_bubble_outline_rounded,
                           title: 'Feedback',
                           subtitle: 'Send us your suggestions & ideas',
-                          onTap: () => _openFeedbackDialog(context),
+                          onTap: () => sendFeedback(),
                         ),
                         const Divider(height: 1, color: Color(0xFFF1F5F9)),
 

@@ -14,6 +14,5 @@ abstract class AppRoutes {
   static const yourGoal = '/your-goal';
   static const healthInsightResult = '/health-insight-result';
   static const profile = '/profile';
-  static const changePassword = '/change-password';
   static const languagesSettings = '/languages-settings';
 }

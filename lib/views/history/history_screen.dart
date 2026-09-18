@@ -55,8 +55,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         backgroundColor: Colors.white,
         title: Text(
           'Delete Record?',
@@ -124,7 +125,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFEF4444),
+                    backgroundColor: const Color(0xFF1DB59B),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
@@ -155,8 +156,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         backgroundColor: Colors.white,
         title: Text(
           'Delete Records?',
@@ -222,7 +224,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFEF4444),
+                    backgroundColor: const Color(0xFF1DB59B),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
@@ -310,8 +312,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 },
                 child: Container(
                   margin: EdgeInsets.only(bottom: 8.h),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 12.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFFF0FAF6)
@@ -331,8 +335,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         option.label,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          fontWeight:
-                              isSelected ? FontWeight.w700 : FontWeight.w500,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
                           color: isSelected
                               ? const Color(0xFF0F766E)
                               : const Color(0xFF1E293B),
@@ -373,10 +378,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
             List<BMIRecord> displayedRecords = List<BMIRecord>.from(allRecords);
             if (_selectedDate != null) {
               displayedRecords = displayedRecords
-                  .where((r) =>
-                      r.date.year == _selectedDate!.year &&
-                      r.date.month == _selectedDate!.month &&
-                      r.date.day == _selectedDate!.day)
+                  .where(
+                    (r) =>
+                        r.date.year == _selectedDate!.year &&
+                        r.date.month == _selectedDate!.month &&
+                        r.date.day == _selectedDate!.day,
+                  )
                   .toList();
             }
 
@@ -389,12 +396,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 displayedRecords.sort((a, b) => a.date.compareTo(b.date));
                 break;
               case HistorySortOption.bmiHighest:
-                displayedRecords
-                    .sort((a, b) => b.bmiValue.compareTo(a.bmiValue));
+                displayedRecords.sort(
+                  (a, b) => b.bmiValue.compareTo(a.bmiValue),
+                );
                 break;
               case HistorySortOption.bmiLowest:
-                displayedRecords
-                    .sort((a, b) => a.bmiValue.compareTo(b.bmiValue));
+                displayedRecords.sort(
+                  (a, b) => a.bmiValue.compareTo(b.bmiValue),
+                );
                 break;
             }
 
@@ -543,15 +552,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             // Select All Checkbox & Label
                             GestureDetector(
                               onTap: () {
-                                final allSelected = displayedRecords.isNotEmpty &&
-                                    displayedRecords.every((r) =>
-                                        _selectedRecordIds.contains(r.id));
+                                final allSelected =
+                                    displayedRecords.isNotEmpty &&
+                                    displayedRecords.every(
+                                      (r) => _selectedRecordIds.contains(r.id),
+                                    );
                                 setState(() {
                                   if (allSelected) {
                                     _selectedRecordIds.clear();
                                   } else {
                                     _selectedRecordIds.addAll(
-                                        displayedRecords.map((r) => r.id));
+                                      displayedRecords.map((r) => r.id),
+                                    );
                                   }
                                 });
                               },
@@ -562,29 +574,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     width: 22.w,
                                     height: 22.w,
                                     decoration: BoxDecoration(
-                                      color: (displayedRecords.isNotEmpty &&
-                                              displayedRecords.every((r) =>
-                                                  _selectedRecordIds
-                                                      .contains(r.id)))
+                                      color:
+                                          (displayedRecords.isNotEmpty &&
+                                              displayedRecords.every(
+                                                (r) => _selectedRecordIds
+                                                    .contains(r.id),
+                                              ))
                                           ? const Color(0xFF1DB59B)
                                           : Colors.white,
                                       borderRadius: BorderRadius.circular(6.r),
                                       border: Border.all(
-                                        color: (displayedRecords.isNotEmpty &&
-                                                displayedRecords.every((r) =>
-                                                    _selectedRecordIds
-                                                        .contains(r.id)))
+                                        color:
+                                            (displayedRecords.isNotEmpty &&
+                                                displayedRecords.every(
+                                                  (r) => _selectedRecordIds
+                                                      .contains(r.id),
+                                                ))
                                             ? const Color(0xFF1DB59B)
                                             : const Color(0xFFCBD5E1),
                                         width: 1.5.w,
                                       ),
                                     ),
-                                    child: (displayedRecords.isNotEmpty &&
-                                            displayedRecords.every((r) =>
-                                                _selectedRecordIds
-                                                    .contains(r.id)))
-                                        ? Icon(Icons.check,
-                                            size: 14.sp, color: Colors.white)
+                                    child:
+                                        (displayedRecords.isNotEmpty &&
+                                            displayedRecords.every(
+                                              (r) => _selectedRecordIds
+                                                  .contains(r.id),
+                                            ))
+                                        ? Icon(
+                                            Icons.check,
+                                            size: 14.sp,
+                                            color: Colors.white,
+                                          )
                                         : null,
                                   ),
                                   SizedBox(width: 8.w),
@@ -606,8 +627,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFF1DB59B),
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
                                       ),
                                       child: Text(
                                         '${_selectedRecordIds.length}',
@@ -638,8 +660,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: _selectedRecordIds.isNotEmpty
-                                          ? const Color(0xFFEF4444)
-                                          : const Color(0xFFCBD5E1),
+                                          ? const Color(0xFF1DB59B)
+                                          : const Color(0xFFCBD5E1)
+                                                .withValues(alpha: 0.99),
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     child: Row(
@@ -736,8 +759,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black
-                                            .withValues(alpha: 0.04),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.04,
+                                        ),
                                         blurRadius: 4.r,
                                         offset: Offset(0, 1.h),
                                       ),
@@ -761,13 +785,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   width: 32.w,
                                   height: 32.h,
                                   decoration: BoxDecoration(
-                                    color: _currentSort !=
-                                            HistorySortOption.newest
+                                    color:
+                                        _currentSort != HistorySortOption.newest
                                         ? const Color(0xFFE8F7F2)
                                         : Colors.white,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: _currentSort !=
+                                      color:
+                                          _currentSort !=
                                               HistorySortOption.newest
                                           ? const Color(0xFF1DB59B)
                                           : const Color(0xFFE2E8F0),
@@ -775,8 +800,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black
-                                            .withValues(alpha: 0.04),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.04,
+                                        ),
                                         blurRadius: 4.r,
                                         offset: Offset(0, 1.h),
                                       ),
@@ -786,7 +812,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     child: Icon(
                                       Icons.sort_rounded,
                                       size: 17.sp,
-                                      color: _currentSort !=
+                                      color:
+                                          _currentSort !=
                                               HistorySortOption.newest
                                           ? const Color(0xFF1DB59B)
                                           : const Color(0xFF475569),
@@ -891,8 +918,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                     // List of Records or Filtered Empty State
                     if (displayedRecords.isNotEmpty)
-                      ...displayedRecords
-                          .map((record) => _buildHistoryRow(record))
+                      ...displayedRecords.map(
+                        (record) => _buildHistoryRow(record),
+                      )
                     else
                       _buildNoFilterResultsSection(),
                   ] else ...[
@@ -1005,9 +1033,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFFE6F7F2)
-              : const Color(0xFFF0FAF6),
+          color: isSelected ? const Color(0xFFE6F7F2) : const Color(0xFFF0FAF6),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isSelected
@@ -1183,8 +1209,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(CupertinoIcons.trash,
-                        color: Colors.white, size: 20.sp),
+                    Icon(
+                      CupertinoIcons.trash,
+                      color: Colors.white,
+                      size: 20.sp,
+                    ),
                     SizedBox(width: 6.w),
                     Text(
                       'Delete',

@@ -16,7 +16,6 @@ import '../../views/home/home_screen.dart';
 import '../../views/language/language_selection_screen.dart';
 import '../../views/onboarding/onboarding_screen.dart';
 import '../../views/onboarding/paywall_screen.dart';
-import '../../views/profile/change_password_screen.dart';
 import '../../views/profile/languages_screen.dart';
 import '../../views/profile/profile_screen.dart';
 import '../../views/splash/splash_screen.dart';
@@ -85,10 +84,6 @@ class AppPages {
       page: () => const HealthInsightResultScreen(),
     ),
     GetPage(name: AppRoutes.profile, page: () => const ProfileScreen()),
-    GetPage(
-      name: AppRoutes.changePassword,
-      page: () => const ChangePasswordScreen(),
-    ),
     GetPage(
       name: AppRoutes.languagesSettings,
       page: () => const LanguagesScreen(),

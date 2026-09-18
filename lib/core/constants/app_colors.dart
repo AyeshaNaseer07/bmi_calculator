@@ -55,7 +55,6 @@ abstract class AppColors {
   // ── Status & Accents ──
   static const Color gold = Color(0xFFFFB800);
   static const Color error = Color(0xFFFF4D4F);
-  static const Color logoutPink = Color(0xFFFFF0F0);
   static const Color heartRed = Color(0xFFEF4444);
   static const Color hydrationBlue = Color(0xFF0EA5E9);
   static const Color progressGreen = Color(0xFF22C55E);

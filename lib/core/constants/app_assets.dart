@@ -5,7 +5,6 @@ abstract class AppAssets {
 
   // ── Images ──
   static const String appBg = '$_imagesBase/bg.png';
-  static const String bg = '$_imagesBase/bg.png';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
   static const String selectLanguage = '$_imagesBase/select_language.png';
@@ -14,8 +13,6 @@ abstract class AppAssets {
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   static const String homeAvatar = '$_imagesBase/home_img.webp';
   static const String btnRectangle = '$_imagesBase/btn.webp';
-  static const String btnCalculateCta = '$_imagesBase/calculate-cta-btn.webp';
-  static const String calculateButton = '$_imagesBase/calculate-button.webp';
   static const String calcilatorIcon = '$_imagesBase/calculator.webp';
   static const String tipIcon = '$_imagesBase/tip.png';
   static const String resetIcon = '$_imagesBase/reset.png';
@@ -52,7 +49,6 @@ abstract class AppAssets {
   static const String bmiCalBackIcon = '$_imagesBase/bmi_cal_back.webp';
   static const String ageBack = '$_imagesBase/age_back.webp';
   static const String ageForward = '$_imagesBase/age_forward.webp';
-  static const String settingicon = '$_imagesBase/setting.webp';
   static const String hearticon = '$_imagesBase/heart.webp';
   static const String shieldicon = '$_imagesBase/shield.webp';
   static const String weighticon = '$_imagesBase/weight.webp';
