@@ -8,6 +8,7 @@ import '../widgets/ads/full_screen_native_ad_page.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../widgets/next_button.dart';
 
 class OnboardingItem {
   final String imagePath;
@@ -42,11 +43,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const int _totalPages = 4;
 
   void _onNext() {
-    if (_currentIndex < _totalPages - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-      );
+    if (_pageController.hasClients) {
+      if (_currentIndex < _totalPages - 1) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        _navigateToPaywall();
+      }
     } else {
       _navigateToPaywall();
     }
@@ -81,12 +86,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
                 FullScreenNativeAdPage(
                   onNext: _onNext,
-                  onAdFailed: () {
-                    // If ad fails to load and user is on page 1, advance smoothly
-                    if (_currentIndex == 1) {
-                      _onNext();
-                    }
-                  },
                 ),
 
                 // Page 2: Weight Tracking (iPhone 13 mini - 65)
@@ -176,7 +175,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Image.asset(AppAssets.onboarding1, fit: BoxFit.contain),
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 6.h),
+
+          // Next Action Button
+          NextButton(onNext: _onNext),
+          SizedBox(height: 4.h),
 
           // Bottom Native Ad Card
           Padding(

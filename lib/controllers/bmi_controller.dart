@@ -118,4 +118,13 @@ class BMIController extends GetxController {
       latestRecord.value = bmiHistory.isNotEmpty ? bmiHistory.first : null;
     }
   }
+
+  void deleteMultipleRecords(Iterable<String> ids) async {
+    final idSet = ids.toSet();
+    bmiHistory.removeWhere((item) => idSet.contains(item.id));
+    await _storage.saveBmiHistory(bmiHistory);
+    if (idSet.contains(latestRecord.value?.id)) {
+      latestRecord.value = bmiHistory.isNotEmpty ? bmiHistory.first : null;
+    }
+  }
 }

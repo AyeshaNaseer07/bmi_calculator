@@ -89,7 +89,6 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
             _isLoaded = false;
             _isFailed = true;
           });
-          widget.onAdFailed?.call();
         },
         onAdOpened: (ad) {
           debugPrint(
@@ -135,19 +134,61 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isFailed) {
-      return const SizedBox.shrink();
-    }
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // Ad or Shimmer View
           Positioned.fill(
-            child: _isLoaded && _nativeAd != null
+            child: _isLoaded && _nativeAd != null && !_isFailed
                 ? AdWidget(ad: _nativeAd!)
                 : const FullScreenNativeAdShimmer(),
+          ),
+
+          // Top Right Skip / Next button
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 14, left: 18),
+                child: GestureDetector(
+                  onTap: widget.onNext,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: const Color(0x4F33D2AB),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Skip',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 11,
+                          color: Colors.black87,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

@@ -55,6 +55,8 @@ class StorageService {
   Future<void> setIsPremium(bool premium) => _prefs.setBool(_keyIsPremium, premium);
 
   // ── User Profile ──
+  bool hasUserProfile() => _prefs.getString(_keyUserProfile) != null;
+
   UserProfile getUserProfile() {
     final raw = _prefs.getString(_keyUserProfile);
     if (raw == null) return const UserProfile();

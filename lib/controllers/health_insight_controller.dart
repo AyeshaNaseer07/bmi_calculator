@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/storage_service.dart';
 
+import 'bmi_controller.dart';
 import 'profile_controller.dart';
 
 class HealthInsightController extends GetxController {
@@ -19,6 +20,17 @@ class HealthInsightController extends GetxController {
   final Rx<HealthGoal?> selectedGoal = Rx<HealthGoal?>(null);
 
   final RxBool hasInsights = false.obs;
+
+  bool get hasRecords {
+    if (hasInsights.value) return true;
+    if (_storage.hasUserProfile()) return true;
+    if (Get.isRegistered<BMIController>() &&
+        Get.find<BMIController>().bmiHistory.isNotEmpty) {
+      return true;
+    }
+    if (_storage.getBmiHistory().isNotEmpty) return true;
+    return false;
+  }
 
   @override
   void onInit() {

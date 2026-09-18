@@ -10,7 +10,8 @@ import '../../core/routes/app_routes.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
-import 'dialogs/units_dialog.dart';
+import 'dialogs/feedback_dialog.dart';
+import 'dialogs/rate_us_dialog.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -26,8 +27,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _openUnitsDialog(BuildContext context) {
-    showDialog(context: context, builder: (_) => const UnitsDialog());
+  void _openRateUsDialog(BuildContext context) {
+    showDialog(context: context, builder: (_) => const RateUsDialog());
+  }
+
+  void _openFeedbackDialog(BuildContext context) {
+    showDialog(context: context, builder: (_) => const FeedbackDialog());
   }
 
   void _showEditProfileBottomSheet(
@@ -101,25 +106,28 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Center(
-                  child: TextField(
-                    controller: textController,
-                    autofocus: true,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textDark,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Enter your name',
-                      hintStyle: TextStyle(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: TextField(
+                      controller: textController,
+                      autofocus: true,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textLight,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark,
                       ),
-                      border: InputBorder.none,
-                      isDense: true,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your name',
+                        hintStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.textLight,
+                        ),
+                        border: InputBorder.none,
+                        isDense: true,
+                      ),
                     ),
                   ),
                 ),
@@ -185,28 +193,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
-              Center(
-                child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    Get.toNamed(AppRoutes.healthInsights);
-                  },
-                  icon: Icon(
-                    Icons.tune,
-                    size: 16.sp,
-                    color: const Color(0xFF1DB59B),
-                  ),
-                  label: Text(
-                    'Update Full Health & Body Details',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: const Color(0xFF1DB59B),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         );
@@ -223,366 +209,328 @@ class ProfileScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(title: 'Profile'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // User Info Card
-              Obx(() {
-                final name = profileController.userProfile.value.displayName;
-                final displayName = name.isNotEmpty ? name : 'Guest User';
-                final tagline = name.isNotEmpty
-                    ? 'Manage your health profile'
-                    : 'Start your health journey\nby adding your details.';
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // User Info Card
+                Obx(() {
+                  final name = profileController.userProfile.value.displayName;
+                  final displayName = name.isNotEmpty ? name : 'Guest User';
+                  final tagline = name.isNotEmpty
+                      ? 'Manage your health profile'
+                      : 'Start your health journey\nby adding your details.';
 
-                return CustomCard(
-                  borderRadius: 20.r,
-                  padding: EdgeInsets.all(16.w),
-                  child: Row(
-                    children: [
-                      // Avatar with edit icon badge
-                      GestureDetector(
-                        onTap: () => _showEditProfileBottomSheet(
-                          context,
-                          profileController,
-                        ),
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 56,
-                              height: 56,
-                              decoration: ShapeDecoration(
-                                color: const Color(0xFF33D2AB)
-                                    .withValues(alpha: 0.21),
-                                shape: OvalBorder(),
-                              ),
-
-                              child: Icon(
-                                CupertinoIcons.person,
-                                color: const Color(0xFF33D2AB),
-                                size: 28.sp,
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                width: 23,
-                                height: 23,
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFF33D2AB)
-                                      .withValues(alpha: 0.8),
-                                  shape: OvalBorder(
-                                    side: BorderSide(
-                                      width: 1,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: Colors.white,
-                                  size: 10.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 14.w),
-
-                      // Name and Tagline
-                      Expanded(
-                        child: GestureDetector(
+                  return CustomCard(
+                    borderRadius: 20.r,
+                    padding: EdgeInsets.all(16.w),
+                    child: Row(
+                      children: [
+                        // Avatar with edit icon badge
+                        GestureDetector(
                           onTap: () => _showEditProfileBottomSheet(
                             context,
                             profileController,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Stack(
                             children: [
-                              Text(
-                                displayName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: const Color(0xFF111827),
-                                  fontSize: 16,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600,
+                              Container(
+                                width: 56,
+                                height: 56,
+                                decoration: ShapeDecoration(
+                                  color: const Color(0xFF33D2AB)
+                                      .withValues(alpha: 0.21),
+                                  shape: OvalBorder(),
+                                ),
+
+                                child: Icon(
+                                  CupertinoIcons.person,
+                                  color: const Color(0xFF33D2AB),
+                                  size: 28.sp,
                                 ),
                               ),
-                              SizedBox(height: 2.h),
-                              Text(
-                                tagline,
-                                style: TextStyle(
-                                  color: const Color(0xFF111827)
-                                      .withValues(alpha: 0.82),
-                                  fontSize: 11,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  width: 23,
+                                  height: 23,
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFF33D2AB)
+                                        .withValues(alpha: 0.8),
+                                    shape: OvalBorder(
+                                      side: BorderSide(
+                                        width: 1,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Colors.white,
+                                    size: 10.sp,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
+                        SizedBox(width: 14.w),
 
-                      // Edit Profile Pill
-                      GestureDetector(
-                        onTap: () => _showEditProfileBottomSheet(
-                          context,
-                          profileController,
-                        ),
-                        child: Container(
-                          width: 81,
-                          height: 25,
-                          decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                color: const Color(0xFF33D2AB)
-                                    .withValues(alpha: 0.82),
-                              ),
-                              borderRadius: BorderRadius.circular(30),
+                        // Name and Tagline
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _showEditProfileBottomSheet(
+                              context,
+                              profileController,
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.edit_outlined,
-                                  size: 12.sp,
-                                  color: const Color(0xFF33D2AB)
-                                      .withValues(alpha: 0.82),
+                                Text(
+                                  displayName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: const Color(0xFF111827),
+                                    fontSize: 16,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                SizedBox(width: 4.w),
-                                Opacity(
-                                  opacity: 0.82,
-                                  child: Text(
-                                    'Edit Profile',
-                                    style: TextStyle(
-                                      color: const Color(0xFF33D2AB),
-                                      fontSize: 10,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                SizedBox(height: 2.h),
+                                Text(
+                                  tagline,
+                                  style: TextStyle(
+                                    color: const Color(0xFF111827)
+                                        .withValues(alpha: 0.82),
+                                    fontSize: 11,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-              SizedBox(height: 18.h),
 
-              // Account Section
-              Text(
-                'Account',
-                style: TextStyle(
-                  color: const Color(0xFF111827),
-                  fontSize: 16,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 10.h),
-
-              // Account List Card
-              Container(
-                width: 337.w,
-                height: 368.h,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      width: 0.25,
-                      color: const Color(0xFF33D2AB),
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  shadows: [
-                    BoxShadow(
-                      color: Color(0x3A33D2AB),
-                      blurRadius: 6.80,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      // Change Password
-                      _buildAccountRow(
-                        icon: Icons.lock_outline,
-                        title: 'Change Password',
-                        subtitle: 'Update your password',
-                        onTap: () => Get.toNamed(AppRoutes.changePassword),
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                      // Privacy Policy
-                      _buildAccountRow(
-                        icon: Icons.shield_outlined,
-                        title: 'Privacy Policy',
-                        subtitle: 'Read our privacy policy',
-                        onTap: () => _showInfoDialog(
-                          'Privacy Policy',
-                          'Your health data is stored securely on your local device. We respect your privacy and do not sell personal health information.',
-                        ),
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                      // Terms of Use
-                      _buildAccountRow(
-                        icon: Icons.description_outlined,
-                        title: 'Terms of Use',
-                        subtitle: 'Read our terms and conditions',
-                        onTap: () => _showInfoDialog(
-                          'Terms of Use',
-                          'BMI calculations are provided for general informational and wellness tracking purposes only and should not replace professional medical advice.',
-                        ),
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                      // Notifications Switch
-                      Obx(() {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 38,
-                                height: 38,
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFF33D2AB)
-                                      .withValues(alpha: 0.15),
-                                  shape: OvalBorder(),
-                                ),
-                                child: Icon(
-                                  CupertinoIcons.bell,
-                                  color: const Color(0xFF33D2AB),
-                                  size: 18.sp,
-                                ),
-                              ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Notifications',
-                                      style: TextStyle(
-                                        color: const Color(0xFF111827),
-                                        fontSize: 12,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    SizedBox(height: 1.h),
-                                    Text(
-                                      'Manage your notification preferences',
-                                      style: TextStyle(
-                                        color: const Color(0xFF111827)
-                                            .withValues(alpha: 0.82),
-                                        fontSize: 11,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              CupertinoSwitch(
-                                value: appController.notificationsEnabled.value,
-                                activeTrackColor: const Color(0xFF2FD1A6),
-                                onChanged: (val) =>
-                                    appController.toggleNotifications(val),
-                              ),
-                            ],
+                        // Edit Profile Pill
+                        GestureDetector(
+                          onTap: () => _showEditProfileBottomSheet(
+                            context,
+                            profileController,
                           ),
-                        );
-                      }),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          child: Container(
+                            width: 81,
+                            height: 25,
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  width: 1,
+                                  color: const Color(0xFF33D2AB)
+                                      .withValues(alpha: 0.82),
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit_outlined,
+                                    size: 12.sp,
+                                    color: const Color(0xFF33D2AB)
+                                        .withValues(alpha: 0.82),
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Opacity(
+                                    opacity: 0.82,
+                                    child: Text(
+                                      'Edit Profile',
+                                      style: TextStyle(
+                                        color: const Color(0xFF33D2AB),
+                                        fontSize: 10,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                SizedBox(height: 18.h),
 
-                      // Units
-                      _buildAccountRow(
-                        icon: Icons.square_foot_outlined,
-                        title: 'Units',
-                        subtitle: 'Choose your preferred units',
-                        onTap: () => _openUnitsDialog(context),
-                      ),
-                      const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                      // Language
-                      _buildAccountRow(
-                        icon: CupertinoIcons.globe,
-                        title: 'Language',
-                        subtitle: 'Select your app language',
-                        onTap: () => Get.toNamed(AppRoutes.languagesSettings),
-                      ),
-                    ],
+                // Account Section
+                Text(
+                  'Account',
+                  style: TextStyle(
+                    color: const Color(0xFF111827),
+                    fontSize: 16,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
 
-              // Log Out Button
-              GestureDetector(
-                onTap: () => profileController.logout(),
-                child: Container(
-                  width: 338,
-                  height: 51,
+                // Account List Card
+                Container(
+                  width: 337.w,
+                  height: 368.h,
                   decoration: ShapeDecoration(
-                    color: const Color(0xFFFEF2F3),
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       side: BorderSide(
                         width: 0.25,
-                        color: const Color(0xFFFDF2F2),
+                        color: const Color(0xFF33D2AB),
                       ),
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.logout,
-                        size: 20.sp,
-                        color: const Color(0xFFFF0000),
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'Log Out',
-                        style: TextStyle(
-                          color: const Color(0xFFFF0000),
-                          fontSize: 18,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
-                        ),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0x3A33D2AB),
+                        blurRadius: 6.80,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
                       ),
                     ],
                   ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        // Rate Us
+                        _buildAccountRow(
+                          icon: Icons.star_outline_rounded,
+                          title: 'Rate Us',
+                          subtitle: 'Rate your experience with us',
+                          onTap: () => _openRateUsDialog(context),
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                        // Privacy Policy
+                        _buildAccountRow(
+                          icon: Icons.shield_outlined,
+                          title: 'Privacy Policy',
+                          subtitle: 'Read our privacy policy',
+                          onTap: () => _showInfoDialog(
+                            'Privacy Policy',
+                            'Your health data is stored securely on your local device. We respect your privacy and do not sell personal health information.',
+                          ),
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                        // Terms of Use
+                        _buildAccountRow(
+                          icon: Icons.description_outlined,
+                          title: 'Terms of Use',
+                          subtitle: 'Read our terms and conditions',
+                          onTap: () => _showInfoDialog(
+                            'Terms of Use',
+                            'BMI calculations are provided for general informational and wellness tracking purposes only and should not replace professional medical advice.',
+                          ),
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                        // Notifications Switch
+                        Obx(() {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 38,
+                                  height: 38,
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFF33D2AB)
+                                        .withValues(alpha: 0.15),
+                                    shape: OvalBorder(),
+                                  ),
+                                  child: Icon(
+                                    CupertinoIcons.bell,
+                                    color: const Color(0xFF33D2AB),
+                                    size: 18.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Notifications',
+                                        style: TextStyle(
+                                          color: const Color(0xFF111827),
+                                          fontSize: 12,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(height: 1.h),
+                                      Text(
+                                        'Manage your notification preferences',
+                                        style: TextStyle(
+                                          color: const Color(0xFF111827)
+                                              .withValues(alpha: 0.82),
+                                          fontSize: 11,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                CupertinoSwitch(
+                                  value:
+                                      appController.notificationsEnabled.value,
+                                  activeTrackColor: const Color(0xFF2FD1A6),
+                                  onChanged: (val) =>
+                                      appController.toggleNotifications(val),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                        // Feedback
+                        _buildAccountRow(
+                          icon: Icons.chat_bubble_outline_rounded,
+                          title: 'Feedback',
+                          subtitle: 'Send us your suggestions & ideas',
+                          onTap: () => _openFeedbackDialog(context),
+                        ),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                        // Language
+                        _buildAccountRow(
+                          icon: CupertinoIcons.globe,
+                          title: 'Language',
+                          subtitle: 'Select your app language',
+                          onTap: () => Get.toNamed(AppRoutes.languagesSettings),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(height: 24.h),
-            ],
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildAccountRow({
     required IconData icon,

@@ -191,7 +191,6 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                   menuPadding: EdgeInsets.zero,
                                 ),
                               ),
-
                               child: PopupMenuButton<Gender>(
                                 onSelected: (Gender g) {
                                   _controller.setGender(g);
@@ -374,11 +373,13 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   ),
                   SizedBox(height: 24.h),
 
-                  // Save & Get Insights Button
+                  // Action Button ("Continue" if no records, "Save & Get Insights" if records exist)
                   CustomGradientButton(
-                    text: 'Save & Get Insights',
+                    text: _controller.hasRecords
+                        ? 'Save & Get Insights'
+                        : 'Continue',
                     backgroundImage: AppAssets.btnRectangle,
-                    onPressed: _onSave,
+                    onPressed: _isFormValid ? _onSave : null,
                   ),
                   SizedBox(height: 24.h),
                 ],
@@ -434,6 +435,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
+            onChanged: (_) => _onTextChanged(),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,

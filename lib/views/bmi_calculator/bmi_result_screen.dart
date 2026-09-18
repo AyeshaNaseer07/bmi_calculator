@@ -1,7 +1,9 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
@@ -35,20 +37,34 @@ class BMIResultScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
           title: 'BMI Result',
-          trailing: GestureDetector(
-            onTap: () {
-              Get.snackbar(
-                'Share',
-                'Sharing BMI Result (${record.bmiValue})',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: AppColors.primaryTeal,
-                colorText: Colors.white,
-              );
-            },
-            child: Image.asset(
-              AppAssets.settingicon,
-              height: 34.h,
-              width: 34.w,
+          trailing: Builder(
+            builder: (btnContext) => GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                _shareBMIResult(btnContext, record);
+              },
+              child: Container(
+                width: 34.w,
+                height: 34.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.share_outlined,
+                    size: 17.sp,
+                    color: const Color(0xFF1E2D2F),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -309,6 +325,60 @@ class BMIResultScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Shares the BMI result using the native share dialog
+  void _shareBMIResult(BuildContext context, BMIRecord record) async {
+    final shareText =
+        '''
+BMI Result
+━━━━━━━━━━━━━━━━
+• BMI: ${record.bmiValue.toStringAsFixed(1)} (${record.category.label})
+• Weight: ${record.weightKg.toStringAsFixed(1)} kg
+• Height: ${record.heightCm.toStringAsFixed(0)} cm
+• Age: ${record.age} years
+• Gender: ${record.gender}
+━━━━━━━━━━━━━━━━
+${record.category.feedbackMessage}
+''';
+
+    // Calculate bounding box for iPad/macOS popover presentation
+    Rect? origin;
+    try {
+      final RenderBox? box = context.findRenderObject() as RenderBox?;
+      if (box != null && box.hasSize) {
+        origin = box.localToGlobal(Offset.zero) & box.size;
+      }
+    } catch (_) {}
+
+    origin ??= Rect.fromLTWH(
+      0,
+      0,
+      MediaQuery.of(context).size.width,
+      MediaQuery.of(context).size.height / 2,
+    );
+
+    try {
+      await SharePlus.instance.share(
+        ShareParams(
+          text: shareText,
+          subject: 'My BMI Result - ${record.bmiValue.toStringAsFixed(1)}',
+          sharePositionOrigin: origin,
+        ),
+      );
+    } catch (e) {
+      debugPrint('SharePlus error: $e');
+      {
+        Get.snackbar(
+          'Share Error',
+          'Could not open share dialog: $e',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black87,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
   }
 
   Widget _buildDetailColumn({
