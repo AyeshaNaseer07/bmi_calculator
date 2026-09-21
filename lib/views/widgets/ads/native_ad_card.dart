@@ -12,17 +12,19 @@ import '../../../main.dart';
 import 'ad_logger.dart';
 import 'ad_shimmer.dart';
 
-const double _kNativeAdHeight = 285;
+const double _kDefaultNativeAdHeight = 350;
 
 class NativeAdCard extends StatefulWidget {
   final String? adUnitId;
   final EdgeInsetsGeometry? margin;
+  final double? height;
   final ValueChanged<bool>? onAdAvailabilityChanged;
 
   const NativeAdCard({
     super.key,
     this.adUnitId,
     this.margin,
+    this.height,
     this.onAdAvailabilityChanged,
   });
 
@@ -163,13 +165,14 @@ class _NativeAdCardState extends State<NativeAdCard> {
     if (!_isAdsEnabled || _isFailed) {
       return const SizedBox.shrink();
     }
+    final effectiveHeight = widget.height ?? _kDefaultNativeAdHeight.h;
     final content = SizedBox(
       width: double.infinity,
       child: _isLoaded && _nativeAd != null
           ? Container(
               key: ValueKey('native_ad_container_${_nativeAd.hashCode}'),
               width: double.infinity,
-              height: _kNativeAdHeight,
+              height: effectiveHeight,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18.r),
@@ -185,16 +188,16 @@ class _NativeAdCardState extends State<NativeAdCard> {
               clipBehavior: Clip.antiAlias,
               child: SizedBox(
                 width: double.infinity,
-                height: _kNativeAdHeight,
+                height: effectiveHeight,
                 child: AdWidget(
                   key: ValueKey('ad_widget_${_nativeAd.hashCode}'),
                   ad: _nativeAd!,
                 ),
               ),
             )
-          : const SizedBox(
+          : SizedBox(
               width: double.infinity,
-              child: MediumNativeAdShimmer(),
+              child: MediumNativeAdShimmer(height: effectiveHeight),
             ),
     );
 

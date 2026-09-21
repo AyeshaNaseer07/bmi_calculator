@@ -1,11 +1,12 @@
 import UIKit
+import Flutter
 import GoogleMobileAds
 import google_mobile_ads
 
 class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
     func createNativeAd(_ nativeAd: NativeAd, customOptions: [AnyHashable : Any]? = nil) -> NativeAdView? {
         print("📢 [MediumNativeAdFactory] createNativeAd invoked: headline='\(nativeAd.headline ?? "N/A")', advertiser='\(nativeAd.advertiser ?? "N/A")', hasCallToAction='\(nativeAd.callToAction ?? "N/A")'")
-        let nativeAdView = NativeAdView()
+        let nativeAdView = NativeAdView(frame: CGRect(x: 0, y: 0, width: 375, height: 350))
         nativeAdView.backgroundColor = .white
         nativeAdView.layer.cornerRadius = 16
         nativeAdView.clipsToBounds = true
@@ -81,30 +82,27 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
 
         textStack.addArrangedSubview(bodyRow)
 
-        // 2. Media View (centered landscape display)
+        // 2. Media View (centered landscape display) - FILLS EDGE TO EDGE
         let mediaView = MediumAdMediaView()
         mediaView.translatesAutoresizingMaskIntoConstraints = false
-        mediaView.layer.cornerRadius = 10
+        mediaView.layer.cornerRadius = 12
         mediaView.layer.masksToBounds = true
         mediaView.backgroundColor = UIColor(red: 0xF3/255.0, green: 0xF4/255.0, blue: 0xF6/255.0, alpha: 1.0)
         mediaView.contentMode = .scaleAspectFill
         mediaView.clipsToBounds = true
+        mediaView.setContentHuggingPriority(UILayoutPriority(240), for: .vertical)
+        mediaView.setContentCompressionResistancePriority(UILayoutPriority(240), for: .vertical)
         containerView.addSubview(mediaView)
 
-        // 3. CTA Button: Solid Vibrant Blue with rounded pill shape
-        let ctaButton = UIButton(type: .custom)
+        // 3. CTA Button: Using btn.webp asset from Flutter
+        let ctaButton = CTAImageButton(type: .custom)
         ctaButton.translatesAutoresizingMaskIntoConstraints = false
         ctaButton.layer.cornerRadius = 23
         ctaButton.layer.masksToBounds = true
-        ctaButton.backgroundColor = UIColor(red: 0x0E/255.0, green: 0x8C/255.0, blue: 0xE0/255.0, alpha: 1.0) // Solid vibrant blue #0E8CE0
         ctaButton.setTitleColor(.white, for: .normal)
         ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         ctaButton.isUserInteractionEnabled = false // Let GADNativeAdView handle touch events
         containerView.addSubview(ctaButton)
-
-        // Layout Constraints
-        let mediaTopConstraint = mediaView.topAnchor.constraint(equalTo: textStack.bottomAnchor, constant: 8)
-        mediaTopConstraint.priority = UILayoutPriority(999)
 
         NSLayoutConstraint.activate([
             // Container edges inside nativeAdView
@@ -133,13 +131,13 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
             textStack.topAnchor.constraint(equalTo: containerView.topAnchor),
             textStack.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 10),
             textStack.trailingAnchor.constraint(lessThanOrEqualTo: adChoicesView.leadingAnchor, constant: -6),
+            textStack.bottomAnchor.constraint(lessThanOrEqualTo: mediaView.topAnchor, constant: -8),
 
-            // Media View
-            mediaTopConstraint,
-            mediaView.topAnchor.constraint(greaterThanOrEqualTo: iconImageView.bottomAnchor, constant: 8),
-            mediaView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            mediaView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            mediaView.bottomAnchor.constraint(equalTo: ctaButton.topAnchor, constant: -10),
+            // Media View - EDGE TO EDGE (NO SIDE PADDING)
+            mediaView.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 10),
+            mediaView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0),
+            mediaView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 0),
+            mediaView.bottomAnchor.constraint(equalTo: ctaButton.topAnchor, constant: -8),
 
             // CTA Button pinned to bottom
             ctaButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -176,62 +174,94 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         mediaView.mediaContent = nativeAd.mediaContent
 
         nativeAdView.nativeAd = nativeAd
+        nativeAdView.layoutIfNeeded()
         print("✅ [MediumNativeAdFactory] nativeAdView successfully configured and returned")
         return nativeAdView
     }
 }
 
-// MediaView subclass enforcing aspect-fill scaling on all image/video subviews to fill container edge-to-edge
+// MediaView subclass enforcing aspect-fit scaling so media is never cropped from top or bottom
 private class MediumAdMediaView: MediaView {
     override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
-        applyAspectFill(to: subview)
+        applyAspectFit(to: subview)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         for subview in subviews {
-            applyAspectFill(to: subview)
+            applyAspectFit(to: subview)
         }
     }
 
-    private func applyAspectFill(to view: UIView) {
-        view.contentMode = .scaleAspectFill
+    private func applyAspectFit(to view: UIView) {
+        view.contentMode = .scaleAspectFit
         view.clipsToBounds = true
         for child in view.subviews {
-            child.contentMode = .scaleAspectFill
+            child.contentMode = .scaleAspectFit
             child.clipsToBounds = true
         }
     }
 }
 
-// Helper gradient button kept for compatibility with FullScreenNativeAdFactory
-class GradientButton: UIButton {
+// CTA Button rendering btn.webp asset from Flutter
+class CTAImageButton: UIButton {
+    private let backgroundImageView = UIImageView()
     private let gradientLayer = CAGradientLayer()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupGradient()
+        setupBackground()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupGradient()
+        setupBackground()
     }
 
-    private func setupGradient() {
+    private func setupBackground() {
+        clipsToBounds = true
+        layer.cornerRadius = 23
+
+        // Gradient Layer fallback matching btn.webp colors (#24CCA7 to #0288D1)
         gradientLayer.colors = [
-            UIColor(red: 0x24/255.0, green: 0xCC/255.0, blue: 0xA7/255.0, alpha: 1.0).cgColor, // App Teal
-            UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0).cgColor  // Sky Blue
+            UIColor(red: 0x24/255.0, green: 0xCC/255.0, blue: 0xA7/255.0, alpha: 1.0).cgColor,
+            UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0).cgColor
         ]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         layer.insertSublayer(gradientLayer, at: 0)
+
+        // Background Image View for btn.webp
+        backgroundImageView.contentMode = .scaleToFill
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(backgroundImageView)
+        sendSubviewToBack(backgroundImageView)
+
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+
+        // Load btn.webp from Flutter assets
+        let assetKey = FlutterDartProject.lookupKey(forAsset: "assets/images/btn.webp")
+        if let path = Bundle.main.path(forResource: assetKey, ofType: nil),
+           let img = UIImage(contentsOfFile: path) {
+            backgroundImageView.image = img
+            gradientLayer.isHidden = true
+        } else if let img = UIImage(named: "btn.webp") ?? UIImage(named: "btn") {
+            backgroundImageView.image = img
+            gradientLayer.isHidden = true
+        }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = bounds
         gradientLayer.cornerRadius = layer.cornerRadius
+        backgroundImageView.layer.cornerRadius = layer.cornerRadius
     }
 }

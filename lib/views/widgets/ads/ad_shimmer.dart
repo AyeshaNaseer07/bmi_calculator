@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/constants/app_assets.dart';
+
 class ShimmerLoading extends StatefulWidget {
   final Widget child;
 
@@ -66,12 +68,16 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 }
 
 class MediumNativeAdShimmer extends StatelessWidget {
-  const MediumNativeAdShimmer({super.key});
+  final double? height;
+
+  const MediumNativeAdShimmer({super.key, this.height});
 
   @override
   Widget build(BuildContext context) {
     return ShimmerLoading(
       child: Container(
+        width: double.infinity,
+        height: height ?? 350.h,
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -86,7 +92,6 @@ class MediumNativeAdShimmer extends StatelessWidget {
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -167,23 +172,28 @@ class MediumNativeAdShimmer extends StatelessWidget {
             SizedBox(height: 8.h),
 
             // Media View skeleton
-            Container(
-              width: double.infinity,
-              height: 136.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0E5E5),
-                borderRadius: BorderRadius.circular(10.r),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE0E5E5),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
               ),
             ),
             SizedBox(height: 10.h),
 
-            // CTA Button skeleton
+            // CTA Button skeleton matching btn.webp
             Container(
               width: double.infinity,
               height: 46.h,
               decoration: BoxDecoration(
-                color: const Color(0xFFE0E5E5),
                 borderRadius: BorderRadius.circular(23.r),
+                image: const DecorationImage(
+                  image: AssetImage(AppAssets.btnRectangle),
+                  fit: BoxFit.fill,
+                  opacity: 0.85,
+                ),
               ),
             ),
           ],

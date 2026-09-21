@@ -3,6 +3,11 @@
         android:label="bmi_calculator"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Required by google_mobile_ads. Replace with your real Android AdMob App ID
+             from the AdMob console before release; this is Google's public test App ID. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

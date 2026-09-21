@@ -163,9 +163,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   /// Builds Onboarding Slide 1 with illustration at top and native ad card at bottom
   Widget _buildBmiAdSlide() {
     return SafeArea(
+      bottom: false,
       child: Column(
         children: [
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
           // Top Illustration
           Expanded(
             child: Padding(
@@ -173,7 +174,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Image.asset(AppAssets.onboarding1, fit: BoxFit.contain),
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 8.h),
 
           // Title: BMI Calculator
           RichText(
@@ -194,7 +195,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 4.h),
 
           // Subtitle
           Padding(
@@ -211,7 +212,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 10.h),
 
           // Controls Row: 4 Indicator Dots on Left & NextButton on Right
           Padding(
@@ -252,7 +253,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: const NativeAdCard(),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 8.h),
         ],
       ),
     );
