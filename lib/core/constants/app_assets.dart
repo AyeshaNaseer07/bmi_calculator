@@ -75,6 +75,7 @@ abstract class AppAssets {
   static const String historyUp = '$_imagesBase/history_up.webp';
   static const String historyCalander = '$_imagesBase/calander_history.webp';
   static const String historyRestart = '$_imagesBase/history_restart.webp';
+  static const String premiumCrown = '$_imagesBase/premium_crown.png';
 
   // ── Health Insights ──
   static const String healthHeight = '$_imagesBase/health_height.webp';

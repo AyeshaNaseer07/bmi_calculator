@@ -76,7 +76,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             PageView(
               controller: _pageController,
-              physics: _currentIndex == 1
+              // Disable all swipe gestures on the full-screen native ad page
+              // (index 1), and also on page 2 so the user cannot swipe back to
+              // the ad. The only way to dismiss the ad is the X button.
+              physics: (_currentIndex == 1 || _currentIndex == 2)
                   ? const NeverScrollableScrollPhysics()
                   : const ClampingScrollPhysics(),
               onPageChanged: (index) {
@@ -128,8 +131,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               duration: const Duration(milliseconds: 250),
                               curve: Curves.easeInOut,
                               margin: const EdgeInsets.symmetric(horizontal: 4),
-                              width: isActive ? 24 : 8,
-                              height: 8,
+                              width: 8.w,
+                              height: 8.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 color: isActive

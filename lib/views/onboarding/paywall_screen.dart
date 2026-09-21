@@ -456,10 +456,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           : _appController.remoteConfigService.buttonText,
                       backgroundImage: AppAssets.btnRectangle,
                       isLoading: _isLoading,
-                      leadingIcon: Icon(
-                        Icons.diamond_outlined,
-                        color: Colors.white,
-                        size: 20.sp,
+                      leadingIcon: Image.asset(
+                        AppAssets.premiumCrown,
+                        width: 20.sp,
+                        height: 20.sp,
                       ),
                       trailingIcon: Icon(
                         CupertinoIcons.arrow_right,

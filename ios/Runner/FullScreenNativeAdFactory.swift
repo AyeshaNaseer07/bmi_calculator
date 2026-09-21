@@ -229,7 +229,7 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         if let cta = nativeAd.callToAction, !cta.isEmpty {
             ctaButton.setTitle(cta, for: .normal)
         } else {
-            ctaButton.setTitle("Install", for: .normal)
+            ctaButton.setTitle("Next", for: .normal)
         }
 
         mediaView.mediaContent = nativeAd.mediaContent
