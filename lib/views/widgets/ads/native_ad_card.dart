@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../controllers/app_controller.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
@@ -34,6 +35,16 @@ class _NativeAdCardState extends State<NativeAdCard> {
   bool _isLoaded = false;
   bool _isFailed = false;
 
+  bool get _isAdsEnabled {
+    if (Get.isRegistered<AppController>()) {
+      if (Get.find<AppController>().isPremium.value) return false;
+    }
+    if (Get.isRegistered<RemoteConfigService>()) {
+      return RemoteConfigService.to.isAdsEnabled;
+    }
+    return remoteModel.isAdsEnabled;
+  }
+
   String get _effectiveAdUnitId {
     if (widget.adUnitId != null && widget.adUnitId!.isNotEmpty) {
       return widget.adUnitId!;
@@ -57,6 +68,11 @@ class _NativeAdCardState extends State<NativeAdCard> {
   }
 
   void _loadAd() {
+    if (!_isAdsEnabled) {
+      _isFailed = true;
+      widget.onAdAvailabilityChanged?.call(false);
+      return;
+    }
     final adUnitId = _effectiveAdUnitId;
     AdLogHelper.logRequest(
       tag: 'NativeAdCard',
@@ -76,7 +92,11 @@ class _NativeAdCardState extends State<NativeAdCard> {
             _isLoaded = true;
             _isFailed = false;
           });
-          widget.onAdAvailabilityChanged?.call(true);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              widget.onAdAvailabilityChanged?.call(true);
+            }
+          });
         },
         onAdFailedToLoad: (ad, error) {
           AdLogHelper.logFailed(
@@ -90,7 +110,11 @@ class _NativeAdCardState extends State<NativeAdCard> {
             _isLoaded = false;
             _isFailed = true;
           });
-          widget.onAdAvailabilityChanged?.call(false);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              widget.onAdAvailabilityChanged?.call(false);
+            }
+          });
         },
         onAdOpened: (ad) {
           debugPrint(
@@ -136,45 +160,42 @@ class _NativeAdCardState extends State<NativeAdCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isFailed) {
+    if (!_isAdsEnabled || _isFailed) {
       return const SizedBox.shrink();
     }
     final content = SizedBox(
       width: double.infinity,
-      child: AnimatedCrossFade(
-        duration: const Duration(milliseconds: 300),
-        crossFadeState: _isLoaded
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
-        firstChild: const SizedBox(
-          width: double.infinity,
-          child: MediumNativeAdShimmer(),
-        ),
-        secondChild: _isLoaded && _nativeAd != null
-            ? Container(
+      child: _isLoaded && _nativeAd != null
+          ? Container(
+              key: ValueKey('native_ad_container_${_nativeAd.hashCode}'),
+              width: double.infinity,
+              height: _kNativeAdHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18.r),
+                border: Border.all(color: const Color(0xFFE5E7EB)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: SizedBox(
                 width: double.infinity,
                 height: _kNativeAdHeight,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18.r),
-                  border: Border.all(color: const Color(0xFFE8F7F2)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                child: AdWidget(
+                  key: ValueKey('ad_widget_${_nativeAd.hashCode}'),
+                  ad: _nativeAd!,
                 ),
-                clipBehavior: Clip.antiAlias,
-                child: SizedBox(
-                  width: double.infinity,
-                  height: _kNativeAdHeight,
-                  child: AdWidget(ad: _nativeAd!),
-                ),
-              )
-            : const SizedBox(width: double.infinity, height: 0),
-      ),
+              ),
+            )
+          : const SizedBox(
+              width: double.infinity,
+              child: MediumNativeAdShimmer(),
+            ),
     );
 
     if (widget.margin != null) {

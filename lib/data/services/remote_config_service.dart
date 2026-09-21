@@ -19,14 +19,20 @@ class RemoteConfigService extends GetxService {
   static RemoteConfigService get to => Get.find<RemoteConfigService>();
 
   RemoteModel get current => model.value;
-  int get crossDelaySeconds => model.value.splashProductCrossDelay;
-  String get monthlyProductId => model.value.splashProductId;
-  String get yearlyProductId => model.value.splashYearlyProductId;
-  String get monthlyPrice => model.value.monthlyPrice;
-  String get yearlyPrice => model.value.yearlyPrice;
-  String get buttonText => model.value.splashProductBtnText;
-  String get trialSubtitle => model.value.trialSubtitle;
+  String get firstTimeOnboarding => model.value.firstTimeOnboarding;
+  bool get isFirstTimeOnboardingEnabled => model.value.isFirstTimeOnboarding;
+  String get secondTimeOnboarding => model.value.secondTimeOnboarding;
+  bool get isSecondTimeOnboardingEnabled => model.value.isSecondTimeOnboarding;
+  String get paywallBtnText => model.value.paywallBtnText;
+  String get buttonText => model.value.paywallBtnText;
+  int get crossDelaySeconds => model.value.crossDelay;
+  String get monthlyProductId => model.value.monthlyProductId;
+  String get yearlyProductId => model.value.yearlyProductId;
   String get nativeAdId => model.value.nativeAdId;
+  String get ads => model.value.ads;
+  bool get isAdsEnabled => model.value.isAdsEnabled;
+  String get localNotification => model.value.localNotification;
+  bool get isLocalNotificationEnabled => model.value.isLocalNotificationEnabled;
 
   Future<RemoteConfigService> init() async {
     loadCachedConfig();
@@ -60,7 +66,7 @@ class RemoteConfigService extends GetxService {
           updateWithMap(map);
         }
         log(
-          'RemoteConfig fetched successfully: crossDelay=${model.value.splashProductCrossDelay}, buttonText="${model.value.splashProductBtnText}", monthlyId="${model.value.splashProductId}", yearlyId="${model.value.splashYearlyProductId}"',
+          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, monthlyId="${model.value.monthlyProductId}", yearlyId="${model.value.yearlyProductId}", ads=${model.value.ads}, localNotification=${model.value.localNotification}',
         );
         return;
       } catch (e) {
@@ -71,7 +77,7 @@ class RemoteConfigService extends GetxService {
       }
     }
     log('Remote config fetch failed; ensuring default values are active');
-    if (model.value.splashProductId.isEmpty) {
+    if (model.value.monthlyProductId.isEmpty) {
       final defaults = RemoteModel.defaults();
       model.value = defaults;
       remoteModel = defaults;
@@ -94,18 +100,9 @@ class RemoteConfigService extends GetxService {
   String getProductId(SubscriptionPlan plan) {
     switch (plan) {
       case SubscriptionPlan.monthly:
-        return model.value.splashProductId;
+        return model.value.monthlyProductId;
       case SubscriptionPlan.yearly:
-        return model.value.splashYearlyProductId;
-    }
-  }
-
-  String getPlanPrice(SubscriptionPlan plan) {
-    switch (plan) {
-      case SubscriptionPlan.monthly:
-        return model.value.monthlyPrice;
-      case SubscriptionPlan.yearly:
-        return model.value.yearlyPrice;
+        return model.value.yearlyProductId;
     }
   }
 }

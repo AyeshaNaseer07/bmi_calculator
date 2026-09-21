@@ -4,25 +4,25 @@ abstract class AppAssets {
   static const String _lottiesBase = 'assets/lotties';
 
   // ── Images ──
-  static const String appBg = '$_imagesBase/bg.png';
+  static const String appBg = '$_imagesBase/bg.webp';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
-  static const String selectLanguage = '$_imagesBase/select_language.png';
+  static const String selectLanguage = '$_imagesBase/select_language.webp';
   static const String crown = '$_imagesBase/crown.webp';
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   static const String homeAvatar = '$_imagesBase/home_img.webp';
   static const String btnRectangle = '$_imagesBase/btn.webp';
   static const String calcilatorIcon = '$_imagesBase/calculator.webp';
-  static const String tipIcon = '$_imagesBase/tip.png';
-  static const String resetIcon = '$_imagesBase/reset.png';
+  static const String tipIcon = '$_imagesBase/tip.webp';
+  static const String resetIcon = '$_imagesBase/reset.webp';
 
-  static const String icDiamond = '$_imagesBase/ic_diamond.png';
+  static const String icDiamond = '$_imagesBase/ic_diamond.webp';
   static const String bmiGauge = '$_imagesBase/gaugae.webp';
 
   // ── Onboarding ──
   static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
-  static const String onboarding2 = '$_imagesBase/onboarding_2.png';
+  static const String onboarding2 = '$_imagesBase/onboarding_2.webp';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
   // ── Paywall Premium Feature Icons ──
@@ -54,10 +54,11 @@ abstract class AppAssets {
   static const String weighticon = '$_imagesBase/weight.webp';
   static const String heighticon = '$_imagesBase/height.webp';
   static const String ageicon = '$_imagesBase/age.webp';
+  static const String arrowIcon = '$_imagesBase/arrow.png';
   static const String gendericon = '$_imagesBase/gender.webp';
-  static const String iconFemale = '$_imagesBase/icon_female.png';
-  static const String iconMale = '$_imagesBase/icon_male.png';
-  static const String iconAge = '$_imagesBase/icon_age.png';
+  static const String iconFemale = '$_imagesBase/icon_female.webp';
+  static const String iconMale = '$_imagesBase/icon_male.webp';
+  static const String iconAge = '$_imagesBase/icon_age.webp';
   static const String bmiHearticon = '$_imagesBase/bmi_heart.webp';
   static const String weightTrackingicon = '$_imagesBase/weight_icon.webp';
   static const String addDataicon = '$_imagesBase/add_my_data.webp';
@@ -73,16 +74,16 @@ abstract class AppAssets {
   static const String historyIcon = '$_imagesBase/history_bg.webp';
   static const String historyUp = '$_imagesBase/history_up.webp';
   static const String historyCalander = '$_imagesBase/calander_history.webp';
-  static const String historyRestart = '$_imagesBase/history_restart.png';
+  static const String historyRestart = '$_imagesBase/history_restart.webp';
 
   // ── Health Insights ──
-  static const String healthHeight = '$_imagesBase/health_height.png';
-  static const String healthWeight = '$_imagesBase/health_weight.png';
+  static const String healthHeight = '$_imagesBase/health_height.webp';
+  static const String healthWeight = '$_imagesBase/health_weight.webp';
 
-  static const String lastUpdated = '$_imagesBase/last_updated.png';
-  static const String happyHealth = '$_imagesBase/happy_health.png';
-  static const String eatHealthy = '$_imagesBase/eat_healthy.png';
-  static const String stayHydrated = '$_imagesBase/stay_hydrated.png';
+  static const String lastUpdated = '$_imagesBase/last_updated.webp';
+  static const String happyHealth = '$_imagesBase/happy_health.webp';
+  static const String eatHealthy = '$_imagesBase/eat_healthy.webp';
+  static const String stayHydrated = '$_imagesBase/stay_hydrated.webp';
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';

@@ -266,17 +266,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 4.h),
-                                Obx(
-                                  () => Text(
-                                    _appController
-                                        .remoteConfigService
-                                        .monthlyPrice,
-                                    style: TextStyle(
-                                      color: const Color(0xFF33D2AB),
-                                      fontSize: 22,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w800,
-                                    ),
+                                Text(
+                                  '\$4.99',
+                                  style: TextStyle(
+                                    color: const Color(0xFF33D2AB),
+                                    fontSize: 22,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.w800,
                                   ),
                                 ),
                                 Text(
@@ -388,17 +384,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       ),
                                     ),
                                     SizedBox(height: 4.h),
-                                    Obx(
-                                      () => Text(
-                                        _appController
-                                            .remoteConfigService
-                                            .yearlyPrice,
-                                        style: TextStyle(
-                                          color: const Color(0xFF33D2AB),
-                                          fontSize: 22,
-                                          fontFamily: 'Outfit',
-                                          fontWeight: FontWeight.w800,
-                                        ),
+                                    Text(
+                                      '\$29.99',
+                                      style: TextStyle(
+                                        color: const Color(0xFF33D2AB),
+                                        fontSize: 22,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w800,
                                       ),
                                     ),
                                     Text(
@@ -479,15 +471,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   ),
                   SizedBox(height: 10.h),
 
-                  Obx(
-                    () => Text(
-                      _appController.remoteConfigService.trialSubtitle,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
-                      ),
+                  Text(
+                    '7 Days Free • Cancel Anytime',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   SizedBox(height: 6.h),

@@ -59,40 +59,41 @@ class _NextButtonState extends State<NextButton>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: GestureDetector(
-          onTap: _handleTap,
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            color: Colors.transparent,
-            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Next',
-                  style: TextStyle(
-                    color: const Color(0xFF24CCA7),
-                    fontSize: 18.sp,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(width: 5.w),
-                SlideTransition(
-                  position: _slideAnimation,
-                  child: Icon(
-                    Icons.arrow_forward_rounded,
-                    color: const Color(0xFF24CCA7),
-                    size: 18,
-                  ),
-                ),
-              ],
-            ),
+    return GestureDetector(
+      onTap: _handleTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24.r),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF24CCA7), Color(0xFF168EE2)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Next',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            SlideTransition(
+              position: _slideAnimation,
+              child: const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -84,9 +84,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 _buildBmiAdSlide(),
 
                 // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
-                FullScreenNativeAdPage(
-                  onNext: _onNext,
-                ),
+                FullScreenNativeAdPage(onNext: _onNext),
 
                 // Page 2: Weight Tracking (iPhone 13 mini - 65)
                 _buildContentSlide(
@@ -138,7 +136,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             );
                           }),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
 
                         // Next Gradient Button
                         CustomGradientButton(
@@ -167,7 +165,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return SafeArea(
       child: Column(
         children: [
-          SizedBox(height: 10.h),
+          SizedBox(height: 8.h),
           // Top Illustration
           Expanded(
             child: Padding(
@@ -175,15 +173,83 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Image.asset(AppAssets.onboarding1, fit: BoxFit.contain),
             ),
           ),
+          SizedBox(height: 10.h),
+
+          // Title: BMI Calculator
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 28.sp,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+              children: const [
+                TextSpan(text: 'BMI '),
+                TextSpan(
+                  text: 'Calculator',
+                  style: TextStyle(color: Color(0xFF24CCA7)),
+                ),
+              ],
+            ),
+          ),
           SizedBox(height: 6.h),
 
-          // Next Action Button
-          NextButton(onNext: _onNext),
-          SizedBox(height: 4.h),
+          // Subtitle
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Text(
+              'Track your BMI, monitor your progress,\nand stay healthy with personalized insights.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black.withValues(alpha: 0.85),
+                fontSize: 13.sp,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w400,
+                height: 1.35,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+
+          // Controls Row: 4 Indicator Dots on Left & NextButton on Right
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Dot Indicator (4 circular dots)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(_totalPages, (index) {
+                    final isActive = index == 0;
+                    return Container(
+                      margin: EdgeInsets.only(
+                        right: index < _totalPages - 1 ? 6.w : 0,
+                      ),
+                      width: 8.w,
+                      height: 8.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isActive
+                            ? const Color(0xFF24CCA7)
+                            : const Color(0xFFC7F3EA),
+                      ),
+                    );
+                  }),
+                ),
+
+                // Next Action Button
+                NextButton(onNext: _onNext),
+              ],
+            ),
+          ),
+          SizedBox(height: 8.h),
 
           // Bottom Native Ad Card
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: const NativeAdCard(),
           ),
           SizedBox(height: 6.h),

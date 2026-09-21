@@ -72,11 +72,11 @@ class MediumNativeAdShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShimmerLoading(
       child: Container(
-        padding: EdgeInsets.all(12.w),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(color: const Color(0xFFE8F7F2)),
+          border: Border.all(color: const Color(0xFFE5E7EB)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.03),
@@ -94,8 +94,8 @@ class MediumNativeAdShimmer extends StatelessWidget {
               children: [
                 // Icon skeleton
                 Container(
-                  width: 44.w,
-                  height: 44.w,
+                  width: 46.w,
+                  height: 46.w,
                   decoration: BoxDecoration(
                     color: const Color(0xFFE0E5E5),
                     borderRadius: BorderRadius.circular(10.r),
@@ -109,7 +109,7 @@ class MediumNativeAdShimmer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 120.w,
+                        width: 130.w,
                         height: 14.h,
                         decoration: BoxDecoration(
                           color: const Color(0xFFE0E5E5),
@@ -117,56 +117,54 @@ class MediumNativeAdShimmer extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 6.h),
-                      // ADDED: Stars skeleton
+                      // Body row: [AD] badge outline + 2-line body skeleton
                       Row(
-                        children: List.generate(
-                          5,
-                          (index) => Container(
-                            width: 12.w,
-                            height: 12.w,
-                            margin: EdgeInsets.only(right: 2.w),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFE0E5E5),
-                              shape: BoxShape.circle,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 24.w,
+                            height: 14.h,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFFCFD6D6),
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(3.r),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Container(
-                        width: double.infinity,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE0E5E5),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Container(
-                        width: 130.w,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE0E5E5),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
+                          SizedBox(width: 6.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 9.h,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE0E5E5),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Container(
+                                  width: 100.w,
+                                  height: 9.h,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE0E5E5),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(width: 8.w),
-
-                // AD Badge skeleton
-                Container(
-                  width: 30.w,
-                  height: 18.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC7F3EA),
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 8.h),
 
             // Media View skeleton
             Container(
@@ -174,7 +172,7 @@ class MediumNativeAdShimmer extends StatelessWidget {
               height: 136.h,
               decoration: BoxDecoration(
                 color: const Color(0xFFE0E5E5),
-                borderRadius: BorderRadius.circular(14.r),
+                borderRadius: BorderRadius.circular(10.r),
               ),
             ),
             SizedBox(height: 10.h),

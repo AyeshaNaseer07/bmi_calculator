@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import 'package:permission_handler/permission_handler.dart';
+
 import '../data/models/user_profile_model.dart';
 import '../data/services/localization_service.dart';
 import '../data/services/remote_config_service.dart';
@@ -31,9 +33,25 @@ class AppController extends GetxController {
     subscriptionService = SubscriptionService(_storage);
     selectedLanguage.value = _storage.getLanguage();
     unitSystem.value = _storage.getUnitSystem();
-    notificationsEnabled.value = _storage.getNotificationsEnabled();
+    final isRemoteNotificationEnabled =
+        remoteConfigService.isLocalNotificationEnabled;
+    notificationsEnabled.value =
+        isRemoteNotificationEnabled && _storage.getNotificationsEnabled();
     isPremium.value = _storage.getIsPremium();
     onboardingSeen.value = _storage.getOnboardingSeen();
+
+    if (isRemoteNotificationEnabled) {
+      _checkLocalNotificationPermission();
+    }
+  }
+
+  Future<void> _checkLocalNotificationPermission() async {
+    try {
+      final status = await Permission.notification.status;
+      if (status.isDenied) {
+        await Permission.notification.request();
+      }
+    } catch (_) {}
   }
 
   void changeLanguage(String code) {

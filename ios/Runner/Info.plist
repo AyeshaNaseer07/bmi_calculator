@@ -78,6 +78,6 @@
 		</dict>
 	</array>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<string>This permission is only required to provide personalized and enhanced experience. It also helps us keep improving our app quality &amp; developing new features</string>
 </dict>
 </plist>

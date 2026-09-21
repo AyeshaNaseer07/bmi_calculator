@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../controllers/app_controller.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
@@ -31,6 +32,16 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   bool _isLoaded = false;
   bool _isFailed = false;
 
+  bool get _isAdsEnabled {
+    if (Get.isRegistered<AppController>()) {
+      if (Get.find<AppController>().isPremium.value) return false;
+    }
+    if (Get.isRegistered<RemoteConfigService>()) {
+      return RemoteConfigService.to.isAdsEnabled;
+    }
+    return remoteModel.isAdsEnabled;
+  }
+
   String get _effectiveAdUnitId {
     if (widget.adUnitId != null && widget.adUnitId!.isNotEmpty) {
       return widget.adUnitId!;
@@ -54,6 +65,15 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   }
 
   void _loadAd() {
+    if (!_isAdsEnabled) {
+      _isFailed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          widget.onNext();
+        }
+      });
+      return;
+    }
     final adUnitId = _effectiveAdUnitId;
     AdLogHelper.logRequest(
       tag: 'FullScreenNativeAdPage',
@@ -134,6 +154,9 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isAdsEnabled) {
+      return const SizedBox.shrink();
+    }
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -141,7 +164,10 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
           // Ad or Shimmer View
           Positioned.fill(
             child: _isLoaded && _nativeAd != null && !_isFailed
-                ? AdWidget(ad: _nativeAd!)
+                ? AdWidget(
+                    key: ValueKey('full_screen_ad_${_nativeAd.hashCode}'),
+                    ad: _nativeAd!,
+                  )
                 : const FullScreenNativeAdShimmer(),
           ),
 

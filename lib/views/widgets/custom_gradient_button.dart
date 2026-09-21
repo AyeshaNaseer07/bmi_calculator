@@ -20,6 +20,8 @@ class CustomGradientButton extends StatelessWidget {
   final BorderRadius? borderRadius;
   final String? backgroundImage;
   final List<BoxShadow>? boxShadow;
+  final bool alignTrailingToEnd;
+  final EdgeInsetsGeometry? contentPadding;
 
   const CustomGradientButton({
     super.key,
@@ -37,7 +39,65 @@ class CustomGradientButton extends StatelessWidget {
     this.borderRadius,
     this.backgroundImage,
     this.boxShadow,
+    this.alignTrailingToEnd = true,
+    this.contentPadding,
   });
+
+  Widget _buildButtonChild({required TextStyle effectiveTextStyle}) {
+    final effectivePadding =
+        contentPadding ??
+        EdgeInsets.symmetric(
+          horizontal:
+              (alignTrailingToEnd &&
+                  (leadingIcon != null || trailingIcon != null))
+              ? 20.w
+              : 16.w,
+        );
+
+    if (alignTrailingToEnd && (leadingIcon != null || trailingIcon != null)) {
+      return Padding(
+        padding: effectivePadding,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (leadingIcon != null)
+              Align(alignment: Alignment.centerLeft, child: leadingIcon!),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 36.w),
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: effectiveTextStyle,
+                ),
+              ),
+            ),
+            if (trailingIcon != null)
+              Align(alignment: Alignment.centerRight, child: trailingIcon!),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: effectivePadding,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (leadingIcon != null) ...[leadingIcon!, SizedBox(width: 8.w)],
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: effectiveTextStyle,
+            ),
+          ),
+          if (trailingIcon != null) ...[SizedBox(width: 8.w), trailingIcon!],
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,32 +125,12 @@ class CustomGradientButton extends StatelessWidget {
           child: InkWell(
             borderRadius: effectiveBorderRadius,
             onTap: onPressed,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (leadingIcon != null) ...[
-                    leadingIcon!,
-                    SizedBox(width: 8.w),
-                  ],
-                  Flexible(
-                    child: Text(
-                      text,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          textStyle ??
-                          AppTypography.buttonText.copyWith(
-                            color: outlineColor ?? const Color(0xFF2EC4B6),
-                          ),
-                    ),
+            child: _buildButtonChild(
+              effectiveTextStyle:
+                  textStyle ??
+                  AppTypography.buttonText.copyWith(
+                    color: outlineColor ?? const Color(0xFF2EC4B6),
                   ),
-                  if (trailingIcon != null) ...[
-                    SizedBox(width: 8.w),
-                    trailingIcon!,
-                  ],
-                ],
-              ),
             ),
           ),
         ),
@@ -101,8 +141,9 @@ class CustomGradientButton extends StatelessWidget {
         width: width ?? double.infinity,
         decoration: BoxDecoration(
           color: solidColor,
+          gradient: gradient,
           borderRadius: effectiveBorderRadius,
-          image: solidColor == null
+          image: (solidColor == null && gradient == null)
               ? DecorationImage(
                   image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
                   fit: BoxFit.fill,
@@ -115,28 +156,8 @@ class CustomGradientButton extends StatelessWidget {
           child: InkWell(
             borderRadius: effectiveBorderRadius,
             onTap: onPressed,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (leadingIcon != null) ...[
-                    leadingIcon!,
-                    SizedBox(width: 8.w),
-                  ],
-                  Flexible(
-                    child: Text(
-                      text,
-                      overflow: TextOverflow.ellipsis,
-                      style: textStyle ?? AppTypography.buttonText,
-                    ),
-                  ),
-                  if (trailingIcon != null) ...[
-                    SizedBox(width: 8.w),
-                    trailingIcon!,
-                  ],
-                ],
-              ),
+            child: _buildButtonChild(
+              effectiveTextStyle: textStyle ?? AppTypography.buttonText,
             ),
           ),
         ),
