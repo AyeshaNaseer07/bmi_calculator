@@ -76,6 +76,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             PageView(
               controller: _pageController,
+              physics: _currentIndex == 1
+                  ? const NeverScrollableScrollPhysics()
+                  : const ClampingScrollPhysics(),
               onPageChanged: (index) {
                 setState(() => _currentIndex = index);
               },
@@ -139,17 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         SizedBox(height: 20),
 
                         // Next Gradient Button
-                        CustomGradientButton(
-                          text: 'Next',
-                          backgroundImage: AppAssets.btnRectangle,
-                          borderRadius: BorderRadius.circular(12.r),
-                          trailingIcon: const Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                          onPressed: _onNext,
-                        ),
+                        _AnimatedGradientNextButton(onPressed: _onNext),
                       ],
                     ),
                   ),
@@ -319,6 +312,75 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Full-width "Next" button used on pages 2 & 3 with animated arrow.png icon.
+class _AnimatedGradientNextButton extends StatefulWidget {
+  final VoidCallback onPressed;
+
+  const _AnimatedGradientNextButton({required this.onPressed});
+
+  @override
+  State<_AnimatedGradientNextButton> createState() =>
+      _AnimatedGradientNextButtonState();
+}
+
+class _AnimatedGradientNextButtonState
+    extends State<_AnimatedGradientNextButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
+  bool _isAnimating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0.6, 0),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    // Continuously bounce the arrow left → right → left
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleTap() {
+    if (_isAnimating) return;
+    _isAnimating = true;
+    widget.onPressed();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) _isAnimating = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomGradientButton(
+      text: 'Next',
+      backgroundImage: AppAssets.btnRectangle,
+      borderRadius: BorderRadius.circular(12.r),
+      trailingIcon: SlideTransition(
+        position: _slideAnimation,
+        child: Image.asset(
+          AppAssets.arrowIcon,
+          width: 18.w,
+          height: 18.w,
+          color: Colors.white,
+        ),
+      ),
+      onPressed: _handleTap,
     );
   }
 }

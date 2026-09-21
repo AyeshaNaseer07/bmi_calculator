@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/constants/app_assets.dart';
+
 class NextButton extends StatefulWidget {
   final VoidCallback onNext;
 
@@ -20,7 +22,7 @@ class _NextButtonState extends State<NextButton>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     );
 
@@ -28,6 +30,9 @@ class _NextButtonState extends State<NextButton>
       begin: Offset.zero,
       end: const Offset(0.6, 0),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    // Continuously bounce the arrow left → right → left
+    _controller.repeat(reverse: true);
   }
 
   @override
@@ -36,25 +41,13 @@ class _NextButtonState extends State<NextButton>
     super.dispose();
   }
 
-  Future<void> _handleTap() async {
+  void _handleTap() {
     if (_isNavigating) return;
     _isNavigating = true;
-
-    try {
-      await _controller.forward();
-      if (mounted) {
-        _controller.reverse();
-      }
-    } catch (_) {}
-
-    if (mounted) {
-      widget.onNext();
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          _isNavigating = false;
-        }
-      });
-    }
+    widget.onNext();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) _isNavigating = false;
+    });
   }
 
   @override
@@ -79,18 +72,19 @@ class _NextButtonState extends State<NextButton>
               'Next',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 14.sp,
+                fontSize: 16.sp,
                 fontFamily: 'Outfit',
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w800,
               ),
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: 18.w),
             SlideTransition(
               position: _slideAnimation,
-              child: const Icon(
-                Icons.arrow_forward_rounded,
+              child: Image.asset(
+                AppAssets.arrowIcon,
+                width: 18.w,
+                height: 18.w,
                 color: Colors.white,
-                size: 16,
               ),
             ),
           ],

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +34,13 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   bool _isLoaded = false;
   bool _isFailed = false;
 
+  // Close (X) button only appears after this many seconds; until then a
+  // countdown circle is shown and swiping away this page is disabled — the
+  // only way forward is tapping the X once it appears.
+  static const int _closeDelaySeconds = 4;
+  int _remainingSeconds = _closeDelaySeconds;
+  Timer? _countdownTimer;
+
   bool get _isAdsEnabled {
     if (Get.isRegistered<AppController>()) {
       if (Get.find<AppController>().isPremium.value) return false;
@@ -62,6 +71,22 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   void initState() {
     super.initState();
     _loadAd();
+    _startCountdown();
+  }
+
+  void _startCountdown() {
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      if (_remainingSeconds <= 1) {
+        timer.cancel();
+        setState(() => _remainingSeconds = 0);
+        return;
+      }
+      setState(() => _remainingSeconds--);
+    });
   }
 
   void _loadAd() {
@@ -148,6 +173,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
 
   @override
   void dispose() {
+    _countdownTimer?.cancel();
     _nativeAd?.dispose();
     super.dispose();
   }
@@ -171,53 +197,70 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
                 : const FullScreenNativeAdShimmer(),
           ),
 
-          // Top Right Skip / Next button
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 14, left: 18),
-                child: GestureDetector(
-                  onTap: widget.onNext,
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 6,
-                    ),
-                    decoration: ShapeDecoration(
-                      color: const Color(0x4F33D2AB),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Skip',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: 'Outfit',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 11,
-                          color: Colors.black87,
-                        ),
-                      ],
-                    ),
+          // Top-right countdown -> close (X) control. Nothing is tappable (and
+          // swiping is disabled by the parent PageView) until the countdown
+          // reaches zero and the X appears; tapping the X is the only way to
+          // advance.
+          // Same row as the native AD badge: the native header starts at
+          // max(top inset, 20) and centres its items 30pt below that.
+          Positioned(
+            top: math.max(MediaQuery.of(context).padding.top, 20) + 16,
+            right: 15,
+            child: _remainingSeconds > 0
+                ? _CountdownBadge(seconds: _remainingSeconds)
+                : GestureDetector(
+                    onTap: widget.onNext,
+                    behavior: HitTestBehavior.opaque,
+                    child: const _CloseBadge(),
                   ),
-                ),
-              ),
-            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CountdownBadge extends StatelessWidget {
+  final int seconds;
+
+  const _CountdownBadge({required this.seconds});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: const BoxDecoration(
+        color: Color(0xFF8E8E8E),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        '$seconds',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _CloseBadge extends StatelessWidget {
+  const _CloseBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: const BoxDecoration(
+        color: Color(0xFF8E8E8E),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: const Icon(Icons.close, size: 16, color: Colors.white),
     );
   }
 }

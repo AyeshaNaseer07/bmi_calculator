@@ -223,10 +223,10 @@ class CTAImageButton: UIButton {
         clipsToBounds = true
         layer.cornerRadius = 23
 
-        // Gradient Layer fallback matching btn.webp colors (#24CCA7 to #0288D1)
+        // Gradient Layer fallback matching the solid blue button color (#2B87E8)
         gradientLayer.colors = [
-            UIColor(red: 0x24/255.0, green: 0xCC/255.0, blue: 0xA7/255.0, alpha: 1.0).cgColor,
-            UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0).cgColor
+            UIColor(red: 0x2B/255.0, green: 0x87/255.0, blue: 0xE8/255.0, alpha: 1.0).cgColor,
+            UIColor(red: 0x2B/255.0, green: 0x87/255.0, blue: 0xE8/255.0, alpha: 1.0).cgColor
         ]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)

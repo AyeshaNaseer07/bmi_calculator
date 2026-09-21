@@ -139,241 +139,240 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
-        children: [
-          // ── Main content ──
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header row
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'languages'.tr,
-                              style: TextStyle(
-                                color: const Color(0xFF111827),
-                                fontSize: 26.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                height: 1.2,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              'select_lang_subtitle'.tr,
-                              style: TextStyle(
-                                color: const Color(0xFF374151),
-                                fontSize: 12.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 16.w),
-                      GestureDetector(
-                        key: _doneButtonKey,
-                        onTap: _onDone,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Image.asset(
-                              AppAssets.btnBg,
-                              width: 80.w,
-                              height: 70.h,
-                            ),
-                            Text(
-                              'done'.tr,
-                              style: TextStyle(
-                                color: const Color(0xFF0F766E),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-
-                  // Language tiles — plain, no animations
-                  ...List.generate(
-                    LocalizationService.supportedLanguages.length,
-                    (index) {
-                      final lang =
-                          LocalizationService.supportedLanguages[index];
-                      final isSelected = _selectedLang == lang.code;
-                      final isFirstItem = index == 0;
-
-                      final tile = Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
-                        child: GestureDetector(
-                          onTap: () => _onLanguageTap(lang.code),
-                          child: Container(
-                            key: isFirstItem ? _firstTileKey : null,
-                            width: double.infinity,
-                            height: 56.h,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFF2FD1A6)
-                                          .withValues(alpha: 0.6)
-                                    : const Color(0xFFE5E7EB),
-                                width: isSelected ? 1.8.w : 1.0.w,
-                              ),
-                              borderRadius: BorderRadius.circular(12.r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.03),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
+          children: [
+            // ── Main content ──
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header row
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'languages'.tr,
+                                style: TextStyle(
+                                  color: const Color(0xFF111827),
+                                  fontSize: 26.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.2,
                                 ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    lang.flag,
-                                    style: TextStyle(fontSize: 28.sp),
-                                  ),
-                                  SizedBox(width: 12.w),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          lang.nativeName,
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xFF111827),
-                                            fontFamily: 'Inter',
-                                          ),
-                                        ),
-                                        if (lang.nativeName !=
-                                            lang.englishName) ...[
-                                          SizedBox(height: 2.h),
-                                          Text(
-                                            lang.englishName,
-                                            style: TextStyle(
-                                              fontSize: 12.sp,
-                                              color: const Color(0xFF9CA3AF),
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 12.w),
-                                  Container(
-                                    width: 24.w,
-                                    height: 24.w,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: isSelected
-                                          ? const Color(0xFF2FD1A6)
-                                          : const Color(0xFFE5E7EB),
-                                    ),
-                                    child: isSelected
-                                        ? Icon(
-                                            CupertinoIcons.checkmark_alt,
-                                            size: 13.sp,
-                                            color: Colors.white,
-                                          )
-                                        : null,
+                              ),
+                              SizedBox(height: 8.h),
+                              Text(
+                                'select_lang_subtitle'.tr,
+                                style: TextStyle(
+                                  color: const Color(0xFF374151),
+                                  fontSize: 12.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 16.w),
+                        GestureDetector(
+                          key: _doneButtonKey,
+                          onTap: _onDone,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset(
+                                AppAssets.btnBg,
+                                width: 80.w,
+                                height: 70.h,
+                              ),
+                              Text(
+                                'done'.tr,
+                                style: TextStyle(
+                                  color: const Color(0xFF0F766E),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+
+                    // Language tiles — plain, no animations
+                    ...List.generate(
+                      LocalizationService.supportedLanguages.length,
+                      (index) {
+                        final lang =
+                            LocalizationService.supportedLanguages[index];
+                        final isSelected = _selectedLang == lang.code;
+                        final isFirstItem = index == 0;
+
+                        final tile = Padding(
+                          padding: EdgeInsets.only(bottom: 12.h),
+                          child: GestureDetector(
+                            onTap: () => _onLanguageTap(lang.code),
+                            child: Container(
+                              key: isFirstItem ? _firstTileKey : null,
+                              width: double.infinity,
+                              height: 56.h,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFF2FD1A6)
+                                            .withValues(alpha: 0.6)
+                                      : const Color(0xFFE5E7EB),
+                                  width: isSelected ? 1.8.w : 1.0.w,
+                                ),
+                                borderRadius: BorderRadius.circular(12.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.03),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-
-                      // Overlay tapping hand on first tile only
-                      if (isFirstItem && _handPhase == _HandPhase.tapping) {
-                        return Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            tile,
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              top: 0,
-                              bottom: 12.h,
-                              child: IgnorePointer(
-                                child: _TapHandHint(
-                                  controller: _handController,
-                                  offsetX: _handOffsetX,
-                                  offsetY: _handOffsetY,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      lang.flag,
+                                      style: TextStyle(fontSize: 28.sp),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            lang.nativeName,
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xFF111827),
+                                              fontFamily: 'Inter',
+                                            ),
+                                          ),
+                                          if (lang.nativeName !=
+                                              lang.englishName) ...[
+                                            SizedBox(height: 2.h),
+                                            Text(
+                                              lang.englishName,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: const Color(0xFF9CA3AF),
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Container(
+                                      width: 24.w,
+                                      height: 24.w,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: isSelected
+                                            ? const Color(0xFF2FD1A6)
+                                            : const Color(0xFFE5E7EB),
+                                      ),
+                                      child: isSelected
+                                          ? Icon(
+                                              CupertinoIcons.checkmark_alt,
+                                              size: 13.sp,
+                                              color: Colors.white,
+                                            )
+                                          : null,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         );
-                      }
 
-                      return tile;
-                    },
-                  ),
+                        // Overlay tapping hand on first tile only
+                        if (isFirstItem && _handPhase == _HandPhase.tapping) {
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              tile,
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                bottom: 12.h,
+                                child: IgnorePointer(
+                                  child: _TapHandHint(
+                                    controller: _handController,
+                                    offsetX: _handOffsetX,
+                                    offsetY: _handOffsetY,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
 
-                  SizedBox(height: 8.h),
-                ],
+                        return tile;
+                      },
+                    ),
+
+                    SizedBox(height: 8.h),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // ── Flying hand overlay (movingToDone phase) ──
-          if (_handPhase == _HandPhase.movingToDone &&
-              _moveAnimation != null &&
-              _moveFade != null)
-            AnimatedBuilder(
-              animation: _moveController,
-              builder: (ctx, child) {
-                final pos = _moveAnimation!.value;
-                return Positioned(
-                  left: pos.dx - 26.w,
-                  top: pos.dy - 26.h,
-                  child: Opacity(
-                    opacity: _moveFade!.value,
-                    child: Image.asset(
-                      AppAssets.selectLanguage,
-                      width: 52.w,
-                      height: 52.h,
-                      fit: BoxFit.contain,
+            // ── Flying hand overlay (movingToDone phase) ──
+            if (_handPhase == _HandPhase.movingToDone &&
+                _moveAnimation != null &&
+                _moveFade != null)
+              AnimatedBuilder(
+                animation: _moveController,
+                builder: (ctx, child) {
+                  final pos = _moveAnimation!.value;
+                  return Positioned(
+                    left: pos.dx - 26.w,
+                    top: pos.dy - 26.h,
+                    child: Opacity(
+                      opacity: _moveFade!.value,
+                      child: Image.asset(
+                        AppAssets.selectLanguage,
+                        width: 52.w,
+                        height: 52.h,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              ),
 
-          if (_handPhase == _HandPhase.tappingDone && _doneButtonCenter != null)
-            _DoneButtonHandOverlay(
-              controller: _handController,
-              center: _doneButtonCenter!,
-            ),
-        ],
-      ),
-      bottomNavigationBar: _bottomAdAvailable
-          ? SafeArea(
-              top: false,
-              child: Container(
+            if (_handPhase == _HandPhase.tappingDone &&
+                _doneButtonCenter != null)
+              _DoneButtonHandOverlay(
+                controller: _handController,
+                center: _doneButtonCenter!,
+              ),
+          ],
+        ),
+        bottomNavigationBar: _bottomAdAvailable
+            ? Container(
                 width: double.infinity,
                 color: Colors.transparent,
                 padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 10.h),
@@ -385,9 +384,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                     }
                   },
                 ),
-              ),
-            )
-          : null,
+              )
+            : null,
       ),
     );
   }

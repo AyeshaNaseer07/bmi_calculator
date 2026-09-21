@@ -2,191 +2,211 @@ import UIKit
 import GoogleMobileAds
 import google_mobile_ads
 
+/// Full-screen native ad shown between onboarding pages.
+///
+/// Geometry measured from the design (375 x 812 pt):
+///   - white header, 52pt tall below the top inset: AD badge on the left
+///     (the countdown / close control on the right is drawn by Flutter in
+///     full_screen_native_ad_page.dart, aligned to the same row)
+///   - media region filling the space between header and details, image
+///     aspect-fit so the creative is never cropped
+///   - 80pt rounded icon (centered), 9pt below the media
+///   - star row (centered), headline 22 bold + body 13 (left-aligned, 16pt margins)
+///   - 48pt gradient pill CTA, 53pt side margins, 15pt above the bottom safe area
 class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
+
+    private enum Layout {
+        static let minTopInset: CGFloat = 20
+        static let headerHeight: CGFloat = 52
+        static let sideMargin: CGFloat = 16
+        static let badgeTop: CGFloat = 21
+        static let badgeSize = CGSize(width: 36, height: 23)
+        static let mediaToIcon: CGFloat = 9
+        static let iconSize: CGFloat = 80
+        static let iconCornerRadius: CGFloat = 12
+        static let iconToStars: CGFloat = 10
+        static let starsToHeadline: CGFloat = 9
+        static let headlineToBody: CGFloat = 11
+        static let bodyToCTA: CGFloat = 20
+        static let ctaHeight: CGFloat = 48
+        static let ctaSideMargin: CGFloat = 53
+        static let ctaBottom: CGFloat = 15
+    }
+
+    private enum Palette {
+        static let badge = UIColor(red: 0x26/255.0, green: 0xF1/255.0, blue: 0xA5/255.0, alpha: 1)
+        static let iconBackground = UIColor(red: 0xF6/255.0, green: 0xF6/255.0, blue: 0xF6/255.0, alpha: 1)
+        static let starFilled = UIColor(red: 0xF9/255.0, green: 0xAE/255.0, blue: 0x0E/255.0, alpha: 1)
+        static let starEmpty = UIColor(red: 0xE8/255.0, green: 0xE7/255.0, blue: 0xE8/255.0, alpha: 1)
+        static let body = UIColor(red: 0x10/255.0, green: 0x10/255.0, blue: 0x10/255.0, alpha: 1)
+    }
+
     func createNativeAd(_ nativeAd: NativeAd, customOptions: [AnyHashable : Any]? = nil) -> NativeAdView? {
-        print("📢 [FullScreenNativeAdFactory] createNativeAd invoked: headline='\(nativeAd.headline ?? "N/A")', advertiser='\(nativeAd.advertiser ?? "N/A")', hasCallToAction='\(nativeAd.callToAction ?? "N/A")'")
-        let nativeAdView = NativeAdView()
-        nativeAdView.backgroundColor = .white
-        nativeAdView.clipsToBounds = true
-        nativeAdView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let adView = NativeAdView()
+        adView.backgroundColor = .white
+        adView.clipsToBounds = true
+        adView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        // 1. Top Section: Media Container (takes ~65% of screen)
-        let topMediaContainer = UIView()
-        topMediaContainer.translatesAutoresizingMaskIntoConstraints = false
-        topMediaContainer.backgroundColor = UIColor(red: 0xEE/255.0, green: 0xF0/255.0, blue: 0xF0/255.0, alpha: 1.0)
-        topMediaContainer.clipsToBounds = true
-        nativeAdView.addSubview(topMediaContainer)
+        // MARK: Header (AD badge)
+        let header = UIView()
+        header.translatesAutoresizingMaskIntoConstraints = false
+        header.backgroundColor = .white
+        adView.addSubview(header)
 
-        let mediaView = FullScreenAdMediaView()
-        mediaView.translatesAutoresizingMaskIntoConstraints = false
-        mediaView.contentMode = .scaleAspectFill
-        mediaView.clipsToBounds = true
-        topMediaContainer.addSubview(mediaView)
-
-        // AD Badge - Top Left
         let adBadge = UILabel()
         adBadge.translatesAutoresizingMaskIntoConstraints = false
         adBadge.text = "AD"
-        adBadge.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        adBadge.textColor = .white
-        adBadge.backgroundColor = UIColor(red: 0x1B/255.0, green: 0xD7/255.0, blue: 0x76/255.0, alpha: 1.0) // Bright Teal
+        adBadge.font = UIFont.systemFont(ofSize: 11, weight: .bold)
+        adBadge.textColor = .black
         adBadge.textAlignment = .center
-        adBadge.layer.cornerRadius = 4
+        adBadge.backgroundColor = Palette.badge
+        adBadge.layer.cornerRadius = 3
         adBadge.layer.masksToBounds = true
-        topMediaContainer.addSubview(adBadge)
+        header.addSubview(adBadge)
 
-        // Close Button - Top Right (Gray circle with X)
-        let closeButton = UIButton(type: .system)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.backgroundColor = UIColor(white: 0.5, alpha: 0.7)
-        closeButton.layer.cornerRadius = 16
-        closeButton.layer.masksToBounds = true
-        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.tintColor = .white
-        closeButton.isUserInteractionEnabled = false // Let GADNativeAdView handle
-        topMediaContainer.addSubview(closeButton)
+        // MARK: Media
+        let mediaContainer = UIView()
+        mediaContainer.translatesAutoresizingMaskIntoConstraints = false
+        mediaContainer.backgroundColor = .white
+        mediaContainer.clipsToBounds = true
+        adView.addSubview(mediaContainer)
 
-        // 2. Bottom Section: Details & CTA (takes ~35% of screen)
-        let bottomCard = UIView()
-        bottomCard.translatesAutoresizingMaskIntoConstraints = false
-        bottomCard.backgroundColor = .white
-        bottomCard.clipsToBounds = true
-        nativeAdView.addSubview(bottomCard)
+        let mediaView = FullScreenAdMediaView()
+        mediaView.translatesAutoresizingMaskIntoConstraints = false
+        mediaView.contentMode = .scaleAspectFit
+        mediaView.clipsToBounds = true
+        mediaContainer.addSubview(mediaView)
 
-        // Icon ImageView - Centered
+        let adChoicesView = AdChoicesView()
+        adChoicesView.translatesAutoresizingMaskIntoConstraints = false
+        mediaContainer.addSubview(adChoicesView)
+
+        // MARK: Details
         let iconImageView = UIImageView()
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.layer.cornerRadius = 28
-        iconImageView.layer.masksToBounds = true
         iconImageView.contentMode = .scaleAspectFill
-        iconImageView.backgroundColor = UIColor(red: 0xF5/255.0, green: 0xF5/255.0, blue: 0xF5/255.0, alpha: 1.0)
-        bottomCard.addSubview(iconImageView)
+        iconImageView.backgroundColor = Palette.iconBackground
+        iconImageView.layer.cornerRadius = Layout.iconCornerRadius
+        iconImageView.layer.masksToBounds = true
+        adView.addSubview(iconImageView)
 
-        // Headline Label
+        let starsLabel = UILabel()
+        starsLabel.translatesAutoresizingMaskIntoConstraints = false
+        starsLabel.textAlignment = .center
+        adView.addSubview(starsLabel)
+
         let headlineLabel = UILabel()
         headlineLabel.translatesAutoresizingMaskIntoConstraints = false
-        headlineLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        headlineLabel.textColor = UIColor(red: 0x1A/255.0, green: 0x25/255.0, blue: 0x2C/255.0, alpha: 1.0)
+        headlineLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+        headlineLabel.textColor = .black
+        headlineLabel.textAlignment = .left
         headlineLabel.numberOfLines = 1
         headlineLabel.lineBreakMode = .byTruncatingTail
-        headlineLabel.textAlignment = .center
-        bottomCard.addSubview(headlineLabel)
+        adView.addSubview(headlineLabel)
 
-        // VERIFIED: Stars Rating Stack
-        let starsStack = UIStackView()
-        starsStack.translatesAutoresizingMaskIntoConstraints = false
-        starsStack.axis = .horizontal
-        starsStack.spacing = 2
-        starsStack.alignment = .center
-        starsStack.distribution = .fillEqually
-        bottomCard.addSubview(starsStack)
-
-        let starRating = nativeAd.starRating?.doubleValue ?? 4.0
-        let fullStars = Int(starRating)
-        for _ in 0..<fullStars {
-            let starLabel = UILabel()
-            starLabel.text = "★"
-            starLabel.textColor = UIColor(red: 0xFA/255.0, green: 0xB0/255.0, blue: 0x05/255.0, alpha: 1.0) // Gold
-            starLabel.font = UIFont.systemFont(ofSize: 14)
-            starsStack.addArrangedSubview(starLabel)
-        }
-        for _ in fullStars..<5 {
-            let starLabel = UILabel()
-            starLabel.text = "★"
-            starLabel.textColor = UIColor(white: 0.88, alpha: 1.0)
-            starLabel.font = UIFont.systemFont(ofSize: 14)
-            starsStack.addArrangedSubview(starLabel)
-        }
-
-        // Body Label
         let bodyLabel = UILabel()
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         bodyLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        bodyLabel.textColor = UIColor(red: 0x5F/255.0, green: 0x6B/255.0, blue: 0x78/255.0, alpha: 1.0)
+        bodyLabel.textColor = Palette.body
+        bodyLabel.textAlignment = .left
         bodyLabel.numberOfLines = 3
         bodyLabel.lineBreakMode = .byTruncatingTail
-        bodyLabel.textAlignment = .center
-        bottomCard.addSubview(bodyLabel)
+        adView.addSubview(bodyLabel)
 
-        // Gradient Install Button
         let ctaButton = GradientButton(type: .custom)
         ctaButton.translatesAutoresizingMaskIntoConstraints = false
-        ctaButton.layer.cornerRadius = 24
+        ctaButton.layer.cornerRadius = Layout.ctaHeight / 2
         ctaButton.layer.masksToBounds = true
-        ctaButton.setTitleColor(.white, for: .normal)
-        ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        ctaButton.isUserInteractionEnabled = false
-        bottomCard.addSubview(ctaButton)
+        ctaButton.setTitleColor(.black, for: .normal)
+        ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        ctaButton.isUserInteractionEnabled = false // NativeAdView handles the click
+        adView.addSubview(ctaButton)
 
-        // Constraints
-        NSLayoutConstraint.activate([
-            // Top Media Container (occupies top 65% of view)
-            topMediaContainer.topAnchor.constraint(equalTo: nativeAdView.topAnchor),
-            topMediaContainer.leadingAnchor.constraint(equalTo: nativeAdView.leadingAnchor),
-            topMediaContainer.trailingAnchor.constraint(equalTo: nativeAdView.trailingAnchor),
-            topMediaContainer.heightAnchor.constraint(equalTo: nativeAdView.heightAnchor, multiplier: 0.65),
+        // MARK: Constraints
+        // Header sits under the status bar / notch, but never closer than 20pt
+        // to the top (matches the design on devices without a notch).
+        let headerToSafeArea = header.topAnchor.constraint(equalTo: adView.safeAreaLayoutGuide.topAnchor)
+        headerToSafeArea.priority = .defaultHigh
 
-            // Media View fills entire top container
-            mediaView.topAnchor.constraint(equalTo: topMediaContainer.topAnchor),
-            mediaView.leadingAnchor.constraint(equalTo: topMediaContainer.leadingAnchor),
-            mediaView.trailingAnchor.constraint(equalTo: topMediaContainer.trailingAnchor),
-            mediaView.bottomAnchor.constraint(equalTo: topMediaContainer.bottomAnchor),
+        var constraints: [NSLayoutConstraint] = [
+            headerToSafeArea,
+            header.topAnchor.constraint(greaterThanOrEqualTo: adView.topAnchor, constant: Layout.minTopInset),
+            header.leadingAnchor.constraint(equalTo: adView.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: adView.trailingAnchor),
+            header.heightAnchor.constraint(equalToConstant: Layout.headerHeight),
 
-            // AD Badge - Top Left
-            adBadge.topAnchor.constraint(equalTo: topMediaContainer.topAnchor, constant: 12),
-            adBadge.leadingAnchor.constraint(equalTo: topMediaContainer.leadingAnchor, constant: 12),
-            adBadge.widthAnchor.constraint(equalToConstant: 36),
-            adBadge.heightAnchor.constraint(equalToConstant: 24),
+            adBadge.topAnchor.constraint(equalTo: header.topAnchor, constant: Layout.badgeTop),
+            adBadge.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: Layout.sideMargin),
+            adBadge.widthAnchor.constraint(equalToConstant: Layout.badgeSize.width),
+            adBadge.heightAnchor.constraint(equalToConstant: Layout.badgeSize.height),
 
-            // Close Button - Top Right
-            closeButton.topAnchor.constraint(equalTo: topMediaContainer.topAnchor, constant: 12),
-            closeButton.trailingAnchor.constraint(equalTo: topMediaContainer.trailingAnchor, constant: -12),
-            closeButton.widthAnchor.constraint(equalToConstant: 32),
-            closeButton.heightAnchor.constraint(equalToConstant: 32),
+            mediaContainer.topAnchor.constraint(equalTo: header.bottomAnchor),
+            mediaContainer.leadingAnchor.constraint(equalTo: adView.leadingAnchor),
+            mediaContainer.trailingAnchor.constraint(equalTo: adView.trailingAnchor),
+            mediaContainer.bottomAnchor.constraint(equalTo: iconImageView.topAnchor, constant: -Layout.mediaToIcon),
 
-            // Bottom Card below media
-            bottomCard.topAnchor.constraint(equalTo: topMediaContainer.bottomAnchor),
-            bottomCard.leadingAnchor.constraint(equalTo: nativeAdView.leadingAnchor),
-            bottomCard.trailingAnchor.constraint(equalTo: nativeAdView.trailingAnchor),
-            bottomCard.bottomAnchor.constraint(equalTo: nativeAdView.bottomAnchor),
+            adChoicesView.topAnchor.constraint(equalTo: mediaContainer.topAnchor, constant: 4),
+            adChoicesView.trailingAnchor.constraint(equalTo: mediaContainer.trailingAnchor, constant: -4),
 
-            // Icon centered at top of bottom card
-            iconImageView.topAnchor.constraint(equalTo: bottomCard.topAnchor, constant: 16),
-            iconImageView.centerXAnchor.constraint(equalTo: bottomCard.centerXAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 56),
-            iconImageView.heightAnchor.constraint(equalToConstant: 56),
+            iconImageView.centerXAnchor.constraint(equalTo: adView.centerXAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: Layout.iconSize),
+            iconImageView.heightAnchor.constraint(equalToConstant: Layout.iconSize),
 
-            // Headline centered below icon
-            headlineLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 12),
-            headlineLabel.leadingAnchor.constraint(equalTo: bottomCard.leadingAnchor, constant: 16),
-            headlineLabel.trailingAnchor.constraint(equalTo: bottomCard.trailingAnchor, constant: -16),
+            starsLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: Layout.iconToStars),
+            starsLabel.centerXAnchor.constraint(equalTo: adView.centerXAnchor),
 
-            // Stars centered below headline
-            starsStack.topAnchor.constraint(equalTo: headlineLabel.bottomAnchor, constant: 6),
-            starsStack.centerXAnchor.constraint(equalTo: bottomCard.centerXAnchor),
-            starsStack.widthAnchor.constraint(equalToConstant: 85),
+            headlineLabel.topAnchor.constraint(equalTo: starsLabel.bottomAnchor, constant: Layout.starsToHeadline),
+            headlineLabel.leadingAnchor.constraint(equalTo: adView.leadingAnchor, constant: Layout.sideMargin),
+            headlineLabel.trailingAnchor.constraint(equalTo: adView.trailingAnchor, constant: -Layout.sideMargin),
 
-            // Body text centered below stars
-            bodyLabel.topAnchor.constraint(equalTo: starsStack.bottomAnchor, constant: 6),
-            bodyLabel.leadingAnchor.constraint(equalTo: bottomCard.leadingAnchor, constant: 16),
-            bodyLabel.trailingAnchor.constraint(equalTo: bottomCard.trailingAnchor, constant: -16),
+            bodyLabel.topAnchor.constraint(equalTo: headlineLabel.bottomAnchor, constant: Layout.headlineToBody),
+            bodyLabel.leadingAnchor.constraint(equalTo: adView.leadingAnchor, constant: Layout.sideMargin),
+            bodyLabel.trailingAnchor.constraint(equalTo: adView.trailingAnchor, constant: -Layout.sideMargin),
 
-            // CTA Button at bottom
-            ctaButton.leadingAnchor.constraint(equalTo: bottomCard.leadingAnchor, constant: 20),
-            ctaButton.trailingAnchor.constraint(equalTo: bottomCard.trailingAnchor, constant: -20),
-            ctaButton.heightAnchor.constraint(equalToConstant: 48),
-            ctaButton.bottomAnchor.constraint(equalTo: bottomCard.safeAreaLayoutGuide.bottomAnchor, constant: -16)
-        ])
+            ctaButton.topAnchor.constraint(equalTo: bodyLabel.bottomAnchor, constant: Layout.bodyToCTA),
+            ctaButton.leadingAnchor.constraint(equalTo: adView.leadingAnchor, constant: Layout.ctaSideMargin),
+            ctaButton.trailingAnchor.constraint(equalTo: adView.trailingAnchor, constant: -Layout.ctaSideMargin),
+            ctaButton.heightAnchor.constraint(equalToConstant: Layout.ctaHeight),
+            ctaButton.bottomAnchor.constraint(equalTo: adView.safeAreaLayoutGuide.bottomAnchor, constant: -Layout.ctaBottom),
+        ]
 
-        // Register views
-        nativeAdView.headlineView = headlineLabel
-        nativeAdView.bodyView = bodyLabel
-        nativeAdView.iconView = iconImageView
-        nativeAdView.mediaView = mediaView
-        nativeAdView.callToActionView = ctaButton
-        nativeAdView.starRatingView = starsStack
+        // Media: centered in its region at the creative's own aspect ratio,
+        // as large as fits -> full width for tall creatives, never cropped.
+        let aspectRatio = nativeAd.mediaContent.aspectRatio
+        if aspectRatio > 0 {
+            let fillWidth = mediaView.widthAnchor.constraint(equalTo: mediaContainer.widthAnchor)
+            fillWidth.priority = UILayoutPriority(750)
+            let fillHeight = mediaView.heightAnchor.constraint(equalTo: mediaContainer.heightAnchor)
+            fillHeight.priority = UILayoutPriority(740)
+            constraints += [
+                mediaView.centerXAnchor.constraint(equalTo: mediaContainer.centerXAnchor),
+                mediaView.centerYAnchor.constraint(equalTo: mediaContainer.centerYAnchor),
+                mediaView.widthAnchor.constraint(lessThanOrEqualTo: mediaContainer.widthAnchor),
+                mediaView.heightAnchor.constraint(lessThanOrEqualTo: mediaContainer.heightAnchor),
+                mediaView.widthAnchor.constraint(equalTo: mediaView.heightAnchor, multiplier: aspectRatio),
+                fillWidth,
+                fillHeight,
+            ]
+        } else {
+            constraints += [
+                mediaView.topAnchor.constraint(equalTo: mediaContainer.topAnchor),
+                mediaView.leadingAnchor.constraint(equalTo: mediaContainer.leadingAnchor),
+                mediaView.trailingAnchor.constraint(equalTo: mediaContainer.trailingAnchor),
+                mediaView.bottomAnchor.constraint(equalTo: mediaContainer.bottomAnchor),
+            ]
+        }
+        NSLayoutConstraint.activate(constraints)
 
-        // Populate content
+        // MARK: Register asset views
+        adView.headlineView = headlineLabel
+        adView.bodyView = bodyLabel
+        adView.iconView = iconImageView
+        adView.mediaView = mediaView
+        adView.callToActionView = ctaButton
+        adView.starRatingView = starsLabel
+        adView.adChoicesView = adChoicesView
+
+        // MARK: Populate
         headlineLabel.text = nativeAd.headline
         bodyLabel.text = nativeAd.body
 
@@ -194,7 +214,16 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
             iconImageView.image = icon
             iconImageView.isHidden = false
         } else {
-            iconImageView.isHidden = true
+            iconImageView.image = nil
+        }
+
+        // Only show a rating the advertiser actually supplied.
+        if let rating = nativeAd.starRating?.doubleValue, rating > 0 {
+            starsLabel.attributedText = Self.stars(for: rating)
+            starsLabel.isHidden = false
+        } else {
+            starsLabel.attributedText = nil
+            starsLabel.isHidden = true
         }
 
         if let cta = nativeAd.callToAction, !cta.isEmpty {
@@ -205,37 +234,51 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
 
         mediaView.mediaContent = nativeAd.mediaContent
 
-        nativeAdView.nativeAd = nativeAd
-        print("✅ [FullScreenNativeAdFactory] nativeAdView successfully configured and returned")
-        return nativeAdView
+        adView.nativeAd = nativeAd
+        return adView
+    }
+
+    private static func stars(for rating: Double) -> NSAttributedString {
+        let filled = max(0, min(5, Int(rating.rounded())))
+        let font = UIFont.systemFont(ofSize: 12)
+        let result = NSMutableAttributedString()
+        for index in 0..<5 {
+            let color = index < filled ? Palette.starFilled : Palette.starEmpty
+            result.append(NSAttributedString(string: "\u{2605}", attributes: [
+                .font: font,
+                .foregroundColor: color,
+            ]))
+        }
+        return result
     }
 }
 
-// MediaView subclass enforcing aspect-fill scaling on all image/video subviews to fill container edge-to-edge
+// MediaView subclass forcing aspect-fit on the image/video subviews the SDK
+// inserts, so the creative is always shown in full, never cropped.
 private class FullScreenAdMediaView: MediaView {
     override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
-        applyAspectFill(to: subview)
+        applyAspectFit(to: subview)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         for subview in subviews {
-            applyAspectFill(to: subview)
+            applyAspectFit(to: subview)
         }
     }
 
-    private func applyAspectFill(to view: UIView) {
-        view.contentMode = .scaleAspectFill
+    private func applyAspectFit(to view: UIView) {
+        view.contentMode = .scaleAspectFit
         view.clipsToBounds = true
         for child in view.subviews {
-            child.contentMode = .scaleAspectFill
+            child.contentMode = .scaleAspectFit
             child.clipsToBounds = true
         }
     }
 }
 
-// Gradient button for CTA
+// Gradient pill for the CTA — app brand gradient (#2FD1A6 -> #168EE2).
 class GradientButton: UIButton {
     private let gradientLayer = CAGradientLayer()
 
@@ -251,8 +294,8 @@ class GradientButton: UIButton {
 
     private func setupGradient() {
         gradientLayer.colors = [
-            UIColor(red: 0x24/255.0, green: 0xCC/255.0, blue: 0xA7/255.0, alpha: 1.0).cgColor, // App Teal
-            UIColor(red: 0x02/255.0, green: 0x88/255.0, blue: 0xD1/255.0, alpha: 1.0).cgColor  // Sky Blue
+            UIColor(red: 0x2F/255.0, green: 0xD1/255.0, blue: 0xA6/255.0, alpha: 1).cgColor,
+            UIColor(red: 0x16/255.0, green: 0x8E/255.0, blue: 0xE2/255.0, alpha: 1).cgColor,
         ]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
