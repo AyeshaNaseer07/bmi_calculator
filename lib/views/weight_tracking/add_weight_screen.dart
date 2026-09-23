@@ -21,19 +21,50 @@ class AddWeightScreen extends StatefulWidget {
 class _AddWeightScreenState extends State<AddWeightScreen> {
   final WeightTrackerController _controller =
       Get.find<WeightTrackerController>();
-  final TextEditingController _weightController = TextEditingController();
+
+  final TextEditingController _currentWeightController =
+      TextEditingController();
+  final TextEditingController _goalWeightController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
 
   String _selectedGender = 'Select';
   bool _isGenderMenuOpen = false;
 
+  @override
+  void initState() {
+    super.initState();
+    if (_controller.currentWeight.value > 0) {
+      _currentWeightController.text = _controller.currentWeight.value
+          .toStringAsFixed(1);
+    }
+    if (_controller.goalWeight.value > 0) {
+      _goalWeightController.text = _controller.goalWeight.value.toStringAsFixed(
+        1,
+      );
+    }
+  }
+
   void _onSave() async {
-    final weight = double.tryParse(_weightController.text.trim()) ?? 70.0;
-    await _controller.addWeight(weight, DateTime.now());
+    final current =
+        double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
+    final goal = double.tryParse(_goalWeightController.text.trim()) ?? 0.0;
+
+    if (current <= 0) {
+      Get.snackbar(
+        'Invalid',
+        'Please enter your current weight.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    await _controller.addWeight(current, DateTime.now(), goalWeight: goal);
     Get.back();
     Get.snackbar(
-      'Success',
+      'Saved',
       'Weight record saved successfully!',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.primaryTeal,
@@ -43,7 +74,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
   @override
   void dispose() {
-    _weightController.dispose();
+    _currentWeightController.dispose();
+    _goalWeightController.dispose();
     _ageController.dispose();
     _heightController.dispose();
     super.dispose();
@@ -62,7 +94,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         },
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: const CustomAppBar(title: 'Weight Tracking'),
+          appBar: const CustomAppBar(title: 'Add Weight'),
           body: SafeArea(
             child: Stack(
               clipBehavior: Clip.none,
@@ -75,14 +107,19 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                   ),
                   child: Column(
                     children: [
-                      // Weight Input Field
-                      _buildInputField(
-                        controller: _weightController,
-                        label: 'Weight',
-                        hint: '00',
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
+                      // Current Weight
+                      _buildWeightInputField(
+                        controller: _currentWeightController,
+                        label: 'Current Weight',
+                        hint: '00.0',
+                      ),
+                      SizedBox(height: 16.h),
+
+                      // Goal Weight
+                      _buildWeightInputField(
+                        controller: _goalWeightController,
+                        label: 'Goal Weight',
+                        hint: '00.0',
                       ),
                       SizedBox(height: 16.h),
 
@@ -189,7 +226,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       _buildInputField(
                         controller: _heightController,
                         label: 'Height',
-                        hint: '0,0',
+                        hint: '0.0',
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
@@ -232,6 +269,58 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     );
   }
 
+  /// Weight field with teal "kg" unit
+  Widget _buildWeightInputField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+  }) {
+    return _buildCardContainer(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              style: const TextStyle(
+                color: Color(0xFF4B5563),
+                fontSize: 17,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: hint,
+                hintStyle: const TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 17,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+          ),
+
+          Text(
+            label,
+            style: const TextStyle(
+              color: Color(0xFF6B7280),
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Generic input field for Age and Height
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,

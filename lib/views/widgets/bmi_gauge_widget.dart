@@ -106,7 +106,7 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
     final effectiveSize = widget.size ?? 200.w;
     final gaugeHeight = widget.showValueCenter
         ? effectiveSize * 0.72
-        : (widget.showLabels ? effectiveSize * 0.60 : effectiveSize * 0.54);
+        : (widget.showLabels ? effectiveSize * 0.68 : effectiveSize * 0.54);
 
     return AnimatedBuilder(
       animation: _animation,
@@ -240,10 +240,10 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
 
     // Pivot Circle
     final pivotHalo = Paint()
-      ..color = const Color(0xFF2FD1A6).withValues(alpha: 0.25)
+      ..color = const Color(0xFF2FD1A6).withValues(alpha: 0.90)
       ..style = PaintingStyle.fill;
     final pivotOuter = Paint()..color = const Color(0xFF1E293B);
-    final pivotInner = Paint()..color = const Color(0xFF2FD1A6);
+    final pivotInner = Paint()..color = Colors.white;
 
     final outerRadius = size.width * 0.038;
     final innerRadius = size.width * 0.020;
@@ -254,16 +254,8 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
 
     // Labels below arc ends
     if (showLabels) {
-      final numFontSize = (size.width * 0.068).clamp(10.0, 13.0);
       final subFontSize = (size.width * 0.055).clamp(8.5, 11.0);
 
-      final numStyle = TextStyle(
-        color: const Color(0xFF1E2D2F),
-        fontSize: numFontSize,
-        fontWeight: FontWeight.w700,
-        fontFamily: 'Outfit',
-        height: 1.15,
-      );
       final subStyle = TextStyle(
         color: const Color(0xFF8C9EA0),
         fontSize: subFontSize,
@@ -273,40 +265,80 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       );
 
       final textPainterLow = TextPainter(
-        text: TextSpan(
-          children: [
-            TextSpan(text: '18.5\n', style: numStyle),
-            TextSpan(text: 'Low', style: subStyle),
-          ],
-        ),
+        text: TextSpan(text: 'Low', style: subStyle),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
       textPainterLow.paint(
         canvas,
         Offset(
-          (size.width * 0.125) - (textPainterLow.width / 2),
-          center.dy + size.width * 0.015,
+          (size.width * 0.115) - (textPainterLow.width / 2),
+          center.dy + size.width * 0.018,
         ),
       );
 
       final textPainterHigh = TextPainter(
-        text: TextSpan(
-          children: [
-            TextSpan(text: '24.9\n', style: numStyle),
-            TextSpan(text: 'High', style: subStyle),
-          ],
-        ),
+        text: TextSpan(text: 'High', style: subStyle),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
       textPainterHigh.paint(
         canvas,
         Offset(
-          (size.width * 0.875) - (textPainterHigh.width / 2),
-          center.dy + size.width * 0.015,
+          (size.width * 0.885) - (textPainterHigh.width / 2),
+          center.dy + size.width * 0.018,
         ),
       );
+
+      // ── Arc unit labels above the gauge arc ──────────────────────────────
+      // BMI thresholds mapped to their 0-1 gauge progress values:
+      //   9.9  -> 0.0  (far left)
+      //  18.5  -> 0.25
+      //  24.9  -> 0.50 (top)
+      //  29.9  -> 0.75
+      //  34.9  -> 1.0  (far right)
+      const arcLabels = <(String, double)>[
+        ('9.9', 0.0),
+        ('18.5', 0.25),
+        ('24.9', 0.50),
+        ('29.9', 0.75),
+        ('34.9', 1.0),
+      ];
+
+      final arcLabelFontSize = (size.width * 0.062).clamp(9.0, 12.0);
+      final arcLabelStyle = TextStyle(
+        color: const Color(0xFF1E2D2F),
+        fontSize: arcLabelFontSize,
+        fontWeight: FontWeight.w700,
+        fontFamily: 'Outfit',
+      );
+
+      // Offset from the arc outward (above the arc)
+      final labelOffset = size.width * 0.060;
+
+      for (final (label, prog) in arcLabels) {
+        // Convert progress (0→1) to angle: 0→π (left), 0.5→π/2 (top), 1→0 (right)
+        final angle = math.pi - (prog * math.pi);
+
+        // Position outward beyond the arc radius by labelOffset
+        final labelRadius = radius + labelOffset;
+        final labelCenter = Offset(
+          center.dx + labelRadius * math.cos(angle),
+          center.dy - labelRadius * math.sin(angle),
+        );
+
+        final tp = TextPainter(
+          text: TextSpan(text: label, style: arcLabelStyle),
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+        )..layout();
+
+        tp.paint(
+          canvas,
+          Offset(labelCenter.dx - tp.width / 2, labelCenter.dy - tp.height / 2),
+        );
+      }
+      // ────────────────────────────────────────────────────────────────────
     }
   }
 

@@ -237,7 +237,7 @@ class HomeScreen extends StatelessWidget {
       borderRadius: 22.r,
       child: Column(
         children: [
-          BMIGaugeWidget(bmiValue: 25.0, size: 160.w, showLabels: false),
+          BMIGaugeWidget(bmiValue: 25.0, size: 160.w, showLabels: true),
           SizedBox(height: 14.h),
           Text(
             'No BMI Record Yet',

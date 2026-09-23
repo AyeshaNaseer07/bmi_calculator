@@ -10,6 +10,10 @@ import '../data/services/subscription_service.dart';
 
 class AppController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
+
+  /// Exposes the underlying storage so external callers (e.g. SplashScreen)
+  /// can reset persisted flags like onboardingSeen on every launch.
+  StorageService get storage => _storage;
   late final SubscriptionService subscriptionService;
 
   RemoteConfigService get remoteConfigService {

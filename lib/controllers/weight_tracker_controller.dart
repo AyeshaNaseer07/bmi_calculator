@@ -12,9 +12,9 @@ class WeightTrackerController extends GetxController {
   final RxString selectedTimeframe = 'week'.obs;
   final RxList<WeightRecord> weightHistory = <WeightRecord>[].obs;
 
-  final RxDouble progressThisWeek = (-1.2).obs;
-  final RxDouble progressThisMonth = (-3.5).obs;
-  final RxDouble progressTotal = (-8.0).obs;
+  final RxDouble progressThisWeek = 0.0.obs;
+  final RxDouble progressThisMonth = 0.0.obs;
+  final RxDouble progressTotal = 0.0.obs;
 
   @override
   void onInit() {
@@ -32,26 +32,13 @@ class WeightTrackerController extends GetxController {
       goalWeight.value = profile.goalWeightKg > 0 ? profile.goalWeightKg : 60.0;
       _recalculateProgress();
     } else {
-      // Seed default initial data matching the UI design mockup
-      currentWeight.value = 70.0;
-      goalWeight.value = 60.0;
-      progressThisWeek.value = -1.2;
-      progressThisMonth.value = -3.5;
-      progressTotal.value = -8.0;
-
-      final now = DateTime.now();
-      const defaultWeights = [71.2, 71.0, 70.8, 70.5, 70.3, 70.2, 70.0];
-      final defaultRecords = <WeightRecord>[];
-      for (int i = 0; i < defaultWeights.length; i++) {
-        defaultRecords.add(
-          WeightRecord(
-            id: 'mock_$i',
-            weightKg: defaultWeights[i],
-            date: now.subtract(Duration(days: 6 - i)),
-          ),
-        );
-      }
-      weightHistory.assignAll(defaultRecords);
+      // No real data — leave history empty to show empty state
+      weightHistory.clear();
+      currentWeight.value = 0.0;
+      goalWeight.value = profile.goalWeightKg > 0 ? profile.goalWeightKg : 60.0;
+      progressThisWeek.value = 0.0;
+      progressThisMonth.value = 0.0;
+      progressTotal.value = 0.0;
     }
   }
 
@@ -83,7 +70,7 @@ class WeightTrackerController extends GetxController {
             .toStringAsFixed(1),
       );
     } else {
-      progressThisWeek.value = -1.2;
+      progressThisWeek.value = 0.0;
     }
 
     final monthRecords = sorted
@@ -95,7 +82,7 @@ class WeightTrackerController extends GetxController {
             .toStringAsFixed(1),
       );
     } else {
-      progressThisMonth.value = -3.5;
+      progressThisMonth.value = 0.0;
     }
   }
 
@@ -107,7 +94,12 @@ class WeightTrackerController extends GetxController {
     goalWeight.value = weight;
   }
 
-  Future<void> addWeight(double weight, DateTime date, {String? note}) async {
+  Future<void> addWeight(
+    double weight,
+    DateTime date, {
+    String? note,
+    double goalWeight = 0.0,
+  }) async {
     final newRecord = WeightRecord(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       weightKg: weight,
@@ -117,51 +109,140 @@ class WeightTrackerController extends GetxController {
     await _storage.addWeightRecord(newRecord);
     weightHistory.add(newRecord);
     currentWeight.value = weight;
-    if (goalWeight.value == 0.0) {
-      goalWeight.value = 60.0;
+    // Update goal weight if provided
+    if (goalWeight > 0) {
+      this.goalWeight.value = goalWeight;
+      final profile = _storage.getUserProfile();
+      _storage.saveUserProfile(profile.copyWith(goalWeightKg: goalWeight));
+    } else if (this.goalWeight.value == 0.0) {
+      this.goalWeight.value = 60.0;
     }
     _recalculateProgress();
   }
 
   List<FlSpot> getSpots() {
+    if (weightHistory.isEmpty) return [];
+
     final tf = selectedTimeframe.value.toLowerCase();
+    final sorted = List<WeightRecord>.from(weightHistory)
+      ..sort((a, b) => a.date.compareTo(b.date));
+    final now = DateTime.now();
 
     if (tf == 'week') {
-      // 7 points for Mon to Sun matching UI mockup: 71.2, 71.0, 70.8, 70.5, 70.3, 70.2, 70.0
-      if (weightHistory.length >= 7) {
-        final recent = weightHistory.sublist(weightHistory.length - 7);
-        return List.generate(
-          7,
-          (i) => FlSpot(i.toDouble(), recent[i].weightKg),
-        );
-      } else if (weightHistory.isNotEmpty) {
-        return List.generate(
-          weightHistory.length,
-          (i) => FlSpot(i.toDouble(), weightHistory[i].weightKg),
-        );
-      } else {
-        const defaultVals = [71.2, 71.0, 70.8, 70.5, 70.3, 70.2, 70.0];
-        return List.generate(7, (i) => FlSpot(i.toDouble(), defaultVals[i]));
+      // Map records to their weekday position (Mon=0 ... Sun=6)
+      // Use current Mon–Sun window
+      final monday = now.subtract(Duration(days: now.weekday - 1));
+      final weekStart = DateTime(monday.year, monday.month, monday.day);
+      // Build weekday -> latest weight map
+      final Map<int, double> dayMap = {};
+      for (final r in sorted) {
+        final dayIndex = r.date.difference(weekStart).inDays;
+        if (dayIndex >= 0 && dayIndex <= 6) {
+          dayMap[dayIndex] = r.weightKg; // last record wins
+        }
       }
+      if (dayMap.isNotEmpty) {
+        final spots =
+            dayMap.entries
+                .map((e) => FlSpot(e.key.toDouble(), e.value))
+                .toList()
+              ..sort((a, b) => a.x.compareTo(b.x));
+        return spots;
+      }
+      // Fallback: records outside current week — place at sequential positions
+      final recent = sorted.length > 7
+          ? sorted.sublist(sorted.length - 7)
+          : sorted;
+      return List.generate(
+        recent.length,
+        (i) => FlSpot(i.toDouble(), recent[i].weightKg),
+      );
     } else if (tf == 'month') {
-      // 7 points for Jan to Jul matching UI mockup: 71.2, 71.0, 70.8, 70.5, 70.3, 70.2, 70.0
-      const defaultVals = [71.2, 71.0, 70.8, 70.5, 70.3, 70.2, 70.0];
-      return List.generate(7, (i) => FlSpot(i.toDouble(), defaultVals[i]));
+      // Records in the last 30 days, grouped by day
+      final cutoff = now.subtract(const Duration(days: 30));
+      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
+      if (recent.isEmpty) return [];
+      // Up to 7 evenly spaced points
+      final step = (recent.length / 7).ceil();
+      final sampled = <WeightRecord>[];
+      for (int i = 0; i < recent.length; i += step) {
+        sampled.add(recent[i]);
+      }
+      if (sampled.last != recent.last) sampled.add(recent.last);
+      return List.generate(
+        sampled.length,
+        (i) => FlSpot(i.toDouble(), sampled[i].weightKg),
+      );
     } else {
-      // 7 points for Year (2021 to 2027)
-      const defaultVals = [76.0, 75.0, 73.5, 72.0, 71.2, 70.5, 70.0];
-      return List.generate(7, (i) => FlSpot(i.toDouble(), defaultVals[i]));
+      // Year: records in the last 12 months, up to 7 points
+      final cutoff = DateTime(now.year - 1, now.month, now.day);
+      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
+      if (recent.isEmpty) return [];
+      final step = (recent.length / 7).ceil();
+      final sampled = <WeightRecord>[];
+      for (int i = 0; i < recent.length; i += step) {
+        sampled.add(recent[i]);
+      }
+      if (sampled.last != recent.last) sampled.add(recent.last);
+      return List.generate(
+        sampled.length,
+        (i) => FlSpot(i.toDouble(), sampled[i].weightKg),
+      );
     }
+  }
+
+  /// Returns a flat horizontal dashed line at the goal weight value.
+  /// Spans the same X range as getSpots().
+  List<FlSpot> getGoalSpots() {
+    final goal = goalWeight.value;
+    if (goal <= 0) return [];
+    final spots = getSpots();
+    if (spots.isEmpty) return [];
+    final maxX = spots.last.x;
+    return [FlSpot(0, goal), FlSpot(maxX, goal)];
   }
 
   List<String> getXAxisLabels() {
     final tf = selectedTimeframe.value.toLowerCase();
+    final spots = getSpots();
+    final count = spots.length;
+
     if (tf == 'week') {
+      // Always return all 7 days so the chart spans Mon–Sun (maxX = 6)
       return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     } else if (tf == 'month') {
-      return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+      if (count == 0) return [];
+      // Generate relative day labels for each sampled point
+      final sorted = List<WeightRecord>.from(weightHistory)
+        ..sort((a, b) => a.date.compareTo(b.date));
+      final now = DateTime.now();
+      final cutoff = now.subtract(const Duration(days: 30));
+      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
+      if (recent.isEmpty) return [];
+      final step = (recent.length / 7).ceil();
+      final sampled = <WeightRecord>[];
+      for (int i = 0; i < recent.length; i += step) {
+        sampled.add(recent[i]);
+      }
+      if (sampled.last != recent.last) sampled.add(recent.last);
+      return sampled.map((r) => '${r.date.day}/${r.date.month}').toList();
     } else {
-      return ['2021', '2022', '2023', '2024', '2025', '2026', '2027'];
+      if (count == 0) return [];
+      final sorted = List<WeightRecord>.from(weightHistory)
+        ..sort((a, b) => a.date.compareTo(b.date));
+      final now = DateTime.now();
+      final cutoff = DateTime(now.year - 1, now.month, now.day);
+      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
+      if (recent.isEmpty) return [];
+      final step = (recent.length / 7).ceil();
+      final sampled = <WeightRecord>[];
+      for (int i = 0; i < recent.length; i += step) {
+        sampled.add(recent[i]);
+      }
+      if (sampled.last != recent.last) sampled.add(recent.last);
+      return sampled
+          .map((r) => '${r.date.month}/${r.date.year.toString().substring(2)}')
+          .toList();
     }
   }
 }

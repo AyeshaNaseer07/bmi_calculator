@@ -41,20 +41,16 @@ class _SplashScreenState extends State<SplashScreen>
     _navigationTimer = Timer(const Duration(seconds: 10), () {
       if (!mounted) return;
       final appController = Get.find<AppController>();
-      final isFirstTime = !appController.onboardingSeen.value;
 
-      if (isFirstTime) {
-        if (appController.remoteConfigService.isFirstTimeOnboardingEnabled) {
-          Get.offAllNamed(AppRoutes.languageSelection);
-        } else {
-          Get.offAllNamed(AppRoutes.home);
-        }
+      // Always reset onboarding flag so the full first-time flow
+      // (Language Selection → Onboarding → Paywall) is shown on every launch.
+      appController.onboardingSeen.value = false;
+      appController.storage.setOnboardingSeen(false);
+
+      if (appController.remoteConfigService.isFirstTimeOnboardingEnabled) {
+        Get.offAllNamed(AppRoutes.languageSelection);
       } else {
-        if (appController.remoteConfigService.isSecondTimeOnboardingEnabled) {
-          Get.offAllNamed(AppRoutes.onboarding);
-        } else {
-          Get.offAllNamed(AppRoutes.home);
-        }
+        Get.offAllNamed(AppRoutes.home);
       }
     });
   }

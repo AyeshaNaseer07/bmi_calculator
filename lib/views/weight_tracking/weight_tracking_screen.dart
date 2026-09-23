@@ -35,6 +35,7 @@ class WeightTrackingScreen extends StatelessWidget {
               final goal = controller.goalWeight.value;
               final timeframe = controller.selectedTimeframe.value;
               final spots = controller.getSpots();
+              final goalSpots = controller.getGoalSpots();
               final xLabels = controller.getXAxisLabels();
 
               final hasRecords = controller.weightHistory.isNotEmpty;
@@ -51,7 +52,7 @@ class WeightTrackingScreen extends StatelessWidget {
                   ? (goal > 0
                         ? (current / goal).clamp(0.0, 1.0)
                         : (current / 60.0).clamp(0.0, 1.0))
-                  : 0.58;
+                  : 0.05; // tiny 1–2cm arc fill when no records
 
               final pWeek = controller.progressThisWeek.value;
               final pMonth = controller.progressThisMonth.value;
@@ -66,49 +67,10 @@ class WeightTrackingScreen extends StatelessWidget {
                   ? '-0.0kg'
                   : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
 
-              double calculatedMinY = 66.0;
-              double calculatedMaxY = 74.0;
-              double calculatedInterval = 2.0;
-
-              if (spots.isNotEmpty) {
-                final yVals = spots.map((s) => s.y).toList();
-                final minW = yVals.reduce(math.min);
-                final maxW = yVals.reduce(math.max);
-                final span = maxW - minW;
-
-                if (span <= 3.0) {
-                  calculatedInterval = 2.0;
-                  calculatedMinY = (minW - 3.0).floorToDouble();
-                  calculatedMaxY = (maxW + 3.0).ceilToDouble();
-                  if (calculatedMinY.toInt() % 2 != 0) calculatedMinY -= 1.0;
-                  if (calculatedMaxY.toInt() % 2 != 0) calculatedMaxY += 1.0;
-                } else if (span <= 12.0) {
-                  calculatedInterval = 2.0;
-                  final pad = (span * 0.2).clamp(2.0, 4.0);
-                  calculatedMinY = ((minW - pad) / 2).floor() * 2.0;
-                  calculatedMaxY = ((maxW + pad) / 2).ceil() * 2.0;
-                } else if (span <= 25.0) {
-                  calculatedInterval = 5.0;
-                  final pad = (span * 0.15).clamp(3.0, 5.0);
-                  calculatedMinY = ((minW - pad) / 5).floor() * 5.0;
-                  calculatedMaxY = ((maxW + pad) / 5).ceil() * 5.0;
-                } else if (span <= 50.0) {
-                  calculatedInterval = 10.0;
-                  final pad = (span * 0.15).clamp(5.0, 10.0);
-                  calculatedMinY = ((minW - pad) / 10).floor() * 10.0;
-                  calculatedMaxY = ((maxW + pad) / 10).ceil() * 10.0;
-                } else {
-                  calculatedInterval = 20.0;
-                  final pad = (span * 0.12).clamp(8.0, 15.0);
-                  calculatedMinY = ((minW - pad) / 20).floor() * 20.0;
-                  calculatedMaxY = ((maxW + pad) / 20).ceil() * 20.0;
-                }
-
-                calculatedMinY = calculatedMinY.clamp(0.0, double.infinity);
-                if (calculatedMaxY - calculatedMinY < calculatedInterval * 3) {
-                  calculatedMaxY = calculatedMinY + calculatedInterval * 4;
-                }
-              }
+              // Fixed Y-axis scale: 0, 20, 40, 60, 80, 100, 120 — interval 20
+              const double calculatedMinY = 0.0;
+              const double calculatedMaxY = 120.0;
+              const double calculatedInterval = 20.0;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,7 +232,7 @@ class WeightTrackingScreen extends StatelessWidget {
                               ),
 
                               child: Row(
-                                children: ['week', 'Month', 'Year'].map((tab) {
+                                children: ['Week', 'Month', 'Year'].map((tab) {
                                   final isSelected =
                                       timeframe.toLowerCase() ==
                                       tab.toLowerCase();
@@ -316,7 +278,53 @@ class WeightTrackingScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 12.h),
+
+                        // Legend row
+                        Row(
+                          children: [
+                            // Current weight legend
+                            Container(
+                              width: 10.w,
+                              height: 10.w,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF2FD1A6),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              'Current Weight',
+                              style: TextStyle(
+                                color: const Color(0xFF4B5563),
+                                fontSize: 11.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(width: 14.w),
+                            // Goal weight legend
+                            Container(
+                              width: 10.w,
+                              height: 10.w,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF97316),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              'Goal Weight',
+                              style: TextStyle(
+                                color: const Color(0xFF4B5563),
+                                fontSize: 11.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
 
                         // FL Chart Container
                         SizedBox(
@@ -405,10 +413,10 @@ class WeightTrackingScreen extends StatelessWidget {
                                   : [
                                       LineChartBarData(
                                         spots: spots,
-                                        isCurved: true,
+                                        isCurved: spots.length > 1,
                                         curveSmoothness: 0.35,
                                         color: const Color(0xFF2FD1A6),
-                                        barWidth: 2.2.w,
+                                        barWidth: spots.length > 1 ? 2.2.w : 0,
                                         isStrokeCapRound: true,
                                         dotData: FlDotData(
                                           show: true,
@@ -441,6 +449,46 @@ class WeightTrackingScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      // Goal weight — dashed orange horizontal line
+                                      if (goalSpots.isNotEmpty)
+                                        LineChartBarData(
+                                          spots: goalSpots,
+                                          isCurved: false,
+                                          color: const Color(0xFFF97316),
+                                          barWidth: 1.8.w,
+                                          isStrokeCapRound: false,
+                                          dashArray: [6, 4],
+                                          dotData: FlDotData(
+                                            show: true,
+                                            getDotPainter:
+                                                (
+                                                  spot,
+                                                  percent,
+                                                  barData,
+                                                  index,
+                                                ) {
+                                                  // Only show a small label at the
+                                                  // right end of the goal line
+                                                  if (index ==
+                                                      goalSpots.length - 1) {
+                                                    return _GoalLabelPainter(
+                                                      label:
+                                                          '${spot.y.toStringAsFixed(1)}kg',
+                                                    );
+                                                  }
+                                                  return FlDotCirclePainter(
+                                                    radius: 0,
+                                                    color: Colors.transparent,
+                                                    strokeWidth: 0,
+                                                    strokeColor:
+                                                        Colors.transparent,
+                                                  );
+                                                },
+                                          ),
+                                          belowBarData: BarAreaData(
+                                            show: false,
+                                          ),
+                                        ),
                                     ],
                             ),
                           ),
@@ -717,6 +765,77 @@ class _WeightDotPainter extends FlDotPainter {
     strokeWidth,
     isLast,
   ];
+
+  @override
+  FlDotPainter lerp(FlDotPainter a, FlDotPainter b, double t) => b;
+}
+
+/// Draws a small orange pill badge at the end of the goal weight line.
+class _GoalLabelPainter extends FlDotPainter {
+  final String label;
+
+  _GoalLabelPainter({required this.label});
+
+  @override
+  void draw(Canvas canvas, FlSpot spot, Offset offset) {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 8.5,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final badgeWidth = textPainter.width + 8.0;
+    final badgeHeight = textPainter.height + 4.0;
+    // Always show badge ABOVE the line
+    final badgeCenterY = offset.dy - badgeHeight / 2 - 4.0;
+
+    final badgeRect = RRect.fromRectAndRadius(
+      Rect.fromCenter(
+        center: Offset(offset.dx, badgeCenterY),
+        width: badgeWidth,
+        height: badgeHeight,
+      ),
+      const Radius.circular(4.0),
+    );
+
+    final paint = Paint()
+      ..color = const Color(0xFFF97316)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(badgeRect, paint);
+
+    // Tiny downward pointer triangle
+    final pointer = Path()
+      ..moveTo(offset.dx - 3.0, badgeCenterY + badgeHeight / 2)
+      ..lineTo(offset.dx + 3.0, badgeCenterY + badgeHeight / 2)
+      ..lineTo(offset.dx, offset.dy - 1.0)
+      ..close();
+    canvas.drawPath(pointer, paint);
+
+    textPainter.paint(
+      canvas,
+      Offset(
+        offset.dx - textPainter.width / 2,
+        badgeCenterY - textPainter.height / 2,
+      ),
+    );
+  }
+
+  @override
+  Size getSize(FlSpot spot) => const Size(50, 20);
+
+  @override
+  Color get mainColor => const Color(0xFFF97316);
+
+  @override
+  List<Object?> get props => [label];
 
   @override
   FlDotPainter lerp(FlDotPainter a, FlDotPainter b, double t) => b;
