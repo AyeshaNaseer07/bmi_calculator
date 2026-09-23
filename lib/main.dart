@@ -230,6 +230,15 @@ class BMIApp extends StatelessWidget {
           getPages: AppPages.routes,
           navigatorObservers: [appRouteObserver],
           defaultTransition: Transition.cupertino,
+          builder: (context, child) {
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: child,
+            );
+          },
         );
       },
     );

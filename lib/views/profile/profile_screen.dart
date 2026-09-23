@@ -15,6 +15,7 @@ import '../../core/routes/app_routes.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
+import '../widgets/mandatory_label.dart';
 import 'dialogs/rate_us_dialog.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -66,162 +67,210 @@ class ProfileScreen extends StatelessWidget {
     final textController = TextEditingController(
       text: controller.userProfile.value.displayName,
     );
+    final focusNode = FocusNode();
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-          ),
-          padding: EdgeInsets.only(
-            left: 20.w,
-            right: 20.w,
-            top: 14.h,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 24.h,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 44.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1D5DB),
-                    borderRadius: BorderRadius.circular(2.r),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                'Edit Profile Name',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Instrument Sans',
-                  color: AppColors.textDark,
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                'Enter your name to personalize your health journey.',
-                style: TextStyle(fontSize: 12.sp, color: AppColors.textLight),
-              ),
-              SizedBox(height: 16.h),
-              Container(
-                width: 343,
-                height: 51,
-                decoration: ShapeDecoration(
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final isNameValid = textController.text.trim().isNotEmpty;
+
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => focusNode.unfocus(),
+              child: Container(
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  shadows: [
-                    BoxShadow(
-                      color: Color(0x3A33D2AB),
-                      blurRadius: 6.80,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+                ),
+                padding: EdgeInsets.only(
+                  left: 20.w,
+                  right: 20.w,
+                  top: 14.h,
+                  bottom: MediaQuery.of(ctx).viewInsets.bottom + 24.h,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 44.w,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD1D5DB),
+                          borderRadius: BorderRadius.circular(2.r),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    MandatoryLabel(
+                      text: 'Edit Profile Name',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Instrument Sans',
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Enter your name to personalize your health journey.',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.textLight,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Container(
+                      width: 343,
+                      height: 51,
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        shadows: [
+                          BoxShadow(
+                            color: Color(0x3A33D2AB),
+                            blurRadius: 6.80,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: TextField(
+                            controller: textController,
+                            focusNode: focusNode,
+                            autofocus: true,
+                            textCapitalization: TextCapitalization.words,
+                            textInputAction: TextInputAction.done,
+                            onTapOutside: (_) => focusNode.unfocus(),
+                            onSubmitted: (_) async {
+                              if (isNameValid) {
+                                focusNode.unfocus();
+                                final newName = textController.text.trim();
+                                await controller.updateName(newName);
+                                if (ctx.mounted) Navigator.pop(ctx);
+                                Get.snackbar(
+                                  'Success',
+                                  'Profile updated for $newName',
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor: const Color(0xFF10B981),
+                                  colorText: Colors.white,
+                                  duration: const Duration(seconds: 2),
+                                );
+                              } else {
+                                focusNode.unfocus();
+                              }
+                            },
+                            onChanged: (_) => setSheetState(() {}),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textDark,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'Enter your name',
+                              hintStyle: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.textLight,
+                              ),
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              side: const BorderSide(color: Color(0xFFD4EFE6)),
+                            ),
+                            onPressed: () {
+                              focusNode.unfocus();
+                              Navigator.pop(ctx);
+                            },
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: AppColors.textLight,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1DB59B),
+                              disabledBackgroundColor: const Color(0xFF1DB59B)
+                                  .withValues(alpha: 0.35),
+                              disabledForegroundColor: Colors.white.withValues(
+                                alpha: 0.6,
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              elevation: 0,
+                            ),
+                            onPressed: isNameValid
+                                ? () async {
+                                    focusNode.unfocus();
+                                    final newName = textController.text.trim();
+                                    await controller.updateName(newName);
+                                    if (ctx.mounted) Navigator.pop(ctx);
+                                    Get.snackbar(
+                                      'Success',
+                                      'Profile updated for $newName',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: const Color(0xFF10B981),
+                                      colorText: Colors.white,
+                                      duration: const Duration(seconds: 2),
+                                    );
+                                  }
+                                : null,
+                            child: Text(
+                              'Save',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: TextField(
-                      controller: textController,
-                      autofocus: true,
-                      textCapitalization: TextCapitalization.words,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textDark,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Enter your name',
-                        hintStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.textLight,
-                        ),
-                        border: InputBorder.none,
-                        isDense: true,
-                      ),
-                    ),
-                  ),
-                ),
               ),
-              SizedBox(height: 16.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        side: const BorderSide(color: Color(0xFFD4EFE6)),
-                      ),
-                      onPressed: () => Navigator.pop(ctx),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: AppColors.textLight,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1DB59B),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        elevation: 0,
-                      ),
-                      onPressed: () async {
-                        final newName = textController.text.trim();
-                        await controller.updateName(newName);
-                        if (ctx.mounted) Navigator.pop(ctx);
-                        Get.snackbar(
-                          'Success',
-                          newName.isNotEmpty
-                              ? 'Profile updated for $newName'
-                              : 'Profile name cleared',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: const Color(0xFF10B981),
-                          colorText: Colors.white,
-                          duration: const Duration(seconds: 2),
-                        );
-                      },
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
-    );
+    ).whenComplete(() {
+      focusNode.dispose();
+      textController.dispose();
+    });
   }
 
   @override

@@ -13,6 +13,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/gender_popup_menu.dart';
+import '../widgets/mandatory_label.dart';
 
 class AddHealthDataScreen extends StatefulWidget {
   const AddHealthDataScreen({super.key});
@@ -25,6 +26,11 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
   final HealthInsightController _controller =
       Get.find<HealthInsightController>();
   bool _isGenderMenuOpen = false;
+
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _ageFocusNode = FocusNode();
+  final FocusNode _heightFocusNode = FocusNode();
+  final FocusNode _weightFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -41,6 +47,10 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
 
   @override
   void dispose() {
+    _nameFocusNode.dispose();
+    _ageFocusNode.dispose();
+    _heightFocusNode.dispose();
+    _weightFocusNode.dispose();
     _controller.fullNameController.removeListener(_onTextChanged);
     _controller.ageController.removeListener(_onTextChanged);
     _controller.heightController.removeListener(_onTextChanged);
@@ -74,6 +84,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
   }
 
   void _onSave() async {
+    FocusScope.of(context).unfocus();
     if (!_isFormValid) return;
     await _controller.saveProfileAndInsights();
     Get.toNamed(AppRoutes.healthInsightResult);
@@ -88,6 +99,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
             child: Obx(() {
               final selectedGender = _controller.selectedGender.value;
@@ -157,7 +169,12 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   _buildFieldLabel('Full Name'),
                   _buildTextInput(
                     controller: _controller.fullNameController,
+                    focusNode: _nameFocusNode,
                     hint: 'Enter your full name',
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => _ageFocusNode.requestFocus(),
                   ),
                   SizedBox(height: 12.h),
 
@@ -165,8 +182,11 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   _buildFieldLabel('Age'),
                   _buildTextInput(
                     controller: _controller.ageController,
+                    focusNode: _ageFocusNode,
                     hint: 'Enter age',
                     keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => _heightFocusNode.requestFocus(),
                   ),
                   SizedBox(height: 12.h),
 
@@ -220,6 +240,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                   ];
                                 },
                                 child: Container(
+                                  width: double.infinity,
                                   height: 48.h,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 14.w,
@@ -272,11 +293,15 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildFieldLabel('Height'),
+                            _buildFieldLabel('Height', unit: '(cm)'),
                             _buildTextInput(
                               controller: _controller.heightController,
+                              focusNode: _heightFocusNode,
                               hint: 'Enter height',
                               keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              onSubmitted: (_) =>
+                                  _weightFocusNode.requestFocus(),
                             ),
                           ],
                         ),
@@ -286,13 +311,16 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 12.h),
 
                   // Weight
-                  _buildFieldLabel('Weight'),
+                  _buildFieldLabel('Weight', unit: '(kg)'),
                   _buildTextInput(
                     controller: _controller.weightController,
+                    focusNode: _weightFocusNode,
                     hint: 'Enter Weight',
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _weightFocusNode.unfocus(),
                   ),
                   SizedBox(height: 12.h),
 
@@ -301,6 +329,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.activityLevel),
                     child: Container(
+                      width: double.infinity,
                       height: 48.h,
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
                       decoration: BoxDecoration(
@@ -340,6 +369,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.yourGoal),
                     child: Container(
+                      width: double.infinity,
                       height: 48.h,
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
                       decoration: BoxDecoration(
@@ -391,13 +421,19 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     );
   }
 
-  Widget _buildFieldLabel(String label) {
+  Widget _buildFieldLabel(
+    String label, {
+    String? unit,
+    bool isMandatory = true,
+  }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 6.h),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: const Color(0xFF111827),
+      child: MandatoryLabel(
+        text: label,
+        unitText: unit,
+        isMandatory: isMandatory,
+        style: const TextStyle(
+          color: Color(0xFF111827),
           fontSize: 13,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
@@ -409,49 +445,46 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
   Widget _buildTextInput({
     required TextEditingController controller,
     required String hint,
+    FocusNode? focusNode,
     TextInputType keyboardType = TextInputType.text,
+    TextInputAction? textInputAction,
+    TextCapitalization textCapitalization = TextCapitalization.none,
+    ValueChanged<String>? onSubmitted,
   }) {
     return Container(
-      width: 343,
-      height: 46,
-      decoration: ShapeDecoration(
+      width: double.infinity,
+      height: 48.h,
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      decoration: BoxDecoration(
         color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0.25, color: const Color(0xFF33D2AB)),
-          borderRadius: BorderRadius.circular(7),
-        ),
-        shadows: [
-          BoxShadow(
-            color: Color(0x3A33D2AB),
-            blurRadius: 6.80,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: const Color(0xFFD4EFE6)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: TextField(
-            controller: controller,
-            keyboardType: keyboardType,
-            onChanged: (_) => _onTextChanged(),
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textDark,
-            ),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textLight,
-              ),
-              border: InputBorder.none,
-              isDense: true,
-            ),
+      alignment: Alignment.centerLeft,
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        textCapitalization: textCapitalization,
+        onSubmitted: onSubmitted,
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        onChanged: (_) => _onTextChanged(),
+        style: TextStyle(
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textDark,
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textLight,
           ),
+          border: InputBorder.none,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
         ),
       ),
     );

@@ -166,10 +166,13 @@ class CustomGradientButton extends StatelessWidget {
       );
     }
 
-    return AnimatedOpacity(
-      opacity: isEnabled ? 1.0 : 0.45,
-      duration: const Duration(milliseconds: 200),
-      child: buttonContent,
+    return IgnorePointer(
+      ignoring: !isEnabled,
+      child: AnimatedOpacity(
+        opacity: isEnabled ? 1.0 : 0.40,
+        duration: const Duration(milliseconds: 200),
+        child: buttonContent,
+      ),
     );
   }
 }

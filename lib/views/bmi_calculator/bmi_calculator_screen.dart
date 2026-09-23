@@ -15,6 +15,7 @@ import '../widgets/bordered_slider_thumb_shape.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../widgets/mandatory_label.dart';
 import 'dialogs/calculating_dialog.dart';
 
 class BMICalculatorScreen extends StatelessWidget {
@@ -150,10 +151,10 @@ class BMICalculatorScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Gender',
-                                  style: TextStyle(
-                                    color: const Color(0xFF111827),
+                                MandatoryLabel(
+                                  text: 'Gender',
+                                  style: const TextStyle(
+                                    color: Color(0xFF111827),
                                     fontSize: 15,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w700,
@@ -195,10 +196,10 @@ class BMICalculatorScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Age',
-                                  style: TextStyle(
-                                    color: const Color(0xFF111827),
+                                MandatoryLabel(
+                                  text: 'Age',
+                                  style: const TextStyle(
+                                    color: Color(0xFF111827),
                                     fontSize: 15,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w700,
@@ -276,10 +277,10 @@ class BMICalculatorScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Height',
-                                      style: TextStyle(
-                                        color: const Color(0xFF111827),
+                                    MandatoryLabel(
+                                      text: 'Height',
+                                      style: const TextStyle(
+                                        color: Color(0xFF111827),
                                         fontSize: 15,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
@@ -375,10 +376,10 @@ class BMICalculatorScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Weight',
-                                      style: TextStyle(
-                                        color: const Color(0xFF111827),
+                                    MandatoryLabel(
+                                      text: 'Weight',
+                                      style: const TextStyle(
+                                        color: Color(0xFF111827),
                                         fontSize: 15,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
@@ -512,7 +513,11 @@ class BMICalculatorScreen extends StatelessWidget {
                               height: 16.w,
                             ),
                             backgroundImage: AppAssets.btnRectangle,
-                            onPressed: () => _onCalculate(controller),
+                            onPressed: (controller.age.value > 0 &&
+                                    controller.heightCm.value > 0 &&
+                                    controller.weightKg.value > 0)
+                                ? () => _onCalculate(controller)
+                                : null,
                           ),
                           SizedBox(height: 10.h),
 
