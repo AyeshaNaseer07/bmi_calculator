@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bmi_calculator/core/constants/app_strings.dart';
 import 'package:bmi_calculator/data/services/logger_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -253,52 +255,61 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         // Avatar with edit icon badge
                         GestureDetector(
-                          onTap: () => _showEditProfileBottomSheet(
-                            context,
-                            profileController,
-                          ),
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 56,
-                                height: 56,
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFF33D2AB)
-                                      .withValues(alpha: 0.21),
-                                  shape: OvalBorder(),
-                                ),
-
-                                child: Icon(
-                                  CupertinoIcons.person,
-                                  color: const Color(0xFF33D2AB),
-                                  size: 28.sp,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  width: 23,
-                                  height: 23,
+                          onTap: () => profileController.pickProfileImage(),
+                          child: Obx(() {
+                            final imgPath =
+                                profileController.profileImagePath.value;
+                            return Stack(
+                              children: [
+                                Container(
+                                  width: 56,
+                                  height: 56,
                                   decoration: ShapeDecoration(
                                     color: const Color(0xFF33D2AB)
-                                        .withValues(alpha: 0.8),
-                                    shape: OvalBorder(
-                                      side: BorderSide(
-                                        width: 1,
-                                        color: Colors.white,
+                                        .withValues(alpha: 0.21),
+                                    shape: OvalBorder(),
+                                  ),
+                                  child: imgPath != null
+                                      ? ClipOval(
+                                          child: Image.file(
+                                            File(imgPath),
+                                            width: 56,
+                                            height: 56,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Icon(
+                                          CupertinoIcons.person,
+                                          color: const Color(0xFF33D2AB),
+                                          size: 28.sp,
+                                        ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    width: 23,
+                                    height: 23,
+                                    decoration: ShapeDecoration(
+                                      color: const Color(0xFF33D2AB)
+                                          .withValues(alpha: 0.8),
+                                      shape: OvalBorder(
+                                        side: BorderSide(
+                                          width: 1,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.white,
-                                    size: 10.sp,
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Colors.white,
+                                      size: 10.sp,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            );
+                          }),
                         ),
                         SizedBox(width: 14.w),
 
@@ -312,16 +323,47 @@ class ProfileScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  displayName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: const Color(0xFF111827),
-                                    fontSize: 16,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      displayName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: const Color(0xFF111827),
+                                        fontSize: 16,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    // Edit Profile Pill
+                                    GestureDetector(
+                                      onTap: () => _showEditProfileBottomSheet(
+                                        context,
+                                        profileController,
+                                      ),
+                                      child: Container(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: ShapeDecoration(
+                                          color: const Color(0xFF33D2AB)
+                                              .withValues(alpha: 0.2),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.edit_outlined,
+                                          size: 14.sp,
+                                          color: const Color(0xFF33D2AB)
+                                              .withValues(alpha: 0.82),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(height: 2.h),
                                 Text(
@@ -335,54 +377,6 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ),
-
-                        // Edit Profile Pill
-                        GestureDetector(
-                          onTap: () => _showEditProfileBottomSheet(
-                            context,
-                            profileController,
-                          ),
-                          child: Container(
-                            width: 81,
-                            height: 25,
-                            decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  width: 1,
-                                  color: const Color(0xFF33D2AB)
-                                      .withValues(alpha: 0.82),
-                                ),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.edit_outlined,
-                                    size: 12.sp,
-                                    color: const Color(0xFF33D2AB)
-                                        .withValues(alpha: 0.82),
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  Opacity(
-                                    opacity: 0.82,
-                                    child: Text(
-                                      'Edit Profile',
-                                      style: TextStyle(
-                                        color: const Color(0xFF33D2AB),
-                                        fontSize: 10,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
                           ),
                         ),
@@ -430,6 +424,74 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
+                        // Language
+                        _buildAccountRow(
+                          icon: CupertinoIcons.globe,
+                          title: 'Language',
+                          subtitle: 'Select your app language',
+                          onTap: () => Get.toNamed(AppRoutes.languagesSettings),
+                        ),
+                        // Notifications Switch
+                        Obx(() {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 38,
+                                  height: 38,
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFF33D2AB)
+                                        .withValues(alpha: 0.15),
+                                    shape: OvalBorder(),
+                                  ),
+                                  child: Icon(
+                                    CupertinoIcons.bell,
+                                    color: const Color(0xFF33D2AB),
+                                    size: 18.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Theme',
+                                        style: TextStyle(
+                                          color: const Color(0xFF111827),
+                                          fontSize: 12,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(height: 1.h),
+                                      Text(
+                                        'Manage your theme preferences',
+                                        style: TextStyle(
+                                          color: const Color(0xFF111827)
+                                              .withValues(alpha: 0.82),
+                                          fontSize: 11,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                CupertinoSwitch(
+                                  value:
+                                      appController.notificationsEnabled.value,
+                                  activeTrackColor: const Color(0xFF2FD1A6),
+                                  onChanged: (val) =>
+                                      appController.toggleNotifications(val),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
                         // Rate Us
                         _buildAccountRow(
                           icon: Icons.star_outline_rounded,
@@ -463,68 +525,6 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         const Divider(height: 1, color: Color(0xFFF1F5F9)),
 
-                        // Notifications Switch
-                        Obx(() {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.h),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 38,
-                                  height: 38,
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFF33D2AB)
-                                        .withValues(alpha: 0.15),
-                                    shape: OvalBorder(),
-                                  ),
-                                  child: Icon(
-                                    CupertinoIcons.bell,
-                                    color: const Color(0xFF33D2AB),
-                                    size: 18.sp,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Notifications',
-                                        style: TextStyle(
-                                          color: const Color(0xFF111827),
-                                          fontSize: 12,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(height: 1.h),
-                                      Text(
-                                        'Manage your notification preferences',
-                                        style: TextStyle(
-                                          color: const Color(0xFF111827)
-                                              .withValues(alpha: 0.82),
-                                          fontSize: 11,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                CupertinoSwitch(
-                                  value:
-                                      appController.notificationsEnabled.value,
-                                  activeTrackColor: const Color(0xFF2FD1A6),
-                                  onChanged: (val) =>
-                                      appController.toggleNotifications(val),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
                         // Feedback
                         _buildAccountRow(
                           icon: Icons.chat_bubble_outline_rounded,
@@ -533,19 +533,86 @@ class ProfileScreen extends StatelessWidget {
                           onTap: () => sendFeedback(),
                         ),
                         const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                        // Language
-                        _buildAccountRow(
-                          icon: CupertinoIcons.globe,
-                          title: 'Language',
-                          subtitle: 'Select your app language',
-                          onTap: () => Get.toNamed(AppRoutes.languagesSettings),
-                        ),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(height: 20.h),
+                // Unlock Premium Banner (Screenshot 19)
+                Container(
+                  width: 343,
+                  padding: const EdgeInsets.all(20),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFFDFDFE),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.emoji_events_outlined,
+                        color: const Color(0xFFFFD700),
+                        size: 26.sp,
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Unlock Premium',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              'Get advanced insights, reports &\nmore',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 10.sp,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => Get.toNamed(AppRoutes.paywall),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF1DB59B),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 14.w,
+                            vertical: 8.h,
+                          ),
+                        ),
+                        child: Text(
+                          'Go Premium',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

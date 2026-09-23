@@ -58,7 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToPaywall() {
-    Get.toNamed(AppRoutes.paywall);
+    Get.toNamed(AppRoutes.paywall, arguments: {'fromOnboarding': true});
   }
 
   @override

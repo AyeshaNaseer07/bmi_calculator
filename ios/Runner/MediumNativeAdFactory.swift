@@ -94,11 +94,12 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         mediaView.setContentCompressionResistancePriority(UILayoutPriority(240), for: .vertical)
         containerView.addSubview(mediaView)
 
-        // 3. CTA Button: Using btn.webp asset from Flutter
-        let ctaButton = CTAImageButton(type: .custom)
+        // 3. CTA Button: Solid blue (#1794D7)
+        let ctaButton = UIButton(type: .custom)
         ctaButton.translatesAutoresizingMaskIntoConstraints = false
         ctaButton.layer.cornerRadius = 23
         ctaButton.layer.masksToBounds = true
+        ctaButton.backgroundColor = UIColor(red: 0x17/255.0, green: 0x94/255.0, blue: 0xD7/255.0, alpha: 1.0)
         ctaButton.setTitleColor(.white, for: .normal)
         ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         ctaButton.isUserInteractionEnabled = false // Let GADNativeAdView handle touch events

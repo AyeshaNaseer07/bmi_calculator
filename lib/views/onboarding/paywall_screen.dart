@@ -26,10 +26,15 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _isLoading = false;
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
+  bool _fromOnboarding = false;
 
   @override
   void initState() {
     super.initState();
+    final args = Get.arguments;
+    if (args is Map && args['fromOnboarding'] == true) {
+      _fromOnboarding = true;
+    }
     _initCrossDelay();
   }
 
@@ -53,8 +58,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   void _onClose() {
-    _appController.completeOnboarding();
-    Get.offAllNamed(AppRoutes.home);
+    if (_fromOnboarding) {
+      _appController.completeOnboarding();
+      Get.offAllNamed(AppRoutes.home);
+    } else {
+      Get.back();
+    }
   }
 
   void _onSubscribe() async {

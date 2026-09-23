@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +12,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
+import '../../data/models/user_profile_model.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/bmi_gauge_widget.dart';
@@ -29,17 +32,29 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            // Background Illustration (Avatar on top right)
+            // Background Illustration — switches based on profile state & gender
             Positioned(
               top: 10,
               left: 0,
               right: 0,
               child: IgnorePointer(
-                child: Image.asset(
-                  AppAssets.homeAvatar,
-                  fit: BoxFit.fitWidth,
-                  alignment: Alignment.topRight,
-                ),
+                child: Obx(() {
+                  final profile = profileController.userProfile.value;
+                  final hasProfile = profile.displayName.isNotEmpty;
+                  final String bgImage;
+                  if (!hasProfile) {
+                    bgImage = AppAssets.homeAvatarDefault;
+                  } else if (profile.gender == Gender.female) {
+                    bgImage = AppAssets.homeImgFemale;
+                  } else {
+                    bgImage = AppAssets.homeAvatar;
+                  }
+                  return Image.asset(
+                    bgImage,
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topRight,
+                  );
+                }),
               ),
             ),
 
@@ -100,6 +115,8 @@ class HomeScreen extends StatelessWidget {
                               SizedBox(height: 18.h),
                             ],
 
+                            const NativeAdCard(),
+                            SizedBox(height: 12.h),
                             // Features Heading (if empty state) or 2x2 Grid Features
                             if (!hasData) ...[
                               Text(
@@ -111,8 +128,6 @@ class HomeScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              SizedBox(height: 12.h),
-                              const NativeAdCard(),
                               SizedBox(height: 16.h),
                             ],
 
@@ -138,13 +153,31 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildTopBar() {
+    final ProfileController profileController = Get.find<ProfileController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => Get.toNamed(AppRoutes.profile),
-          child: Image.asset(AppAssets.profileIcon, width: 32.w, height: 32.w),
+          child: Obx(() {
+            final imgPath = profileController.profileImagePath.value;
+            if (imgPath != null) {
+              return ClipOval(
+                child: Image.file(
+                  File(imgPath),
+                  width: 32.w,
+                  height: 32.w,
+                  fit: BoxFit.cover,
+                ),
+              );
+            }
+            return Image.asset(
+              AppAssets.profileIcon,
+              width: 32.w,
+              height: 32.w,
+            );
+          }),
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -204,7 +237,7 @@ class HomeScreen extends StatelessWidget {
       borderRadius: 22.r,
       child: Column(
         children: [
-          BMIGaugeWidget(bmiValue: 21.5, size: 160.w, showLabels: false),
+          BMIGaugeWidget(bmiValue: 25.0, size: 160.w, showLabels: false),
           SizedBox(height: 14.h),
           Text(
             'No BMI Record Yet',

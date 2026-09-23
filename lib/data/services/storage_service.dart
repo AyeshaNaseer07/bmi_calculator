@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../models/bmi_record_model.dart';
 import '../models/user_profile_model.dart';
 import '../models/weight_record_model.dart';
@@ -13,6 +15,7 @@ class StorageService {
   static const String _keyUserProfile = 'user_profile';
   static const String _keyBmiHistory = 'bmi_history';
   static const String _keyWeightHistory = 'weight_history';
+  static const String _keyProfileImagePath = 'profile_image_path';
   static const String _keyRemoteCrossDelay = 'rc_cross_delay_seconds';
   static const String _keyRemoteMonthlyProductId = 'rc_monthly_product_id';
   static const String _keyRemoteYearlyProductId = 'rc_yearly_product_id';
@@ -27,7 +30,8 @@ class StorageService {
 
   // ── Onboarding ──
   bool getOnboardingSeen() => _prefs.getBool(_keyOnboardingSeen) ?? false;
-  Future<void> setOnboardingSeen(bool seen) => _prefs.setBool(_keyOnboardingSeen, seen);
+  Future<void> setOnboardingSeen(bool seen) =>
+      _prefs.setBool(_keyOnboardingSeen, seen);
 
   // ── Language ──
   String getLanguage() => _prefs.getString(_keyLanguage) ?? 'en';
@@ -41,15 +45,25 @@ class StorageService {
       orElse: () => UnitSystem.metric,
     );
   }
-  Future<void> setUnitSystem(UnitSystem unit) => _prefs.setString(_keyUnitSystem, unit.name);
+
+  Future<void> setUnitSystem(UnitSystem unit) =>
+      _prefs.setString(_keyUnitSystem, unit.name);
 
   // ── Notifications ──
   bool getNotificationsEnabled() => _prefs.getBool(_keyNotifications) ?? true;
-  Future<void> setNotificationsEnabled(bool enabled) => _prefs.setBool(_keyNotifications, enabled);
+  Future<void> setNotificationsEnabled(bool enabled) =>
+      _prefs.setBool(_keyNotifications, enabled);
 
   // ── Premium ──
   bool getIsPremium() => _prefs.getBool(_keyIsPremium) ?? false;
-  Future<void> setIsPremium(bool premium) => _prefs.setBool(_keyIsPremium, premium);
+  Future<void> setIsPremium(bool premium) =>
+      _prefs.setBool(_keyIsPremium, premium);
+
+  // ── Profile Image ──
+  String? getProfileImagePath() => _prefs.getString(_keyProfileImagePath);
+  Future<void> setProfileImagePath(String path) =>
+      _prefs.setString(_keyProfileImagePath, path);
+  Future<void> clearProfileImagePath() => _prefs.remove(_keyProfileImagePath);
 
   // ── User Profile ──
   bool hasUserProfile() => _prefs.getString(_keyUserProfile) != null;
@@ -63,6 +77,7 @@ class StorageService {
       return const UserProfile();
     }
   }
+
   Future<void> saveUserProfile(UserProfile profile) =>
       _prefs.setString(_keyUserProfile, jsonEncode(profile.toJson()));
 
@@ -72,14 +87,18 @@ class StorageService {
     if (raw == null) return [];
     try {
       final list = jsonDecode(raw) as List;
-      return list.map((item) => BMIRecord.fromJson(item as Map<String, dynamic>)).toList();
+      return list
+          .map((item) => BMIRecord.fromJson(item as Map<String, dynamic>))
+          .toList();
     } catch (_) {
       return [];
     }
   }
 
-  Future<void> saveBmiHistory(List<BMIRecord> records) =>
-      _prefs.setString(_keyBmiHistory, jsonEncode(records.map((e) => e.toJson()).toList()));
+  Future<void> saveBmiHistory(List<BMIRecord> records) => _prefs.setString(
+    _keyBmiHistory,
+    jsonEncode(records.map((e) => e.toJson()).toList()),
+  );
 
   Future<void> addBmiRecord(BMIRecord record) async {
     final current = getBmiHistory();
@@ -93,14 +112,19 @@ class StorageService {
     if (raw == null) return [];
     try {
       final list = jsonDecode(raw) as List;
-      return list.map((item) => WeightRecord.fromJson(item as Map<String, dynamic>)).toList();
+      return list
+          .map((item) => WeightRecord.fromJson(item as Map<String, dynamic>))
+          .toList();
     } catch (_) {
       return [];
     }
   }
 
   Future<void> saveWeightHistory(List<WeightRecord> records) =>
-      _prefs.setString(_keyWeightHistory, jsonEncode(records.map((e) => e.toJson()).toList()));
+      _prefs.setString(
+        _keyWeightHistory,
+        jsonEncode(records.map((e) => e.toJson()).toList()),
+      );
 
   Future<void> addWeightRecord(WeightRecord record) async {
     final current = getWeightHistory();
@@ -110,16 +134,22 @@ class StorageService {
 
   // ── Remote Config ──
   int? getRemoteCrossDelay() => _prefs.getInt(_keyRemoteCrossDelay);
-  Future<void> setRemoteCrossDelay(int seconds) => _prefs.setInt(_keyRemoteCrossDelay, seconds);
+  Future<void> setRemoteCrossDelay(int seconds) =>
+      _prefs.setInt(_keyRemoteCrossDelay, seconds);
 
-  String? getRemoteMonthlyProductId() => _prefs.getString(_keyRemoteMonthlyProductId);
-  Future<void> setRemoteMonthlyProductId(String id) => _prefs.setString(_keyRemoteMonthlyProductId, id);
+  String? getRemoteMonthlyProductId() =>
+      _prefs.getString(_keyRemoteMonthlyProductId);
+  Future<void> setRemoteMonthlyProductId(String id) =>
+      _prefs.setString(_keyRemoteMonthlyProductId, id);
 
-  String? getRemoteYearlyProductId() => _prefs.getString(_keyRemoteYearlyProductId);
-  Future<void> setRemoteYearlyProductId(String id) => _prefs.setString(_keyRemoteYearlyProductId, id);
+  String? getRemoteYearlyProductId() =>
+      _prefs.getString(_keyRemoteYearlyProductId);
+  Future<void> setRemoteYearlyProductId(String id) =>
+      _prefs.setString(_keyRemoteYearlyProductId, id);
 
   String? getRemoteButtonText() => _prefs.getString(_keyRemoteButtonText);
-  Future<void> setRemoteButtonText(String text) => _prefs.setString(_keyRemoteButtonText, text);
+  Future<void> setRemoteButtonText(String text) =>
+      _prefs.setString(_keyRemoteButtonText, text);
 
   Future<void> clearAll() async {
     await _prefs.clear();

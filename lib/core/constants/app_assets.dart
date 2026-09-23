@@ -12,6 +12,8 @@ abstract class AppAssets {
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   static const String homeAvatar = '$_imagesBase/home_img.webp';
+  static const String homeAvatarDefault = '$_imagesBase/home_avatar.png';
+  static const String homeImgFemale = '$_imagesBase/home_img_1.png';
   static const String btnRectangle = '$_imagesBase/btn.webp';
   static const String calcilatorIcon = '$_imagesBase/calculator.webp';
   static const String tipIcon = '$_imagesBase/tip.webp';
