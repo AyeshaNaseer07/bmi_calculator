@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 4.h),
                         _buildTopBar(),
                         SizedBox(height: 30.h),
                         Obx(() {
@@ -222,7 +222,7 @@ class HomeScreen extends StatelessWidget {
               : "Welcome! Let's begin your health journey.",
           style: const TextStyle(
             color: Color(0xFF647E80),
-            fontSize: 12,
+            fontSize: 11.5,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),

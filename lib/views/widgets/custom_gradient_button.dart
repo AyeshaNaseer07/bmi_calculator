@@ -21,6 +21,7 @@ class CustomGradientButton extends StatelessWidget {
   final String? backgroundImage;
   final List<BoxShadow>? boxShadow;
   final bool alignTrailingToEnd;
+  final bool alignLeadingToStart;
   final EdgeInsetsGeometry? contentPadding;
 
   const CustomGradientButton({
@@ -40,21 +41,20 @@ class CustomGradientButton extends StatelessWidget {
     this.backgroundImage,
     this.boxShadow,
     this.alignTrailingToEnd = true,
+    this.alignLeadingToStart = false,
     this.contentPadding,
   });
 
   Widget _buildButtonChild({required TextStyle effectiveTextStyle}) {
+    final shouldAlignEnds =
+        (alignTrailingToEnd && trailingIcon != null) ||
+        (alignLeadingToStart && leadingIcon != null);
+
     final effectivePadding =
         contentPadding ??
-        EdgeInsets.symmetric(
-          horizontal:
-              (alignTrailingToEnd &&
-                  (leadingIcon != null || trailingIcon != null))
-              ? 20.w
-              : 16.w,
-        );
+        EdgeInsets.symmetric(horizontal: shouldAlignEnds ? 20.w : 16.w);
 
-    if (alignTrailingToEnd && (leadingIcon != null || trailingIcon != null)) {
+    if (shouldAlignEnds) {
       return Padding(
         padding: effectivePadding,
         child: Stack(
@@ -102,7 +102,8 @@ class CustomGradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveHeight = height ?? 54.h;
-    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(12.r);
+    final effectiveBorderRadius =
+        borderRadius ?? BorderRadius.circular(effectiveHeight / 2);
     final isEnabled = onPressed != null;
 
     Widget buttonContent;
@@ -130,6 +131,7 @@ class CustomGradientButton extends StatelessWidget {
                   textStyle ??
                   AppTypography.buttonText.copyWith(
                     color: outlineColor ?? const Color(0xFF2EC4B6),
+                    fontWeight: FontWeight.w600,
                   ),
             ),
           ),
