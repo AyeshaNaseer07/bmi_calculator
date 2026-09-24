@@ -27,7 +27,9 @@ import 'core/theme/app_theme.dart';
 import 'data/services/health_kit_service.dart';
 import 'data/services/localization_service.dart';
 import 'data/services/remote_config_service.dart';
+import 'data/services/quick_actions_service.dart';
 import 'data/services/storage_service.dart';
+import 'notifications/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +78,17 @@ void main() async {
   } catch (e) {
     AppLogger.e('Firebase initialization failed: $e');
   }
+  try {
+    await NotificationService.instance.initialize();
+  } catch (e) {
+    AppLogger.e('NotificationService initialization failed: $e');
+  }
   await MobileAds.instance.initialize();
+  try {
+    QuickActionsService.instance.initialize();
+  } catch (e) {
+    AppLogger.e('QuickActionsService initialization failed: $e');
+  }
   try {
     await RevenueCat.configStore();
   } catch (e) {

@@ -83,5 +83,38 @@
 	</array>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This permission is only required to provide personalized and enhanced experience. It also helps us keep improving our app quality &amp; developing new features</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>calculate_bmi</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Calculate BMI</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>speedometer</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeCompose</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>track_progress</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Track Progress</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>chart.line.uptrend.xyaxis</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeDate</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>insights</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Insights</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>lightbulb.fill</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeSearch</string>
+		</dict>
+	</array>
 </dict>
 </plist>

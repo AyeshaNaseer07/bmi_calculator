@@ -178,4 +178,14 @@ class RemoteConfig {
   static int getInt(String key) => remoteConfig.getInt(key);
   static bool getBool(String key) => remoteConfig.getBool(key);
   static double getDouble(String key) => remoteConfig.getDouble(key);
+
+  static String get showNotificationFrequency {
+    try {
+      final val = remoteConfig.getString('show_notification_frequency');
+      if (val.isNotEmpty) return val;
+      final alt = remoteConfig.getString('notification_frequency');
+      if (alt.isNotEmpty) return alt;
+    } catch (_) {}
+    return 'd';
+  }
 }
