@@ -341,7 +341,7 @@ class _AnimatedGradientNextButtonState
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
     _slideAnimation = Tween<Offset>(

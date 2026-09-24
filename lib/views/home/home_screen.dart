@@ -32,23 +32,35 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            // Background Illustration — switches based on profile state & gender
             Positioned(
               top: 10,
               left: 0,
               right: 0,
               child: IgnorePointer(
                 child: Obx(() {
+                  final latestRecord = bmiController.latestRecord.value;
                   final profile = profileController.userProfile.value;
-                  final hasProfile = profile.displayName.isNotEmpty;
                   final String bgImage;
-                  if (!hasProfile) {
-                    bgImage = AppAssets.homeAvatarDefault;
-                  } else if (profile.gender == Gender.female) {
-                    bgImage = AppAssets.homeImgFemale;
+
+                  if (latestRecord != null) {
+                    final gender = latestRecord.gender.trim().toLowerCase();
+                    if (gender == 'female') {
+                      bgImage = AppAssets.homeImgFemale;
+                    } else if (gender == 'male') {
+                      bgImage = AppAssets.homeAvatar;
+                    } else {
+                      bgImage = AppAssets.homeAvatar;
+                    }
+                  } else if (profile.displayName.isNotEmpty) {
+                    if (profile.gender == Gender.female) {
+                      bgImage = AppAssets.homeImgFemale;
+                    } else {
+                      bgImage = AppAssets.homeAvatar;
+                    }
                   } else {
-                    bgImage = AppAssets.homeAvatar;
+                    bgImage = AppAssets.homeAvatarDefault;
                   }
+
                   return Image.asset(
                     bgImage,
                     fit: BoxFit.fitWidth,
@@ -133,10 +145,6 @@ class HomeScreen extends StatelessWidget {
 
                             // 2x2 Feature Cards Grid
                             _buildFeatureGrid(),
-                            if (hasData) ...[
-                              SizedBox(height: 16.h),
-                              const NativeAdCard(),
-                            ],
                             SizedBox(height: 24.h),
                           ],
                         ),
@@ -233,12 +241,11 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildEmptyBmiCard() {
     return CustomCard(
-      padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
+      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
       borderRadius: 22.r,
       child: Column(
         children: [
-          BMIGaugeWidget(bmiValue: 25.0, size: 160.w, showLabels: true),
-          SizedBox(height: 14.h),
+          BMIGaugeWidget(bmiValue: 25.0, size: 200.w, showLabels: true),
           Text(
             'No BMI Record Yet',
             textAlign: TextAlign.center,
@@ -309,7 +316,7 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     record.bmiValue.toStringAsFixed(1),
                     style: TextStyle(
-                      color: const Color(0xFF33D2AB),
+                      color: record.category.color,
                       fontSize: 36,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w800,
@@ -322,7 +329,7 @@ class HomeScreen extends StatelessWidget {
                       vertical: 4.h,
                     ),
                     decoration: ShapeDecoration(
-                      color: const Color(0xFFE2F7F2),
+                      color: record.category.color.withValues(alpha: 0.12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50.r),
                       ),
@@ -330,7 +337,7 @@ class HomeScreen extends StatelessWidget {
                     child: Text(
                       record.category.label,
                       style: TextStyle(
-                        color: const Color(0xFF07A981),
+                        color: record.category.color,
                         fontSize: 12,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
@@ -383,7 +390,7 @@ class HomeScreen extends StatelessWidget {
                         vertical: 4.h,
                       ),
                       decoration: ShapeDecoration(
-                        color: const Color(0xFFE2F7F2),
+                        color: const Color(0xFFF1F5F7),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.r),
                         ),
@@ -394,14 +401,14 @@ class HomeScreen extends StatelessWidget {
                           Icon(
                             CupertinoIcons.calendar,
                             size: 10.sp,
-                            color: const Color(0xFF07A981),
+                            color: const Color(0xFF1E2D2F),
                           ),
                           SizedBox(width: 4.w),
                           Text(
                             'View History',
                             style: TextStyle(
-                              color: const Color(0xFF06A981),
-                              fontSize: 8,
+                              color: const Color(0xFF1E2D2F),
+                              fontSize: 8.5.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -417,46 +424,32 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 12.h),
 
           // Bottom Health Banner
-          GestureDetector(
-            onTap: () => Get.toNamed(AppRoutes.healthInsights),
-            child: Container(
-              width: double.infinity,
-              constraints: BoxConstraints(minHeight: 54.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE8F9F7),
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    AppAssets.shieldicon,
-                    width: 22.w,
-                    height: 22.w,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Text(
-                      record.category.feedbackMessage,
-                      style: TextStyle(
-                        color: const Color(0xFF1E2D2F),
-                        fontSize: 11.5.sp,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w400,
-                        height: 1.35,
-                      ),
+          Container(
+            width: double.infinity,
+            constraints: BoxConstraints(minHeight: 54.h),
+            decoration: BoxDecoration(
+              color: record.category.color.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                record.category.buildFeedbackIcon(size: 22.w),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Text(
+                    record.category.feedbackMessage,
+                    style: TextStyle(
+                      color: const Color(0xFF1E2D2F),
+                      fontSize: 11.5.sp,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w400,
+                      height: 1.35,
                     ),
                   ),
-                  SizedBox(width: 6.w),
-                  Icon(
-                    CupertinoIcons.arrow_right,
-                    size: 18.sp,
-                    color: const Color(0xFF25C6A5),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -538,30 +531,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.h),
-        GestureDetector(
-          onTap: onTapUpdate,
-          child: Container(
-            width: 52,
-            height: 23,
-            decoration: ShapeDecoration(
-              color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                'Update',
-                style: TextStyle(
-                  color: const Color(0xFF2EC4B6),
-                  fontSize: 10,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }

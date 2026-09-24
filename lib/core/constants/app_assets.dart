@@ -20,7 +20,7 @@ abstract class AppAssets {
   static const String resetIcon = '$_imagesBase/reset.webp';
 
   static const String icDiamond = '$_imagesBase/ic_diamond.webp';
-  static const String bmiGauge = '$_imagesBase/gaugae.webp';
+  static const String bmiGauge = '$_imagesBase/guagae.png';
 
   // ── Onboarding ──
   static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
@@ -34,10 +34,10 @@ abstract class AppAssets {
   static const String preIcon4 = '$_imagesBase/pre_icon4.webp';
   static const String preIcon5 = '$_imagesBase/pre_icon5.webp';
 
-  static const String homeIcon1 = '$_imagesBase/home_1.webp';
-  static const String homeIcon2 = '$_imagesBase/home_2.webp';
-  static const String homeIcon3 = '$_imagesBase/home_3.webp';
-  static const String homeIcon4 = '$_imagesBase/home_4.webp';
+  static const String homeIcon1 = '$_imagesBase/home_1.png';
+  static const String homeIcon2 = '$_imagesBase/home_2.png';
+  static const String homeIcon3 = '$_imagesBase/home_3.png';
+  static const String homeIcon4 = '$_imagesBase/home_4.png';
 
   static const String btnBg = '$_imagesBase/btn_bg.webp';
   static const String premiumBg = '$_imagesBase/premium_bg.webp';
@@ -53,11 +53,11 @@ abstract class AppAssets {
   static const String ageForward = '$_imagesBase/age_forward.webp';
   static const String hearticon = '$_imagesBase/heart.webp';
   static const String shieldicon = '$_imagesBase/shield.webp';
-  static const String weighticon = '$_imagesBase/weight.webp';
-  static const String heighticon = '$_imagesBase/height.webp';
-  static const String ageicon = '$_imagesBase/age.webp';
+  static const String weighticon = '$_imagesBase/weight.png';
+  static const String heighticon = '$_imagesBase/height.png';
+  static const String ageicon = '$_imagesBase/age.png';
   static const String arrowIcon = '$_imagesBase/arrow.png';
-  static const String gendericon = '$_imagesBase/gender.webp';
+  static const String gendericon = '$_imagesBase/gender.png';
   static const String iconFemale = '$_imagesBase/icon_female.webp';
   static const String iconMale = '$_imagesBase/icon_male.webp';
   static const String iconAge = '$_imagesBase/icon_age.webp';

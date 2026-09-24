@@ -22,7 +22,7 @@ class _NextButtonState extends State<NextButton>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
 

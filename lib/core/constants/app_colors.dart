@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class AppColors {
   // ── Primary Palette ──
-  static const Color primaryTeal = Color(0xFF1DB59B);
+  static const Color primaryTeal = Color(0xFF09B389);
   static const Color primaryTealDark = Color(0xFF138A76);
   static const Color primaryTealLight = Color(0xFF2FD1A6);
   static const Color accentBlue = Color(0xFF168EE2);
@@ -47,10 +47,10 @@ abstract class AppColors {
   static const Color textLight = Color(0xFF94A3B8);
 
   // ── BMI Categories Colors ──
-  static const Color underweight = Color(0xFF3B82F6);
-  static const Color normal = Color(0xFF10B981);
-  static const Color overweight = Color(0xFFF59E0B);
-  static const Color obese = Color(0xFFEF4444);
+  static const Color underweight = Color(0xFF38B6FF);
+  static const Color normal = Color(0xFF00C48C);
+  static const Color overweight = Color(0xFFFF9500);
+  static const Color obese = Color(0xFFFF2D2D);
 
   // ── Status & Accents ──
   static const Color gold = Color(0xFFFFB800);
@@ -62,7 +62,7 @@ abstract class AppColors {
   // ── Shadows ──
   static List<BoxShadow> cardShadow = [
     BoxShadow(
-      color: const Color(0xFF1DB59B).withValues(alpha: 0.06),
+      color: const Color(0xFF09B389).withValues(alpha: 0.06),
       blurRadius: 16,
       offset: const Offset(0, 4),
     ),

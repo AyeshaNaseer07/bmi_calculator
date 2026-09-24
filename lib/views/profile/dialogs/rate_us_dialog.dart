@@ -61,7 +61,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
               ),
               child: Icon(
                 Icons.star_rounded,
-                color: const Color(0xFF1DB59B),
+                color: const Color(0xFF09B389),
                 size: 32.sp,
               ),
             ),
@@ -145,7 +145,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1DB59B),
+                      backgroundColor: const Color(0xFF09B389),
                       padding: EdgeInsets.symmetric(vertical: 12.h),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.r),

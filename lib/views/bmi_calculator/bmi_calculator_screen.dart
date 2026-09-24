@@ -86,7 +86,7 @@ class BMICalculatorScreen extends StatelessWidget {
                     padding: EdgeInsets.only(
                       left: 18.w,
                       right: 18.w,
-                      top: 4.h,
+                      top: 17.h,
                       bottom: 24.h,
                     ),
                     child: Obx(() {
@@ -483,7 +483,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                     AppAssets.tipIcon,
                                     width: 26.w,
                                     height: 27.w,
-                                    color: const Color(0xFF1DB59B),
+                                    color: const Color(0xFF09B389),
                                   ),
                                   SizedBox(width: 10.w),
                                   Expanded(
@@ -513,7 +513,8 @@ class BMICalculatorScreen extends StatelessWidget {
                               height: 16.w,
                             ),
                             backgroundImage: AppAssets.btnRectangle,
-                            onPressed: (controller.age.value > 0 &&
+                            onPressed:
+                                (controller.age.value > 0 &&
                                     controller.heightCm.value > 0 &&
                                     controller.weightKg.value > 0)
                                 ? () => _onCalculate(controller)

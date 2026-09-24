@@ -164,7 +164,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               children: [
                 SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   padding: EdgeInsets.symmetric(
                     horizontal: 20.w,
                     vertical: 16.h,
@@ -195,92 +196,103 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       SizedBox(height: 16.h),
 
                       // Gender Dropdown Field
-                      Theme(
-                        data: Theme.of(context).copyWith(
-                          popupMenuTheme: const PopupMenuThemeData(
-                            color: Colors.transparent,
-                            surfaceTintColor: Colors.transparent,
-                            elevation: 0,
-                            shadowColor: Colors.transparent,
-                            menuPadding: EdgeInsets.zero,
-                          ),
-                        ),
-                        child: PopupMenuButton<String>(
-                          onSelected: (String gender) {
-                            setState(() {
-                              _selectedGender = gender;
-                              _isGenderMenuOpen = false;
-                            });
-                          },
-                          onCanceled: () {
-                            setState(() => _isGenderMenuOpen = false);
-                          },
-                          onOpened: () {
-                            setState(() => _isGenderMenuOpen = true);
-                          },
-                          offset: Offset(0, 68.h),
-                          constraints: BoxConstraints(
-                            minWidth: 144.w,
-                            maxWidth: 144.w,
-                          ),
-                          itemBuilder: (context) {
-                            return const [
-                              GenderPopupMenuEntry<String>(
-                                items: [
-                                  GenderPopupMenuItem(
-                                    value: 'Male',
-                                    label: 'Male',
-                                  ),
-                                  GenderPopupMenuItem(
-                                    value: 'Female',
-                                    label: 'Female',
-                                  ),
-                                  GenderPopupMenuItem(
-                                    value: 'Other',
-                                    label: 'Other',
-                                  ),
-                                ],
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final double offsetX =
+                              constraints.maxWidth - 144.w - 20.w;
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              popupMenuTheme: const PopupMenuThemeData(
+                                color: Colors.transparent,
+                                surfaceTintColor: Colors.transparent,
+                                elevation: 0,
+                                shadowColor: Colors.transparent,
+                                menuPadding: EdgeInsets.zero,
                               ),
-                            ];
-                          },
-                          child: _buildCardContainer(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                            ),
+                            child: PopupMenuButton<String>(
+                              onSelected: (String gender) {
+                                setState(() {
+                                  _selectedGender = gender;
+                                  _isGenderMenuOpen = false;
+                                });
+                              },
+                              onCanceled: () {
+                                setState(() => _isGenderMenuOpen = false);
+                              },
+                              onOpened: () {
+                                setState(() => _isGenderMenuOpen = true);
+                              },
+                              offset: Offset(offsetX > 0 ? offsetX : 0, 68.h),
+                              constraints: BoxConstraints(
+                                minWidth: 144.w,
+                                maxWidth: 144.w,
+                              ),
+                              itemBuilder: (context) {
+                                return const [
+                                  GenderPopupMenuEntry<String>(
+                                    items: [
+                                      GenderPopupMenuItem(
+                                        value: 'Male',
+                                        label: 'Male',
+                                      ),
+                                      GenderPopupMenuItem(
+                                        value: 'Female',
+                                        label: 'Female',
+                                      ),
+                                      GenderPopupMenuItem(
+                                        value: 'Other',
+                                        label: 'Other',
+                                      ),
+                                    ],
+                                  ),
+                                ];
+                              },
+                              child: _buildCardContainer(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      _selectedGender,
-                                      style: const TextStyle(
-                                        color: Color(0xFF4B5563),
+                                    const Text(
+                                      'Gender',
+                                      style: TextStyle(
+                                        color: Color(0xFF6B7280),
                                         fontSize: 17,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(width: 4.w),
-                                    Icon(
-                                      _isGenderMenuOpen
-                                          ? CupertinoIcons.chevron_up
-                                          : CupertinoIcons.chevron_down,
-                                      size: 13.sp,
-                                      color: const Color(0xFF6B7280),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          _selectedGender,
+                                          style: TextStyle(
+                                            color: Colors.grey.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                            fontSize: 17,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(width: 4.w),
+                                        Icon(
+                                          _isGenderMenuOpen
+                                              ? CupertinoIcons.chevron_up
+                                              : CupertinoIcons.chevron_down,
+                                          size: 13.sp,
+                                          color: Colors.grey.withValues(
+                                            alpha: 0.5,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                                const Text(
-                                  'Gender',
-                                  style: TextStyle(
-                                    color: Color(0xFF6B7280),
-                                    fontSize: 17,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                       SizedBox(height: 16.h),
 
@@ -360,37 +372,6 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: TextField(
-              controller: controller,
-              focusNode: focusNode,
-              textInputAction: textInputAction,
-              onSubmitted: onSubmitted,
-              onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              style: const TextStyle(
-                color: Color(0xFF4B5563),
-                fontSize: 17,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: const TextStyle(
-                  color: Color(0xFF6B7280),
-                  fontSize: 17,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ),
-
           MandatoryLabel(
             text: label,
             isMandatory: isMandatory,
@@ -399,6 +380,39 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               fontSize: 17,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              textInputAction: textInputAction,
+              onSubmitted: onSubmitted,
+              onTapOutside: (_) =>
+                  FocusManager.instance.primaryFocus?.unfocus(),
+              textAlign: TextAlign.end,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              style: TextStyle(
+                color: Colors.grey.withValues(alpha: 0.5),
+                fontSize: 17,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: hint,
+                hintStyle: TextStyle(
+                  color: Colors.grey.withValues(alpha: 0.5),
+                  fontSize: 17,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
             ),
           ),
         ],
@@ -421,13 +435,26 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          MandatoryLabel(
+            text: label,
+            isMandatory: isMandatory,
+            style: const TextStyle(
+              color: Color(0xFF6B7280),
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(width: 12.w),
           Expanded(
             child: TextField(
               controller: controller,
               focusNode: focusNode,
               textInputAction: textInputAction,
               onSubmitted: onSubmitted,
-              onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+              onTapOutside: (_) =>
+                  FocusManager.instance.primaryFocus?.unfocus(),
+              textAlign: TextAlign.end,
               keyboardType: keyboardType,
               style: const TextStyle(
                 color: Color(0xFF4B5563),
@@ -447,16 +474,6 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
               ),
-            ),
-          ),
-          MandatoryLabel(
-            text: label,
-            isMandatory: isMandatory,
-            style: const TextStyle(
-              color: Color(0xFF6B7280),
-              fontSize: 17,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],

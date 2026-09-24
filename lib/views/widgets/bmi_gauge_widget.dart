@@ -63,13 +63,11 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
 
   @override
   void didPopNext() {
-    // Called whenever returning back to this screen from any another screen
     _animateGauge();
   }
 
   @override
   void didPush() {
-    // Called when the route is pushed
     _animateGauge();
   }
 
@@ -177,7 +175,7 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
 }
 
 class _BMIGaugeNeedlePainter extends CustomPainter {
-  final double progress; // 0.0 to 1.0
+  final double progress;
   final bool showLabels;
   final double bmiValue;
 
@@ -189,14 +187,9 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // In Group 10.png (454x450), the semi-circle center is at (227, 225.5) / 454
     final center = Offset(size.width / 2, size.width * (225.5 / 454.0));
     final radius = size.width * (226.0 / 454.0);
     final needleLength = radius * 0.74;
-
-    // Angle: progress 0.0 -> math.pi (pointing left)
-    // progress 0.5 -> math.pi / 2 (pointing top)
-    // progress 1.0 -> 0.0 (pointing right)
     final needleAngle = math.pi - (progress * math.pi);
 
     final needlePaint = Paint()
@@ -226,7 +219,6 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       ..lineTo(base2.dx, base2.dy)
       ..close();
 
-    // Subtle drop shadow for needle
     final shadowPaint = Paint()
       ..color = const Color(0x33000000)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
@@ -254,7 +246,16 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
 
     // Labels below arc ends
     if (showLabels) {
+      final numFontSize = (size.width * 0.065).clamp(9.5, 12.5);
       final subFontSize = (size.width * 0.055).clamp(8.5, 11.0);
+
+      final numStyle = TextStyle(
+        color: const Color(0xFF1E2D2F),
+        fontSize: numFontSize,
+        fontWeight: FontWeight.w700,
+        fontFamily: 'Outfit',
+        height: 1.15,
+      );
 
       final subStyle = TextStyle(
         color: const Color(0xFF8C9EA0),
@@ -265,7 +266,12 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       );
 
       final textPainterLow = TextPainter(
-        text: TextSpan(text: 'Low', style: subStyle),
+        text: TextSpan(
+          children: [
+            TextSpan(text: '9.9\n', style: numStyle),
+            TextSpan(text: 'Low', style: subStyle),
+          ],
+        ),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
@@ -273,12 +279,17 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
         canvas,
         Offset(
           (size.width * 0.115) - (textPainterLow.width / 2),
-          center.dy + size.width * 0.018,
+          center.dy + size.width * 0.015,
         ),
       );
 
       final textPainterHigh = TextPainter(
-        text: TextSpan(text: 'High', style: subStyle),
+        text: TextSpan(
+          children: [
+            TextSpan(text: '34.9\n', style: numStyle),
+            TextSpan(text: 'High', style: subStyle),
+          ],
+        ),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout();
@@ -286,59 +297,9 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
         canvas,
         Offset(
           (size.width * 0.885) - (textPainterHigh.width / 2),
-          center.dy + size.width * 0.018,
+          center.dy + size.width * 0.015,
         ),
       );
-
-      // ── Arc unit labels above the gauge arc ──────────────────────────────
-      // BMI thresholds mapped to their 0-1 gauge progress values:
-      //   9.9  -> 0.0  (far left)
-      //  18.5  -> 0.25
-      //  24.9  -> 0.50 (top)
-      //  29.9  -> 0.75
-      //  34.9  -> 1.0  (far right)
-      const arcLabels = <(String, double)>[
-        ('9.9', 0.0),
-        ('18.5', 0.25),
-        ('24.9', 0.50),
-        ('29.9', 0.75),
-        ('34.9', 1.0),
-      ];
-
-      final arcLabelFontSize = (size.width * 0.062).clamp(9.0, 12.0);
-      final arcLabelStyle = TextStyle(
-        color: const Color(0xFF1E2D2F),
-        fontSize: arcLabelFontSize,
-        fontWeight: FontWeight.w700,
-        fontFamily: 'Outfit',
-      );
-
-      // Offset from the arc outward (above the arc)
-      final labelOffset = size.width * 0.060;
-
-      for (final (label, prog) in arcLabels) {
-        // Convert progress (0→1) to angle: 0→π (left), 0.5→π/2 (top), 1→0 (right)
-        final angle = math.pi - (prog * math.pi);
-
-        // Position outward beyond the arc radius by labelOffset
-        final labelRadius = radius + labelOffset;
-        final labelCenter = Offset(
-          center.dx + labelRadius * math.cos(angle),
-          center.dy - labelRadius * math.sin(angle),
-        );
-
-        final tp = TextPainter(
-          text: TextSpan(text: label, style: arcLabelStyle),
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
-        )..layout();
-
-        tp.paint(
-          canvas,
-          Offset(labelCenter.dx - tp.width / 2, labelCenter.dy - tp.height / 2),
-        );
-      }
-      // ────────────────────────────────────────────────────────────────────
     }
   }
 

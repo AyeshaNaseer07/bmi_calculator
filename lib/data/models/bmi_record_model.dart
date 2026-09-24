@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 
 enum BMICategory {
@@ -17,7 +18,7 @@ enum BMICategory {
       case BMICategory.overweight:
         return 'Overweight';
       case BMICategory.obese:
-        return 'Obesity';
+        return 'Obese';
     }
   }
 
@@ -50,13 +51,51 @@ enum BMICategory {
   String get feedbackMessage {
     switch (this) {
       case BMICategory.underweight:
-        return 'Your BMI is below the standard range. A nutrient-dense diet and fitness plan can support healthy weight gain.';
+        return 'Your BMI is in the underweight range. Focus on gaining weight in a healthy way.';
       case BMICategory.normal:
         return 'Great job! Your BMI is in the normal range. Keep maintaining a healthy lifestyle.';
       case BMICategory.overweight:
-        return 'Your BMI is slightly elevated. Consistent physical activity and mindful nutrition can help bring it to a healthy balance.';
+        return 'Your BMI is in the overweight range. Focus on a healthier lifestyle.';
       case BMICategory.obese:
-        return 'Your BMI indicates high risk. We recommend focusing on regular active routines and consulting a healthcare advisor.';
+        return 'Your BMI is in the obese range. Focus on a healthier lifestyle.';
+    }
+  }
+
+  Widget buildFeedbackIcon({double size = 22}) {
+    switch (this) {
+      case BMICategory.underweight:
+        return Icon(
+          Icons.info_outline_rounded,
+          color: color,
+          size: size,
+        );
+      case BMICategory.normal:
+        return Image.asset(
+          AppAssets.shieldicon,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+        );
+      case BMICategory.overweight:
+        return Icon(
+          Icons.warning_amber_rounded,
+          color: color,
+          size: size,
+        );
+      case BMICategory.obese:
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.close_rounded,
+            color: Colors.white,
+            size: size * 0.65,
+          ),
+        );
     }
   }
 }

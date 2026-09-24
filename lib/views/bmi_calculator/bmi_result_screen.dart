@@ -99,13 +99,12 @@ class BMIResultScreen extends StatelessWidget {
                             size: 160.w,
                             showLabels: true,
                           ),
-                          SizedBox(height: 4.h),
 
                           // BMI Numeric Value
                           Text(
                             record.bmiValue.toStringAsFixed(1),
                             style: TextStyle(
-                              color: const Color(0xFF33D2AB),
+                              color: record.category.color,
                               fontSize: 28,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
@@ -124,24 +123,25 @@ class BMIResultScreen extends StatelessWidget {
 
                           // Status Pill
                           Container(
-                            width: 78.w,
-                            height: 24.h,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 4.h,
+                            ),
                             decoration: ShapeDecoration(
-                              color: const Color(0xFF33D2AB)
-                                  .withValues(alpha: 0.15),
+                              color: record.category.color.withValues(
+                                alpha: 0.15,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
                               ),
                             ),
-                            child: Center(
-                              child: Text(
-                                record.category.label,
-                                style: TextStyle(
-                                  color: const Color(0xFF07A981),
-                                  fontSize: 11.5,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                ),
+                            child: Text(
+                              record.category.label,
+                              style: TextStyle(
+                                color: record.category.color,
+                                fontSize: 11.5,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
@@ -152,7 +152,9 @@ class BMIResultScreen extends StatelessWidget {
                             width: double.infinity,
                             constraints: BoxConstraints(minHeight: 42.h),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE8F9F7),
+                              color: record.category.color.withValues(
+                                alpha: 0.10,
+                              ),
                               borderRadius: BorderRadius.circular(14.r),
                             ),
                             padding: EdgeInsets.symmetric(
@@ -162,12 +164,7 @@ class BMIResultScreen extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Image.asset(
-                                  AppAssets.shieldicon,
-                                  width: 18.w,
-                                  height: 18.w,
-                                  fit: BoxFit.contain,
-                                ),
+                                record.category.buildFeedbackIcon(size: 20.w),
                                 SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(

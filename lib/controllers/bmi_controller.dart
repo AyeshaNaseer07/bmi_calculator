@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
+
 import '../data/models/bmi_record_model.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/bmi_service.dart';
 import '../data/services/storage_service.dart';
+import 'profile_controller.dart';
 
 class BMIController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
@@ -31,6 +33,12 @@ class BMIController extends GetxController {
     bmiHistory.assignAll(list);
     if (list.isNotEmpty) {
       latestRecord.value = list.first;
+      final g = list.first.gender.trim().toLowerCase();
+      if (g == 'female') {
+        selectedGender.value = Gender.female;
+      } else if (g == 'male') {
+        selectedGender.value = Gender.male;
+      }
     }
   }
 
@@ -108,6 +116,20 @@ class BMIController extends GetxController {
     await _storage.addBmiRecord(record);
     bmiHistory.insert(0, record);
     latestRecord.value = record;
+
+    if (Get.isRegistered<ProfileController>()) {
+      final profileController = Get.find<ProfileController>();
+      final profile = profileController.userProfile.value;
+      await profileController.updateProfile(
+        profile.copyWith(
+          gender: selectedGender.value,
+          age: age.value,
+          heightCm: heightCm.value,
+          weightKg: weightKg.value,
+        ),
+      );
+    }
+
     return record;
   }
 

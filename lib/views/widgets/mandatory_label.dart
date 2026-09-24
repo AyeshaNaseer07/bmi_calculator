@@ -30,7 +30,7 @@ class MandatoryLabel extends StatelessWidget {
           color: Color(0xFF111827),
           fontSize: 13,
           fontFamily: 'Inter',
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w900,
         );
 
     final effectiveUnitStyle =

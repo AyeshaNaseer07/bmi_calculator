@@ -84,7 +84,9 @@ class ProfileScreen extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(24.r),
+                  ),
                 ),
                 padding: EdgeInsets.only(
                   left: 20.w,
@@ -220,8 +222,8 @@ class ProfileScreen extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1DB59B),
-                              disabledBackgroundColor: const Color(0xFF1DB59B)
+                              backgroundColor: const Color(0xFF09B389),
+                              disabledBackgroundColor: const Color(0xFF09B389)
                                   .withValues(alpha: 0.35),
                               disabledForegroundColor: Colors.white.withValues(
                                 alpha: 0.6,
@@ -588,78 +590,81 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20.h),
                 // Unlock Premium Banner (Screenshot 19)
-                Container(
-                  width: 343,
-                  padding: const EdgeInsets.all(20),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFFDFDFE),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                GestureDetector(
+                  onTap: () => Get.toNamed(AppRoutes.paywall),
+                  child: Container(
+                    width: 343,
+                    padding: const EdgeInsets.all(20),
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFFFDFDFE),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      shadows: [
+                        BoxShadow(
+                          color: Color(0x3F000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        ),
+                      ],
                     ),
-                    shadows: [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.emoji_events_outlined,
-                        color: const Color(0xFFFFD700),
-                        size: 26.sp,
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Unlock Premium',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13.sp,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.emoji_events_outlined,
+                          color: const Color(0xFFFFD700),
+                          size: 26.sp,
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Unlock Premium',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13.sp,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              'Get advanced insights, reports &\nmore',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 10.sp,
-                                height: 1.2,
+                              SizedBox(height: 2.h),
+                              Text(
+                                'Get advanced insights, reports &\nmore',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10.sp,
+                                  height: 1.2,
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Get.toNamed(AppRoutes.paywall),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF09B389),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => Get.toNamed(AppRoutes.paywall),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF1DB59B),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.r),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 8.h,
+                            ),
                           ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 14.w,
-                            vertical: 8.h,
+                          child: Text(
+                            'Go Premium',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        child: Text(
-                          'Go Premium',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

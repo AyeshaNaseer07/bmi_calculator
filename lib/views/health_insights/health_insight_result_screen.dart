@@ -91,8 +91,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                               SizedBox(height: 2.h),
                               Text(
                                 bmi.toStringAsFixed(1),
-                                style: const TextStyle(
-                                  color: Color(0xFF33D2AB),
+                                style: TextStyle(
+                                  color: category.color,
                                   fontSize: 32,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
@@ -101,8 +101,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                               SizedBox(height: 4.h),
                               Text(
                                 category.label,
-                                style: const TextStyle(
-                                  color: Color(0xFF33D2AB),
+                                style: TextStyle(
+                                  color: category.color,
                                   fontSize: 14,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w500,
@@ -152,7 +152,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                       imagePath: AppAssets.healthWeight,
                       label: 'Weight',
                       value: '${weight.toStringAsFixed(1)}kg',
-                      valueColor: const Color(0xFF1DB59B),
+                      valueColor: const Color(0xFF09B389),
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -161,7 +161,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                       imagePath: AppAssets.healthHeight,
                       label: 'Height',
                       value: '${height.toStringAsFixed(0)}cm',
-                      valueColor: const Color(0xFF1DB59B),
+                      valueColor: const Color(0xFF09B389),
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -170,7 +170,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                       imagePath: AppAssets.lastUpdated,
                       label: 'Last Updated',
                       value: 'Today',
-                      valueColor: const Color(0xFF1DB59B),
+                      valueColor: const Color(0xFF09B389),
                     ),
                   ),
                 ],
@@ -220,7 +220,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 2.h),
                           Text(
-                            'Your BMI is in the normal range. Keep maintaining a healthy lifestyle.',
+                            category.feedbackMessage,
                             style: TextStyle(
                               color: const Color(0xFF111827),
                               fontSize: 10,
