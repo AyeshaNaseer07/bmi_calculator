@@ -279,14 +279,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   ),
                   SizedBox(height: 16.h),
 
-                  // Plan Selection (Monthly vs Yearly) with Remote IDs & Pricing
+                  // Plan Selection (Weekly vs Yearly) with Remote IDs & Pricing
                   Row(
                     children: [
-                      // Monthly Plan
+                      // Weekly Plan
                       Expanded(
                         child: GestureDetector(
                           onTap: () => setState(
-                            () => _selectedPlan = SubscriptionPlan.monthly,
+                            () => _selectedPlan = SubscriptionPlan.weekly,
                           ),
                           child: Container(
                             padding: EdgeInsets.all(14.w),
@@ -294,10 +294,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16.r),
                               border: Border.all(
-                                color: _selectedPlan == SubscriptionPlan.monthly
+                                color: _selectedPlan == SubscriptionPlan.weekly
                                     ? AppColors.primaryTeal
                                     : const Color(0xFFE2E8F0),
-                                width: _selectedPlan == SubscriptionPlan.monthly
+                                width: _selectedPlan == SubscriptionPlan.weekly
                                     ? 1.5.w
                                     : 1.0.w,
                               ),
@@ -315,20 +315,20 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       border: Border.all(
                                         color:
                                             _selectedPlan ==
-                                                SubscriptionPlan.monthly
+                                                SubscriptionPlan.weekly
                                             ? AppColors.primaryTeal
                                             : const Color(0xFFCBD5E1),
                                         width: 1.5.w,
                                       ),
                                       color:
                                           _selectedPlan ==
-                                              SubscriptionPlan.monthly
+                                              SubscriptionPlan.weekly
                                           ? AppColors.primaryTeal
                                           : Colors.white,
                                     ),
                                     child:
                                         _selectedPlan ==
-                                            SubscriptionPlan.monthly
+                                            SubscriptionPlan.weekly
                                         ? Icon(
                                             Icons.check,
                                             size: 12.sp,
@@ -339,7 +339,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                 ),
                                 SizedBox(height: 6.h),
                                 Text(
-                                  'Monthly Plan',
+                                  'Weekly Plan',
                                   style: TextStyle(
                                     color: const Color(0xFF4B5563),
                                     fontSize: 14.sp,
@@ -349,7 +349,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
-                                  '\$4.99',
+                                  '\$1.99',
                                   style: TextStyle(
                                     color: const Color(0xFF33D2AB),
                                     fontSize: 22.sp,
@@ -358,7 +358,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'month',
+                                  'week',
                                   style: TextStyle(
                                     color: const Color(0xFF9CA3AF),
                                     fontSize: 12.sp,

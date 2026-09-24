@@ -11,16 +11,12 @@ import 'package:get/get.dart';
 import '../data/models/remote_model.dart';
 import '../data/services/remote_config_service.dart';
 
-/// Schedules repeating local notifications based on Remote Config frequency.
-/// Each notification shows a different random message from the pool.
 class LocalNotificationScheduler {
   LocalNotificationScheduler._();
   static final LocalNotificationScheduler instance =
       LocalNotificationScheduler._();
 
   static const String _tag = 'LocalNotifScheduler';
-
-  /// Base notification ID — individual notifications use _baseId + index.
   static const int _baseId = 9000;
 
   final FlutterLocalNotificationsPlugin _plugin =
@@ -123,21 +119,21 @@ class LocalNotificationScheduler {
     await _cancelAll();
 
     final int count;
-    final Duration interval;
+    final int stepDays;
 
     switch (rawFrequency) {
       case 'w':
       case 'week':
       case 'weekly':
         count = _weeklyCount;
-        interval = const Duration(days: 7);
+        stepDays = 7;
         break;
 
       case 'm':
       case 'month':
       case 'monthly':
         count = _monthlyCount;
-        interval = const Duration(days: 30);
+        stepDays = 30;
         break;
 
       case 'd':
@@ -145,8 +141,50 @@ class LocalNotificationScheduler {
       case 'daily':
       default:
         count = _dailyCount;
-        interval = const Duration(days: 1);
+        stepDays = 1;
         break;
+    }
+
+    // Fixed morning reminder time (default: 9:00 AM local time for weigh-in)
+    int targetHour = 9;
+    int targetMinute = 0;
+    try {
+      final hourStr = RemoteConfig.getString('notification_hour').trim();
+      if (hourStr.isNotEmpty) {
+        final parsed = int.tryParse(hourStr);
+        if (parsed != null && parsed >= 0 && parsed <= 23) {
+          targetHour = parsed;
+        }
+      }
+      final minStr = RemoteConfig.getString('notification_minute').trim();
+      if (minStr.isNotEmpty) {
+        final parsed = int.tryParse(minStr);
+        if (parsed != null && parsed >= 0 && parsed <= 59) {
+          targetMinute = parsed;
+        }
+      }
+    } catch (_) {}
+
+    final now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime firstDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      targetHour,
+      targetMinute,
+    );
+
+    // If target time today has already passed, start tomorrow morning
+    if (firstDate.isBefore(now)) {
+      firstDate = tz.TZDateTime(
+        tz.local,
+        now.year,
+        now.month,
+        now.day + 1,
+        targetHour,
+        targetMinute,
+      );
     }
 
     final random = math.Random();
@@ -156,13 +194,20 @@ class LocalNotificationScheduler {
 
     for (int i = 0; i < count; i++) {
       final msg = shuffled[i % shuffled.length];
-      final scheduledTime = DateTime.now().add(interval * (i + 1));
+      final scheduledDate = tz.TZDateTime(
+        tz.local,
+        firstDate.year,
+        firstDate.month,
+        firstDate.day + (stepDays * i),
+        targetHour,
+        targetMinute,
+      );
 
       await _plugin.zonedSchedule(
         id: _baseId + i,
         title: msg['title']!,
         body: msg['body']!,
-        scheduledDate: _toTZDateTime(scheduledTime),
+        scheduledDate: scheduledDate,
         notificationDetails: const NotificationDetails(
           iOS: DarwinNotificationDetails(
             presentAlert: true,
@@ -179,21 +224,15 @@ class LocalNotificationScheduler {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: null, // one-shot, not repeating
+        matchDateTimeComponents: null, // one-shot, pre-scheduled batch
       );
     }
 
     log(
-      'Scheduled $count notifications, interval=${interval.inHours}h, '
-      'first at ${DateTime.now().add(interval)}',
+      'Scheduled $count notifications at ${targetHour.toString().padLeft(2, '0')}:${targetMinute.toString().padLeft(2, '0')} local time, '
+      'first at $firstDate, stepDays=$stepDays',
       name: _tag,
     );
-  }
-
-  /// Convert a [DateTime] to a [tz.TZDateTime] for scheduling.
-  /// Uses the device local timezone.
-  tz.TZDateTime _toTZDateTime(DateTime dateTime) {
-    return tz.TZDateTime.from(dateTime, tz.local);
   }
 
   /// Cancel all scheduled notifications in our ID range.

@@ -27,6 +27,7 @@ class RemoteConfigService extends GetxService {
       return true;
     }
   }
+
   String get secondTimeOnboarding => model.value.secondTimeOnboarding;
   bool get isSecondTimeOnboardingEnabled {
     try {
@@ -35,10 +36,11 @@ class RemoteConfigService extends GetxService {
       return false;
     }
   }
+
   String get paywallBtnText => model.value.paywallBtnText;
   String get buttonText => model.value.paywallBtnText;
   int get crossDelaySeconds => model.value.crossDelay;
-  String get monthlyProductId => model.value.monthlyProductId;
+  String get weeklyProductId => model.value.weeklyProductId;
   String get yearlyProductId => model.value.yearlyProductId;
   String get nativeAdId => model.value.nativeAdId;
   String get ads => model.value.ads;
@@ -49,6 +51,7 @@ class RemoteConfigService extends GetxService {
       return true;
     }
   }
+
   bool get isFullScreenNativeAdEnabled {
     try {
       return model.value.isFullScreenNativeAdEnabled;
@@ -56,6 +59,7 @@ class RemoteConfigService extends GetxService {
       return true;
     }
   }
+
   bool get isNativeAdEnabled {
     try {
       return model.value.isNativeAdEnabled;
@@ -63,6 +67,7 @@ class RemoteConfigService extends GetxService {
       return true;
     }
   }
+
   String get fullScreenNativeAdId => model.value.fullScreenNativeAdId;
   String get localNotification => model.value.localNotification;
   bool get isLocalNotificationEnabled {
@@ -72,6 +77,7 @@ class RemoteConfigService extends GetxService {
       return true;
     }
   }
+
   String get notificationFrequency => model.value.notificationFrequency;
 
   Future<RemoteConfigService> init() async {
@@ -106,7 +112,7 @@ class RemoteConfigService extends GetxService {
           updateWithMap(map);
         }
         log(
-          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, monthlyId="${model.value.monthlyProductId}", yearlyId="${model.value.yearlyProductId}", ads=${model.value.ads}, fullScreenNativeAd=${model.value.fullScreenNativeAd}, nativeAd=${model.value.nativeAd}, localNotification=${model.value.localNotification}',
+          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, weeklyId="${model.value.weeklyProductId}", yearlyId="${model.value.yearlyProductId}", ads=${model.value.ads}, fullScreenNativeAd=${model.value.fullScreenNativeAd}, nativeAd=${model.value.nativeAd}, localNotification=${model.value.localNotification}',
         );
         return;
       } catch (e) {
@@ -117,7 +123,8 @@ class RemoteConfigService extends GetxService {
       }
     }
     log('Remote config fetch failed; ensuring default values are active');
-    if (model.value.monthlyProductId.isEmpty) {
+    if (model.value.weeklyProductId.isEmpty ||
+        model.value.yearlyProductId.isEmpty) {
       final defaults = RemoteModel.defaults();
       model.value = defaults;
       remoteModel = defaults;
@@ -139,8 +146,8 @@ class RemoteConfigService extends GetxService {
 
   String getProductId(SubscriptionPlan plan) {
     switch (plan) {
-      case SubscriptionPlan.monthly:
-        return model.value.monthlyProductId;
+      case SubscriptionPlan.weekly:
+        return model.value.weeklyProductId;
       case SubscriptionPlan.yearly:
         return model.value.yearlyProductId;
     }

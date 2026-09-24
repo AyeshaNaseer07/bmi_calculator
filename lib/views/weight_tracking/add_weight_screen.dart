@@ -8,6 +8,7 @@ import '../../controllers/weight_tracker_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/storage_service.dart';
+import '../widgets/age_popup_menu.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_gradient_button.dart';
@@ -28,54 +29,23 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   final TextEditingController _currentWeightController =
       TextEditingController();
   final TextEditingController _goalWeightController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
 
   final FocusNode _currentWeightFocusNode = FocusNode();
   final FocusNode _goalWeightFocusNode = FocusNode();
-  final FocusNode _ageFocusNode = FocusNode();
   final FocusNode _heightFocusNode = FocusNode();
 
+  int? _selectedAge;
+  bool _isAgeMenuOpen = false;
   Gender? _selectedGender;
   bool _isGenderMenuOpen = false;
 
   @override
   void initState() {
     super.initState();
-    if (_controller.currentWeight.value > 0) {
-      _currentWeightController.text = _controller.currentWeight.value
-          .toStringAsFixed(1);
-    }
-    if (_controller.goalWeight.value > 0) {
-      _goalWeightController.text = _controller.goalWeight.value.toStringAsFixed(
-        1,
-      );
-    }
-
-    // Prefill profile info if available (only if user has saved a profile)
-    try {
-      final storage = Get.find<StorageService>();
-      if (storage.hasUserProfile()) {
-        final profile = storage.getUserProfile();
-        if (profile.age > 0) {
-          _ageController.text = profile.age.toString();
-        }
-        if (profile.heightCm > 0) {
-          _heightController.text = profile.heightCm.toStringAsFixed(0);
-        }
-        _selectedGender = profile.gender;
-        if (_controller.currentWeight.value <= 0 && profile.weightKg > 0) {
-          _currentWeightController.text = profile.weightKg.toStringAsFixed(1);
-        }
-        if (_controller.goalWeight.value <= 0 && profile.goalWeightKg > 0) {
-          _goalWeightController.text = profile.goalWeightKg.toStringAsFixed(1);
-        }
-      }
-    } catch (_) {}
-
+    // Do not prefill values by default; only hint texts will be shown
     _currentWeightController.addListener(_onFieldChanged);
     _goalWeightController.addListener(_onFieldChanged);
-    _ageController.addListener(_onFieldChanged);
     _heightController.addListener(_onFieldChanged);
   }
 
@@ -84,8 +54,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   }
 
   bool get _isCurrentWeightExceeded {
-    final current =
-        double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
+    final currentText = _currentWeightController.text.trim();
+    if (currentText.isEmpty) return false;
+    final current = double.tryParse(currentText) ?? 0.0;
     return current > 120.0;
   }
 
@@ -97,10 +68,21 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   }
 
   bool get _isFormValid {
-    final current =
-        double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
-    final goal = double.tryParse(_goalWeightController.text.trim()) ?? 0.0;
-    return current > 0 && current <= 120.0 && goal <= 120.0;
+    final currentText = _currentWeightController.text.trim();
+    final goalText = _goalWeightController.text.trim();
+    final heightText = _heightController.text.trim();
+
+    final current = double.tryParse(currentText) ?? 0.0;
+    final goal = double.tryParse(goalText) ?? 0.0;
+    final height = double.tryParse(heightText) ?? 0.0;
+
+    final isCurrentValid =
+        currentText.isNotEmpty && current > 0 && current <= 120.0;
+    final isGoalValid = goalText.isNotEmpty && goal > 0 && goal <= 120.0;
+    final isAgeValid = _selectedAge != null && _selectedAge! > 0;
+    final isHeightValid = heightText.isNotEmpty && height > 0;
+
+    return isCurrentValid && isGoalValid && isAgeValid && isHeightValid;
   }
 
   void _onSave() async {
@@ -110,28 +92,35 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     final current =
         double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
     final goal = double.tryParse(_goalWeightController.text.trim()) ?? 0.0;
-    if (current <= 0 || current > 120.0 || goal > 120.0) return;
-
-    // Update profile age, height, gender if entered
-    final ageVal = int.tryParse(_ageController.text.trim());
+    final ageVal = _selectedAge;
     final heightVal = double.tryParse(_heightController.text.trim());
     final genderVal = _selectedGender;
 
-    if (ageVal != null || heightVal != null || genderVal != null) {
-      try {
-        final storage = Get.find<StorageService>();
-        final profile = storage.getUserProfile();
-        storage.saveUserProfile(
-          profile.copyWith(
-            age: (ageVal != null && ageVal > 0) ? ageVal : profile.age,
-            heightCm: (heightVal != null && heightVal > 0)
-                ? heightVal
-                : profile.heightCm,
-            gender: genderVal ?? profile.gender,
-          ),
-        );
-      } catch (_) {}
+    if (current <= 0 ||
+        current > 120.0 ||
+        goal <= 0 ||
+        goal > 120.0 ||
+        ageVal == null ||
+        ageVal <= 0 ||
+        heightVal == null ||
+        heightVal <= 0) {
+      return;
     }
+
+    // Update profile age, height, gender if entered
+    try {
+      final storage = Get.find<StorageService>();
+      final profile = storage.getUserProfile();
+      storage.saveUserProfile(
+        profile.copyWith(
+          age: ageVal,
+          heightCm: heightVal,
+          gender: genderVal ?? profile.gender,
+          weightKg: current,
+          goalWeightKg: goal,
+        ),
+      );
+    } catch (_) {}
 
     await _controller.addWeight(current, DateTime.now(), goalWeight: goal);
     Get.back();
@@ -148,15 +137,12 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   void dispose() {
     _currentWeightFocusNode.dispose();
     _goalWeightFocusNode.dispose();
-    _ageFocusNode.dispose();
     _heightFocusNode.dispose();
     _currentWeightController.removeListener(_onFieldChanged);
     _goalWeightController.removeListener(_onFieldChanged);
-    _ageController.removeListener(_onFieldChanged);
     _heightController.removeListener(_onFieldChanged);
     _currentWeightController.dispose();
     _goalWeightController.dispose();
-    _ageController.dispose();
     _heightController.dispose();
     super.dispose();
   }
@@ -169,6 +155,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         onTap: () {
           if (_isGenderMenuOpen) {
             setState(() => _isGenderMenuOpen = false);
+          }
+          if (_isAgeMenuOpen) {
+            setState(() => _isAgeMenuOpen = false);
           }
           FocusScope.of(context).unfocus();
         },
@@ -255,11 +244,11 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       ],
                       SizedBox(height: 12.h),
 
-                      // Goal Weight (Optional)
+                      // Goal Weight (Mandatory)
                       _buildFieldLabel(
                         'Goal Weight',
                         unit: '(kg)',
-                        isMandatory: false,
+                        isMandatory: true,
                       ),
                       _buildTextInput(
                         controller: _goalWeightController,
@@ -270,7 +259,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                           decimal: true,
                         ),
                         textInputAction: TextInputAction.next,
-                        onSubmitted: (_) => _ageFocusNode.requestFocus(),
+                        onSubmitted: (_) => _heightFocusNode.requestFocus(),
                       ),
                       if (_isGoalWeightExceeded) ...[
                         SizedBox(height: 6.h),
@@ -296,16 +285,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       ],
                       SizedBox(height: 12.h),
 
-                      // Age
-                      _buildFieldLabel('Age', isMandatory: false),
-                      _buildTextInput(
-                        controller: _ageController,
-                        focusNode: _ageFocusNode,
-                        hint: 'Enter age (25)',
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (_) => _heightFocusNode.requestFocus(),
-                      ),
+                      // Age (Mandatory)
+                      _buildFieldLabel('Age', isMandatory: true),
+                      _buildAgeDropdown(context),
                       SizedBox(height: 12.h),
 
                       // Gender & Height Row
@@ -334,7 +316,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                                 _buildFieldLabel(
                                   'Height',
                                   unit: '(cm)',
-                                  isMandatory: false,
+                                  isMandatory: true,
                                 ),
                                 _buildTextInput(
                                   controller: _heightController,
@@ -440,6 +422,82 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           border: InputBorder.none,
           isDense: true,
           contentPadding: EdgeInsets.zero,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAgeDropdown(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        popupMenuTheme: const PopupMenuThemeData(
+          color: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          menuPadding: EdgeInsets.zero,
+        ),
+      ),
+      child: PopupMenuButton<int>(
+        onSelected: (int a) {
+          setState(() {
+            _selectedAge = a;
+            _isAgeMenuOpen = false;
+          });
+        },
+        onCanceled: () {
+          setState(() => _isAgeMenuOpen = false);
+        },
+        onOpened: () {
+          setState(() => _isAgeMenuOpen = true);
+        },
+        offset: Offset(0, 52.h),
+        constraints: BoxConstraints(minWidth: 144.w, maxWidth: 144.w),
+        itemBuilder: (context) {
+          return [
+            AgePopupMenuEntry(
+              items: List.generate(120, (i) => i + 1),
+              selectedAge: _selectedAge,
+            ),
+          ];
+        },
+        child: Container(
+          width: double.infinity,
+          height: 48.h,
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(
+              color: _isAgeMenuOpen
+                  ? const Color(0xFF2FD1A6)
+                  : const Color(0xFFD4EFE6),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _selectedAge != null ? '$_selectedAge' : 'Select',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: _selectedAge != null
+                      ? FontWeight.w600
+                      : FontWeight.w400,
+                  color: _selectedAge != null
+                      ? AppColors.textDark
+                      : AppColors.textLight,
+                ),
+              ),
+              Icon(
+                _isAgeMenuOpen
+                    ? CupertinoIcons.chevron_up
+                    : CupertinoIcons.chevron_down,
+                size: 14.sp,
+                color: Colors.black,
+              ),
+            ],
+          ),
         ),
       ),
     );

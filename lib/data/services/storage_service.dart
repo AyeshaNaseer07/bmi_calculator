@@ -18,7 +18,7 @@ class StorageService {
   static const String _keyWeightHistory = 'weight_history';
   static const String _keyProfileImagePath = 'profile_image_path';
   static const String _keyRemoteCrossDelay = 'rc_cross_delay_seconds';
-  static const String _keyRemoteMonthlyProductId = 'rc_monthly_product_id';
+  static const String _keyRemoteWeeklyProductId = 'rc_weekly_product_id';
   static const String _keyRemoteYearlyProductId = 'rc_yearly_product_id';
   static const String _keyRemoteButtonText = 'rc_button_text';
 
@@ -145,10 +145,10 @@ class StorageService {
   Future<void> setRemoteCrossDelay(int seconds) =>
       _prefs.setInt(_keyRemoteCrossDelay, seconds);
 
-  String? getRemoteMonthlyProductId() =>
-      _prefs.getString(_keyRemoteMonthlyProductId);
-  Future<void> setRemoteMonthlyProductId(String id) =>
-      _prefs.setString(_keyRemoteMonthlyProductId, id);
+  String? getRemoteWeeklyProductId() =>
+      _prefs.getString(_keyRemoteWeeklyProductId);
+  Future<void> setRemoteWeeklyProductId(String id) =>
+      _prefs.setString(_keyRemoteWeeklyProductId, id);
 
   String? getRemoteYearlyProductId() =>
       _prefs.getString(_keyRemoteYearlyProductId);

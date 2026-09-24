@@ -7,7 +7,7 @@ class RemoteModel {
   String? _secondTimeOnboarding;
   String? _paywallBtnText;
   int? _crossDelay;
-  String? _monthlyProductId;
+  String? _weeklyProductId;
   String? _yearlyProductId;
   String? _nativeAdId;
   String? _ads;
@@ -33,11 +33,12 @@ class RemoteModel {
   int get crossDelay => _crossDelay ?? 3;
   set crossDelay(int value) => _crossDelay = value;
 
-  String get monthlyProductId =>
-      _monthlyProductId ?? 'com.monthly.bmi.calculator';
-  set monthlyProductId(String value) => _monthlyProductId = value;
+  String get weeklyProductId =>
+      _weeklyProductId ?? 'com.weekly.bmi.calculator.app';
+  set weeklyProductId(String value) => _weeklyProductId = value;
 
-  String get yearlyProductId => _yearlyProductId ?? 'com.yearly.bmi.calculator';
+  String get yearlyProductId =>
+      _yearlyProductId ?? 'com.yearly.bmi.calculator.app';
   set yearlyProductId(String value) => _yearlyProductId = value;
 
   String get nativeAdId => _nativeAdId ?? defaultNativeAdId;
@@ -66,7 +67,7 @@ class RemoteModel {
     this._secondTimeOnboarding,
     this._paywallBtnText,
     this._crossDelay,
-    this._monthlyProductId,
+    this._weeklyProductId,
     this._yearlyProductId,
     this._nativeAdId,
     this._ads,
@@ -102,7 +103,8 @@ class RemoteModel {
   bool get isLocalNotificationEnabled => _isOn(localNotification);
 
   // Compatibility aliases
-  String get splashProductId => monthlyProductId;
+  String get splashProductId => weeklyProductId;
+  String get splashWeeklyProductId => weeklyProductId;
   String get splashYearlyProductId => yearlyProductId;
   int get splashProductCrossDelay => crossDelay;
   String get splashProductBtnText => paywallBtnText;
@@ -174,16 +176,19 @@ class RemoteModel {
               remoteConfig['splash_product_cross_delay'],
           3,
         ),
-        monthlyProductId: _parseString(
-          remoteConfig['monthly_product_id'] ??
+        weeklyProductId: _parseString(
+          remoteConfig['weekly_product_id'] ??
+              remoteConfig['splash_weekly_product_id'] ??
+              remoteConfig['weeklyProductId'] ??
               remoteConfig['splash_product_id'],
-          'com.monthly.bmi.calculator',
+          'com.weekly.bmi.calculator.app',
         ),
         yearlyProductId: _parseString(
           remoteConfig['yearly_product_id'] ??
               remoteConfig['splashYearlyProductId'] ??
-              remoteConfig['splash_yearly_product_id'],
-          'com.yearly.bmi.calculator',
+              remoteConfig['splash_yearly_product_id'] ??
+              remoteConfig['yearlyProductId'],
+          'com.yearly.bmi.calculator.app',
         ),
         nativeAdId: nativeAdId,
         ads: adsMaster,
@@ -236,8 +241,8 @@ class RemoteModel {
       secondTimeOnboarding: 'off',
       paywallBtnText: 'Start Free Trial',
       crossDelay: 3,
-      monthlyProductId: 'com.monthly.bmi.calculator',
-      yearlyProductId: 'com.yearly.bmi.calculator',
+      weeklyProductId: 'com.weekly.bmi.calculator.app',
+      yearlyProductId: 'com.yearly.bmi.calculator.app',
       nativeAdId: defaultNativeAdId,
       ads: 'on',
       fullScreenNativeAd: 'on',
@@ -254,7 +259,7 @@ class RemoteModel {
       'second_time_onboarding': secondTimeOnboarding,
       'paywall_btn_text': paywallBtnText,
       'cross_delay': crossDelay,
-      'monthly_product_id': monthlyProductId,
+      'weekly_product_id': weeklyProductId,
       'yearly_product_id': yearlyProductId,
       'native_ad_id': nativeAdId,
       'ads': ads,

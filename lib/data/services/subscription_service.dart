@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'storage_service.dart';
 
 enum SubscriptionPlan {
-  monthly,
+  weekly,
   yearly,
 }
 
