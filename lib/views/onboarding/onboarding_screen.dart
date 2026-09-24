@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
+import '../../data/models/remote_model.dart';
+import '../../data/services/remote_config_service.dart';
 import '../widgets/ads/full_screen_native_ad_page.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
@@ -40,7 +43,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // 1: Full-Screen Native Ad
   // 2: Weight Tracking
   // 3: Health Insights
-  static const int _totalPages = 4;
+  //
+  // When the `full_screen_native_ad` Remote Config switch is off (or the user
+  // is premium) page 1 is removed entirely instead of rendering a blank page.
+  late final bool _showFullScreenAd = _resolveShowFullScreenAd();
+
+  bool _resolveShowFullScreenAd() {
+    if (Get.isRegistered<AppController>() &&
+        Get.find<AppController>().isPremium.value) {
+      return false;
+    }
+    if (Get.isRegistered<RemoteConfigService>()) {
+      return RemoteConfigService.to.isFullScreenNativeAdEnabled;
+    }
+    return remoteModel.isFullScreenNativeAdEnabled;
+  }
+
+  int get _totalPages => _showFullScreenAd ? 4 : 3;
+
+  /// Index of the full-screen ad page, or -1 when it isn't shown.
+  int get _adPageIndex => _showFullScreenAd ? 1 : -1;
+
+  /// Index of the first content slide (Weight Tracking).
+  int get _firstContentIndex => _showFullScreenAd ? 2 : 1;
 
   void _onNext() {
     if (_pageController.hasClients) {
@@ -76,12 +101,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             PageView(
               controller: _pageController,
-              // Disable all swipe gestures on the full-screen native ad page
-              // (index 1), and also on page 2 so the user cannot swipe back to
-              // the ad. The only way to dismiss the ad is the X button.
-              physics: (_currentIndex == 1 || _currentIndex == 2)
-                  ? const NeverScrollableScrollPhysics()
-                  : const ClampingScrollPhysics(),
+
+              physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (index) {
                 setState(() => _currentIndex = index);
               },
@@ -90,7 +111,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 _buildBmiAdSlide(),
 
                 // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
-                FullScreenNativeAdPage(onNext: _onNext),
+                if (_showFullScreenAd) FullScreenNativeAdPage(onNext: _onNext),
 
                 // Page 2: Weight Tracking (iPhone 13 mini - 65)
                 _buildContentSlide(
@@ -110,9 +131,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
 
-            if (_currentIndex != 1)
+            if (_currentIndex != _adPageIndex)
               // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
-              if (_currentIndex >= 2)
+              if (_currentIndex >= _firstContentIndex)
                 Positioned(
                   left: 24.w,
                   right: 24.w,
@@ -266,11 +287,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         // Full background illustration - Top to Middle
         Positioned(
-          top: 56.h,
+          top: 45.h,
           left: 0,
           right: 0,
           height: MediaQuery.of(context).size.height * 0.58,
-          child: Image.asset(imagePath, fit: BoxFit.contain),
+          child: Image.asset(imagePath, fit: BoxFit.fitHeight),
         ),
 
         // Title and Subtitle positioned above the bottom controls

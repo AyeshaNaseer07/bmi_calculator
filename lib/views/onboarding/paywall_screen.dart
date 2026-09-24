@@ -74,10 +74,83 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
     debugPrint('Subscribing with remote product ID: $selectedProductId');
 
-    await _appController.upgradeToPremium(_selectedPlan);
+    final success = await _appController.upgradeToPremium(_selectedPlan);
     _appController.completeOnboarding();
     setState(() => _isLoading = false);
+    if (!mounted) return;
+    if (success) {
+      await _showCongratsDialog();
+    }
     Get.offAllNamed(AppRoutes.home);
+  }
+
+  /// Shown once, right after a successful purchase, before landing on Home.
+  Future<void> _showCongratsDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 32.w),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(24.w, 28.h, 24.w, 24.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(AppAssets.crown, width: 72.w, height: 72.w),
+              SizedBox(height: 16.h),
+              Text(
+                'Congratulations! 🎉',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'You\'re now a Premium member.\nEnjoy an ad-free experience and all\nadvanced features.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF6B7280),
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Get.back(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryTeal,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                  ),
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _onRestore() async {

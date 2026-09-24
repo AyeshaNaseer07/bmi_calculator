@@ -8,7 +8,9 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/routes/app_routes.dart';
+import '../../data/models/remote_model.dart';
 import '../../data/services/localization_service.dart';
+import '../../data/services/remote_config_service.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 
@@ -127,7 +129,23 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   void _onDone() {
     _appController.changeLanguage(_selectedLang);
-    Get.offNamed(AppRoutes.onboarding);
+
+    // Same on/off check on every app flow (first launch and every launch
+    // after): Remote Config's onboarding flag decides whether the
+    // Onboarding slides are shown. The Paywall itself is constant either
+    // way — it always follows, whether via Onboarding or directly here.
+    if (_isOnboardingEnabled) {
+      Get.offNamed(AppRoutes.onboarding);
+    } else {
+      Get.offNamed(AppRoutes.paywall, arguments: {'fromOnboarding': true});
+    }
+  }
+
+  bool get _isOnboardingEnabled {
+    if (Get.isRegistered<RemoteConfigService>()) {
+      return RemoteConfigService.to.isFirstTimeOnboardingEnabled;
+    }
+    return remoteModel.isFirstTimeOnboarding;
   }
 
   @override

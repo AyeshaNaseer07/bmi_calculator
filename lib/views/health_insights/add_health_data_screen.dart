@@ -63,6 +63,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     final ageText = _controller.ageController.text.trim();
     final heightText = _controller.heightController.text.trim();
     final weightText = _controller.weightController.text.trim();
+    final weightVal = double.tryParse(weightText) ?? 0.0;
 
     final isNameValid = name.isNotEmpty;
     final isAgeValid = ageText.isNotEmpty && (int.tryParse(ageText) ?? 0) > 0;
@@ -70,7 +71,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     final isHeightValid =
         heightText.isNotEmpty && (double.tryParse(heightText) ?? 0) > 0;
     final isWeightValid =
-        weightText.isNotEmpty && (double.tryParse(weightText) ?? 0) > 0;
+        weightText.isNotEmpty && weightVal > 0 && weightVal <= 120.0;
     final isActivityValid = _controller.selectedActivity.value != null;
     final isGoalValid = _controller.selectedGoal.value != null;
 
@@ -81,6 +82,13 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
         isWeightValid &&
         isActivityValid &&
         isGoalValid;
+  }
+
+  bool get _isWeightExceeded {
+    final weightText = _controller.weightController.text.trim();
+    if (weightText.isEmpty) return false;
+    final weightVal = double.tryParse(weightText) ?? 0.0;
+    return weightVal > 120.0;
   }
 
   void _onSave() async {
@@ -316,12 +324,35 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                     controller: _controller.weightController,
                     focusNode: _weightFocusNode,
                     hint: 'Enter Weight (65.7 kg)',
+                    isError: _isWeightExceeded,
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _weightFocusNode.unfocus(),
                   ),
+                  if (_isWeightExceeded) ...[
+                    SizedBox(height: 6.h),
+                    Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.exclamationmark_circle_fill,
+                          color: const Color(0xFFEF4444),
+                          size: 14.sp,
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          'Weight cannot exceed 120 kg.',
+                          style: TextStyle(
+                            color: const Color(0xFFEF4444),
+                            fontSize: 12.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   SizedBox(height: 12.h),
 
                   // Activity Level Selector Button
@@ -450,15 +481,19 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     TextInputAction? textInputAction,
     TextCapitalization textCapitalization = TextCapitalization.none,
     ValueChanged<String>? onSubmitted,
+    bool isError = false,
   }) {
     return Container(
       width: double.infinity,
       height: 48.h,
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isError ? const Color(0xFFFEF2F2) : Colors.white,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFD4EFE6)),
+        border: Border.all(
+          color: isError ? const Color(0xFFEF4444) : const Color(0xFFD4EFE6),
+          width: isError ? 1.5.w : 1.w,
+        ),
       ),
       alignment: Alignment.centerLeft,
       child: TextField(
@@ -473,7 +508,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
         style: TextStyle(
           fontSize: 13.sp,
           fontWeight: FontWeight.w600,
-          color: AppColors.textDark,
+          color: isError ? const Color(0xFFDC2626) : AppColors.textDark,
         ),
         decoration: InputDecoration(
           hintText: hint,

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../controllers/app_controller.dart';
 import '../../controllers/bmi_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_assets.dart';
@@ -205,11 +206,19 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }),
         ),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => Get.toNamed(AppRoutes.paywall),
-          child: Image.asset(AppAssets.icDiamond, width: 32.w, height: 32.w),
-        ),
+        Obx(() {
+          final appController = Get.find<AppController>();
+          if (appController.isPremium.value) {
+            // Already premium — nothing to upsell, so the icon is removed
+            // rather than left as dead space.
+            return SizedBox(width: 32.w, height: 32.w);
+          }
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => Get.toNamed(AppRoutes.paywall),
+            child: Image.asset(AppAssets.icDiamond, width: 32.w, height: 32.w),
+          );
+        }),
       ],
     );
   }

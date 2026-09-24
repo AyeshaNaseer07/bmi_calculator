@@ -20,9 +20,21 @@ class RemoteConfigService extends GetxService {
 
   RemoteModel get current => model.value;
   String get firstTimeOnboarding => model.value.firstTimeOnboarding;
-  bool get isFirstTimeOnboardingEnabled => model.value.isFirstTimeOnboarding;
+  bool get isFirstTimeOnboardingEnabled {
+    try {
+      return model.value.isFirstTimeOnboarding;
+    } catch (_) {
+      return true;
+    }
+  }
   String get secondTimeOnboarding => model.value.secondTimeOnboarding;
-  bool get isSecondTimeOnboardingEnabled => model.value.isSecondTimeOnboarding;
+  bool get isSecondTimeOnboardingEnabled {
+    try {
+      return model.value.isSecondTimeOnboarding;
+    } catch (_) {
+      return false;
+    }
+  }
   String get paywallBtnText => model.value.paywallBtnText;
   String get buttonText => model.value.paywallBtnText;
   int get crossDelaySeconds => model.value.crossDelay;
@@ -30,9 +42,37 @@ class RemoteConfigService extends GetxService {
   String get yearlyProductId => model.value.yearlyProductId;
   String get nativeAdId => model.value.nativeAdId;
   String get ads => model.value.ads;
-  bool get isAdsEnabled => model.value.isAdsEnabled;
+  bool get isAdsEnabled {
+    try {
+      return model.value.isAdsEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+  bool get isFullScreenNativeAdEnabled {
+    try {
+      return model.value.isFullScreenNativeAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+  bool get isNativeAdEnabled {
+    try {
+      return model.value.isNativeAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+  String get fullScreenNativeAdId => model.value.fullScreenNativeAdId;
   String get localNotification => model.value.localNotification;
-  bool get isLocalNotificationEnabled => model.value.isLocalNotificationEnabled;
+  bool get isLocalNotificationEnabled {
+    try {
+      return model.value.isLocalNotificationEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+  String get notificationFrequency => model.value.notificationFrequency;
 
   Future<RemoteConfigService> init() async {
     loadCachedConfig();
@@ -66,7 +106,7 @@ class RemoteConfigService extends GetxService {
           updateWithMap(map);
         }
         log(
-          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, monthlyId="${model.value.monthlyProductId}", yearlyId="${model.value.yearlyProductId}", ads=${model.value.ads}, localNotification=${model.value.localNotification}',
+          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, monthlyId="${model.value.monthlyProductId}", yearlyId="${model.value.yearlyProductId}", ads=${model.value.ads}, fullScreenNativeAd=${model.value.fullScreenNativeAd}, nativeAd=${model.value.nativeAd}, localNotification=${model.value.localNotification}',
         );
         return;
       } catch (e) {
@@ -181,9 +221,13 @@ class RemoteConfig {
 
   static String get showNotificationFrequency {
     try {
-      final val = remoteConfig.getString('show_notification_frequency');
+      if (Get.isRegistered<RemoteConfigService>()) {
+        final val = RemoteConfigService.to.notificationFrequency.trim();
+        if (val.isNotEmpty) return val;
+      }
+      final val = remoteConfig.getString('show_notification_frequency').trim();
       if (val.isNotEmpty) return val;
-      final alt = remoteConfig.getString('notification_frequency');
+      final alt = remoteConfig.getString('notification_frequency').trim();
       if (alt.isNotEmpty) return alt;
     } catch (_) {}
     return 'd';

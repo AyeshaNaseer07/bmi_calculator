@@ -68,8 +68,9 @@ class WeightTrackingScreen extends StatelessWidget {
                   : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
 
               // Fixed Y-axis scale: 0, 20, 40, 60, 80, 100, 120 — interval 20
+              // Headroom up to 140.0 ensures the 120.0 weight badge and icon are not cut off
               const double calculatedMinY = 0.0;
-              const double calculatedMaxY = 120.0;
+              const double calculatedMaxY = 140.0;
               const double calculatedInterval = 20.0;
 
               return Column(
@@ -324,14 +325,14 @@ class WeightTrackingScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 22.h),
 
                         // FL Chart Container
                         SizedBox(
-                          height: 175.h,
+                          height: 185.h,
                           child: LineChart(
                             LineChartData(
-                              clipData: const FlClipData.all(),
+                              clipData: const FlClipData.none(),
                               gridData: const FlGridData(show: false),
                               lineTouchData: const LineTouchData(
                                 enabled: false,
@@ -376,7 +377,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                     interval: calculatedInterval,
                                     getTitlesWidget: (value, meta) {
                                       if (value < calculatedMinY ||
-                                          value > calculatedMaxY) {
+                                          value > 120.0) {
                                         return const SizedBox.shrink();
                                       }
                                       return Text(
@@ -673,7 +674,7 @@ class _WeightDotPainter extends FlDotPainter {
     final valueStr = spot.y.toStringAsFixed(1);
 
     if (isLast) {
-      final isNearTop = offset.dy < 24.0;
+      final isNearTop = offset.dy < 10.0;
       final badgeCenterY = isNearTop ? offset.dy + 18.0 : offset.dy - 16.0;
 
       // Draw highlighted teal pill badge with downward pointer
@@ -734,7 +735,7 @@ class _WeightDotPainter extends FlDotPainter {
         ),
       );
     } else {
-      final isNearTop = offset.dy < 18.0;
+      final isNearTop = offset.dy < 10.0;
       final textY = isNearTop ? offset.dy + 10.0 : offset.dy - 14.0;
 
       // Draw normal floating text above dot

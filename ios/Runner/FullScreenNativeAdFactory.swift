@@ -28,8 +28,8 @@ class FullScreenNativeAdFactory: NSObject, FLTNativeAdFactory {
         static let starsToHeadline: CGFloat = 9
         static let headlineToBody: CGFloat = 11
         static let bodyToCTA: CGFloat = 20
-        static let ctaHeight: CGFloat = 48
-        static let ctaSideMargin: CGFloat = 53
+        static let ctaHeight: CGFloat = 54
+        static let ctaSideMargin: CGFloat = 24
         static let ctaBottom: CGFloat = 15
     }
 

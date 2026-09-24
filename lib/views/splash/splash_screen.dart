@@ -24,12 +24,15 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _progressAnimation;
   Timer? _navigationTimer;
 
+  /// Splash screen wait — was 10s, trimmed down so the app feels snappier.
+  static const int _splashSeconds = 3;
+
   @override
   void initState() {
     super.initState();
     _progressController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: _splashSeconds),
     );
 
     _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -38,20 +41,24 @@ class _SplashScreenState extends State<SplashScreen>
 
     _progressController.forward();
 
-    _navigationTimer = Timer(const Duration(seconds: 10), () {
+    _navigationTimer = Timer(const Duration(seconds: _splashSeconds), () {
       if (!mounted) return;
-      final appController = Get.find<AppController>();
 
-      // Always reset onboarding flag so the full first-time flow
-      // (Language Selection → Onboarding → Paywall) is shown on every launch.
-      appController.onboardingSeen.value = false;
-      appController.storage.setOnboardingSeen(false);
-
-      if (appController.remoteConfigService.isFirstTimeOnboardingEnabled) {
-        Get.offAllNamed(AppRoutes.languageSelection);
-      } else {
+      // A premium user has already been through Language Selection,
+      // Onboarding and the Paywall once — never show that flow again.
+      // Every launch, they go straight to Home.
+      final isPremium = Get.isRegistered<AppController>() &&
+          Get.find<AppController>().isPremium.value;
+      if (isPremium) {
         Get.offAllNamed(AppRoutes.home);
+        return;
       }
+
+      // Non-premium: every app flow (first launch and every one after)
+      // starts at Language Selection. Whether the Onboarding slides show
+      // next, and the Paywall shown after that, is decided from there —
+      // same check on every flow, no first-launch/later-launch distinction.
+      Get.offAllNamed(AppRoutes.languageSelection);
     });
   }
 

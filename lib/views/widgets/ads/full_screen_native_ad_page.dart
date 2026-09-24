@@ -41,14 +41,22 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   int _remainingSeconds = _closeDelaySeconds;
   Timer? _countdownTimer;
 
+  // Hard safety net: if the ad never finishes loading (no fill, no network,
+  // or the platform ad view never renders) the user must not be stuck on a
+  // blank/black screen with no way forward. Auto-advance once this fires,
+  // regardless of ad state.
+  static const int _maxWaitSeconds = 8;
+  Timer? _safetyTimer;
+  bool _hasAdvanced = false;
+
   bool get _isAdsEnabled {
     if (Get.isRegistered<AppController>()) {
       if (Get.find<AppController>().isPremium.value) return false;
     }
     if (Get.isRegistered<RemoteConfigService>()) {
-      return RemoteConfigService.to.isAdsEnabled;
+      return RemoteConfigService.to.isFullScreenNativeAdEnabled;
     }
-    return remoteModel.isAdsEnabled;
+    return remoteModel.isFullScreenNativeAdEnabled;
   }
 
   String get _effectiveAdUnitId {
@@ -56,11 +64,11 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
       return widget.adUnitId!;
     }
     if (Get.isRegistered<RemoteConfigService>()) {
-      final remoteAdId = RemoteConfigService.to.nativeAdId;
+      final remoteAdId = RemoteConfigService.to.fullScreenNativeAdId;
       if (remoteAdId.isNotEmpty) return remoteAdId;
     }
-    if (remoteModel.nativeAdId.isNotEmpty) {
-      return remoteModel.nativeAdId;
+    if (remoteModel.fullScreenNativeAdId.isNotEmpty) {
+      return remoteModel.fullScreenNativeAdId;
     }
     return Platform.isIOS
         ? 'ca-app-pub-3940256099942544/3986624511'
@@ -72,6 +80,19 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
     super.initState();
     _loadAd();
     _startCountdown();
+    _safetyTimer = Timer(const Duration(seconds: _maxWaitSeconds), () {
+      if (mounted && !_isLoaded) {
+        _advance();
+      }
+    });
+  }
+
+  /// Moves to the next onboarding page exactly once, however we got here
+  /// (ad failed, ad never loaded, or the user tapped the close button).
+  void _advance() {
+    if (_hasAdvanced) return;
+    _hasAdvanced = true;
+    widget.onNext();
   }
 
   void _startCountdown() {
@@ -94,7 +115,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
       _isFailed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          widget.onNext();
+          _advance();
         }
       });
       return;
@@ -133,6 +154,11 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
           setState(() {
             _isLoaded = false;
             _isFailed = true;
+          });
+          // No ad to show — don't leave the user staring at a blank/black
+          // screen waiting out the close-button countdown; move on now.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _advance();
           });
         },
         onAdOpened: (ad) {
@@ -174,6 +200,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    _safetyTimer?.cancel();
     _nativeAd?.dispose();
     super.dispose();
   }
@@ -197,19 +224,13 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
                 : const FullScreenNativeAdShimmer(),
           ),
 
-          // Top-right countdown -> close (X) control. Nothing is tappable (and
-          // swiping is disabled by the parent PageView) until the countdown
-          // reaches zero and the X appears; tapping the X is the only way to
-          // advance.
-          // Same row as the native AD badge: the native header starts at
-          // max(top inset, 20) and centres its items 30pt below that.
           Positioned(
             top: math.max(MediaQuery.of(context).padding.top, 20) + 16,
             right: 15,
             child: _remainingSeconds > 0
                 ? _CountdownBadge(seconds: _remainingSeconds)
                 : GestureDetector(
-                    onTap: widget.onNext,
+                    onTap: _advance,
                     behavior: HitTestBehavior.opaque,
                     child: const _CloseBadge(),
                   ),

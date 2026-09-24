@@ -8,6 +8,7 @@ import '../models/weight_record_model.dart';
 
 class StorageService {
   static const String _keyOnboardingSeen = 'onboarding_seen';
+  static const String _keyHasLaunchedBefore = 'has_launched_before';
   static const String _keyLanguage = 'selected_language';
   static const String _keyUnitSystem = 'unit_system';
   static const String _keyNotifications = 'notifications_enabled';
@@ -30,6 +31,13 @@ class StorageService {
 
   // ── Onboarding ──
   bool getOnboardingSeen() => _prefs.getBool(_keyOnboardingSeen) ?? false;
+
+  /// False only on the very first app launch (used to pick between the
+  /// `first_time_onboarding` and `second_time_onboarding` Remote Config keys).
+  bool getHasLaunchedBefore() =>
+      _prefs.getBool(_keyHasLaunchedBefore) ?? false;
+  Future<void> setHasLaunchedBefore(bool value) =>
+      _prefs.setBool(_keyHasLaunchedBefore, value);
   Future<void> setOnboardingSeen(bool seen) =>
       _prefs.setBool(_keyOnboardingSeen, seen);
 

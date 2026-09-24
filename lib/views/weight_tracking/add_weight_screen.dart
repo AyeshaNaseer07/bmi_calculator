@@ -1,5 +1,4 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
-import 'package:bmi_calculator/views/widgets/custom_gradient_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +10,7 @@ import '../../data/models/user_profile_model.dart';
 import '../../data/services/storage_service.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/custom_gradient_button.dart';
 import '../widgets/gender_popup_menu.dart';
 import '../widgets/mandatory_label.dart';
 
@@ -36,7 +36,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   final FocusNode _ageFocusNode = FocusNode();
   final FocusNode _heightFocusNode = FocusNode();
 
-  String _selectedGender = 'Select';
+  Gender? _selectedGender;
   bool _isGenderMenuOpen = false;
 
   @override
@@ -52,20 +52,24 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       );
     }
 
-    // Prefill profile info if available
+    // Prefill profile info if available (only if user has saved a profile)
     try {
       final storage = Get.find<StorageService>();
-      final profile = storage.getUserProfile();
-      if (profile.age > 0) {
-        _ageController.text = profile.age.toString();
-      }
-      if (profile.heightCm > 0) {
-        _heightController.text = profile.heightCm.toStringAsFixed(0);
-      }
-      if (profile.gender == Gender.male) {
-        _selectedGender = 'Male';
-      } else if (profile.gender == Gender.female) {
-        _selectedGender = 'Female';
+      if (storage.hasUserProfile()) {
+        final profile = storage.getUserProfile();
+        if (profile.age > 0) {
+          _ageController.text = profile.age.toString();
+        }
+        if (profile.heightCm > 0) {
+          _heightController.text = profile.heightCm.toStringAsFixed(0);
+        }
+        _selectedGender = profile.gender;
+        if (_controller.currentWeight.value <= 0 && profile.weightKg > 0) {
+          _currentWeightController.text = profile.weightKg.toStringAsFixed(1);
+        }
+        if (_controller.goalWeight.value <= 0 && profile.goalWeightKg > 0) {
+          _goalWeightController.text = profile.goalWeightKg.toStringAsFixed(1);
+        }
       }
     } catch (_) {}
 
@@ -79,10 +83,24 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     if (mounted) setState(() {});
   }
 
+  bool get _isCurrentWeightExceeded {
+    final current =
+        double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
+    return current > 120.0;
+  }
+
+  bool get _isGoalWeightExceeded {
+    final goalText = _goalWeightController.text.trim();
+    if (goalText.isEmpty) return false;
+    final goal = double.tryParse(goalText) ?? 0.0;
+    return goal > 120.0;
+  }
+
   bool get _isFormValid {
     final current =
         double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
-    return current > 0;
+    final goal = double.tryParse(_goalWeightController.text.trim()) ?? 0.0;
+    return current > 0 && current <= 120.0 && goal <= 120.0;
   }
 
   void _onSave() async {
@@ -92,13 +110,12 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     final current =
         double.tryParse(_currentWeightController.text.trim()) ?? 0.0;
     final goal = double.tryParse(_goalWeightController.text.trim()) ?? 0.0;
+    if (current <= 0 || current > 120.0 || goal > 120.0) return;
 
     // Update profile age, height, gender if entered
     final ageVal = int.tryParse(_ageController.text.trim());
     final heightVal = double.tryParse(_heightController.text.trim());
-    Gender? genderVal;
-    if (_selectedGender == 'Male') genderVal = Gender.male;
-    if (_selectedGender == 'Female') genderVal = Gender.female;
+    final genderVal = _selectedGender;
 
     if (ageVal != null || heightVal != null || genderVal != null) {
       try {
@@ -158,171 +175,185 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: const CustomAppBar(title: 'Add Weight'),
-          body: SafeArea(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                SingleChildScrollView(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Subtitle
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8.h),
+                    Text(
+                      'Track your weight journey by entering your details below.',
+                      style: TextStyle(
+                        color: const Color(0xFF6B7280),
+                        fontSize: 14.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.5,
+                      ),
+                    ),
+                    SizedBox(height: 18.h),
+                  ],
+                ),
+              ),
+
+              // Scrollable Form Fields
+              Expanded(
+                child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 16.h,
+                  padding: EdgeInsets.only(
+                    left: 18.w,
+                    right: 18.w,
+                    bottom: 24.h,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Current Weight
-                      _buildWeightInputField(
+                      // Current Weight (Mandatory)
+                      _buildFieldLabel(
+                        'Current Weight',
+                        unit: '(kg)',
+                        isMandatory: true,
+                      ),
+                      _buildTextInput(
                         controller: _currentWeightController,
                         focusNode: _currentWeightFocusNode,
-                        label: 'Current Weight',
-                        hint: '00.0',
-                        isMandatory: true,
+                        hint: 'Enter Weight (65.7 kg)',
+                        isError: _isCurrentWeightExceeded,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         textInputAction: TextInputAction.next,
                         onSubmitted: (_) => _goalWeightFocusNode.requestFocus(),
                       ),
-                      SizedBox(height: 16.h),
+                      if (_isCurrentWeightExceeded) ...[
+                        SizedBox(height: 6.h),
+                        Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.exclamationmark_circle_fill,
+                              color: const Color(0xFFEF4444),
+                              size: 14.sp,
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              'Weight cannot exceed 120 kg.',
+                              style: TextStyle(
+                                color: const Color(0xFFEF4444),
+                                fontSize: 12.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      SizedBox(height: 12.h),
 
-                      // Goal Weight
-                      _buildWeightInputField(
+                      // Goal Weight (Optional)
+                      _buildFieldLabel(
+                        'Goal Weight',
+                        unit: '(kg)',
+                        isMandatory: false,
+                      ),
+                      _buildTextInput(
                         controller: _goalWeightController,
                         focusNode: _goalWeightFocusNode,
-                        label: 'Goal Weight',
-                        hint: '00.0',
+                        hint: 'Enter goal weight (60.0 kg)',
+                        isError: _isGoalWeightExceeded,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         textInputAction: TextInputAction.next,
                         onSubmitted: (_) => _ageFocusNode.requestFocus(),
                       ),
-                      SizedBox(height: 16.h),
-
-                      // Gender Dropdown Field
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final double offsetX =
-                              constraints.maxWidth - 144.w - 20.w;
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              popupMenuTheme: const PopupMenuThemeData(
-                                color: Colors.transparent,
-                                surfaceTintColor: Colors.transparent,
-                                elevation: 0,
-                                shadowColor: Colors.transparent,
-                                menuPadding: EdgeInsets.zero,
+                      if (_isGoalWeightExceeded) ...[
+                        SizedBox(height: 6.h),
+                        Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.exclamationmark_circle_fill,
+                              color: const Color(0xFFEF4444),
+                              size: 14.sp,
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              'Goal weight cannot exceed 120 kg.',
+                              style: TextStyle(
+                                color: const Color(0xFFEF4444),
+                                fontSize: 12.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            child: PopupMenuButton<String>(
-                              onSelected: (String gender) {
-                                setState(() {
-                                  _selectedGender = gender;
-                                  _isGenderMenuOpen = false;
-                                });
-                              },
-                              onCanceled: () {
-                                setState(() => _isGenderMenuOpen = false);
-                              },
-                              onOpened: () {
-                                setState(() => _isGenderMenuOpen = true);
-                              },
-                              offset: Offset(offsetX > 0 ? offsetX : 0, 68.h),
-                              constraints: BoxConstraints(
-                                minWidth: 144.w,
-                                maxWidth: 144.w,
-                              ),
-                              itemBuilder: (context) {
-                                return const [
-                                  GenderPopupMenuEntry<String>(
-                                    items: [
-                                      GenderPopupMenuItem(
-                                        value: 'Male',
-                                        label: 'Male',
-                                      ),
-                                      GenderPopupMenuItem(
-                                        value: 'Female',
-                                        label: 'Female',
-                                      ),
-                                      GenderPopupMenuItem(
-                                        value: 'Other',
-                                        label: 'Other',
-                                      ),
-                                    ],
-                                  ),
-                                ];
-                              },
-                              child: _buildCardContainer(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Gender',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 17.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          _selectedGender,
-                                          style: TextStyle(
-                                            color: _selectedGender != 'Select'
-                                                ? Colors.black
-                                                : Colors.grey.withValues(
-                                                    alpha: 0.5,
-                                                  ),
-                                            fontSize: 17.sp,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Icon(
-                                          _isGenderMenuOpen
-                                              ? CupertinoIcons.chevron_up
-                                              : CupertinoIcons.chevron_down,
-                                          size: 13.sp,
-                                          color: Colors.grey.withValues(
-                                            alpha: 0.5,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 16.h),
+                          ],
+                        ),
+                      ],
+                      SizedBox(height: 12.h),
 
-                      // Age Input Field
-                      _buildInputField(
+                      // Age
+                      _buildFieldLabel('Age', isMandatory: false),
+                      _buildTextInput(
                         controller: _ageController,
                         focusNode: _ageFocusNode,
-                        label: 'Age',
-                        hint: '00',
+                        hint: 'Enter age (25)',
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                         onSubmitted: (_) => _heightFocusNode.requestFocus(),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 12.h),
 
-                      // Height Input Field
-                      _buildInputField(
-                        controller: _heightController,
-                        focusNode: _heightFocusNode,
-                        label: 'Height',
-                        hint: '0.0',
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) => _heightFocusNode.unfocus(),
+                      // Gender & Height Row
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Gender Dropdown
+                          Expanded(
+                            flex: 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildFieldLabel('Gender', isMandatory: false),
+                                _buildGenderDropdown(context),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+
+                          // Height
+                          Expanded(
+                            flex: 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildFieldLabel(
+                                  'Height',
+                                  unit: '(cm)',
+                                  isMandatory: false,
+                                ),
+                                _buildTextInput(
+                                  controller: _heightController,
+                                  focusNode: _heightFocusNode,
+                                  hint: 'Enter height (152 cm)',
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                  textInputAction: TextInputAction.done,
+                                  onSubmitted: (_) =>
+                                      _heightFocusNode.unfocus(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 32.h),
+                      SizedBox(height: 24.h),
 
                       // Save Button
                       CustomGradientButton(
@@ -330,155 +361,163 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                         backgroundImage: AppAssets.btnRectangle,
                         onPressed: _isFormValid ? _onSave : null,
                       ),
+                      SizedBox(height: 24.h),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCardContainer({required Widget child}) {
+  Widget _buildFieldLabel(
+    String label, {
+    String? unit,
+    bool isMandatory = true,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 6.h),
+      child: MandatoryLabel(
+        text: label,
+        unitText: unit,
+        isMandatory: isMandatory,
+        style: const TextStyle(
+          color: Color(0xFF111827),
+          fontSize: 13,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextInput({
+    required TextEditingController controller,
+    required String hint,
+    FocusNode? focusNode,
+    TextInputType keyboardType = TextInputType.text,
+    TextInputAction? textInputAction,
+    TextCapitalization textCapitalization = TextCapitalization.none,
+    ValueChanged<String>? onSubmitted,
+    bool isError = false,
+  }) {
     return Container(
-      height: 64.h,
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      width: double.infinity,
+      height: 48.h,
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3833D2AB),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
+        color: isError ? const Color(0xFFFEF2F2) : Colors.white,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(
+          color: isError ? const Color(0xFFEF4444) : const Color(0xFFD4EFE6),
+          width: isError ? 1.5.w : 1.w,
+        ),
       ),
-      child: child,
-    );
-  }
-
-  /// Weight field with teal "kg" unit
-  Widget _buildWeightInputField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    FocusNode? focusNode,
-    TextInputAction? textInputAction,
-    ValueChanged<String>? onSubmitted,
-    bool isMandatory = false,
-  }) {
-    return _buildCardContainer(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          MandatoryLabel(
-            text: label,
-            isMandatory: isMandatory,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 17.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
-            ),
+      alignment: Alignment.centerLeft,
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        textCapitalization: textCapitalization,
+        onSubmitted: onSubmitted,
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        style: TextStyle(
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w600,
+          color: isError ? const Color(0xFFDC2626) : AppColors.textDark,
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textLight,
           ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              focusNode: focusNode,
-              textInputAction: textInputAction,
-              onSubmitted: onSubmitted,
-              onTapOutside: (_) =>
-                  FocusManager.instance.primaryFocus?.unfocus(),
-              textAlign: TextAlign.end,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 17.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: TextStyle(
-                  color: Colors.grey.withValues(alpha: 0.5),
-                  fontSize: 17.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ),
-        ],
+          border: InputBorder.none,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+        ),
       ),
     );
   }
 
-  /// Generic input field for Age and Height
-  Widget _buildInputField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required TextInputType keyboardType,
-    FocusNode? focusNode,
-    TextInputAction? textInputAction,
-    ValueChanged<String>? onSubmitted,
-    bool isMandatory = false,
-  }) {
-    return _buildCardContainer(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          MandatoryLabel(
-            text: label,
-            isMandatory: isMandatory,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 17.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
+  Widget _buildGenderDropdown(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        popupMenuTheme: const PopupMenuThemeData(
+          color: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          menuPadding: EdgeInsets.zero,
+        ),
+      ),
+      child: PopupMenuButton<Gender>(
+        onSelected: (Gender g) {
+          setState(() {
+            _selectedGender = g;
+            _isGenderMenuOpen = false;
+          });
+        },
+        onCanceled: () {
+          setState(() => _isGenderMenuOpen = false);
+        },
+        onOpened: () {
+          setState(() => _isGenderMenuOpen = true);
+        },
+        offset: Offset(0, 52.h),
+        constraints: BoxConstraints(minWidth: 144.w, maxWidth: 144.w),
+        itemBuilder: (context) {
+          return [
+            GenderPopupMenuEntry<Gender>(
+              items: Gender.values.map((g) {
+                return GenderPopupMenuItem(value: g, label: g.displayName);
+              }).toList(),
+            ),
+          ];
+        },
+        child: Container(
+          width: double.infinity,
+          height: 48.h,
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(
+              color: _isGenderMenuOpen
+                  ? const Color(0xFF2FD1A6)
+                  : const Color(0xFFD4EFE6),
             ),
           ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              focusNode: focusNode,
-              textInputAction: textInputAction,
-              onSubmitted: onSubmitted,
-              onTapOutside: (_) =>
-                  FocusManager.instance.primaryFocus?.unfocus(),
-              textAlign: TextAlign.end,
-              keyboardType: keyboardType,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 17.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: TextStyle(
-                  color: Colors.grey.withValues(alpha: 0.5),
-                  fontSize: 17.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _selectedGender?.displayName ?? 'Select',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: _selectedGender != null
+                      ? FontWeight.w600
+                      : FontWeight.w400,
+                  color: _selectedGender != null
+                      ? AppColors.textDark
+                      : AppColors.textLight,
                 ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
               ),
-            ),
+              Icon(
+                _isGenderMenuOpen
+                    ? CupertinoIcons.chevron_up
+                    : CupertinoIcons.chevron_down,
+                size: 14.sp,
+                color: Colors.black,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

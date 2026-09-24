@@ -38,13 +38,17 @@ class _NativeAdCardState extends State<NativeAdCard> {
   bool _isFailed = false;
 
   bool get _isAdsEnabled {
-    if (Get.isRegistered<AppController>()) {
-      if (Get.find<AppController>().isPremium.value) return false;
+    try {
+      if (Get.isRegistered<AppController>()) {
+        if (Get.find<AppController>().isPremium.value) return false;
+      }
+      if (Get.isRegistered<RemoteConfigService>()) {
+        return RemoteConfigService.to.isNativeAdEnabled;
+      }
+      return remoteModel.isNativeAdEnabled;
+    } catch (_) {
+      return true;
     }
-    if (Get.isRegistered<RemoteConfigService>()) {
-      return RemoteConfigService.to.isAdsEnabled;
-    }
-    return remoteModel.isAdsEnabled;
   }
 
   String get _effectiveAdUnitId {

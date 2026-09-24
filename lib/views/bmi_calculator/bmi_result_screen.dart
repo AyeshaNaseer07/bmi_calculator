@@ -1,4 +1,5 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -58,7 +59,7 @@ class BMIResultScreen extends StatelessWidget {
                 ),
                 child: Center(
                   child: Icon(
-                    Icons.share_outlined,
+                    CupertinoIcons.share,
                     size: 17.sp,
                     color: const Color(0xFF1E2D2F),
                   ),

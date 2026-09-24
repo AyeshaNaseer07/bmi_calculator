@@ -265,6 +265,12 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
         height: 1.25,
       );
 
+      // Exact horizontal centers of the gauge arc ends:
+      final imageLeft = 4.w;
+      final imageWidth = (size.width - 8.w).clamp(0.0, size.width);
+      final leftGaugeEndX = imageLeft + imageWidth * (23.2 / 556.0);
+      final rightGaugeEndX = imageLeft + imageWidth * (529.7 / 556.0);
+
       final textPainterLow = TextPainter(
         text: TextSpan(
           children: [
@@ -278,7 +284,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       textPainterLow.paint(
         canvas,
         Offset(
-          (size.width * 0.115) - (textPainterLow.width / 2),
+          leftGaugeEndX - (textPainterLow.width / 2),
           center.dy + size.width * 0.015,
         ),
       );
@@ -296,7 +302,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       textPainterHigh.paint(
         canvas,
         Offset(
-          (size.width * 0.885) - (textPainterHigh.width / 2),
+          rightGaugeEndX - (textPainterHigh.width / 2),
           center.dy + size.width * 0.015,
         ),
       );

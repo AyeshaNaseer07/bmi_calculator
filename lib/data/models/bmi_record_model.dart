@@ -61,14 +61,23 @@ enum BMICategory {
     }
   }
 
+  String get bmiRangeDescription {
+    switch (this) {
+      case BMICategory.underweight:
+        return 'Your BMI is below the healthy range.';
+      case BMICategory.normal:
+        return 'Your BMI is within the healthy range.';
+      case BMICategory.overweight:
+        return 'Your BMI is above the healthy range.';
+      case BMICategory.obese:
+        return 'Your BMI is in the obesity range.';
+    }
+  }
+
   Widget buildFeedbackIcon({double size = 22}) {
     switch (this) {
       case BMICategory.underweight:
-        return Icon(
-          Icons.info_outline_rounded,
-          color: color,
-          size: size,
-        );
+        return Icon(Icons.info_outline_rounded, color: color, size: size);
       case BMICategory.normal:
         return Image.asset(
           AppAssets.shieldicon,
@@ -77,19 +86,12 @@ enum BMICategory {
           fit: BoxFit.contain,
         );
       case BMICategory.overweight:
-        return Icon(
-          Icons.warning_amber_rounded,
-          color: color,
-          size: size,
-        );
+        return Icon(Icons.warning_amber_rounded, color: color, size: size);
       case BMICategory.obese:
         return Container(
           width: size,
           height: size,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           child: Icon(
             Icons.close_rounded,
             color: Colors.white,

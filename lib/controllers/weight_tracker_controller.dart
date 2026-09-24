@@ -120,6 +120,11 @@ class WeightTrackerController extends GetxController {
     _recalculateProgress();
   }
 
+  static const List<String> _monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+
   List<FlSpot> getSpots() {
     if (weightHistory.isEmpty) return [];
 
@@ -158,91 +163,99 @@ class WeightTrackerController extends GetxController {
         (i) => FlSpot(i.toDouble(), recent[i].weightKg),
       );
     } else if (tf == 'month') {
-      // Records in the last 30 days, grouped by day
-      final cutoff = now.subtract(const Duration(days: 30));
-      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
-      if (recent.isEmpty) return [];
-      // Up to 7 evenly spaced points
-      final step = (recent.length / 7).ceil();
-      final sampled = <WeightRecord>[];
-      for (int i = 0; i < recent.length; i += step) {
-        sampled.add(recent[i]);
+      // 6-month window ending at current month
+      final Map<int, double> monthMap = {};
+      for (int i = 5; i >= 0; i--) {
+        final slotIndex = 5 - i;
+        final startOfMonth = DateTime(now.year, now.month - i, 1);
+        final endOfMonth = DateTime(now.year, now.month - i + 1, 1);
+        final inMonth = sorted
+            .where((r) =>
+                !r.date.isBefore(startOfMonth) && r.date.isBefore(endOfMonth))
+            .toList();
+        if (inMonth.isNotEmpty) {
+          monthMap[slotIndex] = inMonth.last.weightKg;
+        }
       }
-      if (sampled.last != recent.last) sampled.add(recent.last);
+      if (monthMap.isNotEmpty) {
+        final spots =
+            monthMap.entries
+                .map((e) => FlSpot(e.key.toDouble(), e.value))
+                .toList()
+              ..sort((a, b) => a.x.compareTo(b.x));
+        return spots;
+      }
+      // Fallback if no records in the current 6-month window
+      final recent = sorted.length > 6
+          ? sorted.sublist(sorted.length - 6)
+          : sorted;
       return List.generate(
-        sampled.length,
-        (i) => FlSpot(i.toDouble(), sampled[i].weightKg),
+        recent.length,
+        (i) => FlSpot(i.toDouble(), recent[i].weightKg),
       );
     } else {
-      // Year: records in the last 12 months, up to 7 points
-      final cutoff = DateTime(now.year - 1, now.month, now.day);
-      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
-      if (recent.isEmpty) return [];
-      final step = (recent.length / 7).ceil();
-      final sampled = <WeightRecord>[];
-      for (int i = 0; i < recent.length; i += step) {
-        sampled.add(recent[i]);
+      // 5-year window ending at current year
+      final Map<int, double> yearMap = {};
+      for (int i = 4; i >= 0; i--) {
+        final slotIndex = 4 - i;
+        final targetYear = now.year - i;
+        final inYear = sorted.where((r) => r.date.year == targetYear).toList();
+        if (inYear.isNotEmpty) {
+          yearMap[slotIndex] = inYear.last.weightKg;
+        }
       }
-      if (sampled.last != recent.last) sampled.add(recent.last);
+      if (yearMap.isNotEmpty) {
+        final spots =
+            yearMap.entries
+                .map((e) => FlSpot(e.key.toDouble(), e.value))
+                .toList()
+              ..sort((a, b) => a.x.compareTo(b.x));
+        return spots;
+      }
+      // Fallback if no records in the 5-year window
+      final recent = sorted.length > 5
+          ? sorted.sublist(sorted.length - 5)
+          : sorted;
       return List.generate(
-        sampled.length,
-        (i) => FlSpot(i.toDouble(), sampled[i].weightKg),
+        recent.length,
+        (i) => FlSpot(i.toDouble(), recent[i].weightKg),
       );
     }
   }
 
   /// Returns a flat horizontal dashed line at the goal weight value.
-  /// Spans the same X range as getSpots().
+  /// Spans across the full X-axis range of the chart.
   List<FlSpot> getGoalSpots() {
     final goal = goalWeight.value;
     if (goal <= 0) return [];
-    final spots = getSpots();
-    if (spots.isEmpty) return [];
-    final maxX = spots.last.x;
+    final labels = getXAxisLabels();
+    if (labels.isEmpty) return [];
+    final maxX = (labels.length - 1).toDouble();
     return [FlSpot(0, goal), FlSpot(maxX, goal)];
   }
 
   List<String> getXAxisLabels() {
     final tf = selectedTimeframe.value.toLowerCase();
-    final spots = getSpots();
-    final count = spots.length;
+    final now = DateTime.now();
 
     if (tf == 'week') {
       // Always return all 7 days so the chart spans Mon–Sun (maxX = 6)
       return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     } else if (tf == 'month') {
-      if (count == 0) return [];
-      // Generate relative day labels for each sampled point
-      final sorted = List<WeightRecord>.from(weightHistory)
-        ..sort((a, b) => a.date.compareTo(b.date));
-      final now = DateTime.now();
-      final cutoff = now.subtract(const Duration(days: 30));
-      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
-      if (recent.isEmpty) return [];
-      final step = (recent.length / 7).ceil();
-      final sampled = <WeightRecord>[];
-      for (int i = 0; i < recent.length; i += step) {
-        sampled.add(recent[i]);
+      // Show 6 month names leading up to current month (e.g. Apr, May, Jun, Jul, Aug, Sep)
+      final List<String> labels = [];
+      for (int i = 5; i >= 0; i--) {
+        final d = DateTime(now.year, now.month - i, 1);
+        labels.add(_monthNames[d.month - 1]);
       }
-      if (sampled.last != recent.last) sampled.add(recent.last);
-      return sampled.map((r) => '${r.date.day}/${r.date.month}').toList();
+      return labels;
     } else {
-      if (count == 0) return [];
-      final sorted = List<WeightRecord>.from(weightHistory)
-        ..sort((a, b) => a.date.compareTo(b.date));
-      final now = DateTime.now();
-      final cutoff = DateTime(now.year - 1, now.month, now.day);
-      final recent = sorted.where((r) => r.date.isAfter(cutoff)).toList();
-      if (recent.isEmpty) return [];
-      final step = (recent.length / 7).ceil();
-      final sampled = <WeightRecord>[];
-      for (int i = 0; i < recent.length; i += step) {
-        sampled.add(recent[i]);
+      // Show 5 years leading up to current year (e.g. 2022, 2023, 2024, 2025, 2026)
+      final List<String> labels = [];
+      for (int i = 4; i >= 0; i--) {
+        labels.add((now.year - i).toString());
       }
-      if (sampled.last != recent.last) sampled.add(recent.last);
-      return sampled
-          .map((r) => '${r.date.month}/${r.date.year.toString().substring(2)}')
-          .toList();
+      return labels;
     }
   }
 }

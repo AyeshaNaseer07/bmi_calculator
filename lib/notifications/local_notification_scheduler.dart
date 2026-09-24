@@ -6,6 +6,9 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:get/get.dart';
+
+import '../data/models/remote_model.dart';
 import '../data/services/remote_config_service.dart';
 
 /// Schedules repeating local notifications based on Remote Config frequency.
@@ -80,16 +83,31 @@ class LocalNotificationScheduler {
   ];
 
   /// How many notifications to pre-schedule per frequency.
-  static const int _hourlyCount = 24; // 1 day worth
-  static const int _dailyCount = 14; // 2 weeks worth
-  static const int _weeklyCount = 8; // 2 months worth
+  static const int _dailyCount = 14; // 2 weeks worth (daily)
+  static const int _weeklyCount = 8; // 2 months worth (weekly)
+  static const int _monthlyCount = 6; // 6 months worth (monthly)
 
   /// Call this after Remote Config is ready.
   /// Cancels any existing schedule and pre-schedules a batch of
   /// future notifications, each with a different message.
   Future<void> scheduleNotifications() async {
-    final frequency = RemoteConfig.showNotificationFrequency;
-    log('Scheduling notifications with frequency: $frequency', name: _tag);
+    // Remote Config `local_notification` on/off switch.
+    final bool enabled = Get.isRegistered<RemoteConfigService>()
+        ? RemoteConfigService.to.isLocalNotificationEnabled
+        : remoteModel.isLocalNotificationEnabled;
+    if (!enabled) {
+      log(
+        'local_notification is OFF — cancelling scheduled notifications',
+        name: _tag,
+      );
+      await _cancelAll();
+      return;
+    }
+
+    final rawFrequency = RemoteConfig.showNotificationFrequency
+        .trim()
+        .toLowerCase();
+    log('Scheduling notifications with frequency: $rawFrequency', name: _tag);
 
     // Initialize timezone data and set local location
     tz_data.initializeTimeZones();
@@ -107,16 +125,24 @@ class LocalNotificationScheduler {
     final int count;
     final Duration interval;
 
-    switch (frequency) {
-      case 'h':
-        count = _hourlyCount;
-        interval = const Duration(hours: 1);
-        break;
+    switch (rawFrequency) {
       case 'w':
+      case 'week':
+      case 'weekly':
         count = _weeklyCount;
         interval = const Duration(days: 7);
         break;
+
+      case 'm':
+      case 'month':
+      case 'monthly':
+        count = _monthlyCount;
+        interval = const Duration(days: 30);
+        break;
+
       case 'd':
+      case 'day':
+      case 'daily':
       default:
         count = _dailyCount;
         interval = const Duration(days: 1);
@@ -172,7 +198,7 @@ class LocalNotificationScheduler {
 
   /// Cancel all scheduled notifications in our ID range.
   Future<void> _cancelAll() async {
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 50; i++) {
       await _plugin.cancel(id: _baseId + i);
     }
     log('Previous notifications cancelled', name: _tag);

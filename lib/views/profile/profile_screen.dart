@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../controllers/app_controller.dart';
@@ -94,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
                   final displayName = name.isNotEmpty ? name : 'Guest User';
                   final tagline = name.isNotEmpty
                       ? 'Manage your health profile'
-                      : 'Start your health journey\nby adding your details.';
+                      : 'Add your name to personalize\n your experience.';
 
                   return CustomCard(
                     borderRadius: 20.r,
@@ -234,22 +235,10 @@ class ProfileScreen extends StatelessWidget {
                 }),
                 SizedBox(height: 18.h),
 
-                // Account Section
-                Text(
-                  'Account',
-                  style: TextStyle(
-                    color: const Color(0xFF111827),
-                    fontSize: 16.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-
                 // Account List Card
                 Container(
                   width: double.infinity,
-                  height: 368.h,
+                  height: 426.h,
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -381,89 +370,111 @@ class ProfileScreen extends StatelessWidget {
                           onTap: () => sendFeedback(),
                         ),
                         const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                        // Share App
+                        _buildAccountRow(
+                          icon: CupertinoIcons.share_up,
+                          title: 'Share App',
+                          subtitle: 'Share this app with friends & family',
+                          onTap: () {
+                            SharePlus.instance.share(
+                              ShareParams(
+                                text: 'Check out this BMI Calculator app! Track your health and stay fit. Download it now!',
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
-                // Unlock Premium Banner (Screenshot 19)
-                GestureDetector(
-                  onTap: () => Get.toNamed(AppRoutes.paywall),
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(20.r),
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFFDFDFE),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24.r),
+                // Already premium — nothing to upsell, so the banner is
+                // removed rather than left as dead space.
+                Obx(() {
+                  if (appController.isPremium.value) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: EdgeInsets.only(top: 18.h),
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed(AppRoutes.paywall),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(20.r),
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFFFDFDFE),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24.r),
+                          ),
+                          shadows: [
+                            BoxShadow(
+                              color: Color(0x3F000000),
+                              blurRadius: 4,
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.emoji_events_outlined,
+                              color: const Color(0xFFFFD700),
+                              size: 26.sp,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Unlock Premium',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 13.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    'Get advanced insights, reports &\nmore',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 10.sp,
+                                      height: 1.2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Get.toNamed(AppRoutes.paywall),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF09B389),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 8.h,
+                                ),
+                              ),
+                              child: Text(
+                                'Go Premium',
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      shadows: [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        ),
-                      ],
                     ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.emoji_events_outlined,
-                          color: const Color(0xFFFFD700),
-                          size: 26.sp,
-                        ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Unlock Premium',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                              SizedBox(height: 2.h),
-                              Text(
-                                'Get advanced insights, reports &\nmore',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10.sp,
-                                  height: 1.2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => Get.toNamed(AppRoutes.paywall),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF09B389),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 8.h,
-                            ),
-                          ),
-                          child: Text(
-                            'Go Premium',
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),
@@ -592,9 +603,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(24.r),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         padding: EdgeInsets.only(
           left: 20.w,
@@ -629,10 +638,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
             SizedBox(height: 4.h),
             Text(
               'Enter your name to personalize your health journey.',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.textLight,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.textLight),
             ),
             SizedBox(height: 16.h),
             Container(
@@ -744,4 +750,3 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
     );
   }
 }
-
