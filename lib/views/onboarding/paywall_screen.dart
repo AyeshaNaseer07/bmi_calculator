@@ -125,7 +125,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               text: 'Unlock ',
                               style: TextStyle(
                                 color: const Color(0xFF111827),
-                                fontSize: 32,
+                                fontSize: 32.sp,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w800,
                               ),
@@ -134,7 +134,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               text: 'Premium',
                               style: TextStyle(
                                 color: const Color(0xFF0AA37D),
-                                fontSize: 32,
+                                fontSize: 32.sp,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w800,
                               ),
@@ -155,7 +155,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: const Color(0xFF4B5563),
-                      fontSize: 12.5,
+                      fontSize: 12.5.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
                       height: 1.50,
@@ -269,7 +269,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   'Monthly Plan',
                                   style: TextStyle(
                                     color: const Color(0xFF4B5563),
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -279,7 +279,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   '\$4.99',
                                   style: TextStyle(
                                     color: const Color(0xFF33D2AB),
-                                    fontSize: 22,
+                                    fontSize: 22.sp,
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -288,7 +288,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   'month',
                                   style: TextStyle(
                                     color: const Color(0xFF9CA3AF),
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -308,12 +308,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            Image.asset(AppAssets.preOr, width: 32, height: 32),
+                            Image.asset(AppAssets.preOr, width: 32.w, height: 32.h),
                             Text(
                               'OR',
                               style: TextStyle(
                                 color: const Color(0xFF4B5563),
-                                fontSize: 10,
+                                fontSize: 10.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w600,
                               ),
@@ -387,7 +387,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       'Yearly Plan',
                                       style: TextStyle(
                                         color: const Color(0xFF4B5563),
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -397,7 +397,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       '\$29.99',
                                       style: TextStyle(
                                         color: const Color(0xFF33D2AB),
-                                        fontSize: 22,
+                                        fontSize: 22.sp,
                                         fontFamily: 'Outfit',
                                         fontWeight: FontWeight.w800,
                                       ),
@@ -406,7 +406,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       'Year',
                                       style: TextStyle(
                                         color: const Color(0xFF9CA3AF),
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -441,7 +441,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       'BEST VALUE',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 8,
+                                        fontSize: 8.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -484,7 +484,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     '7 Days Free • Cancel Anytime',
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
                     ),
@@ -559,7 +559,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               title,
               style: TextStyle(
                 color: const Color(0xFF111827),
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),

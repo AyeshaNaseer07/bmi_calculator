@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_colors.dart';
 
@@ -26,9 +27,9 @@ class MandatoryLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveStyle =
         style ??
-        const TextStyle(
+        TextStyle(
           color: Color(0xFF111827),
-          fontSize: 13,
+          fontSize: 13.sp,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w900,
         );

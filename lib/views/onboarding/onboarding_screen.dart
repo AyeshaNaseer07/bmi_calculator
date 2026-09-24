@@ -114,9 +114,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
               if (_currentIndex >= 2)
                 Positioned(
-                  left: 24,
-                  right: 24,
-                  bottom: 20,
+                  left: 24.w,
+                  right: 24.w,
+                  bottom: 20.h,
                   child: SafeArea(
                     top: false,
                     child: Column(
@@ -130,11 +130,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             return AnimatedContainer(
                               duration: const Duration(milliseconds: 250),
                               curve: Curves.easeInOut,
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              margin: EdgeInsets.symmetric(horizontal: 4.w),
                               width: 8.w,
                               height: 8.h,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(4.r),
                                 color: isActive
                                     ? const Color(0xFF24CCA7)
                                     : const Color(0xFFC7F3EA),
@@ -142,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             );
                           }),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 20.h),
 
                         // Next Gradient Button
                         _AnimatedGradientNextButton(onPressed: _onNext),
@@ -266,7 +266,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         // Full background illustration - Top to Middle
         Positioned(
-          top: 56,
+          top: 56.h,
           left: 0,
           right: 0,
           height: MediaQuery.of(context).size.height * 0.58,
@@ -275,18 +275,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
         // Title and Subtitle positioned above the bottom controls
         Positioned(
-          left: 24,
-          right: 24,
-          bottom: 126,
+          left: 24.w,
+          right: 24.w,
+          bottom: 126.h,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.black,
-                    fontSize: 32,
+                    fontSize: 32.sp,
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w700,
                   ),
@@ -303,9 +303,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontFamily: 'SF Pro',
                   fontWeight: FontWeight.w400,
                 ),

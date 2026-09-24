@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../core/utils/photo_permission.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/storage_service.dart';
 
@@ -37,6 +38,8 @@ class ProfileController extends GetxController {
 
   /// Opens the device gallery and, if the user picks an image, saves its path.
   Future<void> pickProfileImage() async {
+    if (!await PhotoPermission.request()) return;
+
     final XFile? picked = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 85,

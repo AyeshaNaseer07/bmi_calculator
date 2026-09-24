@@ -38,8 +38,8 @@ class HealthInsightResultScreen extends StatelessWidget {
             children: [
               // Top Understand Your Health Card
               Container(
-                width: 343,
-                height: 187,
+                width: double.infinity,
+                height: 187.h,
                 decoration: ShapeDecoration(
                   color: const Color(0xFF33D2AB).withValues(alpha: 0.05),
                   shape: RoundedRectangleBorder(
@@ -47,7 +47,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                       width: 0.25,
                       color: Color(0xFF33D2AB),
                     ),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                   shadows: [
                     BoxShadow(
@@ -67,7 +67,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                         style: TextStyle(
                           color: const Color(0xFF111827)
                               .withValues(alpha: 0.64),
-                          fontSize: 13,
+                          fontSize: 13.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                         ),
@@ -81,9 +81,9 @@ class HealthInsightResultScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Your BMI',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color(0xFF111827),
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -93,7 +93,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                                 bmi.toStringAsFixed(1),
                                 style: TextStyle(
                                   color: category.color,
-                                  fontSize: 32,
+                                  fontSize: 32.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -103,7 +103,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                                 category.label,
                                 style: TextStyle(
                                   color: category.color,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -114,7 +114,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                                 style: TextStyle(
                                   color: const Color(0xFF111827)
                                       .withValues(alpha: 0.64),
-                                  fontSize: 10,
+                                  fontSize: 10.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -137,9 +137,9 @@ class HealthInsightResultScreen extends StatelessWidget {
               // Health Summary Section
               Text(
                 'Health Summary',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFF111827),
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
@@ -182,7 +182,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                 'What It Means',
                 style: TextStyle(
                   color: const Color(0xFF111827),
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
@@ -213,7 +213,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                             "You're doing great!",
                             style: TextStyle(
                               color: const Color(0xFF111827),
-                              fontSize: 11,
+                              fontSize: 11.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -223,7 +223,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                             category.feedbackMessage,
                             style: TextStyle(
                               color: const Color(0xFF111827),
-                              fontSize: 10,
+                              fontSize: 10.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w400,
                             ),
@@ -299,7 +299,7 @@ class HealthInsightResultScreen extends StatelessWidget {
             label,
             style: TextStyle(
               color: const Color(0xFF111827),
-              fontSize: 10,
+              fontSize: 10.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
             ),
@@ -309,7 +309,7 @@ class HealthInsightResultScreen extends StatelessWidget {
             value,
             style: TextStyle(
               color: const Color(0xFF33D2AB),
-              fontSize: 12,
+              fontSize: 12.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
             ),
@@ -350,7 +350,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: const Color(0xFF111827),
-                    fontSize: 11,
+                    fontSize: 11.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
                   ),
@@ -360,7 +360,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                   description,
                   style: TextStyle(
                     color: const Color(0xFF111827),
-                    fontSize: 10,
+                    fontSize: 10.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
                   ),

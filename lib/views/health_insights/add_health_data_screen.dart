@@ -432,9 +432,9 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
         text: label,
         unitText: unit,
         isMandatory: isMandatory,
-        style: const TextStyle(
+        style: TextStyle(
           color: Color(0xFF111827),
-          fontSize: 13,
+          fontSize: 13.sp,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
         ),

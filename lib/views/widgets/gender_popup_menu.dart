@@ -28,10 +28,10 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 144,
-      height: 137,
+      width: 144.w,
+      height: 137.h,
       decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11.r)),
       ),
       child: Stack(
         children: [
@@ -39,8 +39,8 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
             left: 0,
             top: 0,
             child: Container(
-              width: 144,
-              height: 137,
+              width: 144.w,
+              height: 137.h,
               decoration: ShapeDecoration(
                 gradient: LinearGradient(
                   begin: Alignment(0.50, -2.0),
@@ -48,7 +48,7 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
                   colors: [const Color(0xFFD9F8F1), Colors.white],
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(11),
+                  borderRadius: BorderRadius.circular(11.r),
                 ),
                 shadows: [
                   BoxShadow(

@@ -450,7 +450,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       'Your Progress',
                                       style: TextStyle(
                                         color: const Color(0xFF111827),
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -462,7 +462,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         'Keep tracking to reach \nyour health goals.',
                                         style: TextStyle(
                                           color: const Color(0xFF111827),
-                                          fontSize: 11,
+                                          fontSize: 11.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w400,
                                         ),
@@ -495,7 +495,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             decoration: ShapeDecoration(
                               color: const Color(0xFFF0F9F8),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20.r),
                               ),
                             ),
                             child: Row(
@@ -731,7 +731,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             'BMI History',
                             style: TextStyle(
                               color: const Color(0xFF111827),
-                              fontSize: 15,
+                              fontSize: 15.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -1245,7 +1245,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           label,
           style: TextStyle(
             color: const Color(0xFF111827),
-            fontSize: 13,
+            fontSize: 13.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
@@ -1255,7 +1255,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           value,
           style: TextStyle(
             color: const Color(0xFF33D2AB),
-            fontSize: 20,
+            fontSize: 20.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w700,
           ),
@@ -1265,7 +1265,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           subtitle,
           style: TextStyle(
             color: const Color(0xFF111827).withValues(alpha: .44),
-            fontSize: 8,
+            fontSize: 8.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
@@ -1359,8 +1359,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     GestureDetector(
                       onTap: () => Get.toNamed(AppRoutes.bmiCalculator),
                       child: Container(
-                        width: 117,
-                        height: 36,
+                        width: 117.w,
+                        height: 36.h,
                         decoration: ShapeDecoration(
                           gradient: LinearGradient(
                             begin: Alignment(0.50, 0.00),
@@ -1371,7 +1371,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ],
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(6.r),
                           ),
                         ),
                         child: Center(
@@ -1434,7 +1434,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   'Your BMI history helps you understand your health journey over time and stay on track with your goals.',
                   style: TextStyle(
                     color: const Color(0xFF111827),
-                    fontSize: 11,
+                    fontSize: 11.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
                   ),
@@ -1476,12 +1476,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
         // Unlock Premium Banner (Screenshot 19)
         Container(
-          width: 343,
-          padding: const EdgeInsets.all(20),
+          width: double.infinity,
+          padding: EdgeInsets.all(20.r),
           decoration: ShapeDecoration(
             color: const Color(0xFFFDFDFE),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(24.r),
             ),
             shadows: [
               BoxShadow(
@@ -1583,7 +1583,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 title,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 13,
+                  fontSize: 13.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
                 ),
@@ -1593,7 +1593,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 subtitle,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w500,
                 ),

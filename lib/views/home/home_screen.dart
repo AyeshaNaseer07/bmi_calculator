@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
         body: Stack(
           children: [
             Positioned(
-              top: 10,
+              top: 10.h,
               left: 0,
               right: 0,
               child: IgnorePointer(
@@ -135,7 +135,7 @@ class HomeScreen extends StatelessWidget {
                                 'Features',
                                 style: TextStyle(
                                   color: const Color(0xFF1A252C),
-                                  fontSize: 18,
+                                  fontSize: 18.sp,
                                   fontFamily: 'Instrument Sans',
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -211,9 +211,9 @@ class HomeScreen extends StatelessWidget {
                 greeting,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFF1A252C),
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontFamily: 'Instrument Sans',
                   fontWeight: FontWeight.w700,
                 ),
@@ -228,9 +228,9 @@ class HomeScreen extends StatelessWidget {
           hasData
               ? "Let's track your health today."
               : "Welcome! Let's begin your health journey.",
-          style: const TextStyle(
+          style: TextStyle(
             color: Color(0xFF647E80),
-            fontSize: 11.5,
+            fontSize: 11.5.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),
@@ -251,7 +251,7 @@ class HomeScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: const Color(0xFF1A252C),
-              fontSize: 18,
+              fontSize: 18.sp,
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w700,
             ),
@@ -262,7 +262,7 @@ class HomeScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: const Color(0xFF7A8B94),
-              fontSize: 13,
+              fontSize: 13.sp,
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w400,
               height: 1.40,
@@ -307,7 +307,7 @@ class HomeScreen extends StatelessWidget {
                     'Your BMI',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 15.sp,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w600,
                     ),
@@ -317,7 +317,7 @@ class HomeScreen extends StatelessWidget {
                     record.bmiValue.toStringAsFixed(1),
                     style: TextStyle(
                       color: record.category.color,
-                      fontSize: 36,
+                      fontSize: 36.sp,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w800,
                     ),
@@ -338,7 +338,7 @@ class HomeScreen extends StatelessWidget {
                       record.category.label,
                       style: TextStyle(
                         color: record.category.color,
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
@@ -366,7 +366,7 @@ class HomeScreen extends StatelessWidget {
                     'Last Updated',
                     style: TextStyle(
                       color: const Color(0xFF96ADB0),
-                      fontSize: 10,
+                      fontSize: 10.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
                     ),
@@ -376,7 +376,7 @@ class HomeScreen extends StatelessWidget {
                     formattedTime,
                     style: TextStyle(
                       color: const Color(0xFF1E2D2F),
-                      fontSize: 10,
+                      fontSize: 10.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
                     ),
@@ -515,7 +515,7 @@ class HomeScreen extends StatelessWidget {
           value,
           style: TextStyle(
             color: const Color(0xFF1E2D2F),
-            fontSize: 12,
+            fontSize: 12.sp,
             fontFamily: 'Outfit',
             fontWeight: FontWeight.w700,
           ),
@@ -525,7 +525,7 @@ class HomeScreen extends StatelessWidget {
           label,
           style: TextStyle(
             color: const Color(0xFF647E80),
-            fontSize: 11,
+            fontSize: 11.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),
@@ -550,7 +550,7 @@ class HomeScreen extends StatelessWidget {
                 text: 'BMI ',
                 style: TextStyle(
                   color: const Color(0xFF1E2D2F),
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
                 ),
@@ -559,7 +559,7 @@ class HomeScreen extends StatelessWidget {
                 text: 'Categories',
                 style: TextStyle(
                   color: const Color(0xFF33D2AB),
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
                 ),
@@ -726,7 +726,7 @@ class HomeScreen extends StatelessWidget {
             title,
             style: TextStyle(
               color: const Color(0xFF1A252C),
-              fontSize: 14,
+              fontSize: 14.sp,
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w700,
             ),
@@ -736,7 +736,7 @@ class HomeScreen extends StatelessWidget {
             subtitle,
             style: TextStyle(
               color: const Color(0xFF7A8B94),
-              fontSize: 11,
+              fontSize: 11.sp,
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w400,
               height: 1.30,

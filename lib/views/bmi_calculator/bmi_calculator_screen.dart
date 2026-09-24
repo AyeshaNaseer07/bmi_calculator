@@ -43,8 +43,8 @@ class BMICalculatorScreen extends StatelessWidget {
           children: [
             // Background Illustration (Calculator background at top right)
             Positioned(
-              top: -24,
-              right: -6,
+              top: -24.h,
+              right: -6.w,
               child: Image.asset(
                 AppAssets.bmiCalIcon,
                 height: 170.h,
@@ -68,7 +68,7 @@ class BMICalculatorScreen extends StatelessWidget {
                         'Enter your details below to\ncalculate your Body Mass Index.',
                         style: TextStyle(
                           color: const Color(0xFF6B7280),
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                           height: 1.69,
@@ -153,9 +153,9 @@ class BMICalculatorScreen extends StatelessWidget {
                               children: [
                                 MandatoryLabel(
                                   text: 'Gender',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Color(0xFF111827),
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -198,9 +198,9 @@ class BMICalculatorScreen extends StatelessWidget {
                               children: [
                                 MandatoryLabel(
                                   text: 'Age',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Color(0xFF111827),
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -233,7 +233,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                             '$age Years',
                                             style: TextStyle(
                                               color: const Color(0xFF111827),
-                                              fontSize: 15,
+                                              fontSize: 15.sp,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -279,9 +279,9 @@ class BMICalculatorScreen extends StatelessWidget {
                                   children: [
                                     MandatoryLabel(
                                       text: 'Height',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Color(0xFF111827),
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -300,7 +300,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                   heightDisplay,
                                   style: TextStyle(
                                     color: const Color(0xFF2EC4B6),
-                                    fontSize: 36,
+                                    fontSize: 36.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -344,7 +344,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                         minHeightText,
                                         style: TextStyle(
                                           color: const Color(0xFF6B7280),
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -353,7 +353,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                         maxHeightText,
                                         style: TextStyle(
                                           color: const Color(0xFF6B7280),
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -378,9 +378,9 @@ class BMICalculatorScreen extends StatelessWidget {
                                   children: [
                                     MandatoryLabel(
                                       text: 'Weight',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Color(0xFF111827),
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -399,7 +399,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                   weightDisplay,
                                   style: TextStyle(
                                     color: const Color(0xFF2EC4B6),
-                                    fontSize: 36,
+                                    fontSize: 36.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -443,7 +443,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                         minWeightText,
                                         style: TextStyle(
                                           color: const Color(0xFF6B7280),
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -452,7 +452,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                         maxWeightText,
                                         style: TextStyle(
                                           color: const Color(0xFF6B7280),
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -467,16 +467,16 @@ class BMICalculatorScreen extends StatelessWidget {
 
                           // Tip Banner
                           Container(
-                            width: 360,
-                            height: 68,
+                            width: double.infinity,
+                            height: 68.h,
                             decoration: ShapeDecoration(
                               color: const Color(0x142EC4B6),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(16.r),
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0.r),
                               child: Row(
                                 children: [
                                   Image.asset(
@@ -491,7 +491,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                       'Tip: Make sure to enter accurate details for precise BMI calculation.',
                                       style: TextStyle(
                                         color: const Color(0xFF1D9A8D),
-                                        fontSize: 13,
+                                        fontSize: 13.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                         height: 1.38,

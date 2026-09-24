@@ -119,8 +119,8 @@ class _BMIGaugeWidgetState extends State<BMIGaugeWidget>
               // Gauge background image asset
               Positioned(
                 top: 0,
-                left: 4,
-                right: 4,
+                left: 4.w,
+                right: 4.w,
                 child: Image.asset(
                   AppAssets.bmiGauge,
                   width: effectiveSize,

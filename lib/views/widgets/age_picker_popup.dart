@@ -41,7 +41,7 @@ class AgePickerPopup extends StatelessWidget {
                 'Your Age',
                 style: TextStyle(
                   color: const Color(0xFF111827),
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
@@ -53,7 +53,7 @@ class AgePickerPopup extends StatelessWidget {
             'Your age helps calculate your BMI\naccurately.',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 11,
+              fontSize: 11.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),
@@ -67,7 +67,7 @@ class AgePickerPopup extends StatelessWidget {
                 onTap: () {
                   if (currentAge > 1) onAgeChanged(currentAge - 1);
                 },
-                child: Image.asset(AppAssets.ageBack, height: 24, width: 24),
+                child: Image.asset(AppAssets.ageBack, height: 24.h, width: 24.w),
               ),
               // Previous age
               Text(
@@ -85,7 +85,7 @@ class AgePickerPopup extends StatelessWidget {
                   '$currentAge',
                   style: TextStyle(
                     color: const Color(0xFF33D2AB),
-                    fontSize: 48,
+                    fontSize: 48.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
@@ -105,7 +105,7 @@ class AgePickerPopup extends StatelessWidget {
                 onTap: () {
                   if (currentAge < 120) onAgeChanged(currentAge + 1);
                 },
-                child: Image.asset(AppAssets.ageForward, height: 24, width: 24),
+                child: Image.asset(AppAssets.ageForward, height: 24.h, width: 24.w),
               ),
             ],
           ),

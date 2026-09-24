@@ -253,11 +253,11 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Gender',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -272,7 +272,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                                                 : Colors.grey.withValues(
                                                     alpha: 0.5,
                                                   ),
-                                            fontSize: 17,
+                                            fontSize: 17.sp,
                                             fontFamily: 'Inter',
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -377,9 +377,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           MandatoryLabel(
             text: label,
             isMandatory: isMandatory,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.black,
-              fontSize: 17,
+              fontSize: 17.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
             ),
@@ -397,9 +397,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.black,
-                fontSize: 17,
+                fontSize: 17.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),
@@ -407,7 +407,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                 hintText: hint,
                 hintStyle: TextStyle(
                   color: Colors.grey.withValues(alpha: 0.5),
-                  fontSize: 17,
+                  fontSize: 17.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w500,
                 ),
@@ -440,9 +440,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           MandatoryLabel(
             text: label,
             isMandatory: isMandatory,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.black,
-              fontSize: 17,
+              fontSize: 17.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
             ),
@@ -458,9 +458,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                   FocusManager.instance.primaryFocus?.unfocus(),
               textAlign: TextAlign.end,
               keyboardType: keyboardType,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.black,
-                fontSize: 17,
+                fontSize: 17.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),
@@ -468,7 +468,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                 hintText: hint,
                 hintStyle: TextStyle(
                   color: Colors.grey.withValues(alpha: 0.5),
-                  fontSize: 17,
+                  fontSize: 17.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w500,
                 ),

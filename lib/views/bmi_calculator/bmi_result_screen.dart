@@ -105,7 +105,7 @@ class BMIResultScreen extends StatelessWidget {
                             record.bmiValue.toStringAsFixed(1),
                             style: TextStyle(
                               color: record.category.color,
-                              fontSize: 28,
+                              fontSize: 28.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -114,7 +114,7 @@ class BMIResultScreen extends StatelessWidget {
                             'Your BMI',
                             style: TextStyle(
                               color: Colors.black.withValues(alpha: 0.5),
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
                             ),
@@ -132,14 +132,14 @@ class BMIResultScreen extends StatelessWidget {
                                 alpha: 0.15,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: BorderRadius.circular(50.r),
                               ),
                             ),
                             child: Text(
                               record.category.label,
                               style: TextStyle(
                                 color: record.category.color,
-                                fontSize: 11.5,
+                                fontSize: 11.5.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                               ),
@@ -201,7 +201,7 @@ class BMIResultScreen extends StatelessWidget {
                         'Your Details',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
                         ),
@@ -254,7 +254,7 @@ class BMIResultScreen extends StatelessWidget {
                         'Health Advice',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
                         ),
@@ -391,7 +391,7 @@ ${record.category.feedbackMessage}
           value,
           style: TextStyle(
             color: const Color(0xFF1E2D2F),
-            fontSize: 12,
+            fontSize: 12.sp,
             fontFamily: 'Outfit',
             fontWeight: FontWeight.w700,
           ),
@@ -401,7 +401,7 @@ ${record.category.feedbackMessage}
           label,
           style: TextStyle(
             color: AppColors.textLight,
-            fontSize: 11,
+            fontSize: 11.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),
@@ -428,7 +428,7 @@ ${record.category.feedbackMessage}
             text,
             style: TextStyle(
               color: const Color(0xFF647E80),
-              fontSize: 10.5,
+              fontSize: 10.5.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),

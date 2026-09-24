@@ -136,7 +136,7 @@ class YourGoalScreen extends StatelessWidget {
                                     item.$3,
                                     style: TextStyle(
                                       color: const Color(0xFF111827),
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -147,7 +147,7 @@ class YourGoalScreen extends StatelessWidget {
                                     style: TextStyle(
                                       color: const Color(0xFF111827)
                                           .withValues(alpha: 0.64),
-                                      fontSize: 13,
+                                      fontSize: 13.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w400,
                                     ),

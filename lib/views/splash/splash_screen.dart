@@ -72,8 +72,8 @@ class _SplashScreenState extends State<SplashScreen>
           children: [
             // — Full Screen Background —
             Positioned(
-              left: -5,
-              right: -5,
+              left: -5.w,
+              right: -5.w,
               child: Image.asset(AppAssets.splashBg, fit: BoxFit.cover),
             ),
             // Center Logo & Tagline
@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen>
                         'Know Your Body. Live Healthier',
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontFamily: 'SF Pro',
                           fontWeight: FontWeight.w400,
                         ),

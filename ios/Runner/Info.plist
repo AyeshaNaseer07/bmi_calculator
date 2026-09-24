@@ -17,7 +17,7 @@
 	<key>CFBundleName</key>
 	<string>bmi_calculator</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Choose a profile picture from your photo library.</string>
+	<string>We need access to your photos so you can set a profile picture.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

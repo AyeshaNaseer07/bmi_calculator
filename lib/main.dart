@@ -207,6 +207,29 @@ Future<void> logAdRevenue({
   }
 }
 
+/// Base (phone) design size from Figma.
+const Size _phoneDesignSize = Size(375, 812);
+
+/// On phones we keep the Figma design size (375x812).
+///
+/// On tablets (iPad) the default ScreenUtil behaviour scales widths by
+/// `screenWidth / 375` (~2.7x on iPad) but heights by `screenHeight / 812`
+/// (~1.7x), so `.w`, `.h`, `.sp` and `.r` all grow by different amounts and
+/// the UI gets stretched, text overflows its boxes, etc.
+///
+/// To keep every value growing by ONE uniform factor we derive the design
+/// size from the real screen size: the height stays 812 design units and the
+/// width becomes whatever keeps the aspect ratio. Full-width widgets still
+/// fill the iPad width, while fonts, paddings, heights and icons scale evenly.
+Size _designSizeFor(Size screen) {
+  if (screen.isEmpty || screen.shortestSide < 600) return _phoneDesignSize;
+
+  // Scale the phone layout up to fill the iPad height, slightly reduced so
+  // text and controls don't look oversized on large tablets.
+  final double scale = (screen.height / _phoneDesignSize.height) * 0.92;
+  return Size(screen.width / scale, screen.height / scale);
+}
+
 class BMIApp extends StatelessWidget {
   final Locale initialLocale;
 
@@ -215,7 +238,7 @@ class BMIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
+      designSize: _designSizeFor(MediaQuery.sizeOf(context)),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {

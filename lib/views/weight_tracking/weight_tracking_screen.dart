@@ -90,7 +90,7 @@ class WeightTrackingScreen extends StatelessWidget {
                               'Current weight',
                               style: TextStyle(
                                 color: const Color(0xFF111827),
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
                               ),
@@ -100,7 +100,7 @@ class WeightTrackingScreen extends StatelessWidget {
                               currentStr,
                               style: TextStyle(
                                 color: const Color(0xFF33D2AB),
-                                fontSize: 24,
+                                fontSize: 24.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                               ),
@@ -139,7 +139,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                     centerValStr,
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 15,
+                                      fontSize: 15.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
                                       height: 1.30,
@@ -149,7 +149,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                     'kg',
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 11,
+                                      fontSize: 11.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
                                       height: 1.30,
@@ -169,7 +169,7 @@ class WeightTrackingScreen extends StatelessWidget {
                               'Goal weight',
                               style: TextStyle(
                                 color: const Color(0xFF111827),
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
                               ),
@@ -179,7 +179,7 @@ class WeightTrackingScreen extends StatelessWidget {
                               goalStr,
                               style: TextStyle(
                                 color: const Color(0xFF33D2AB),
-                                fontSize: 24,
+                                fontSize: 24.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                               ),
@@ -219,7 +219,7 @@ class WeightTrackingScreen extends StatelessWidget {
                               'Weight Progress',
                               style: TextStyle(
                                 color: const Color(0xFF111827),
-                                fontSize: 15,
+                                fontSize: 15.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w600,
                               ),
@@ -341,7 +341,14 @@ class WeightTrackingScreen extends StatelessWidget {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     reservedSize: 24.h,
+                                    // One label per data slot. Without a fixed
+                                    // interval fl_chart picks 0.5 steps on wide
+                                    // (iPad) charts and every day shows twice.
+                                    interval: 1,
                                     getTitlesWidget: (value, meta) {
+                                      if (value != value.roundToDouble()) {
+                                        return const SizedBox.shrink();
+                                      }
                                       final index = value.toInt();
                                       if (index >= 0 &&
                                           index < xLabels.length) {
@@ -351,7 +358,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                             xLabels[index],
                                             style: TextStyle(
                                               color: const Color(0xFF797979),
-                                              fontSize: 11,
+                                              fontSize: 11.sp,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -376,7 +383,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                         value.toInt().toString(),
                                         style: TextStyle(
                                           color: const Color(0xFF797979),
-                                          fontSize: 11,
+                                          fontSize: 11.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -545,7 +552,7 @@ class WeightTrackingScreen extends StatelessWidget {
           value,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 13,
+            fontSize: 13.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
@@ -555,7 +562,7 @@ class WeightTrackingScreen extends StatelessWidget {
           label,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 11,
+            fontSize: 11.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
@@ -673,9 +680,9 @@ class _WeightDotPainter extends FlDotPainter {
       final textPainter = TextPainter(
         text: TextSpan(
           text: valueStr,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 9.0,
+            fontSize: 9.0.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w700,
           ),
@@ -691,7 +698,7 @@ class _WeightDotPainter extends FlDotPainter {
           width: badgeWidth,
           height: badgeHeight,
         ),
-        const Radius.circular(3.0),
+        Radius.circular(3.0.r),
       );
 
       final badgePaint = Paint()
@@ -734,9 +741,9 @@ class _WeightDotPainter extends FlDotPainter {
       final textPainter = TextPainter(
         text: TextSpan(
           text: valueStr,
-          style: const TextStyle(
+          style: TextStyle(
             color: Color(0xFF1E293B),
-            fontSize: 9.0,
+            fontSize: 9.0.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
@@ -781,9 +788,9 @@ class _GoalLabelPainter extends FlDotPainter {
     final textPainter = TextPainter(
       text: TextSpan(
         text: label,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 8.5,
+          fontSize: 8.5.sp,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w700,
         ),
@@ -802,7 +809,7 @@ class _GoalLabelPainter extends FlDotPainter {
         width: badgeWidth,
         height: badgeHeight,
       ),
-      const Radius.circular(4.0),
+      Radius.circular(4.0.r),
     );
 
     final paint = Paint()
