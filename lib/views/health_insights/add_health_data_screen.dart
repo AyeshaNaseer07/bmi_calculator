@@ -297,7 +297,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                             _buildTextInput(
                               controller: _controller.heightController,
                               focusNode: _heightFocusNode,
-                              hint: 'Enter height',
+                              hint: 'Enter height (152 cm)',
                               keyboardType: TextInputType.number,
                               textInputAction: TextInputAction.next,
                               onSubmitted: (_) =>
@@ -315,7 +315,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   _buildTextInput(
                     controller: _controller.weightController,
                     focusNode: _weightFocusNode,
-                    hint: 'Enter Weight',
+                    hint: 'Enter Weight (65.7 kg)',
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),

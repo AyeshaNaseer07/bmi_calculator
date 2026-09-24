@@ -256,7 +256,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                                     const Text(
                                       'Gender',
                                       style: TextStyle(
-                                        color: Color(0xFF6B7280),
+                                        color: Colors.black,
                                         fontSize: 17,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
@@ -267,9 +267,11 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                                         Text(
                                           _selectedGender,
                                           style: TextStyle(
-                                            color: Colors.grey.withValues(
-                                              alpha: 0.5,
-                                            ),
+                                            color: _selectedGender != 'Select'
+                                                ? Colors.black
+                                                : Colors.grey.withValues(
+                                                    alpha: 0.5,
+                                                  ),
                                             fontSize: 17,
                                             fontFamily: 'Inter',
                                             fontWeight: FontWeight.w500,
@@ -376,7 +378,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
             text: label,
             isMandatory: isMandatory,
             style: const TextStyle(
-              color: Color(0xFF6B7280),
+              color: Colors.black,
               fontSize: 17,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
@@ -395,8 +397,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              style: TextStyle(
-                color: Colors.grey.withValues(alpha: 0.5),
+              style: const TextStyle(
+                color: Colors.black,
                 fontSize: 17,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
@@ -439,7 +441,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
             text: label,
             isMandatory: isMandatory,
             style: const TextStyle(
-              color: Color(0xFF6B7280),
+              color: Colors.black,
               fontSize: 17,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
@@ -457,15 +459,15 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               textAlign: TextAlign.end,
               keyboardType: keyboardType,
               style: const TextStyle(
-                color: Color(0xFF4B5563),
+                color: Colors.black,
                 fontSize: 17,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: const TextStyle(
-                  color: Color(0xFF6B7280),
+                hintStyle: TextStyle(
+                  color: Colors.grey.withValues(alpha: 0.5),
                   fontSize: 17,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w500,
