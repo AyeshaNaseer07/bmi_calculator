@@ -21,8 +21,6 @@ class LocalNotificationScheduler {
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
-
-  /// Pool of engaging notification content tailored for BMI & health tracking.
   static final List<Map<String, String>> _messages = [
     {
       'title': '⚖️ Time to log your weight!',
@@ -83,9 +81,6 @@ class LocalNotificationScheduler {
   static const int _weeklyCount = 8; // 2 months worth (weekly)
   static const int _monthlyCount = 6; // 6 months worth (monthly)
 
-  /// Call this after Remote Config is ready.
-  /// Cancels any existing schedule and pre-schedules a batch of
-  /// future notifications, each with a different message.
   Future<void> scheduleNotifications() async {
     // Remote Config `local_notification` on/off switch.
     final bool enabled = Get.isRegistered<RemoteConfigService>()

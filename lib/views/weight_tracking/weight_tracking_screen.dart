@@ -179,7 +179,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Text(
                               goalStr,
                               style: TextStyle(
-                                color: const Color(0xFF33D2AB),
+                                color: const Color(0xFFF97316),
                                 fontSize: 24.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
@@ -342,9 +342,6 @@ class WeightTrackingScreen extends StatelessWidget {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     reservedSize: 24.h,
-                                    // One label per data slot. Without a fixed
-                                    // interval fl_chart picks 0.5 steps on wide
-                                    // (iPad) charts and every day shows twice.
                                     interval: 1,
                                     getTitlesWidget: (value, meta) {
                                       if (value != value.roundToDouble()) {

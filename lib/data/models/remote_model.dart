@@ -10,7 +10,6 @@ class RemoteModel {
   String? _weeklyProductId;
   String? _yearlyProductId;
   String? _nativeAdId;
-  String? _ads;
   String? _fullScreenNativeAd;
   String? _nativeAd;
   String? _fullScreenNativeAdId;
@@ -44,9 +43,6 @@ class RemoteModel {
   String get nativeAdId => _nativeAdId ?? defaultNativeAdId;
   set nativeAdId(String value) => _nativeAdId = value;
 
-  String get ads => _ads ?? 'on';
-  set ads(String value) => _ads = value;
-
   String get fullScreenNativeAd => _fullScreenNativeAd ?? 'on';
   set fullScreenNativeAd(String value) => _fullScreenNativeAd = value;
 
@@ -70,7 +66,6 @@ class RemoteModel {
     this._weeklyProductId,
     this._yearlyProductId,
     this._nativeAdId,
-    this._ads,
     this._fullScreenNativeAd,
     this._nativeAd,
     this._fullScreenNativeAdId,
@@ -89,10 +84,6 @@ class RemoteModel {
     final s = v.trim().toLowerCase();
     return s == 'on' || s == 'true';
   }
-
-  /// Master switch (legacy `ads` key). Used as the fallback for the two
-  /// separate ad switches below when they aren't set in Remote Config.
-  bool get isAdsEnabled => _isOn(ads);
 
   /// Full-screen native ad shown inside onboarding.
   bool get isFullScreenNativeAdEnabled => _isOn(fullScreenNativeAd);
@@ -133,13 +124,6 @@ class RemoteModel {
 
   factory RemoteModel.fromRemoteConfig(Map<String, dynamic> remoteConfig) {
     try {
-      final String adsMaster = _parseString(
-        remoteConfig['ads'] ??
-            remoteConfig['ads_enabled'] ??
-            remoteConfig['is_ads_enabled'] ??
-            remoteConfig['ads_on_off'],
-        'on',
-      );
       final String nativeAdId = _parseString(
         remoteConfig['native_ad_id'] ??
             remoteConfig['ad_id'] ??
@@ -191,20 +175,18 @@ class RemoteModel {
           'com.yearly.bmi.calculator.app',
         ),
         nativeAdId: nativeAdId,
-        ads: adsMaster,
-        // Separate switches; fall back to the `ads` master value if missing.
         fullScreenNativeAd: _parseString(
           remoteConfig['full_screen_native_ad'] ??
               remoteConfig['fullscreen_native_ad'] ??
               remoteConfig['full_screen_native'] ??
               remoteConfig['fullScreenNativeAd'],
-          adsMaster,
+          'on',
         ),
         nativeAd: _parseString(
           remoteConfig['native_ad'] ??
               remoteConfig['native_ads'] ??
               remoteConfig['nativeAd'],
-          adsMaster,
+          'on',
         ),
         fullScreenNativeAdId: _parseString(
           remoteConfig['full_screen_native_ad_id'] ??
@@ -244,7 +226,6 @@ class RemoteModel {
       weeklyProductId: 'com.weekly.bmi.calculator.app',
       yearlyProductId: 'com.yearly.bmi.calculator.app',
       nativeAdId: defaultNativeAdId,
-      ads: 'on',
       fullScreenNativeAd: 'on',
       nativeAd: 'on',
       fullScreenNativeAdId: defaultNativeAdId,
@@ -262,7 +243,6 @@ class RemoteModel {
       'weekly_product_id': weeklyProductId,
       'yearly_product_id': yearlyProductId,
       'native_ad_id': nativeAdId,
-      'ads': ads,
       'full_screen_native_ad': fullScreenNativeAd,
       'native_ad': nativeAd,
       'full_screen_native_ad_id': fullScreenNativeAdId,
