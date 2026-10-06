@@ -30,7 +30,7 @@ import UserNotifications
     if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
       SceneDelegate.pendingShortcutType = shortcutItem.type
     }
-    SceneDelegate.updateDynamicShortcuts()
+    SceneDelegate.clearDynamicShortcuts()
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

@@ -17,7 +17,14 @@ class SceneDelegate: FlutterSceneDelegate {
       SceneDelegate.pendingShortcutType = shortcutItem.type
     }
     setupChannel()
-    SceneDelegate.updateDynamicShortcuts()
+    SceneDelegate.clearDynamicShortcuts()
+  }
+
+  override func sceneDidBecomeActive(_ scene: UIScene) {
+    super.sceneDidBecomeActive(scene)
+    // Old builds registered dynamic shortcuts that iOS persists across
+    // launches. Only the static Info.plist shortcuts should ever be shown.
+    SceneDelegate.clearDynamicShortcuts()
   }
 
   override func windowScene(
@@ -66,42 +73,11 @@ class SceneDelegate: FlutterSceneDelegate {
     }
   }
 
-  static func updateDynamicShortcuts() {
-    if #available(iOS 13.0, *) {
-      let calculateIcon = UIApplicationShortcutIcon(systemImageName: "speedometer")
-      let progressIcon: UIApplicationShortcutIcon
-      if #available(iOS 14.0, *) {
-        progressIcon = UIApplicationShortcutIcon(systemImageName: "chart.line.uptrend.xyaxis")
-      } else {
-        progressIcon = UIApplicationShortcutIcon(systemImageName: "chart.bar.fill")
-      }
-      let insightsIcon = UIApplicationShortcutIcon(systemImageName: "lightbulb.fill")
-
-      let itemCalculate = UIApplicationShortcutItem(
-        type: "calculate_bmi",
-        localizedTitle: "Calculate BMI",
-        localizedSubtitle: nil,
-        icon: calculateIcon,
-        userInfo: nil
-      )
-
-      let itemTrack = UIApplicationShortcutItem(
-        type: "track_progress",
-        localizedTitle: "Track Progress",
-        localizedSubtitle: nil,
-        icon: progressIcon,
-        userInfo: nil
-      )
-
-      let itemInsights = UIApplicationShortcutItem(
-        type: "insights",
-        localizedTitle: "Insights",
-        localizedSubtitle: nil,
-        icon: insightsIcon,
-        userInfo: nil
-      )
-
-      UIApplication.shared.shortcutItems = [itemCalculate, itemTrack, itemInsights]
+  /// Clears dynamic shortcuts so iOS only displays the static shortcuts defined in Info.plist,
+  /// preventing duplicates.
+  static func clearDynamicShortcuts() {
+    if let items = UIApplication.shared.shortcutItems, !items.isEmpty {
+      UIApplication.shared.shortcutItems = []
     }
   }
 }

@@ -16,6 +16,7 @@ import '../../core/routes/app_routes.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
+import '../widgets/custom_loader.dart';
 import '../widgets/mandatory_label.dart';
 import 'dialogs/rate_us_dialog.dart';
 
@@ -75,6 +76,20 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ProfileController controller = Get.find<ProfileController>();
+    return Stack(
+      children: [
+        _buildPage(context),
+        Obx(
+          () => controller.isUploading.value
+              ? const LoaderOverlay(message: 'Uploading photo...')
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPage(BuildContext context) {
     final AppController appController = Get.find<AppController>();
     final ProfileController profileController = Get.find<ProfileController>();
 
@@ -104,10 +119,14 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         // Avatar with edit icon badge
                         GestureDetector(
-                          onTap: () => profileController.pickProfileImage(),
+                          onTap: () => profileController.isUploading.value
+                              ? null
+                              : profileController.pickProfileImage(),
                           child: Obx(() {
                             final imgPath =
                                 profileController.profileImagePath.value;
+                            final uploading =
+                                profileController.isUploading.value;
                             return Stack(
                               children: [
                                 Container(
@@ -133,6 +152,23 @@ class ProfileScreen extends StatelessWidget {
                                           size: 28.sp,
                                         ),
                                 ),
+                                // Loading overlay
+                                if (uploading)
+                                  Positioned.fill(
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0.3),
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 24.w,
+                                          height: 24.w,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 Positioned(
                                   bottom: 0,
                                   right: 0,

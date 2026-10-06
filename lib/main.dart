@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
@@ -22,6 +23,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'controllers/app_controller.dart';
+import 'core/constants/app_colors.dart';
 import 'core/routes/app_pages.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/health_kit_service.dart';
@@ -173,9 +175,9 @@ String getDeviceCountry() {
 
 Future<void> logAdRevenue({
   required String adNetwork,
-  required dynamic revenue, // can be double, int, or String from macros
+  required dynamic revenue,
   required String currency,
-  required String adFormat, // e.g. native, rewarded, interstitial
+  required String adFormat,
   required String adUnitId,
   required String mediationNetwork,
   required String adType,
@@ -192,12 +194,9 @@ Future<void> logAdRevenue({
       parsedRevenue = double.tryParse(revenue.trim()) ?? 0.0;
     }
 
-    // Convert micros to standard currency and format to 5 decimals
     parsedRevenue = double.parse(
       (parsedRevenue / 1000000.0).toStringAsFixed(5),
     );
-
-    // Log to AppsFlyer
     appsflyerSdk?.logAdRevenue(
       AdRevenueData(
         monetizationNetwork: adNetwork,
@@ -219,26 +218,22 @@ Future<void> logAdRevenue({
   }
 }
 
-/// Base (phone) design size from Figma.
 const Size _phoneDesignSize = Size(375, 812);
 
-/// On phones we keep the Figma design size (375x812).
-///
-/// On tablets (iPad) the default ScreenUtil behaviour scales widths by
-/// `screenWidth / 375` (~2.7x on iPad) but heights by `screenHeight / 812`
-/// (~1.7x), so `.w`, `.h`, `.sp` and `.r` all grow by different amounts and
-/// the UI gets stretched, text overflows its boxes, etc.
-///
-/// To keep every value growing by ONE uniform factor we derive the design
-/// size from the real screen size: the height stays 812 design units and the
-/// width becomes whatever keeps the aspect ratio. Full-width widgets still
-/// fill the iPad width, while fonts, paddings, heights and icons scale evenly.
-Size _designSizeFor(Size screen) {
-  if (screen.isEmpty || screen.shortestSide < 600) return _phoneDesignSize;
+const double _tabletMaxContentWidth = 640;
 
-  // Scale the phone layout up to fill the iPad height, slightly reduced so
-  // text and controls don't look oversized on large tablets.
-  final double scale = (screen.height / _phoneDesignSize.height) * 0.92;
+bool _isTabletScreen(Size screen) =>
+    !screen.isEmpty && screen.shortestSide >= 600;
+
+double _contentWidthFor(Size screen) => _isTabletScreen(screen)
+    ? math.min(screen.shortestSide, _tabletMaxContentWidth)
+    : screen.width;
+
+double _tabletScaleFor(Size screen) =>
+    (screen.shortestSide / 375 * 0.62).clamp(1.15, 1.4).toDouble();
+Size _designSizeFor(Size screen) {
+  if (!_isTabletScreen(screen)) return _phoneDesignSize;
+  final double scale = _tabletScaleFor(screen);
   return Size(screen.width / scale, screen.height / scale);
 }
 
@@ -266,13 +261,29 @@ class BMIApp extends StatelessWidget {
           navigatorObservers: [appRouteObserver],
           defaultTransition: Transition.cupertino,
           builder: (context, child) {
-            return GestureDetector(
+            Widget content = GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
               child: child,
             );
+
+            final mq = MediaQuery.of(context);
+            if (_isTabletScreen(mq.size)) {
+              final double contentWidth = _contentWidthFor(mq.size);
+              content = MediaQuery(
+                data: mq.copyWith(size: Size(contentWidth, mq.size.height)),
+                child: content,
+              );
+              content = ColoredBox(
+                color: AppColors.scaffoldBackground,
+                child: Center(
+                  child: SizedBox(width: contentWidth, child: content),
+                ),
+              );
+            }
+            return content;
           },
         );
       },

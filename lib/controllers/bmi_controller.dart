@@ -111,6 +111,8 @@ class BMIController extends GetxController {
       gender: selectedGender.value.displayName,
       category: category,
       date: DateTime.now(),
+      isCm: isCm.value,
+      isKg: isKg.value,
     );
 
     await _storage.addBmiRecord(record);

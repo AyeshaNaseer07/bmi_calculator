@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../controllers/bmi_controller.dart';
@@ -183,40 +184,59 @@ class _HomeScreenState extends State<HomeScreen> {
     final ProfileController profileController = Get.find<ProfileController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => Get.toNamed(AppRoutes.profile),
-          child: Obx(() {
-            final imgPath = profileController.profileImagePath.value;
-            if (imgPath != null) {
-              return ClipOval(
-                child: Image.file(
-                  File(imgPath),
-                  width: 32.w,
-                  height: 32.w,
-                  fit: BoxFit.cover,
-                ),
+          child: Container(
+            width: 38.w,
+            height: 38.w,
+            alignment: Alignment.centerLeft,
+            child: Obx(() {
+              final imgPath = profileController.profileImagePath.value;
+              if (imgPath != null) {
+                return ClipOval(
+                  child: Image.file(
+                    File(imgPath),
+                    width: 38.w,
+                    height: 38.w,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              }
+              return Image.asset(
+                AppAssets.profileIcon,
+                width: 38.w,
+                height: 38.w,
+                fit: BoxFit.contain,
               );
-            }
-            return Image.asset(
-              AppAssets.profileIcon,
-              width: 32.w,
-              height: 32.w,
-            );
-          }),
+            }),
+          ),
         ),
         Obx(() {
           final appController = Get.find<AppController>();
           if (appController.isPremium.value) {
-            // Already premium — nothing to upsell, so the icon is removed
-            // rather than left as dead space.
-            return SizedBox(width: 32.w, height: 32.w);
+            return SizedBox(width: 36.w, height: 36.w);
           }
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () => Get.toNamed(AppRoutes.paywall),
-            child: Image.asset(AppAssets.icDiamond, width: 32.w, height: 32.w),
+            child: Container(
+              width: 38.w,
+              height: 38.w,
+              alignment: Alignment.centerRight,
+              child: Transform.translate(
+                offset: Offset(0, -3.5.w),
+                child: Lottie.asset(
+                  AppAssets.premiumLottie,
+                  width: 38.w,
+                  height: 38.w,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.centerRight,
+                ),
+              ),
+            ),
           );
         }),
       ],
@@ -498,14 +518,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildParamItem(
             imageAsset: AppAssets.weighticon,
-            value: '${record.weightKg.toStringAsFixed(1)} kg',
+            value: record.weightDisplay,
             label: 'Weight',
             onTapUpdate: () => Get.toNamed(AppRoutes.addWeight),
           ),
           _buildDivider(),
           _buildParamItem(
             imageAsset: AppAssets.heighticon,
-            value: '${record.heightCm.toStringAsFixed(0)} cm',
+            value: record.heightDisplay,
             label: 'Height',
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),

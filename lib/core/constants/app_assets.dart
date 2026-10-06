@@ -24,7 +24,7 @@ abstract class AppAssets {
 
   // ── Onboarding ──
   static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
-  static const String onboarding2 = '$_imagesBase/onboarding_2.webp';
+  static const String onboarding2 = '$_imagesBase/onboarding_2.png';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
   // ── Paywall Premium Feature Icons ──
@@ -90,4 +90,5 @@ abstract class AppAssets {
 
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
+  static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
 }

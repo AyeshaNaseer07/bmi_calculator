@@ -43,9 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // 1: Full-Screen Native Ad
   // 2: Weight Tracking
   // 3: Health Insights
-  //
-  // When the `full_screen_native_ad` Remote Config switch is off (or the user
-  // is premium) page 1 is removed entirely instead of rendering a blank page.
+
   late final bool _showFullScreenAd = _resolveShowFullScreenAd();
 
   bool _resolveShowFullScreenAd() {
@@ -287,7 +285,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         // Full background illustration - Top to Middle
         Positioned(
-          top: 45.h,
+          top: 68.h,
           left: 0,
           right: 0,
           height: MediaQuery.of(context).size.height * 0.58,

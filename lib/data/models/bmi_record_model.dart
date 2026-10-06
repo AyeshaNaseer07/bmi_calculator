@@ -112,6 +112,11 @@ class BMIRecord {
   final BMICategory category;
   final DateTime date;
 
+  /// Units the user entered the values in (values are always stored as cm/kg).
+  /// `false` means ft/in and lb were used. Old records default to metric.
+  final bool isCm;
+  final bool isKg;
+
   const BMIRecord({
     required this.id,
     required this.bmiValue,
@@ -121,7 +126,22 @@ class BMIRecord {
     required this.gender,
     required this.category,
     required this.date,
+    this.isCm = true,
+    this.isKg = true,
   });
+
+  /// Height formatted in the unit the user entered, e.g. `175 cm` or `5'9"`.
+  String get heightDisplay {
+    if (isCm) return '${heightCm.toStringAsFixed(0)} cm';
+    final totalInches = (heightCm / 2.54).round();
+    return "${totalInches ~/ 12}'${totalInches % 12}\"";
+  }
+
+  /// Weight formatted in the unit the user entered, e.g. `70.0 kg` or `154.3 lb`.
+  String get weightDisplay {
+    if (isKg) return '${weightKg.toStringAsFixed(1)} kg';
+    return '${(weightKg * 2.20462).toStringAsFixed(1)} lb';
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -133,6 +153,8 @@ class BMIRecord {
       'gender': gender,
       'category': category.name,
       'date': date.toIso8601String(),
+      'isCm': isCm,
+      'isKg': isKg,
     };
   }
 
@@ -149,6 +171,8 @@ class BMIRecord {
         orElse: () => BMICategory.normal,
       ),
       date: DateTime.parse(json['date'] as String),
+      isCm: json['isCm'] as bool? ?? true,
+      isKg: json['isKg'] as bool? ?? true,
     );
   }
 }

@@ -328,9 +328,10 @@ class WeightTrackingScreen extends StatelessWidget {
                         SizedBox(height: 22.h),
 
                         // FL Chart Container
-                        SizedBox(
-                          height: 185.h,
-                          child: LineChart(
+                        _buildSlidableChart(
+                          key: ValueKey(timeframe),
+                          pointCount: xLabels.length,
+                          chart: LineChart(
                             LineChartData(
                               clipData: const FlClipData.none(),
                               gridData: const FlGridData(show: false),
@@ -540,6 +541,68 @@ class WeightTrackingScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// Chart that can be slid horizontally so the full graph can be viewed.
+  /// The chart is at least 68.w wide per x-axis label; when that
+  /// is wider than the card, the user swipes sideways to see the rest.
+  Widget _buildSlidableChart({
+    required Key key,
+    required int pointCount,
+    required Widget chart,
+  }) {
+    final double minSpacing = 68.w;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double available = constraints.maxWidth;
+        final double chartWidth = math.max(available, pointCount * minSpacing);
+        final bool scrollable = chartWidth > available + 1;
+        final Widget sized = SizedBox(
+          width: chartWidth,
+          height: 185.h,
+          child: Padding(
+            // Room so the last dot / goal label isn't clipped at the edge.
+            padding: EdgeInsets.only(right: scrollable ? 24.w : 0),
+            child: chart,
+          ),
+        );
+        if (!scrollable) return sized;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SingleChildScrollView(
+              key: key,
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: sized,
+            ),
+            SizedBox(height: 8.h),
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.swipe_rounded,
+                    size: 14.sp,
+                    color: const Color(0xFF797979),
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    'Swipe to see the full graph',
+                    style: TextStyle(
+                      color: const Color(0xFF797979),
+                      fontSize: 10.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

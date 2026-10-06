@@ -1145,7 +1145,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  '${record.weightKg.toStringAsFixed(1)}kg',
+                  record.weightDisplay,
                   style: TextStyle(
                     color: const Color(0xFF33D2AB),
                     fontSize: 13.sp,

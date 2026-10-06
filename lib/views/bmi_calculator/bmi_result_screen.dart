@@ -213,14 +213,14 @@ class BMIResultScreen extends StatelessWidget {
                         children: [
                           _buildDetailColumn(
                             imageAsset: AppAssets.weighticon,
-                            value: '${record.weightKg.toStringAsFixed(1)} kg',
+                            value: record.weightDisplay,
                             label: 'Weight',
                             showUnderline: true,
                           ),
                           _buildDetailDivider(),
                           _buildDetailColumn(
                             imageAsset: AppAssets.heighticon,
-                            value: '${record.heightCm.toStringAsFixed(0)} cm',
+                            value: record.heightDisplay,
                             label: 'Height',
                           ),
                           _buildDetailDivider(),
@@ -331,8 +331,8 @@ class BMIResultScreen extends StatelessWidget {
 BMI Result
 ━━━━━━━━━━━━━━━━
 • BMI: ${record.bmiValue.toStringAsFixed(1)} (${record.category.label})
-• Weight: ${record.weightKg.toStringAsFixed(1)} kg
-• Height: ${record.heightCm.toStringAsFixed(0)} cm
+• Weight: ${record.weightDisplay}
+• Height: ${record.heightDisplay}
 • Age: ${record.age} years
 • Gender: ${record.gender}
 ━━━━━━━━━━━━━━━━
