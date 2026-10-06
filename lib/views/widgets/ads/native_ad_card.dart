@@ -10,6 +10,7 @@ import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
 import 'ad_logger.dart';
+import 'ad_preloader.dart';
 import 'ad_shimmer.dart';
 
 const double _kDefaultNativeAdHeight = 350;
@@ -19,6 +20,9 @@ class NativeAdCard extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final double? height;
   final Color? backgroundColor;
+
+  /// Name of an ad placement preloaded on the splash screen (see AdSlots).
+  final String? slot;
   final ValueChanged<bool>? onAdAvailabilityChanged;
 
   const NativeAdCard({
@@ -27,6 +31,7 @@ class NativeAdCard extends StatefulWidget {
     this.margin,
     this.height,
     this.backgroundColor,
+    this.slot,
     this.onAdAvailabilityChanged,
   });
 
@@ -75,12 +80,50 @@ class _NativeAdCardState extends State<NativeAdCard> {
     _loadAd();
   }
 
+  void _notifyAvailability(bool available) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) widget.onAdAvailabilityChanged?.call(available);
+    });
+  }
+
+  /// Uses the ad preloaded on splash, if there is one for this placement.
+  bool _tryUsePreloaded() {
+    final key = widget.slot;
+    if (key == null) return false;
+    final pre = AdPreloader.instance.claim(key);
+    if (pre == null) return false;
+
+    if (pre.failed) {
+      _isFailed = true;
+      _notifyAvailability(false);
+      return true;
+    }
+    _nativeAd = pre.ad;
+    if (pre.loaded) {
+      _isLoaded = true;
+      _notifyAvailability(true);
+    } else {
+      // Still loading — show the shimmer and finish when it completes.
+      pre.onDone = (ok) {
+        if (!mounted) return;
+        setState(() {
+          _isLoaded = ok;
+          _isFailed = !ok;
+          if (!ok) _nativeAd = null;
+        });
+        _notifyAvailability(ok);
+      };
+    }
+    return true;
+  }
+
   void _loadAd() {
     if (!_isAdsEnabled) {
       _isFailed = true;
       widget.onAdAvailabilityChanged?.call(false);
       return;
     }
+    if (_tryUsePreloaded()) return;
     final adUnitId = _effectiveAdUnitId;
     AdLogHelper.logRequest(
       tag: 'NativeAdCard',

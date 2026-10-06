@@ -17,6 +17,7 @@ import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
+import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/bmi_gauge_widget.dart';
@@ -147,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: 18.h),
                             ],
 
-                            const NativeAdCard(),
+                            const NativeAdCard(slot: AdSlots.home),
                             SizedBox(height: 12.h),
                             // Features Heading (if empty state) or 2x2 Grid Features
                             if (!hasData) ...[
@@ -259,8 +260,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Color(0xFF1A252C),
-                  fontSize: 24.sp,
+                  color: const Color(0xFF63C9B7),
+                  fontSize: 24,
                   fontFamily: 'Instrument Sans',
                   fontWeight: FontWeight.w700,
                 ),

@@ -8,6 +8,7 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/remote_model.dart';
 import '../../data/services/remote_config_service.dart';
 import '../widgets/ads/full_screen_native_ad_page.dart';
+import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_gradient_button.dart';
@@ -37,6 +38,10 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
+
+  /// False once the first-slide native ad fails to load (or ads are off).
+  /// Decides which layout page 0 uses: with ad (compact) or without (full).
+  bool _bmiAdAvailable = true;
 
   // 4 steps:
   // 0: BMI Calculator with Bottom Native Ad
@@ -105,8 +110,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 setState(() => _currentIndex = index);
               },
               children: [
-                // Page 0: BMI Screen with Bottom Native Ad (iPhone 13 mini - 55)
-                _buildBmiAdSlide(),
+                // Page 0: with bottom native ad when it loads, otherwise the
+                // same full layout as the other content slides.
+                if (_bmiAdAvailable)
+                  _buildBmiAdSlide()
+                else
+                  _buildContentSlide(
+                    imagePath: AppAssets.onboarding1,
+                    titlePrefix: 'BMI ',
+                    titleHighlight: 'Calculator',
+                    subtitle: 'Track your BMI, monitor your progress,\nand stay healthy with personalized insights.',
+                  ),
 
                 // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
                 if (_showFullScreenAd) FullScreenNativeAdPage(onNext: _onNext),
@@ -131,7 +145,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             if (_currentIndex != _adPageIndex)
               // Bottom Controls (Dot indicator & Next button) for Page 2 & 3
-              if (_currentIndex >= _firstContentIndex)
+              if (_currentIndex >= _firstContentIndex ||
+                  (_currentIndex == 0 && !_bmiAdAvailable))
                 Positioned(
                   left: 24.w,
                   right: 24.w,
@@ -263,12 +278,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           SizedBox(height: 8.h),
 
-          // Bottom Native Ad Card
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: const NativeAdCard(),
+          // Bottom Native Ad (full-width light grey strip)
+          Container(
+            width: double.infinity,
+            color: const Color(0xFFF7F7F7),
+            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 0),
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: NativeAdCard(
+                  slot: AdSlots.onboarding,
+                  height: 300.h,
+                  backgroundColor: Colors.transparent,
+                  onAdAvailabilityChanged: (available) {
+                    // May fire during build (ads disabled) -> defer.
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      if (_bmiAdAvailable != available) {
+                        setState(() => _bmiAdAvailable = available);
+                      }
+                    });
+                  },
+                ),
+              ),
+            ),
           ),
-          SizedBox(height: 8.h),
         ],
       ),
     );
@@ -324,7 +359,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontFamily: 'SF Pro',
                   fontWeight: FontWeight.w400,
                 ),

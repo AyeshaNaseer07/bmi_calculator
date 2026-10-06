@@ -11,6 +11,7 @@ import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
 import 'ad_logger.dart';
+import 'ad_preloader.dart';
 import 'ad_shimmer.dart';
 
 class FullScreenNativeAdPage extends StatefulWidget {
@@ -110,6 +111,39 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
     });
   }
 
+  /// Uses the ad preloaded on splash, if there is one.
+  bool _tryUsePreloaded() {
+    final pre = AdPreloader.instance.claim(AdSlots.fullScreen);
+    if (pre == null) return false;
+
+    if (pre.failed) {
+      _isFailed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _advance();
+      });
+      return true;
+    }
+    _nativeAd = pre.ad;
+    if (pre.loaded) {
+      _isLoaded = true;
+    } else {
+      pre.onDone = (ok) {
+        if (!mounted) return;
+        setState(() {
+          _isLoaded = ok;
+          _isFailed = !ok;
+          if (!ok) _nativeAd = null;
+        });
+        if (!ok) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _advance();
+          });
+        }
+      };
+    }
+    return true;
+  }
+
   void _loadAd() {
     if (!_isAdsEnabled) {
       _isFailed = true;
@@ -120,6 +154,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
       });
       return;
     }
+    if (_tryUsePreloaded()) return;
     final adUnitId = _effectiveAdUnitId;
     AdLogHelper.logRequest(
       tag: 'FullScreenNativeAdPage',

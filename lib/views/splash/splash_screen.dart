@@ -9,6 +9,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
+import '../widgets/ads/ad_preloader.dart';
 import '../widgets/app_background.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,6 +31,10 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+
+    // Load every native ad now, while the splash is showing.
+    AdPreloader.instance.preloadAll();
+
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: _splashSeconds),

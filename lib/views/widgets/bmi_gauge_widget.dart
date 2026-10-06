@@ -230,18 +230,17 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
     // Draw Needle
     canvas.drawPath(path, needlePaint);
 
-    // Pivot Circle
-    final pivotHalo = Paint()
-      ..color = const Color(0xFF2FD1A6).withValues(alpha: 0.90)
-      ..style = PaintingStyle.fill;
-    final pivotOuter = Paint()..color = const Color(0xFF1E293B);
-    final pivotInner = Paint()..color = Colors.white;
+    // Pivot (black base -> green ring -> white dot), all inside the needle
+    final pivotOuter = Paint()..color = const Color(0xFF1E293B); // black base
+    final pivotRing = Paint()..color = Colors.white; // green ring
+    final pivotInner = Paint()..color = const Color(0xFF2FD1A6); // white dot
 
     final outerRadius = size.width * 0.038;
-    final innerRadius = size.width * 0.020;
+    final ringRadius = size.width * 0.026;
+    final innerRadius = size.width * 0.014;
 
-    canvas.drawCircle(center, outerRadius * 1.5, pivotHalo);
     canvas.drawCircle(center, outerRadius, pivotOuter);
+    canvas.drawCircle(center, ringRadius, pivotRing);
     canvas.drawCircle(center, innerRadius, pivotInner);
 
     // Labels below arc ends

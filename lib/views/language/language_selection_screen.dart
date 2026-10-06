@@ -11,6 +11,7 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/remote_model.dart';
 import '../../data/services/localization_service.dart';
 import '../../data/services/remote_config_service.dart';
+import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 
@@ -429,6 +430,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0),
                     child: NativeAdCard(
+                      slot: AdSlots.language,
                       height: 290.h,
                       backgroundColor: Colors.transparent,
                       onAdAvailabilityChanged: (available) {
