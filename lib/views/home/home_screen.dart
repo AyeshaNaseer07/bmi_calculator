@@ -17,7 +17,11 @@ import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
+import '../widgets/ads/ad_preloader.dart';
+import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
+import '../insights/bmi_insight_screen.dart';
+import '../insights/insight_common.dart' show kInk, kGreen, kGreenDark, kMuted;
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
@@ -30,6 +34,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  /// True once the home native ad failed / is unavailable (empty state only).
+  final RxBool _adFailed = false.obs;
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       bgImage = AppAssets.homeAvatar;
                     }
+                  } else if (_adFailed.value) {
+                    bgImage = AppAssets.homeAvatar;
                   } else if (profile.displayName.isNotEmpty) {
                     if (profile.gender == Gender.female) {
                       bgImage = AppAssets.homeImgFemale;
@@ -104,18 +113,82 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 30.h),
                         Obx(() {
                           final hasData = bmiController.bmiHistory.isNotEmpty;
-                          return _buildGreeting(hasData, profileController);
+                          return _buildGreeting(
+                            hasData,
+                            profileController,
+                            plain: !hasData && _adFailed.value,
+                          );
                         }),
                         SizedBox(height: 20.h),
                       ],
                     ),
                   ),
 
-                  // Content (fixed, no scrolling)
+                  // Content
                   Expanded(
                     child: Obx(() {
                       final hasData = bmiController.bmiHistory.isNotEmpty;
                       final latest = bmiController.latestRecord.value;
+
+                      if (!hasData || latest == null) {
+                        // Empty state: card given priority flex, the ad (or
+                        // the features grid once the ad fails) given the
+                        // rest — both resized for real, no scroll needed.
+                        return Padding(
+                          padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 58,
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width -
+                                          36.w,
+                                      child: _buildEmptyBmiCard(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 14.h),
+                              Expanded(
+                                flex: 42,
+                                child: _adFailed.value
+                                    ? Align(
+                                        alignment: Alignment.topCenter,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: SizedBox(
+                                            width:
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                36.w,
+                                            child: _buildFeaturesSection(),
+                                          ),
+                                        ),
+                                      )
+                                    : LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          return _HomeNativeAdStrip(
+                                            height: constraints.maxHeight,
+                                            onAvailability: (ok) {
+                                              if (!ok && mounted) {
+                                                _adFailed.value = true;
+                                              }
+                                            },
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
 
                       return Padding(
                         padding: EdgeInsets.only(
@@ -127,45 +200,175 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (!hasData || latest == null)
-                              // Empty state: just the prompt card, centered
-                              Expanded(
-                                child: Center(child: _buildEmptyBmiCard()),
-                              )
-                            else ...[
-                              // Main BMI Card
-                              _buildActiveBmiCard(latest),
-                              SizedBox(height: 10.h),
+                            // Main BMI Card
+                            _buildActiveBmiCard(latest),
+                            SizedBox(height: 10.h),
 
-                              // Quick Parameters Pills (Weight, Height, Age, Gender)
-                              _buildParameterPills(latest, bmiController),
-                              SizedBox(height: 10.h),
+                            // Quick Parameters Pills (Weight, Height, Age, Gender)
+                            _buildParameterPills(latest, bmiController),
+                            SizedBox(height: 10.h),
 
-                              // BMI Categories Row (scales down to fit if space is tight)
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: Alignment.topLeft,
-                                    child: SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width -
-                                          36.w,
-                                      child: _buildBmiCategories(
-                                        latest.category,
-                                      ),
-                                    ),
+                            // BMI Categories Row (scales down to fit if space is tight)
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.topLeft,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width -
+                                        36.w,
+                                    child: _buildBmiCategories(latest.category),
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ],
                         ),
                       );
                     }),
                   ),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeaturesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Features',
+          style: TextStyle(
+            color: kInk,
+            fontSize: 20.sp,
+            fontFamily: 'Plus Jakarta Sans',
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        Row(
+          children: [
+            Expanded(
+              child: _featureCard(
+                Icons.calculate_outlined,
+                'BMI Calculator',
+                'Calculate your BMI',
+                AppRoutes.bmiCalculator,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _featureCard(
+                Icons.balance_rounded,
+                'Weight Tracker',
+                'Record your weight',
+                AppRoutes.weightTracking,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        Row(
+          children: [
+            Expanded(
+              child: _featureCard(
+                Icons.monitor_heart_outlined,
+                'Health Insights',
+                'Daily wellness advice',
+                AppRoutes.healthInsights,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _featureCard(
+                Icons.history_rounded,
+                'History',
+                'Monitor your journey',
+                AppRoutes.history,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _featureCard(
+    IconData icon,
+    String title,
+    String subtitle,
+    String route,
+  ) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => Get.toNamed(route),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(14.w, 14.h, 12.w, 14.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: const Color(0xFF7FE0C0), width: 1),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1F33D2AB),
+              blurRadius: 10,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFB5EFDC),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(icon, color: kGreenDark, size: 22.sp),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 12.h),
+                  child: Icon(
+                    Icons.chevron_right_rounded,
+                    color: kGreen,
+                    size: 20.sp,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 22.h),
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: kInk,
+                fontSize: 14.sp,
+                fontFamily: 'Plus Jakarta Sans',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: kMuted,
+                fontSize: 11.sp,
+                fontFamily: 'Inter',
               ),
             ),
           ],
@@ -237,7 +440,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGreeting(bool hasData, ProfileController profileController) {
+  Widget _buildGreeting(
+    bool hasData,
+    ProfileController profileController, {
+    bool plain = false,
+  }) {
     final userName = profileController.userProfile.value.displayName;
     final greeting = userName.isNotEmpty ? 'Hello, $userName' : 'Hello, Guest';
 
@@ -253,7 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: const Color(0xFF63C9B7),
+                  color: plain ? kInk : const Color(0xFF63C9B7),
                   fontSize: 24,
                   fontFamily: 'Instrument Sans',
                   fontWeight: FontWeight.w700,
@@ -477,35 +684,39 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(height: 12.h),
 
         // Health Feedback Banner
-        Container(
-          width: double.infinity,
-          constraints: BoxConstraints(minHeight: 48.h),
-          decoration: BoxDecoration(
-            color: record.category.color.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: AppColors.cardShadow,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              record.category.buildFeedbackIcon(size: 24.w),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Text(
-                  record.category.feedbackMessage,
-                  style: TextStyle(
-                    color: const Color(0xFF1E2D2F),
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                    height: 1.40,
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Get.to(() => BmiInsightScreen(record: record)),
+          child: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(minHeight: 48.h),
+            decoration: BoxDecoration(
+              color: record.category.color.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: AppColors.cardShadow,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                record.category.buildFeedbackIcon(size: 24.w),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Text(
+                    record.category.feedbackMessage,
+                    style: TextStyle(
+                      color: const Color(0xFF1E2D2F),
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      height: 1.40,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 6.w),
-              Image.asset(AppAssets.ageForward, height: 16.h, width: 16.w),
-            ],
+                SizedBox(width: 6.w),
+                Image.asset(AppAssets.ageForward, height: 16.h, width: 16.w),
+              ],
+            ),
           ),
         ),
       ],
@@ -693,6 +904,51 @@ class _HomeScreenState extends State<HomeScreen> {
           fontFamily: 'Outfit',
           fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
           color: isCurrent ? Colors.white : const Color(0xFF1E2D2F),
+        ),
+      ),
+    );
+  }
+}
+
+/// Full-width light-grey strip holding the home native ad (hidden if no ad).
+class _HomeNativeAdStrip extends StatefulWidget {
+  final ValueChanged<bool> onAvailability;
+  final double height;
+  const _HomeNativeAdStrip({
+    required this.onAvailability,
+    required this.height,
+  });
+
+  @override
+  State<_HomeNativeAdStrip> createState() => _HomeNativeAdStripState();
+}
+
+class _HomeNativeAdStripState extends State<_HomeNativeAdStrip> {
+  bool _available = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Offstage(
+      offstage: !_available,
+      child: Container(
+        width: double.infinity,
+        color: const Color(0xFFF7F7F7),
+        padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
+        child: NativeAdCard(
+          slot: AdSlots.home,
+          // Real layout size (not a transform-scale), so the ad's
+          // platform view always fits within the space it's given.
+          height: widget.height,
+          backgroundColor: Colors.transparent,
+          onAdAvailabilityChanged: (available) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              if (_available != available) {
+                setState(() => _available = available);
+              }
+              widget.onAvailability(available);
+            });
+          },
         ),
       ),
     );

@@ -41,6 +41,13 @@ abstract class AppAssets {
   static const String homeIcon3 = '$_imagesBase/home_3.png';
   static const String homeIcon4 = '$_imagesBase/home_4.png';
 
+  // ── Bottom Nav ──
+  static const String navHome = '$_imagesBase/nav_1.png';
+  static const String navProfile = '$_imagesBase/nav_2.png';
+  static const String navWeight = '$_imagesBase/nav_3.png';
+  static const String navHistory = '$_imagesBase/nav_4.png';
+  static const String navAdd = '$_imagesBase/bmi_home.png';
+
   static const String btnBg = '$_imagesBase/btn_bg.webp';
   static const String premiumBg = '$_imagesBase/premium_bg.webp';
   static const String preCross = '$_imagesBase/pre_cross.webp';
@@ -93,4 +100,31 @@ abstract class AppAssets {
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
   static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
+
+  // ── BMI insight / tips flow ──
+  static const String insightNormal = '$_imagesBase/normal_bmi.png';
+  static const String insightUnder = '$_imagesBase/below_bmi.png';
+  static const String insightOver = '$_imagesBase/above_bmi.png';
+  static const String insightObese = '$_imagesBase/obese_bmi.png';
+  static const String insightRise = '$_imagesBase/rise_bmi.png';
+  static const String tipMeals = '$_imagesBase/balance_meal.png';
+  static const String tipHydrated = '$_imagesBase/hydrated.png';
+  static const String tipActive = '$_imagesBase/active.png';
+  static const String tipSleep = '$_imagesBase/sleep.png';
+
+  // Photos that exist already
+  static const String photoVegetables = '$_imagesBase/hero-image-container.png';
+  static const String photoBalancedMeal = '$_imagesBase/hero.png';
+  static const String photoChicken = '$_imagesBase/protein.png';
+
+  // Photos still to be added (a soft placeholder shows until the file exists)
+  static const String photoMealHero = '$_imagesBase/meal_hero.png';
+  static const String photoPortionVeg = '$_imagesBase/portion_veg.png';
+  static const String photoSimpleMeal = '$_imagesBase/simple_meal.png';
+  static const String photoBreakfast = '$_imagesBase/meal_breakfast.png';
+  static const String photoLunch = '$_imagesBase/meal_lunch.png';
+  static const String photoDinner = '$_imagesBase/meal_dinner.png';
+  static const String photoLunchHero = '$_imagesBase/meal_lunch_hero.png';
+  static const String photoWaterHero = '$_imagesBase/water_hero.png';
+  static const String photoWaterEnergy = '$_imagesBase/water_energy.png';
 }

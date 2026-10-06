@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_assets.dart';
+
+const Color _kActiveNavColor = Color(0xFF2EC4B6);
 
 class MainBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -25,7 +26,9 @@ class MainBottomNavBar extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: [
           Positioned.fill(
-            top: 16.h,
+            top: 10.h,
+            right: 15.w,
+            left: 15.w,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -46,23 +49,23 @@ class MainBottomNavBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildNavItem(
-                    icon: CupertinoIcons.house_fill,
+                    icon: AppAssets.navHome,
                     label: 'Home',
                     index: 0,
                   ),
                   _buildNavItem(
-                    icon: CupertinoIcons.person_fill,
+                    icon: AppAssets.navProfile,
                     label: 'Profile',
                     index: 1,
                   ),
                   SizedBox(width: 56.w),
                   _buildNavItem(
-                    icon: CupertinoIcons.graph_square_fill,
+                    icon: AppAssets.navWeight,
                     label: 'Weight',
                     index: 2,
                   ),
                   _buildNavItem(
-                    icon: CupertinoIcons.clock_fill,
+                    icon: AppAssets.navHistory,
                     label: 'History',
                     index: 3,
                   ),
@@ -73,7 +76,7 @@ class MainBottomNavBar extends StatelessWidget {
 
           // Raised center "+" button
           Positioned(
-            top: 0,
+            top: -15,
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: onAddTap,
@@ -81,18 +84,19 @@ class MainBottomNavBar extends StatelessWidget {
                 width: 56.w,
                 height: 56.w,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryTeal,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 4.w),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryTeal.withValues(alpha: 0.35),
+                      color: _kActiveNavColor.withValues(alpha: 0.35),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: Icon(Icons.add, color: Colors.white, size: 26.sp),
+                child: ClipOval(
+                  child: Image.asset(AppAssets.navAdd, fit: BoxFit.cover),
+                ),
               ),
             ),
           ),
@@ -102,12 +106,12 @@ class MainBottomNavBar extends StatelessWidget {
   }
 
   Widget _buildNavItem({
-    required IconData icon,
+    required String icon,
     required String label,
     required int index,
   }) {
     final isSelected = currentIndex == index;
-    final color = isSelected ? AppColors.primaryTeal : const Color(0xFF9AA6A9);
+    final color = isSelected ? _kActiveNavColor : const Color(0xFF9AA6A9);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -117,7 +121,13 @@ class MainBottomNavBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 20.sp, color: color),
+            Image.asset(
+              icon,
+              width: 20.sp,
+              height: 20.sp,
+              color: color,
+              colorBlendMode: BlendMode.srcIn,
+            ),
             SizedBox(height: 4.h),
             Text(
               label,
