@@ -66,14 +66,17 @@ class BMICalculatorScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 30.h),
-                        Text(
-                          'Enter your details below to\ncalculate your Body Mass Index.',
-                          style: TextStyle(
-                            color: const Color(0xFF6B7280),
-                            fontSize: 14.sp,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w400,
-                            height: 1.69,
+                        SizedBox(
+                          width: 193,
+                          child: Text(
+                            'Make sure to enter accurate details for precise BMI calculation.',
+                            style: TextStyle(
+                              color: const Color(0xFF6F6F6F),
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              height: 1.38,
+                            ),
                           ),
                         ),
                       ],
@@ -220,14 +223,38 @@ class BMICalculatorScreen extends StatelessWidget {
                                 ),
                                 SizedBox(width: 8.w),
                                 _buildEditButton(
-                                  onTap: () => ManualInputDialog.show(
-                                    title: 'Enter Height',
-                                    unitLabel: 'cm',
-                                    initialValue: heightCm.toStringAsFixed(0),
-                                    min: 120,
-                                    max: 220,
-                                    onSubmit: controller.setHeightFromInput,
-                                  ),
+                                  onTap: () {
+                                    if (isCm) {
+                                      ManualInputDialog.show(
+                                        title: 'Enter Height',
+                                        unitLabel: 'cm',
+                                        initialValue: heightCm.toStringAsFixed(
+                                          0,
+                                        ),
+                                        min: 120,
+                                        max: 220,
+                                        onSubmit: controller.setHeightFromInput,
+                                      );
+                                    } else {
+                                      final (
+                                        ft,
+                                        inches,
+                                      ) = BMIService.cmToFeetAndInches(
+                                        heightCm,
+                                      );
+                                      ManualInputDialog.showFeetInches(
+                                        title: 'Enter Height',
+                                        initialFeet: ft,
+                                        initialInches: inches,
+                                        onSubmit: (feet, inchesVal) {
+                                          final cm = BMIService.inchesToCm(
+                                            (feet * 12) + inchesVal,
+                                          );
+                                          controller.setHeightFromInput(cm);
+                                        },
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
@@ -332,14 +359,33 @@ class BMICalculatorScreen extends StatelessWidget {
                                 ),
                                 SizedBox(width: 8.w),
                                 _buildEditButton(
-                                  onTap: () => ManualInputDialog.show(
-                                    title: 'Enter Weight',
-                                    unitLabel: 'kg',
-                                    initialValue: weightKg.toStringAsFixed(1),
-                                    min: 30,
-                                    max: 130,
-                                    onSubmit: controller.setWeightFromInput,
-                                  ),
+                                  onTap: () {
+                                    if (isKg) {
+                                      ManualInputDialog.show(
+                                        title: 'Enter Weight',
+                                        unitLabel: 'kg',
+                                        initialValue: weightKg.toStringAsFixed(
+                                          1,
+                                        ),
+                                        min: 30,
+                                        max: 130,
+                                        onSubmit: controller.setWeightFromInput,
+                                      );
+                                    } else {
+                                      final lb = BMIService.kgToLbs(weightKg);
+                                      ManualInputDialog.show(
+                                        title: 'Enter Weight',
+                                        unitLabel: 'lb',
+                                        initialValue: lb.toStringAsFixed(1),
+                                        min: BMIService.kgToLbs(30),
+                                        max: BMIService.kgToLbs(130),
+                                        onSubmit: (val) =>
+                                            controller.setWeightFromInput(
+                                              BMIService.lbsToKg(val),
+                                            ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
@@ -400,55 +446,23 @@ class BMICalculatorScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 12.h),
-
-                      // Tip Banner
-                      Container(
-                        width: double.infinity,
-                        height: 68.h,
-                        decoration: ShapeDecoration(
-                          color: const Color(0x142EC4B6),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.r),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0.r),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                AppAssets.tipIcon,
-                                width: 26.w,
-                                height: 27.w,
-                                color: const Color(0xFF09B389),
-                              ),
-                              SizedBox(width: 10.w),
-                              Expanded(
-                                child: Text(
-                                  'Tip: Make sure to enter accurate details for precise BMI calculation.',
-                                  style: TextStyle(
-                                    color: const Color(0xFF1D9A8D),
-                                    fontSize: 13.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.38,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-
                       // Calculate BMI Button
                       CustomGradientButton(
                         text: 'Calculate BMI',
                         leadingIcon: Image.asset(
                           AppAssets.calcilatorIcon,
-                          width: 16.w,
-                          height: 16.w,
+                          width: 18.w,
+                          height: 18.w,
                         ),
-                        backgroundImage: AppAssets.btnRectangle,
+                        solidColor: const Color(0xFF00BD8E),
+                        borderRadius: BorderRadius.circular(26.r),
+                        height: 48.h,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontFamily: 'Instrument Sans',
+                          fontWeight: FontWeight.w700,
+                        ),
                         onPressed:
                             (controller.age.value > 0 &&
                                 controller.heightCm.value > 0 &&
@@ -465,9 +479,18 @@ class BMICalculatorScreen extends StatelessWidget {
                           AppAssets.resetIcon,
                           width: 18.w,
                           height: 18.w,
+                          color: const Color(0xFF00BD8E),
                         ),
                         isOutlined: true,
-                        outlineColor: const Color(0xFF2EC4B6),
+                        outlineColor: const Color(0xFF00BD8E),
+                        borderRadius: BorderRadius.circular(26.r),
+                        height: 48.h,
+                        textStyle: TextStyle(
+                          color: const Color(0xFF00BD8E),
+                          fontSize: 15.sp,
+                          fontFamily: 'Instrument Sans',
+                          fontWeight: FontWeight.w700,
+                        ),
                         onPressed: () => controller.resetInputs(),
                       ),
                       SizedBox(height: 24.h),
@@ -560,7 +583,7 @@ class BMICalculatorScreen extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 15.sp,
+                    fontSize: 15,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
                     color: isSelected
@@ -575,11 +598,21 @@ class BMICalculatorScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: ageText,
-                          style: TextStyle(fontSize: 14.sp),
+                          style: TextStyle(
+                            color: const Color(0xFF09B389),
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         TextSpan(
                           text: 'Yr',
-                          style: TextStyle(fontSize: 11.sp),
+                          style: TextStyle(
+                            color: const Color(0xFF09B389),
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
                     ),

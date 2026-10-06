@@ -35,27 +35,30 @@ class AgePickerPopup extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Your Age',
-                style: TextStyle(
-                  color: const Color(0xFF111827),
-                  fontSize: 20.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
+              Center(
+                child: Text(
+                  'Your Age',
+                  style: TextStyle(
+                    color: const Color(0xFF111827),
+                    fontSize: 20.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 2.h),
           Text(
-            'Your age helps calculate your BMI\naccurately.',
+            'Your age helps calculate your BMI accurately.',
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 11.sp,
+              fontSize: 10,
               fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(height: 10.h),
@@ -67,7 +70,11 @@ class AgePickerPopup extends StatelessWidget {
                 onTap: () {
                   if (currentAge > 1) onAgeChanged(currentAge - 1);
                 },
-                child: Image.asset(AppAssets.ageBack, height: 24.h, width: 24.w),
+                child: Image.asset(
+                  AppAssets.ageBack,
+                  height: 24.h,
+                  width: 24.w,
+                ),
               ),
               // Previous age
               Text(
@@ -84,7 +91,7 @@ class AgePickerPopup extends StatelessWidget {
                 child: Text(
                   '$currentAge',
                   style: TextStyle(
-                    color: const Color(0xFF33D2AB),
+                    color: const Color(0xFF08B289),
                     fontSize: 48.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
@@ -105,7 +112,11 @@ class AgePickerPopup extends StatelessWidget {
                 onTap: () {
                   if (currentAge < 120) onAgeChanged(currentAge + 1);
                 },
-                child: Image.asset(AppAssets.ageForward, height: 24.h, width: 24.w),
+                child: Image.asset(
+                  AppAssets.ageForward,
+                  height: 24.h,
+                  width: 24.w,
+                ),
               ),
             ],
           ),
