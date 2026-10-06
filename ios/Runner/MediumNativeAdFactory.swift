@@ -7,8 +7,7 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
     func createNativeAd(_ nativeAd: NativeAd, customOptions: [AnyHashable : Any]? = nil) -> NativeAdView? {
         print("📢 [MediumNativeAdFactory] createNativeAd invoked: headline='\(nativeAd.headline ?? "N/A")', advertiser='\(nativeAd.advertiser ?? "N/A")', hasCallToAction='\(nativeAd.callToAction ?? "N/A")'")
         let nativeAdView = NativeAdView(frame: CGRect(x: 0, y: 0, width: 375, height: 350))
-        nativeAdView.backgroundColor = .white
-        nativeAdView.layer.cornerRadius = 16
+        nativeAdView.backgroundColor = .clear
         nativeAdView.clipsToBounds = true
         nativeAdView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
@@ -21,7 +20,7 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         // 1. Icon ImageView (left)
         let iconImageView = UIImageView()
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.layer.cornerRadius = 10
+        iconImageView.layer.cornerRadius = 12
         iconImageView.layer.masksToBounds = true
         iconImageView.contentMode = .scaleAspectFill
         iconImageView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
@@ -43,8 +42,8 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
 
         let headlineLabel = UILabel()
         headlineLabel.translatesAutoresizingMaskIntoConstraints = false
-        headlineLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        headlineLabel.textColor = UIColor(red: 0x1A/255.0, green: 0x20/255.0, blue: 0x2C/255.0, alpha: 1.0)
+        headlineLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        headlineLabel.textColor = UIColor(red: 0x11/255.0, green: 0x18/255.0, blue: 0x27/255.0, alpha: 1.0)
         headlineLabel.numberOfLines = 1
         headlineLabel.lineBreakMode = .byTruncatingTail
         textStack.addArrangedSubview(headlineLabel)
@@ -85,9 +84,9 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         // 2. Media View (centered landscape display) - FILLS EDGE TO EDGE
         let mediaView = MediumAdMediaView()
         mediaView.translatesAutoresizingMaskIntoConstraints = false
-        mediaView.layer.cornerRadius = 12
+        mediaView.layer.cornerRadius = 8
         mediaView.layer.masksToBounds = true
-        mediaView.backgroundColor = UIColor(red: 0xF3/255.0, green: 0xF4/255.0, blue: 0xF6/255.0, alpha: 1.0)
+        mediaView.backgroundColor = .clear
         mediaView.contentMode = .scaleAspectFill
         mediaView.clipsToBounds = true
         mediaView.setContentHuggingPriority(UILayoutPriority(240), for: .vertical)
@@ -97,11 +96,11 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
         // 3. CTA Button: Solid blue (#1794D7)
         let ctaButton = UIButton(type: .custom)
         ctaButton.translatesAutoresizingMaskIntoConstraints = false
-        ctaButton.layer.cornerRadius = 23
+        ctaButton.layer.cornerRadius = 24
         ctaButton.layer.masksToBounds = true
-        ctaButton.backgroundColor = UIColor(red: 0x17/255.0, green: 0x94/255.0, blue: 0xD7/255.0, alpha: 1.0)
+        ctaButton.backgroundColor = UIColor(red: 0x1B/255.0, green: 0x92/255.0, blue: 0xD6/255.0, alpha: 1.0)
         ctaButton.setTitleColor(.white, for: .normal)
-        ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        ctaButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         ctaButton.isUserInteractionEnabled = false // Let GADNativeAdView handle touch events
         containerView.addSubview(ctaButton)
 
@@ -115,8 +114,8 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
             // Icon
             iconImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
             iconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 46),
-            iconImageView.heightAnchor.constraint(equalToConstant: 46),
+            iconImageView.widthAnchor.constraint(equalToConstant: 50),
+            iconImageView.heightAnchor.constraint(equalToConstant: 50),
 
             // AdChoices View (top trailing)
             adChoicesView.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -143,7 +142,7 @@ class MediumNativeAdFactory: NSObject, FLTNativeAdFactory {
             // CTA Button pinned to bottom
             ctaButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             ctaButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            ctaButton.heightAnchor.constraint(equalToConstant: 46),
+            ctaButton.heightAnchor.constraint(equalToConstant: 48),
             ctaButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
 

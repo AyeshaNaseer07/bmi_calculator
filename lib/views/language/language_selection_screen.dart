@@ -28,6 +28,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     with TickerProviderStateMixin {
   final AppController _appController = Get.find<AppController>();
   String _selectedLang = 'en';
+  bool _hasSelected = false;
   bool _bottomAdAvailable = true;
 
   final GlobalKey _doneButtonKey = GlobalKey();
@@ -80,8 +81,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     if (_handPhase == _HandPhase.tapping) {
       _flyToDone();
     }
-    if (_selectedLang == code) return;
-    setState(() => _selectedLang = code);
+    setState(() {
+      _selectedLang = code;
+      _hasSelected = true;
+    });
     _appController.changeLanguage(code);
   }
 
@@ -148,6 +151,83 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     return remoteModel.isFirstTimeOnboarding;
   }
 
+  static const Color _kMint = Color(0xFFC9F2E5);
+  static const Color _kCheckGreen = Color(0xFF1BA672);
+  static const Color _kAdBackground = Color(0xFFF7F7F7);
+
+  Widget _buildDoneChip() {
+    // Always laid out (so the hand animation can measure it) but only
+    // visible/tappable once a language has been picked.
+    return IgnorePointer(
+      ignoring: !_hasSelected,
+      child: AnimatedOpacity(
+        opacity: _hasSelected ? 1 : 0,
+        duration: const Duration(milliseconds: 200),
+        child: GestureDetector(
+          key: _doneButtonKey,
+          onTap: _onDone,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: _kMint,
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              'done'.tr,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFlag(String flag) {
+    final double size = 30.w;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.black12, width: 0.5),
+      ),
+      child: ClipOval(
+        child: OverflowBox(
+          maxWidth: size * 2,
+          maxHeight: size * 2,
+          child: Center(
+            child: Transform.scale(
+              scale: 1.9, // tweak 1.3 - 1.8 until the flag fills the circle
+              child: Text(flag, style: TextStyle(fontSize: size, height: 1.0)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRadio(bool isSelected) {
+    return Container(
+      width: 22.w,
+      height: 22.w,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isSelected ? _kCheckGreen : _kMint,
+        border: isSelected
+            ? null
+            : Border.all(color: const Color(0xFFB3E6D3), width: 1),
+      ),
+      child: isSelected
+          ? Icon(CupertinoIcons.checkmark_alt, size: 13.sp, color: Colors.white)
+          : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _handOffsetX = 70.w;
@@ -158,16 +238,15 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            // ── Main content ──
             SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header row (fixed app bar)
+                  // Header
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 12.h),
+                    padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 16.h),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: Column(
@@ -177,18 +256,17 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                 'languages'.tr,
                                 style: TextStyle(
                                   color: const Color(0xFF111827),
-                                  fontSize: 26.sp,
+                                  fontSize: 24,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2,
                                 ),
                               ),
-                              SizedBox(height: 8.h),
+                              SizedBox(height: 6.h),
                               Text(
                                 'select_lang_subtitle'.tr,
                                 style: TextStyle(
-                                  color: const Color(0xFF374151),
-                                  fontSize: 12.sp,
+                                  color: Colors.black,
+                                  fontSize: 13,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -196,180 +274,112 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                             ],
                           ),
                         ),
-                        SizedBox(width: 16.w),
-                        GestureDetector(
-                          key: _doneButtonKey,
-                          onTap: _onDone,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.asset(
-                                AppAssets.btnBg,
-                                width: 80.w,
-                                height: 70.h,
-                              ),
-                              Text(
-                                'done'.tr,
-                                style: TextStyle(
-                                  color: const Color(0xFF0F766E),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ],
-                          ),
+                        SizedBox(width: 12.w),
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.h),
+                          child: _buildDoneChip(),
                         ),
                       ],
                     ),
                   ),
 
-                  // Scrollable language tiles
+                  // Language tiles
                   Expanded(
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Stack(
+                        clipBehavior: Clip.none,
                         children: [
-                          ...List.generate(
-                            LocalizationService.supportedLanguages.length,
-                            (index) {
-                              final lang =
-                                  LocalizationService.supportedLanguages[index];
-                              final isSelected = _selectedLang == lang.code;
-                              final isFirstItem = index == 0;
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...List.generate(
+                                LocalizationService.supportedLanguages.length,
+                                (index) {
+                                  final lang = LocalizationService
+                                      .supportedLanguages[index];
+                                  final isSelected =
+                                      _hasSelected &&
+                                      _selectedLang == lang.code;
+                                  final isFirstItem = index == 0;
 
-                              final tile = Padding(
-                                padding: EdgeInsets.only(bottom: 12.h),
-                                child: GestureDetector(
-                                  onTap: () => _onLanguageTap(lang.code),
-                                  child: Container(
-                                    key: isFirstItem ? _firstTileKey : null,
-                                    width: double.infinity,
-                                    height: 56.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? const Color(0xFF2FD1A6)
-                                                  .withValues(alpha: 0.6)
-                                            : const Color(0xFFE5E7EB),
-                                        width: isSelected ? 1.8.w : 1.0.w,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.03,
-                                          ),
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 12.h),
+                                    child: GestureDetector(
+                                      onTap: () => _onLanguageTap(lang.code),
+                                      child: Container(
+                                        key: isFirstItem ? _firstTileKey : null,
+                                        width: double.infinity,
+                                        height: 48.h,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 14.w,
                                         ),
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            lang.flag,
-                                            style: TextStyle(fontSize: 28.sp),
+                                        decoration: ShapeDecoration(
+                                          color: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              width: 0.25,
+                                              color: const Color(0xFF09B389),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              11,
+                                            ),
                                           ),
-                                          SizedBox(width: 12.w),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  lang.nativeName,
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: const Color(
-                                                      0xFF111827,
-                                                    ),
-                                                    fontFamily: 'Inter',
+                                          shadows: [
+                                            BoxShadow(
+                                              color: Color(0x1633D2AB),
+                                              blurRadius: 6.80,
+                                              offset: Offset(0, 3),
+                                              spreadRadius: 0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            _buildFlag(lang.flag),
+                                            SizedBox(width: 12.w),
+                                            Expanded(
+                                              child: Text(
+                                                lang.nativeName,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: const Color(
+                                                    0xFF111827,
                                                   ),
+                                                  fontFamily: 'Inter',
                                                 ),
-                                                if (lang.nativeName !=
-                                                    lang.englishName) ...[
-                                                  SizedBox(height: 2.h),
-                                                  Text(
-                                                    lang.englishName,
-                                                    style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      color: const Color(
-                                                        0xFF9CA3AF,
-                                                      ),
-                                                      fontFamily: 'Inter',
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 12.w),
-                                          Container(
-                                            width: 24.w,
-                                            height: 24.w,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: isSelected
-                                                  ? const Color(0xFF2FD1A6)
-                                                  : const Color(0xFFE5E7EB),
-                                            ),
-                                            child: isSelected
-                                                ? Icon(
-                                                    CupertinoIcons
-                                                        .checkmark_alt,
-                                                    size: 13.sp,
-                                                    color: Colors.white,
-                                                  )
-                                                : null,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-
-                              // Overlay tapping hand on first tile only
-                              if (isFirstItem &&
-                                  _handPhase == _HandPhase.tapping) {
-                                return Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    tile,
-                                    Positioned(
-                                      left: 0,
-                                      right: 0,
-                                      top: 0,
-                                      bottom: 12.h,
-                                      child: IgnorePointer(
-                                        child: _TapHandHint(
-                                          controller: _handController,
-                                          offsetX: _handOffsetX,
-                                          offsetY: _handOffsetY,
+                                            SizedBox(width: 12.w),
+                                            _buildRadio(isSelected),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ],
-                                );
-                              }
-
-                              return tile;
-                            },
+                                  );
+                                },
+                              ),
+                              SizedBox(height: 8.h),
+                            ],
                           ),
-
-                          SizedBox(height: 8.h),
+                          if (_handPhase == _HandPhase.tapping)
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              top: 0,
+                              height: 50.h,
+                              child: IgnorePointer(
+                                child: _TapHandHint(
+                                  controller: _handController,
+                                  offsetX: _handOffsetX,
+                                  offsetY: _handOffsetY,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -413,15 +423,22 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
         bottomNavigationBar: _bottomAdAvailable
             ? Container(
                 width: double.infinity,
-                color: Colors.transparent,
-                padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 10.h),
-                child: NativeAdCard(
-                  onAdAvailabilityChanged: (available) {
-                    if (!mounted) return;
-                    if (_bottomAdAvailable != available) {
-                      setState(() => _bottomAdAvailable = available);
-                    }
-                  },
+                color: _kAdBackground,
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0),
+                    child: NativeAdCard(
+                      height: 290.h,
+                      backgroundColor: Colors.transparent,
+                      onAdAvailabilityChanged: (available) {
+                        if (!mounted) return;
+                        if (_bottomAdAvailable != available) {
+                          setState(() => _bottomAdAvailable = available);
+                        }
+                      },
+                    ),
+                  ),
                 ),
               )
             : null,

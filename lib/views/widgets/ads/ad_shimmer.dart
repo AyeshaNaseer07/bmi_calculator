@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/constants/app_assets.dart';
 
 class ShimmerLoading extends StatefulWidget {
   final Widget child;
@@ -69,8 +68,9 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 
 class MediumNativeAdShimmer extends StatelessWidget {
   final double? height;
+  final Color? backgroundColor;
 
-  const MediumNativeAdShimmer({super.key, this.height});
+  const MediumNativeAdShimmer({super.key, this.height, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -80,16 +80,8 @@ class MediumNativeAdShimmer extends StatelessWidget {
         height: height ?? 350.h,
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: backgroundColor ?? const Color(0xFFF7F7F7),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,8 +91,8 @@ class MediumNativeAdShimmer extends StatelessWidget {
               children: [
                 // Icon skeleton
                 Container(
-                  width: 46.w,
-                  height: 46.w,
+                  width: 50.w,
+                  height: 50.w,
                   decoration: BoxDecoration(
                     color: const Color(0xFFE0E5E5),
                     borderRadius: BorderRadius.circular(10.r),
@@ -188,12 +180,8 @@ class MediumNativeAdShimmer extends StatelessWidget {
               width: double.infinity,
               height: 46.h,
               decoration: BoxDecoration(
+                color: const Color(0xFFD5DDDD),
                 borderRadius: BorderRadius.circular(23.r),
-                image: const DecorationImage(
-                  image: AssetImage(AppAssets.btnRectangle),
-                  fit: BoxFit.fill,
-                  opacity: 0.85,
-                ),
               ),
             ),
           ],

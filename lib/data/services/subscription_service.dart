@@ -3,6 +3,7 @@ import 'storage_service.dart';
 
 enum SubscriptionPlan {
   weekly,
+  monthly,
   yearly,
 }
 

@@ -23,7 +23,7 @@ abstract class AppAssets {
   static const String bmiGauge = '$_imagesBase/guagae.png';
 
   // ── Onboarding ──
-  static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
+  static const String onboarding1 = '$_imagesBase/onboarding_1.png';
   static const String onboarding2 = '$_imagesBase/onboarding_2.png';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 

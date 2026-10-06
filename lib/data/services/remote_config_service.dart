@@ -139,6 +139,7 @@ class RemoteConfigService extends GetxService {
   String getProductId(SubscriptionPlan plan) {
     switch (plan) {
       case SubscriptionPlan.weekly:
+      case SubscriptionPlan.monthly:
         return model.value.weeklyProductId;
       case SubscriptionPlan.yearly:
         return model.value.yearlyProductId;

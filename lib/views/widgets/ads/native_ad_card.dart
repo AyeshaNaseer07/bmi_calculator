@@ -18,6 +18,7 @@ class NativeAdCard extends StatefulWidget {
   final String? adUnitId;
   final EdgeInsetsGeometry? margin;
   final double? height;
+  final Color? backgroundColor;
   final ValueChanged<bool>? onAdAvailabilityChanged;
 
   const NativeAdCard({
@@ -25,6 +26,7 @@ class NativeAdCard extends StatefulWidget {
     this.adUnitId,
     this.margin,
     this.height,
+    this.backgroundColor,
     this.onAdAvailabilityChanged,
   });
 
@@ -178,16 +180,8 @@ class _NativeAdCardState extends State<NativeAdCard> {
               width: double.infinity,
               height: effectiveHeight,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(color: const Color(0xFFE5E7EB)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                color: widget.backgroundColor ?? const Color(0xFFF7F7F7),
+                borderRadius: BorderRadius.circular(16.r),
               ),
               clipBehavior: Clip.antiAlias,
               child: SizedBox(
@@ -201,7 +195,10 @@ class _NativeAdCardState extends State<NativeAdCard> {
             )
           : SizedBox(
               width: double.infinity,
-              child: MediumNativeAdShimmer(height: effectiveHeight),
+              child: MediumNativeAdShimmer(
+                height: effectiveHeight,
+                backgroundColor: widget.backgroundColor,
+              ),
             ),
     );
 

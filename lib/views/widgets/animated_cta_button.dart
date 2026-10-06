@@ -18,6 +18,7 @@ class AnimatedCtaButton extends StatefulWidget {
   final bool enableArrowNudge;
   final BorderRadius? borderRadius;
   final TextStyle? textStyle;
+  final Gradient? gradient;
 
   const AnimatedCtaButton({
     super.key,
@@ -34,6 +35,7 @@ class AnimatedCtaButton extends StatefulWidget {
     this.enableArrowNudge = true,
     this.borderRadius,
     this.textStyle,
+    this.gradient,
   });
 
   @override
@@ -204,6 +206,7 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
                     trailingIcon: effectiveTrailing,
                     height: widget.height,
                     width: widget.width,
+                    gradient: widget.gradient,
                     backgroundImage:
                         widget.backgroundImage ?? AppAssets.btnRectangle,
                     borderRadius: effectiveBorderRadius,

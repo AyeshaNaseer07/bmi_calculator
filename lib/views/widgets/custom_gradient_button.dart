@@ -60,16 +60,26 @@ class CustomGradientButton extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            if (leadingIcon != null)
-              Align(alignment: Alignment.centerLeft, child: leadingIcon!),
             Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 36.w),
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: effectiveTextStyle,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (leadingIcon != null) ...[
+                      leadingIcon!,
+                      SizedBox(width: 8.w),
+                    ],
+                    Flexible(
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: effectiveTextStyle,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
