@@ -17,8 +17,6 @@ import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
-import '../widgets/ads/ad_preloader.dart';
-import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
@@ -113,60 +111,55 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  // Scrollable Content
+                  // Content (fixed, no scrolling)
                   Expanded(
                     child: Obx(() {
                       final hasData = bmiController.bmiHistory.isNotEmpty;
                       final latest = bmiController.latestRecord.value;
 
-                      return SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
+                      return Padding(
                         padding: EdgeInsets.only(
                           left: 18.w,
                           right: 18.w,
-                          top: 4.h,
-                          bottom: 24.h,
+                          top: 2.h,
+                          bottom: 6.h,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Main BMI Card (Empty state or Active Calculated state)
                             if (!hasData || latest == null)
-                              _buildEmptyBmiCard()
-                            else
+                              // Empty state: just the prompt card, centered
+                              Expanded(
+                                child: Center(child: _buildEmptyBmiCard()),
+                              )
+                            else ...[
+                              // Main BMI Card
                               _buildActiveBmiCard(latest),
+                              SizedBox(height: 10.h),
 
-                            SizedBox(height: 16.h),
-
-                            // Quick Parameters Pills (Weight, Height, Age, Gender)
-                            if (hasData && latest != null) ...[
+                              // Quick Parameters Pills (Weight, Height, Age, Gender)
                               _buildParameterPills(latest, bmiController),
-                              SizedBox(height: 16.h),
+                              SizedBox(height: 10.h),
 
-                              // BMI Categories Row
-                              _buildBmiCategories(latest.category),
-                              SizedBox(height: 18.h),
-                            ],
-
-                            const NativeAdCard(slot: AdSlots.home),
-                            SizedBox(height: 12.h),
-                            // Features Heading (if empty state) or 2x2 Grid Features
-                            if (!hasData) ...[
-                              Text(
-                                'Features',
-                                style: TextStyle(
-                                  color: const Color(0xFF1A252C),
-                                  fontSize: 18.sp,
-                                  fontFamily: 'Instrument Sans',
-                                  fontWeight: FontWeight.w700,
+                              // BMI Categories Row (scales down to fit if space is tight)
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.topLeft,
+                                    child: SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width -
+                                          36.w,
+                                      child: _buildBmiCategories(
+                                        latest.category,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: 16.h),
                             ],
-
-                            // 2x2 Feature Cards Grid
-                            _buildFeatureGrid(),
-                            SizedBox(height: 24.h),
                           ],
                         ),
                       );
@@ -346,38 +339,80 @@ class _HomeScreenState extends State<HomeScreen> {
         ? 'Today, ${DateFormat('h:mm a').format(record.date)}'
         : DateFormat('MMM d, h:mm a').format(record.date);
 
-    return CustomCard(
-      padding: EdgeInsets.all(16.w),
-      borderRadius: 22.r,
-      child: Column(
-        children: [
-          Row(
+    return Column(
+      children: [
+        // Main Gauge Card
+        CustomCard(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          borderRadius: 22.r,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Left: "Your BMI", Large value, Category badge
-              Column(
+              // Header Row: "Your BMI" + Last Updated
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Your BMI',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 15.sp,
+                      fontSize: 18,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Last Updated',
+                        style: TextStyle(
+                          color: const Color(0xFF96ADB0),
+                          fontSize: 10,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        formattedTime,
+                        style: TextStyle(
+                          color: const Color(0xFF1E2D2F),
+                          fontSize: 10,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              // Gauge
+              Center(
+                child: BMIGaugeWidget(
+                  bmiValue: record.bmiValue,
+                  size: 170.w,
+                  showLabels: true,
+                ),
+              ),
+              SizedBox(height: 2.h),
+
+              // Value, Category badge & View History
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   Text(
                     record.bmiValue.toStringAsFixed(1),
                     style: TextStyle(
                       color: record.category.color,
-                      fontSize: 36.sp,
+                      fontSize: 36,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: 6.h),
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 14.w,
@@ -393,56 +428,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       record.category.label,
                       style: TextStyle(
                         color: record.category.color,
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                ],
-              ),
-
-              // Center: Gauge
-              Expanded(
-                child: Center(
-                  child: BMIGaugeWidget(
-                    bmiValue: record.bmiValue,
-                    size: 142.w,
-                    showLabels: true,
-                  ),
-                ),
-              ),
-
-              // Right: Last Updated & View History
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Last Updated',
-                    style: TextStyle(
-                      color: const Color(0xFF96ADB0),
-                      fontSize: 10.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    formattedTime,
-                    style: TextStyle(
-                      color: const Color(0xFF1E2D2F),
-                      fontSize: 10.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
                   GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.history),
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
-                        vertical: 4.h,
+                        vertical: 6.h,
                       ),
                       decoration: ShapeDecoration(
                         color: const Color(0xFFF1F5F7),
@@ -462,8 +459,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'View History',
                             style: TextStyle(
-                              color: const Color(0xFF1E2D2F),
-                              fontSize: 8.5.sp,
+                              color: Colors.black,
+                              fontSize: 9,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -476,45 +473,48 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          SizedBox(height: 12.h),
+        ),
+        SizedBox(height: 12.h),
 
-          // Bottom Health Banner
-          Container(
-            width: double.infinity,
-            constraints: BoxConstraints(minHeight: 54.h),
-            decoration: BoxDecoration(
-              color: record.category.color.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                record.category.buildFeedbackIcon(size: 22.w),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Text(
-                    record.category.feedbackMessage,
-                    style: TextStyle(
-                      color: const Color(0xFF1E2D2F),
-                      fontSize: 11.5.sp,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w400,
-                      height: 1.35,
-                    ),
+        // Health Feedback Banner
+        Container(
+          width: double.infinity,
+          constraints: BoxConstraints(minHeight: 48.h),
+          decoration: BoxDecoration(
+            color: record.category.color.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: AppColors.cardShadow,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              record.category.buildFeedbackIcon(size: 24.w),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Text(
+                  record.category.feedbackMessage,
+                  style: TextStyle(
+                    color: const Color(0xFF1E2D2F),
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    height: 1.40,
                   ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(width: 6.w),
+              Image.asset(AppAssets.ageForward, height: 16.h, width: 16.w),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildParameterPills(BMIRecord record, BMIController controller) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18.r),
@@ -605,7 +605,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 text: 'BMI ',
                 style: TextStyle(
                   color: const Color(0xFF1E2D2F),
-                  fontSize: 20.sp,
+                  fontSize: 20,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
                 ),
@@ -613,8 +613,8 @@ class _HomeScreenState extends State<HomeScreen> {
               TextSpan(
                 text: 'Categories',
                 style: TextStyle(
-                  color: const Color(0xFF33D2AB),
-                  fontSize: 20.sp,
+                  color: const Color(0xFF09B389),
+                  fontSize: 20,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
                 ),
@@ -630,16 +630,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Underweight (<18.5)',
                 currentCategory == BMICategory.underweight,
                 inactiveBg: const Color(0xFFEAF5FD),
-                activeBg: const Color(0xFF25C6A5),
+                activeBg: const Color(0xFF5AC1E9),
               ),
             ),
             SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
-                'Normal (18.5–24.9)',
-                currentCategory == BMICategory.normal,
-                inactiveBg: const Color(0xFFE6F8F4),
-                activeBg: const Color(0xFF25C6A5),
+                'Obese (30–34.9)',
+                currentCategory == BMICategory.obese,
+                inactiveBg: const Color(0xFFFFEDE6),
+                activeBg: const Color(0xFFFF0100),
               ),
             ),
           ],
@@ -652,16 +652,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Overweight (25–29.9)',
                 currentCategory == BMICategory.overweight,
                 inactiveBg: const Color(0xFFFEF6E9),
-                activeBg: const Color(0xFF25C6A5),
+                activeBg: const Color(0xFFFE9B20),
               ),
             ),
             SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
-                'Obese (30–34.9)',
-                currentCategory == BMICategory.obese,
-                inactiveBg: const Color(0xFFFFEDE6),
-                activeBg: const Color(0xFF25C6A5),
+                'Normal (18.5–24.9)',
+                currentCategory == BMICategory.normal,
+                inactiveBg: const Color(0xFFE6F8F4),
+                activeBg: const Color(
+                  0xFF25C6A5,
+                ), // already full opacity, unchanged
               ),
             ),
           ],
@@ -692,112 +694,6 @@ class _HomeScreenState extends State<HomeScreen> {
           fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
           color: isCurrent ? Colors.white : const Color(0xFF1E2D2F),
         ),
-      ),
-    );
-  }
-
-  Widget _buildFeatureGrid() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildGridTile(
-                imagePath: AppAssets.homeIcon1,
-                title: 'BMI Calculator',
-                subtitle: 'Calculate your BMI',
-                onTap: () => Get.toNamed(AppRoutes.bmiCalculator),
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: _buildGridTile(
-                imagePath: AppAssets.homeIcon2,
-                title: 'Weight Tracker',
-                subtitle: 'Record your weight',
-                onTap: () => Get.toNamed(AppRoutes.weightTracking),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 12.h),
-        Row(
-          children: [
-            Expanded(
-              child: _buildGridTile(
-                imagePath: AppAssets.homeIcon3,
-                title: 'Health Insights',
-                subtitle: 'Daily wellness advice',
-                onTap: () => Get.toNamed(AppRoutes.healthInsights),
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: _buildGridTile(
-                imagePath: AppAssets.homeIcon4,
-                title: 'History',
-                subtitle: 'Monitor your journey',
-                onTap: () => Get.toNamed(AppRoutes.history),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGridTile({
-    required String imagePath, // Changed from IconData to String
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return CustomCard(
-      onTap: onTap,
-      borderRadius: 18.r,
-      padding: EdgeInsets.all(14.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                imagePath,
-                width: 40.w,
-                height: 40.h,
-                fit: BoxFit.contain,
-              ),
-              Image.asset(
-                AppAssets.chevronIcon,
-                width: 16.w,
-                height: 16.h,
-                fit: BoxFit.contain,
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            title,
-            style: TextStyle(
-              color: const Color(0xFF1A252C),
-              fontSize: 14.sp,
-              fontFamily: 'Instrument Sans',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 2.h),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: const Color(0xFF7A8B94),
-              fontSize: 11.sp,
-              fontFamily: 'Instrument Sans',
-              fontWeight: FontWeight.w400,
-              height: 1.30,
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -12,8 +12,8 @@ import '../../views/health_insights/add_health_data_screen.dart';
 import '../../views/health_insights/health_insight_result_screen.dart';
 import '../../views/health_insights/your_goal_screen.dart';
 import '../../views/history/history_screen.dart';
-import '../../views/home/home_screen.dart';
 import '../../views/language/language_selection_screen.dart';
+import '../../views/main/main_navigation_screen.dart';
 import '../../views/onboarding/onboarding_screen.dart';
 import '../../views/onboarding/paywall_screen.dart';
 import '../../views/profile/languages_screen.dart';
@@ -43,7 +43,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.home,
-      page: () => const HomeScreen(),
+      page: () => const MainNavigationScreen(),
       binding: BindingsBuilder(() {
         if (!Get.isRegistered<BMIController>()) {
           Get.put(BMIController(), permanent: true);

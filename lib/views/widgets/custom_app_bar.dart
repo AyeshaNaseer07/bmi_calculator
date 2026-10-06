@@ -23,6 +23,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canShowBack = showBackButton && Navigator.of(context).canPop();
+
     return SafeArea(
       bottom: false,
       child: Padding(
@@ -30,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            if (showBackButton)
+            if (canShowBack)
               Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
