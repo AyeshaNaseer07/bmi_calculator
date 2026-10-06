@@ -81,6 +81,16 @@ class BMIController extends GetxController {
     weightKg.value = double.parse(kg.toStringAsFixed(1));
   }
 
+  /// Sets height from a manually entered value in cm.
+  void setHeightFromInput(double cm) {
+    setHeight(cm.clamp(120.0, 220.0));
+  }
+
+  /// Sets weight from a manually entered value in kg.
+  void setWeightFromInput(double kg) {
+    setWeight(kg.clamp(30.0, 130.0));
+  }
+
   void toggleHeightUnit(bool useCm) {
     isCm.value = useCm;
   }

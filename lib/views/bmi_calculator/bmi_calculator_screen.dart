@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/bmi_controller.dart';
 import '../../core/constants/app_assets.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/bmi_service.dart';
@@ -16,6 +14,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/mandatory_label.dart';
+import '../widgets/manual_input_dialog.dart';
 import 'dialogs/calculating_dialog.dart';
 
 class BMICalculatorScreen extends StatelessWidget {
@@ -138,125 +137,44 @@ class BMICalculatorScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Card 1: Gender
-                      CustomCard(
-                        padding: EdgeInsets.all(14.w),
-                        borderRadius: 18.r,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MandatoryLabel(
-                              text: 'Gender',
-                              style: TextStyle(
-                                color: Color(0xFF111827),
-                                fontSize: 15.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _buildGenderButton(
-                                    iconAsset: AppAssets.iconMale,
-                                    label: 'Male',
-                                    isSelected: isMale,
-                                    onTap: () =>
-                                        controller.setGender(Gender.male),
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: _buildGenderButton(
-                                    iconAsset: AppAssets.iconFemale,
-                                    label: 'Female',
-                                    isSelected: isFemale,
-                                    onTap: () =>
-                                        controller.setGender(Gender.female),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      // Gender cards (avatar + age badge)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildGenderCard(
+                            asset: AppAssets.homeMale,
+                            label: 'Male',
+                            isSelected: isMale,
+                            ageText: isMale ? '$age' : null,
+                            onTap: () => controller.setGender(Gender.male),
+                            onAgeTap: () {
+                              controller.setGender(Gender.male);
+                              controller.toggleAgePicker();
+                            },
+                          ),
+                          _buildGenderCard(
+                            asset: AppAssets.homeFemale,
+                            label: 'Female',
+                            isSelected: isFemale,
+                            ageText: isFemale ? '$age' : null,
+                            onTap: () => controller.setGender(Gender.female),
+                            onAgeTap: () {
+                              controller.setGender(Gender.female);
+                              controller.toggleAgePicker();
+                            },
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 12.h),
-
-                      // Card 2: Age (with interactive tooltip stepper)
-                      CustomCard(
-                        padding: EdgeInsets.all(14.w),
-                        borderRadius: 18.r,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MandatoryLabel(
-                              text: 'Age',
-                              style: TextStyle(
-                                color: Color(0xFF111827),
-                                fontSize: 15.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
-                            GestureDetector(
-                              onTap: () => controller.toggleAgePicker(),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.w,
-                                  vertical: 12.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14.r),
-                                  border: Border.all(
-                                    color: const Color(0xFFE2E8F0),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      AppAssets.iconAge,
-                                      width: 18.w,
-                                      height: 18.w,
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    Expanded(
-                                      child: Text(
-                                        '$age Years',
-                                        style: TextStyle(
-                                          color: const Color(0xFF111827),
-                                          fontSize: 15.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      controller.isAgePickerVisible.value
-                                          ? CupertinoIcons.chevron_up
-                                          : CupertinoIcons.chevron_down,
-                                      size: 16.sp,
-                                      color: AppColors.textLight,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            if (controller.isAgePickerVisible.value) ...[
-                              SizedBox(height: 10.h),
-                              Center(
-                                child: AgePickerPopup(
-                                  currentAge: age,
-                                  onAgeChanged: (val) => controller.setAge(val),
-                                  onClose: () => controller.toggleAgePicker(),
-                                ),
-                              ),
-                            ],
-                          ],
+                      if (controller.isAgePickerVisible.value) ...[
+                        SizedBox(height: 10.h),
+                        Center(
+                          child: AgePickerPopup(
+                            currentAge: age,
+                            onAgeChanged: (val) => controller.setAge(val),
+                            onClose: () => controller.toggleAgePicker(),
+                          ),
                         ),
-                      ),
+                      ],
                       SizedBox(height: 12.h),
 
                       // Card 3: Height Slider
@@ -287,14 +205,31 @@ class BMICalculatorScreen extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 10.h),
-                            Text(
-                              heightDisplay,
-                              style: TextStyle(
-                                color: const Color(0xFF2EC4B6),
-                                fontSize: 36.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w800,
-                              ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  heightDisplay,
+                                  style: TextStyle(
+                                    color: const Color(0xFF08B289),
+                                    fontSize: 36.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                _buildEditButton(
+                                  onTap: () => ManualInputDialog.show(
+                                    title: 'Enter Height',
+                                    unitLabel: 'cm',
+                                    initialValue: heightCm.toStringAsFixed(0),
+                                    min: 120,
+                                    max: 220,
+                                    onSubmit: controller.setHeightFromInput,
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 4.h),
                             SliderTheme(
@@ -305,10 +240,10 @@ class BMICalculatorScreen extends StatelessWidget {
                                 thumbShape: BorderedRoundSliderThumbShape(
                                   enabledThumbRadius: 10.r,
                                   borderWidth: 2.5.w,
-                                  borderColor: const Color(0xFF2FD1A6),
+                                  borderColor: const Color(0xFF08B289),
                                   elevation: 2,
                                 ),
-                                overlayColor: const Color(0xFF2FD1A6)
+                                overlayColor: const Color(0xFF08B289)
                                     .withValues(alpha: 0.12),
                                 overlayShape: RoundSliderOverlayShape(
                                   overlayRadius: 18.r,
@@ -382,14 +317,31 @@ class BMICalculatorScreen extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 10.h),
-                            Text(
-                              weightDisplay,
-                              style: TextStyle(
-                                color: const Color(0xFF2EC4B6),
-                                fontSize: 36.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w800,
-                              ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  weightDisplay,
+                                  style: TextStyle(
+                                    color: const Color(0xFF08B289),
+                                    fontSize: 36.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                _buildEditButton(
+                                  onTap: () => ManualInputDialog.show(
+                                    title: 'Enter Weight',
+                                    unitLabel: 'kg',
+                                    initialValue: weightKg.toStringAsFixed(1),
+                                    min: 30,
+                                    max: 130,
+                                    onSubmit: controller.setWeightFromInput,
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 4.h),
                             SliderTheme(
@@ -400,10 +352,10 @@ class BMICalculatorScreen extends StatelessWidget {
                                 thumbShape: BorderedRoundSliderThumbShape(
                                   enabledThumbRadius: 10.r,
                                   borderWidth: 2.5.w,
-                                  borderColor: const Color(0xFF2FD1A6),
+                                  borderColor: const Color(0xFF08B289),
                                   elevation: 2,
                                 ),
-                                overlayColor: const Color(0xFF2FD1A6)
+                                overlayColor: const Color(0xFF08B289)
                                     .withValues(alpha: 0.12),
                                 overlayShape: RoundSliderOverlayShape(
                                   overlayRadius: 18.r,
@@ -530,50 +482,133 @@ class BMICalculatorScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGenderButton({
-    required String iconAsset,
+  Widget _buildGenderCard({
+    required String asset,
     required String label,
     required bool isSelected,
     required VoidCallback onTap,
+    required VoidCallback onAgeTap,
+    String? ageText,
   }) {
+    const green = Color(0xFF09B389);
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
-        height: 46.h,
+        width: 140.w,
+        padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 8.h),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: isSelected
-                ? const Color(0xFF2FD1A6)
-                : const Color(0xFFE2E8F0),
-            width: isSelected ? 1.5.w : 1.0.w,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              iconAsset,
-              width: 18.w,
-              height: 18.w,
-              color: isSelected
-                  ? const Color(0xFF2EC4B6)
-                  : const Color(0xFF6B7280),
-            ),
-            SizedBox(width: 8.w),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected
-                    ? const Color(0xFF2EC4B6)
-                    : AppColors.textBody,
-              ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(color: const Color(0xFFD8F3EC), width: 1.2),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x2633D2AB),
+              blurRadius: 8,
+              offset: Offset(0, 2),
             ),
           ],
         ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 88.w,
+                  height: 88.w,
+                  padding: EdgeInsets.all(3.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected ? green : const Color(0xFFD1D5DB),
+                      width: 2.w,
+                    ),
+                  ),
+                  child: ClipOval(child: Image.asset(asset, fit: BoxFit.cover)),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 2.h,
+                  child: GestureDetector(
+                    onTap: onAgeTap,
+                    child: Container(
+                      width: 20.w,
+                      height: 20.w,
+                      decoration: BoxDecoration(
+                        color: green,
+                        borderRadius: BorderRadius.circular(6.r),
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: Icon(
+                        Icons.calendar_today_rounded,
+                        size: 10.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 6.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
+                    color: isSelected
+                        ? const Color(0xFF111827)
+                        : const Color(0xFF6B7280),
+                  ),
+                ),
+                if (ageText != null) ...[
+                  SizedBox(width: 10.w),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: ageText,
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                        TextSpan(
+                          text: 'Yr',
+                          style: TextStyle(fontSize: 11.sp),
+                        ),
+                      ],
+                    ),
+                    style: const TextStyle(
+                      color: green,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditButton({required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: const BoxDecoration(
+          color: Color(0xFFE6F8F4),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(Icons.edit, size: 14.sp, color: const Color(0xFF08B289)),
       ),
     );
   }
@@ -599,7 +634,7 @@ class BMICalculatorScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
               decoration: BoxDecoration(
                 color: isLeftSelected
-                    ? const Color(0xFF2FD1A6)
+                    ? const Color(0xFF08B289)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -621,7 +656,7 @@ class BMICalculatorScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
               decoration: BoxDecoration(
                 color: !isLeftSelected
-                    ? const Color(0xFF2FD1A6)
+                    ? const Color(0xFF08B289)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(12.r),
               ),
