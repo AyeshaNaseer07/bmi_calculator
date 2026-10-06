@@ -25,9 +25,9 @@ class BMICalculatorScreen extends StatelessWidget {
     Get.dialog(const CalculatingDialog(), barrierDismissible: false);
 
     await Future.delayed(const Duration(milliseconds: 1600));
-    final record = await controller.calculateAndSave();
+    await controller.calculateAndSave();
     Get.back(); // close dialog
-    Get.toNamed(AppRoutes.bmiResult, arguments: record);
+    Get.offAllNamed(AppRoutes.home);
   }
 
   @override
@@ -137,363 +137,382 @@ class BMICalculatorScreen extends StatelessWidget {
                       ? '130 kg'
                       : '${BMIService.kgToLbs(130.0).round()} lb';
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  return Stack(
+                    clipBehavior: Clip.none,
                     children: [
-                      // Gender cards (avatar + age badge)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildGenderCard(
-                            asset: AppAssets.homeMale,
-                            label: 'Male',
-                            isSelected: isMale,
-                            ageText: isMale ? '$age' : null,
-                            onTap: () => controller.setGender(Gender.male),
-                            onAgeTap: () {
-                              controller.setGender(Gender.male);
-                              controller.toggleAgePicker();
-                            },
+                          // Gender cards (avatar + age badge)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildGenderCard(
+                                asset: AppAssets.homeMale,
+                                label: 'Male',
+                                isSelected: isMale,
+                                ageText: isMale ? '$age' : null,
+                                onTap: () => controller.setGender(Gender.male),
+                                onAgeTap: () {
+                                  controller.setGender(Gender.male);
+                                  controller.toggleAgePicker();
+                                },
+                              ),
+                              _buildGenderCard(
+                                asset: AppAssets.homeFemale,
+                                label: 'Female',
+                                isSelected: isFemale,
+                                ageText: isFemale ? '$age' : null,
+                                onTap: () =>
+                                    controller.setGender(Gender.female),
+                                onAgeTap: () {
+                                  controller.setGender(Gender.female);
+                                  controller.toggleAgePicker();
+                                },
+                              ),
+                            ],
                           ),
-                          _buildGenderCard(
-                            asset: AppAssets.homeFemale,
-                            label: 'Female',
-                            isSelected: isFemale,
-                            ageText: isFemale ? '$age' : null,
-                            onTap: () => controller.setGender(Gender.female),
-                            onAgeTap: () {
-                              controller.setGender(Gender.female);
-                              controller.toggleAgePicker();
-                            },
+                          SizedBox(height: 12.h),
+
+                          // Card 3: Height Slider
+                          CustomCard(
+                            padding: EdgeInsets.all(14.w),
+                            borderRadius: 18.r,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    MandatoryLabel(
+                                      text: 'Height',
+                                      style: TextStyle(
+                                        color: Color(0xFF111827),
+                                        fontSize: 15.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    _buildUnitToggle(
+                                      leftLabel: 'cm',
+                                      rightLabel: 'ft',
+                                      isLeftSelected: isCm,
+                                      onToggle: (val) =>
+                                          controller.toggleHeightUnit(val),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10.h),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      heightDisplay,
+                                      style: TextStyle(
+                                        color: const Color(0xFF08B289),
+                                        fontSize: 36.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    _buildEditButton(
+                                      onTap: () {
+                                        if (isCm) {
+                                          ManualInputDialog.show(
+                                            title: 'Enter Height',
+                                            unitLabel: 'cm',
+                                            initialValue: heightCm
+                                                .toStringAsFixed(0),
+                                            min: 120,
+                                            max: 220,
+                                            onSubmit:
+                                                controller.setHeightFromInput,
+                                          );
+                                        } else {
+                                          final (
+                                            ft,
+                                            inches,
+                                          ) = BMIService.cmToFeetAndInches(
+                                            heightCm,
+                                          );
+                                          ManualInputDialog.showFeetInches(
+                                            title: 'Enter Height',
+                                            initialFeet: ft,
+                                            initialInches: inches,
+                                            onSubmit: (feet, inchesVal) {
+                                              final cm = BMIService.inchesToCm(
+                                                (feet * 12) + inchesVal,
+                                              );
+                                              controller.setHeightFromInput(cm);
+                                            },
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.h),
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    activeTrackColor: const Color(0xFF2EC4B6),
+                                    inactiveTrackColor: const Color(0xFFE2E8F0),
+                                    thumbColor: Colors.white,
+                                    thumbShape: BorderedRoundSliderThumbShape(
+                                      enabledThumbRadius: 10.r,
+                                      borderWidth: 2.5.w,
+                                      borderColor: const Color(0xFF08B289),
+                                      elevation: 2,
+                                    ),
+                                    overlayColor: const Color(0xFF08B289)
+                                        .withValues(alpha: 0.12),
+                                    overlayShape: RoundSliderOverlayShape(
+                                      overlayRadius: 18.r,
+                                    ),
+                                    trackHeight: 6.h,
+                                  ),
+                                  child: Slider(
+                                    value: heightCm.clamp(120.0, 220.0),
+                                    min: 120.0,
+                                    max: 220.0,
+                                    onChanged: (val) =>
+                                        controller.setHeight(val),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        minHeightText,
+                                        style: TextStyle(
+                                          color: const Color(0xFF6B7280),
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        maxHeightText,
+                                        style: TextStyle(
+                                          color: const Color(0xFF6B7280),
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+                          SizedBox(height: 12.h),
+
+                          // Card 4: Weight Slider
+                          CustomCard(
+                            padding: EdgeInsets.all(14.w),
+                            borderRadius: 18.r,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    MandatoryLabel(
+                                      text: 'Weight',
+                                      style: TextStyle(
+                                        color: Color(0xFF111827),
+                                        fontSize: 15.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    _buildUnitToggle(
+                                      leftLabel: 'kg',
+                                      rightLabel: 'lb',
+                                      isLeftSelected: isKg,
+                                      onToggle: (val) =>
+                                          controller.toggleWeightUnit(val),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10.h),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      weightDisplay,
+                                      style: TextStyle(
+                                        color: const Color(0xFF08B289),
+                                        fontSize: 36.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    _buildEditButton(
+                                      onTap: () {
+                                        if (isKg) {
+                                          ManualInputDialog.show(
+                                            title: 'Enter Weight',
+                                            unitLabel: 'kg',
+                                            initialValue: weightKg
+                                                .toStringAsFixed(1),
+                                            min: 30,
+                                            max: 130,
+                                            onSubmit:
+                                                controller.setWeightFromInput,
+                                          );
+                                        } else {
+                                          final lb = BMIService.kgToLbs(
+                                            weightKg,
+                                          );
+                                          ManualInputDialog.show(
+                                            title: 'Enter Weight',
+                                            unitLabel: 'lb',
+                                            initialValue: lb.toStringAsFixed(1),
+                                            min: BMIService.kgToLbs(30),
+                                            max: BMIService.kgToLbs(130),
+                                            onSubmit: (val) =>
+                                                controller.setWeightFromInput(
+                                                  BMIService.lbsToKg(val),
+                                                ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.h),
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    activeTrackColor: const Color(0xFF2FD1A6),
+                                    inactiveTrackColor: const Color(0xFFE2E8F0),
+                                    thumbColor: Colors.white,
+                                    thumbShape: BorderedRoundSliderThumbShape(
+                                      enabledThumbRadius: 10.r,
+                                      borderWidth: 2.5.w,
+                                      borderColor: const Color(0xFF08B289),
+                                      elevation: 2,
+                                    ),
+                                    overlayColor: const Color(0xFF08B289)
+                                        .withValues(alpha: 0.12),
+                                    overlayShape: RoundSliderOverlayShape(
+                                      overlayRadius: 18.r,
+                                    ),
+                                    trackHeight: 6.h,
+                                  ),
+                                  child: Slider(
+                                    value: weightKg.clamp(30.0, 130.0),
+                                    min: 30.0,
+                                    max: 130.0,
+                                    onChanged: (val) =>
+                                        controller.setWeight(val),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        minWeightText,
+                                        style: TextStyle(
+                                          color: const Color(0xFF6B7280),
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        maxWeightText,
+                                        style: TextStyle(
+                                          color: const Color(0xFF6B7280),
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          // Calculate BMI Button
+                          CustomGradientButton(
+                            text: 'Calculate BMI',
+                            leadingIcon: Image.asset(
+                              AppAssets.calcilatorIcon,
+                              width: 18.w,
+                              height: 18.w,
+                            ),
+                            solidColor: const Color(0xFF00BD8E),
+                            borderRadius: BorderRadius.circular(26.r),
+                            height: 48.h,
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.sp,
+                              fontFamily: 'Instrument Sans',
+                              fontWeight: FontWeight.w700,
+                            ),
+                            onPressed:
+                                (controller.age.value > 0 &&
+                                    controller.heightCm.value > 0 &&
+                                    controller.weightKg.value > 0)
+                                ? () => _onCalculate(controller)
+                                : null,
+                          ),
+                          SizedBox(height: 10.h),
+
+                          // Reset Button
+                          CustomGradientButton(
+                            text: 'Reset',
+                            leadingIcon: Image.asset(
+                              AppAssets.resetIcon,
+                              width: 18.w,
+                              height: 18.w,
+                              color: const Color(0xFF00BD8E),
+                            ),
+                            isOutlined: true,
+                            outlineColor: const Color(0xFF00BD8E),
+                            borderRadius: BorderRadius.circular(26.r),
+                            height: 48.h,
+                            textStyle: TextStyle(
+                              color: const Color(0xFF00BD8E),
+                              fontSize: 15.sp,
+                              fontFamily: 'Instrument Sans',
+                              fontWeight: FontWeight.w700,
+                            ),
+                            onPressed: () => controller.resetInputs(),
+                          ),
+                          SizedBox(height: 24.h),
                         ],
                       ),
-                      if (controller.isAgePickerVisible.value) ...[
-                        SizedBox(height: 10.h),
-                        Center(
-                          child: AgePickerPopup(
-                            currentAge: age,
-                            onAgeChanged: (val) => controller.setAge(val),
-                            onClose: () => controller.toggleAgePicker(),
+                      if (controller.isAgePickerVisible.value)
+                        Positioned(
+                          top: 85.h,
+                          left: 20,
+                          right: 0,
+                          child: Center(
+                            child: AgePickerPopup(
+                              currentAge: age,
+                              onAgeChanged: (val) => controller.setAge(val),
+                              onClose: () => controller.toggleAgePicker(),
+                            ),
                           ),
                         ),
-                      ],
-                      SizedBox(height: 12.h),
-
-                      // Card 3: Height Slider
-                      CustomCard(
-                        padding: EdgeInsets.all(14.w),
-                        borderRadius: 18.r,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                MandatoryLabel(
-                                  text: 'Height',
-                                  style: TextStyle(
-                                    color: Color(0xFF111827),
-                                    fontSize: 15.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                _buildUnitToggle(
-                                  leftLabel: 'cm',
-                                  rightLabel: 'ft',
-                                  isLeftSelected: isCm,
-                                  onToggle: (val) =>
-                                      controller.toggleHeightUnit(val),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  heightDisplay,
-                                  style: TextStyle(
-                                    color: const Color(0xFF08B289),
-                                    fontSize: 36.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                _buildEditButton(
-                                  onTap: () {
-                                    if (isCm) {
-                                      ManualInputDialog.show(
-                                        title: 'Enter Height',
-                                        unitLabel: 'cm',
-                                        initialValue: heightCm.toStringAsFixed(
-                                          0,
-                                        ),
-                                        min: 120,
-                                        max: 220,
-                                        onSubmit: controller.setHeightFromInput,
-                                      );
-                                    } else {
-                                      final (
-                                        ft,
-                                        inches,
-                                      ) = BMIService.cmToFeetAndInches(
-                                        heightCm,
-                                      );
-                                      ManualInputDialog.showFeetInches(
-                                        title: 'Enter Height',
-                                        initialFeet: ft,
-                                        initialInches: inches,
-                                        onSubmit: (feet, inchesVal) {
-                                          final cm = BMIService.inchesToCm(
-                                            (feet * 12) + inchesVal,
-                                          );
-                                          controller.setHeightFromInput(cm);
-                                        },
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4.h),
-                            SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: const Color(0xFF2EC4B6),
-                                inactiveTrackColor: const Color(0xFFE2E8F0),
-                                thumbColor: Colors.white,
-                                thumbShape: BorderedRoundSliderThumbShape(
-                                  enabledThumbRadius: 10.r,
-                                  borderWidth: 2.5.w,
-                                  borderColor: const Color(0xFF08B289),
-                                  elevation: 2,
-                                ),
-                                overlayColor: const Color(0xFF08B289)
-                                    .withValues(alpha: 0.12),
-                                overlayShape: RoundSliderOverlayShape(
-                                  overlayRadius: 18.r,
-                                ),
-                                trackHeight: 6.h,
-                              ),
-                              child: Slider(
-                                value: heightCm.clamp(120.0, 220.0),
-                                min: 120.0,
-                                max: 220.0,
-                                onChanged: (val) => controller.setHeight(val),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    minHeightText,
-                                    style: TextStyle(
-                                      color: const Color(0xFF6B7280),
-                                      fontSize: 12.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    maxHeightText,
-                                    style: TextStyle(
-                                      color: const Color(0xFF6B7280),
-                                      fontSize: 12.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-
-                      // Card 4: Weight Slider
-                      CustomCard(
-                        padding: EdgeInsets.all(14.w),
-                        borderRadius: 18.r,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                MandatoryLabel(
-                                  text: 'Weight',
-                                  style: TextStyle(
-                                    color: Color(0xFF111827),
-                                    fontSize: 15.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                _buildUnitToggle(
-                                  leftLabel: 'kg',
-                                  rightLabel: 'lb',
-                                  isLeftSelected: isKg,
-                                  onToggle: (val) =>
-                                      controller.toggleWeightUnit(val),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  weightDisplay,
-                                  style: TextStyle(
-                                    color: const Color(0xFF08B289),
-                                    fontSize: 36.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                _buildEditButton(
-                                  onTap: () {
-                                    if (isKg) {
-                                      ManualInputDialog.show(
-                                        title: 'Enter Weight',
-                                        unitLabel: 'kg',
-                                        initialValue: weightKg.toStringAsFixed(
-                                          1,
-                                        ),
-                                        min: 30,
-                                        max: 130,
-                                        onSubmit: controller.setWeightFromInput,
-                                      );
-                                    } else {
-                                      final lb = BMIService.kgToLbs(weightKg);
-                                      ManualInputDialog.show(
-                                        title: 'Enter Weight',
-                                        unitLabel: 'lb',
-                                        initialValue: lb.toStringAsFixed(1),
-                                        min: BMIService.kgToLbs(30),
-                                        max: BMIService.kgToLbs(130),
-                                        onSubmit: (val) =>
-                                            controller.setWeightFromInput(
-                                              BMIService.lbsToKg(val),
-                                            ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4.h),
-                            SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: const Color(0xFF2FD1A6),
-                                inactiveTrackColor: const Color(0xFFE2E8F0),
-                                thumbColor: Colors.white,
-                                thumbShape: BorderedRoundSliderThumbShape(
-                                  enabledThumbRadius: 10.r,
-                                  borderWidth: 2.5.w,
-                                  borderColor: const Color(0xFF08B289),
-                                  elevation: 2,
-                                ),
-                                overlayColor: const Color(0xFF08B289)
-                                    .withValues(alpha: 0.12),
-                                overlayShape: RoundSliderOverlayShape(
-                                  overlayRadius: 18.r,
-                                ),
-                                trackHeight: 6.h,
-                              ),
-                              child: Slider(
-                                value: weightKg.clamp(30.0, 130.0),
-                                min: 30.0,
-                                max: 130.0,
-                                onChanged: (val) => controller.setWeight(val),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    minWeightText,
-                                    style: TextStyle(
-                                      color: const Color(0xFF6B7280),
-                                      fontSize: 12.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    maxWeightText,
-                                    style: TextStyle(
-                                      color: const Color(0xFF6B7280),
-                                      fontSize: 12.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      // Calculate BMI Button
-                      CustomGradientButton(
-                        text: 'Calculate BMI',
-                        leadingIcon: Image.asset(
-                          AppAssets.calcilatorIcon,
-                          width: 18.w,
-                          height: 18.w,
-                        ),
-                        solidColor: const Color(0xFF00BD8E),
-                        borderRadius: BorderRadius.circular(26.r),
-                        height: 48.h,
-                        textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.sp,
-                          fontFamily: 'Instrument Sans',
-                          fontWeight: FontWeight.w700,
-                        ),
-                        onPressed:
-                            (controller.age.value > 0 &&
-                                controller.heightCm.value > 0 &&
-                                controller.weightKg.value > 0)
-                            ? () => _onCalculate(controller)
-                            : null,
-                      ),
-                      SizedBox(height: 10.h),
-
-                      // Reset Button
-                      CustomGradientButton(
-                        text: 'Reset',
-                        leadingIcon: Image.asset(
-                          AppAssets.resetIcon,
-                          width: 18.w,
-                          height: 18.w,
-                          color: const Color(0xFF00BD8E),
-                        ),
-                        isOutlined: true,
-                        outlineColor: const Color(0xFF00BD8E),
-                        borderRadius: BorderRadius.circular(26.r),
-                        height: 48.h,
-                        textStyle: TextStyle(
-                          color: const Color(0xFF00BD8E),
-                          fontSize: 15.sp,
-                          fontFamily: 'Instrument Sans',
-                          fontWeight: FontWeight.w700,
-                        ),
-                        onPressed: () => controller.resetInputs(),
-                      ),
-                      SizedBox(height: 24.h),
                     ],
                   );
                 }),

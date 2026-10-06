@@ -277,8 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ? "Let's track your health today."
               : "Welcome! Let's begin your health journey.",
           style: TextStyle(
-            color: Color(0xFF647E80),
-            fontSize: 11.5.sp,
+            color: const Color(0xFF647E80),
+            fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),

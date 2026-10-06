@@ -17,8 +17,9 @@ class AgePickerPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 210.w,
-      padding: EdgeInsets.all(14.w),
+      height: 92.h,
+      width: 130.w,
+      padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
         color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(16.r),
@@ -42,7 +43,7 @@ class AgePickerPopup extends StatelessWidget {
                   'Your Age',
                   style: TextStyle(
                     color: const Color(0xFF111827),
-                    fontSize: 20.sp,
+                    fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
@@ -56,12 +57,12 @@ class AgePickerPopup extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 10,
+              fontSize: 7,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 2.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -72,17 +73,18 @@ class AgePickerPopup extends StatelessWidget {
                 },
                 child: Image.asset(
                   AppAssets.ageBack,
-                  height: 24.h,
-                  width: 24.w,
+                  height: 16.h,
+                  width: 16.w,
                 ),
               ),
               // Previous age
               Text(
                 '${currentAge > 1 ? currentAge - 1 : ''}',
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  color: const Color(0xFFDFDFDF),
+                  fontSize: 16,
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFFB0BEC5),
                 ),
               ),
               // Selected age (large teal)
@@ -91,8 +93,8 @@ class AgePickerPopup extends StatelessWidget {
                 child: Text(
                   '$currentAge',
                   style: TextStyle(
-                    color: const Color(0xFF08B289),
-                    fontSize: 48.sp,
+                    color: const Color(0xFF09B389),
+                    fontSize: 24,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
@@ -102,9 +104,10 @@ class AgePickerPopup extends StatelessWidget {
               Text(
                 '${currentAge < 120 ? currentAge + 1 : ''}',
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  color: const Color(0xFFDFDFDF),
+                  fontSize: 16,
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFFB0BEC5),
                 ),
               ),
               // Right Arrow
@@ -114,8 +117,8 @@ class AgePickerPopup extends StatelessWidget {
                 },
                 child: Image.asset(
                   AppAssets.ageForward,
-                  height: 24.h,
-                  width: 24.w,
+                  height: 16.h,
+                  width: 16.w,
                 ),
               ),
             ],
