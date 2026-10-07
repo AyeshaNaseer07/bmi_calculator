@@ -12,21 +12,21 @@ abstract class AppAssets {
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   static const String homeAvatar = '$_imagesBase/home_img.webp';
-  static const String homeAvatarDefault = '$_imagesBase/home_avatar.png';
-  static const String homeMale = '$_imagesBase/home_male.png';
-  static const String homeFemale = '$_imagesBase/home_female.png';
-  static const String homeImgFemale = '$_imagesBase/home_img_1.png';
+  static const String homeAvatarDefault = '$_imagesBase/home_avatar.webp';
+  static const String homeMale = '$_imagesBase/home_male.webp';
+  static const String homeFemale = '$_imagesBase/home_female.webp';
+  static const String homeImgFemale = '$_imagesBase/home_img_1.webp';
   static const String btnRectangle = '$_imagesBase/btn.webp';
   static const String calcilatorIcon = '$_imagesBase/calculator.webp';
   static const String tipIcon = '$_imagesBase/tip.webp';
   static const String resetIcon = '$_imagesBase/reset.webp';
 
   static const String icDiamond = '$_imagesBase/ic_diamond.webp';
-  static const String bmiGauge = '$_imagesBase/guagae.png';
+  static const String bmiGauge = '$_imagesBase/guagae.webp';
 
   // ── Onboarding ──
-  static const String onboarding1 = '$_imagesBase/onboarding_1.png';
-  static const String onboarding2 = '$_imagesBase/onboarding_2.png';
+  static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
+  static const String onboarding2 = '$_imagesBase/onboarding_2.webp';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
   // ── Paywall Premium Feature Icons ──
@@ -36,17 +36,17 @@ abstract class AppAssets {
   static const String preIcon4 = '$_imagesBase/pre_icon4.webp';
   static const String preIcon5 = '$_imagesBase/pre_icon5.webp';
 
-  static const String homeIcon1 = '$_imagesBase/home_1.png';
-  static const String homeIcon2 = '$_imagesBase/home_2.png';
-  static const String homeIcon3 = '$_imagesBase/home_3.png';
-  static const String homeIcon4 = '$_imagesBase/home_4.png';
+  static const String homeIcon1 = '$_imagesBase/home_1.webp';
+  static const String homeIcon2 = '$_imagesBase/home_2.webp';
+  static const String homeIcon3 = '$_imagesBase/home_3.webp';
+  static const String homeIcon4 = '$_imagesBase/home_4.webp';
 
   // ── Bottom Nav ──
-  static const String navHome = '$_imagesBase/nav_1.png';
-  static const String navProfile = '$_imagesBase/nav_2.png';
-  static const String navWeight = '$_imagesBase/nav_3.png';
-  static const String navHistory = '$_imagesBase/nav_4.png';
-  static const String navAdd = '$_imagesBase/bmi_home.png';
+  static const String navHome = '$_imagesBase/nav_1.webp';
+  static const String navProfile = '$_imagesBase/nav_2.webp';
+  static const String navWeight = '$_imagesBase/nav_3.webp';
+  static const String navHistory = '$_imagesBase/nav_4.webp';
+  static const String navAdd = '$_imagesBase/bmi_home.webp';
 
   static const String btnBg = '$_imagesBase/btn_bg.webp';
   static const String premiumBg = '$_imagesBase/premium_bg.webp';
@@ -62,11 +62,11 @@ abstract class AppAssets {
   static const String ageForward = '$_imagesBase/age_forward.webp';
   static const String hearticon = '$_imagesBase/heart.webp';
   static const String shieldicon = '$_imagesBase/shield.webp';
-  static const String weighticon = '$_imagesBase/weight.png';
-  static const String heighticon = '$_imagesBase/height.png';
-  static const String ageicon = '$_imagesBase/age.png';
-  static const String arrowIcon = '$_imagesBase/arrow.png';
-  static const String gendericon = '$_imagesBase/gender.png';
+  static const String weighticon = '$_imagesBase/weight.webp';
+  static const String heighticon = '$_imagesBase/height.webp';
+  static const String ageicon = '$_imagesBase/age.webp';
+  static const String arrowIcon = '$_imagesBase/arrow.webp';
+  static const String gendericon = '$_imagesBase/gender.webp';
   static const String iconFemale = '$_imagesBase/icon_female.webp';
   static const String iconMale = '$_imagesBase/icon_male.webp';
   static const String iconAge = '$_imagesBase/icon_age.webp';
@@ -86,7 +86,7 @@ abstract class AppAssets {
   static const String historyUp = '$_imagesBase/history_up.webp';
   static const String historyCalander = '$_imagesBase/calander_history.webp';
   static const String historyRestart = '$_imagesBase/history_restart.webp';
-  static const String premiumCrown = '$_imagesBase/premium_crown.png';
+  static const String premiumCrown = '$_imagesBase/premium_crown.webp';
 
   // ── Health Insights ──
   static const String healthHeight = '$_imagesBase/health_height.webp';
@@ -102,29 +102,30 @@ abstract class AppAssets {
   static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
 
   // ── BMI insight / tips flow ──
-  static const String insightNormal = '$_imagesBase/normal_bmi.png';
-  static const String insightUnder = '$_imagesBase/below_bmi.png';
-  static const String insightOver = '$_imagesBase/above_bmi.png';
-  static const String insightObese = '$_imagesBase/obese_bmi.png';
-  static const String insightRise = '$_imagesBase/rise_bmi.png';
-  static const String tipMeals = '$_imagesBase/balance_meal.png';
-  static const String tipHydrated = '$_imagesBase/hydrated.png';
-  static const String tipActive = '$_imagesBase/active.png';
-  static const String tipSleep = '$_imagesBase/sleep.png';
+  static const String insightNormal = '$_imagesBase/normal_bmi.webp';
+  static const String insightUnder = '$_imagesBase/below_bmi.webp';
+  static const String insightOver = '$_imagesBase/above_bmi.webp';
+  static const String insightObese = '$_imagesBase/obese_bmi.webp';
+  static const String insightRise = '$_imagesBase/rise_bmi.webp';
+  static const String tipMeals = '$_imagesBase/balance_meal.webp';
+  static const String tipHydrated = '$_imagesBase/hydrated.webp';
+  static const String tipActive = '$_imagesBase/active.webp';
+  static const String tipSleep = '$_imagesBase/sleep.webp';
 
   // Photos that exist already
-  static const String photoVegetables = '$_imagesBase/hero-image-container.png';
-  static const String photoBalancedMeal = '$_imagesBase/hero.png';
-  static const String photoChicken = '$_imagesBase/protein.png';
+  static const String photoVegetables =
+      '$_imagesBase/hero-image-container.webp';
+  static const String photoBalancedMeal = '$_imagesBase/hero.webp';
+  static const String photoChicken = '$_imagesBase/protein.webp';
 
   // Photos still to be added (a soft placeholder shows until the file exists)
-  static const String photoMealHero = '$_imagesBase/meal_hero.png';
-  static const String photoPortionVeg = '$_imagesBase/portion_veg.png';
-  static const String photoSimpleMeal = '$_imagesBase/simple_meal.png';
-  static const String photoBreakfast = '$_imagesBase/meal_breakfast.png';
-  static const String photoLunch = '$_imagesBase/meal_lunch.png';
-  static const String photoDinner = '$_imagesBase/meal_dinner.png';
-  static const String photoLunchHero = '$_imagesBase/meal_lunch_hero.png';
-  static const String photoWaterHero = '$_imagesBase/water_hero.png';
-  static const String photoWaterEnergy = '$_imagesBase/water_energy.png';
+  static const String photoMealHero = '$_imagesBase/meal_hero.webp';
+  static const String photoPortionVeg = '$_imagesBase/portion_veg.webp';
+  static const String photoSimpleMeal = '$_imagesBase/simple_meal.webp';
+  static const String photoBreakfast = '$_imagesBase/meal_breakfast.webp';
+  static const String photoLunch = '$_imagesBase/meal_lunch.webp';
+  static const String photoDinner = '$_imagesBase/meal_dinner.webp';
+  static const String photoLunchHero = '$_imagesBase/meal_lunch_hero.webp';
+  static const String photoWaterHero = '$_imagesBase/water_hero.webp';
+  static const String photoWaterEnergy = '$_imagesBase/water_energy.webp';
 }

@@ -21,10 +21,14 @@ import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
-import '../insights/insight_common.dart' show kInk, kGreen, kGreenDark, kMuted;
+import '../insights/insight_common.dart' show kInk, kGreen, kMuted;
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+
+/// True while Home shows the "no BMI + ad failed" layout; the main bottom
+/// navigation is hidden in that state.
+final RxBool homeAdFailed = false.obs;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,7 +39,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   /// True once the home native ad failed / is unavailable (empty state only).
-  final RxBool _adFailed = false.obs;
+  RxBool get _adFailed => homeAdFailed;
 
   @override
   void initState() {
@@ -131,9 +135,36 @@ class _HomeScreenState extends State<HomeScreen> {
                       final latest = bmiController.latestRecord.value;
 
                       if (!hasData || latest == null) {
-                        // Empty state: card given priority flex, the ad (or
-                        // the features grid once the ad fails) given the
-                        // rest — both resized for real, no scroll needed.
+                        if (_adFailed.value) {
+                          // No ad: card + Features grid as one proportioned
+                          // unit, matching the full "Features" view.
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 36.w,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      _buildEmptyBmiCard(showLabels: false),
+                                      SizedBox(height: 18.h),
+                                      _buildFeaturesSection(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
+                        // Ad showing: card given priority flex, the ad
+                        // given the rest — both resized for real.
                         return Padding(
                           padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
                           child: Column(
@@ -157,33 +188,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: 14.h),
                               Expanded(
                                 flex: 42,
-                                child: _adFailed.value
-                                    ? Align(
-                                        alignment: Alignment.topCenter,
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: SizedBox(
-                                            width:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                36.w,
-                                            child: _buildFeaturesSection(),
-                                          ),
-                                        ),
-                                      )
-                                    : LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          return _HomeNativeAdStrip(
-                                            height: constraints.maxHeight,
-                                            onAvailability: (ok) {
-                                              if (!ok && mounted) {
-                                                _adFailed.value = true;
-                                              }
-                                            },
-                                          );
-                                        },
-                                      ),
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    return _HomeNativeAdStrip(
+                                      height: constraints.maxHeight,
+                                      onAvailability: (ok) {
+                                        if (!ok && mounted) {
+                                          _adFailed.value = true;
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -256,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: _featureCard(
-                Icons.calculate_outlined,
+                AppAssets.homeIcon1,
                 'BMI Calculator',
                 'Calculate your BMI',
                 AppRoutes.bmiCalculator,
@@ -265,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 12.w),
             Expanded(
               child: _featureCard(
-                Icons.balance_rounded,
+                AppAssets.homeIcon2,
                 'Weight Tracker',
                 'Record your weight',
                 AppRoutes.weightTracking,
@@ -278,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: _featureCard(
-                Icons.monitor_heart_outlined,
+                AppAssets.homeIcon3,
                 'Health Insights',
                 'Daily wellness advice',
                 AppRoutes.healthInsights,
@@ -287,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 12.w),
             Expanded(
               child: _featureCard(
-                Icons.history_rounded,
+                AppAssets.homeIcon4,
                 'History',
                 'Monitor your journey',
                 AppRoutes.history,
@@ -300,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _featureCard(
-    IconData icon,
+    String iconAsset,
     String title,
     String subtitle,
     String route,
@@ -309,16 +325,19 @@ class _HomeScreenState extends State<HomeScreen> {
       behavior: HitTestBehavior.opaque,
       onTap: () => Get.toNamed(route),
       child: Container(
-        padding: EdgeInsets.fromLTRB(14.w, 14.h, 12.w, 14.h),
-        decoration: BoxDecoration(
+        padding: EdgeInsets.fromLTRB(12.w, 12.h, 10.w, 12.h),
+        decoration: ShapeDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: const Color(0xFF7FE0C0), width: 1),
-          boxShadow: const [
+          shape: RoundedRectangleBorder(
+            side: BorderSide(width: 0.50, color: const Color(0xFF33D2AB)),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          shadows: [
             BoxShadow(
-              color: Color(0x1F33D2AB),
-              blurRadius: 10,
+              color: Color(0x4C33D2AB),
+              blurRadius: 4.70,
               offset: Offset(0, 2),
+              spreadRadius: 0,
             ),
           ],
         ),
@@ -327,28 +346,13 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: 40.w,
-                  height: 40.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFB5EFDC),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(icon, color: kGreenDark, size: 22.sp),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 12.h),
-                  child: Icon(
-                    Icons.chevron_right_rounded,
-                    color: kGreen,
-                    size: 20.sp,
-                  ),
-                ),
+                Image.asset(iconAsset, width: 40.w, height: 40.w),
+                Icon(Icons.chevron_right_rounded, color: kGreen, size: 20.sp),
               ],
             ),
-            SizedBox(height: 22.h),
+            SizedBox(height: 16.h),
             Text(
               title,
               maxLines: 1,
@@ -487,13 +491,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildEmptyBmiCard() {
+  Widget _buildEmptyBmiCard({bool showLabels = true}) {
     return CustomCard(
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
       borderRadius: 22.r,
       child: Column(
         children: [
-          BMIGaugeWidget(bmiValue: 25.0, size: 200.w, showLabels: true),
+          BMIGaugeWidget(bmiValue: 25.0, size: 200.w, showLabels: showLabels),
           Text(
             'No BMI Record Yet',
             textAlign: TextAlign.center,
