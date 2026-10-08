@@ -6,7 +6,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'local_notification_scheduler.dart';
 
 /// Top-level function required for background/terminated FCM messages.
-/// Must be a top-level function (not a class method or closure).
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log('FCM background message: ${message.messageId}');

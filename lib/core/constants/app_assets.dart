@@ -36,10 +36,10 @@ abstract class AppAssets {
   static const String preIcon4 = '$_imagesBase/pre_icon4.webp';
   static const String preIcon5 = '$_imagesBase/pre_icon5.webp';
 
-  static const String homeIcon1 = '$_imagesBase/home_1.webp';
-  static const String homeIcon2 = '$_imagesBase/home_2.webp';
-  static const String homeIcon3 = '$_imagesBase/home_3.webp';
-  static const String homeIcon4 = '$_imagesBase/home_4.webp';
+  static const String homeIcon1 = '$_imagesBase/home_1.png';
+  static const String homeIcon2 = '$_imagesBase/home_2.png';
+  static const String homeIcon3 = '$_imagesBase/home_3.png';
+  static const String homeIcon4 = '$_imagesBase/home_4.png';
 
   // ── Bottom Nav ──
   static const String navHome = '$_imagesBase/nav_1.webp';
@@ -107,14 +107,20 @@ abstract class AppAssets {
   static const String insightOver = '$_imagesBase/above_bmi.webp';
   static const String insightObese = '$_imagesBase/obese_bmi.webp';
   static const String insightRise = '$_imagesBase/rise_bmi.webp';
-  static const String tipMeals = '$_imagesBase/balance_meal.webp';
+  static const String tipMeals = '$_imagesBase/balance_meal.png';
   static const String tipHydrated = '$_imagesBase/hydrated.webp';
   static const String tipActive = '$_imagesBase/active.webp';
   static const String tipSleep = '$_imagesBase/sleep.webp';
+  static const String mealIcon = '$_imagesBase/meal.png';
+  static const String leafIcon = '$_imagesBase/leaf.png';
+  static const String tipDailyMealPlan = '$_imagesBase/1_week.png';
+  static const String tipPortionControl = '$_imagesBase/control_pro.png';
+  static const String tipLeanProtein = '$_imagesBase/lean_pro.png';
+  static const String tipMoreVeggies = '$_imagesBase/more_vegs.png';
+  static const String insightBackIcon = '$_imagesBase/back_btn.png';
 
   // Photos that exist already
-  static const String photoVegetables =
-      '$_imagesBase/hero-image-container.webp';
+  static const String photoVegetables = '$_imagesBase/vegs.webp';
   static const String photoBalancedMeal = '$_imagesBase/hero.webp';
   static const String photoChicken = '$_imagesBase/protein.webp';
 

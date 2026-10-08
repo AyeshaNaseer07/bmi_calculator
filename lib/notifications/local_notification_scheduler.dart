@@ -82,7 +82,6 @@ class LocalNotificationScheduler {
   static const int _monthlyCount = 6; // 6 months worth (monthly)
 
   Future<void> scheduleNotifications() async {
-    // Remote Config `local_notification` on/off switch.
     final bool enabled = Get.isRegistered<RemoteConfigService>()
         ? RemoteConfigService.to.isLocalNotificationEnabled
         : remoteModel.isLocalNotificationEnabled;

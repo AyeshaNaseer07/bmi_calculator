@@ -20,6 +20,7 @@ class _Variant {
   final String message;
   final Color messageColor;
   final String image;
+  final double imageAspect;
   final Color weightColor;
   final Color barBg;
   final Color barFill;
@@ -38,6 +39,7 @@ class _Variant {
     required this.message,
     required this.messageColor,
     required this.image,
+    required this.imageAspect,
     required this.weightColor,
     required this.barBg,
     required this.barFill,
@@ -61,6 +63,7 @@ _Variant _variantFor(BMICategory c) {
         message: 'Keep up your healthy routine!',
         messageColor: Color(0xFF09B389),
         image: AppAssets.insightNormal,
+        imageAspect: 1065 / 456,
         weightColor: Color(0xFF09B389),
         barBg: Color(0xFFE3F8F1),
         barFill: Color(0xFF09B389),
@@ -78,6 +81,7 @@ _Variant _variantFor(BMICategory c) {
         message: 'Your BMI is below the healthy range.',
         messageColor: Color(0xFF0A8FD6),
         image: AppAssets.insightUnder,
+        imageAspect: 1065 / 500,
         weightColor: Color(0xFF0A8FD6),
         barBg: Color(0xFFD3ECFA),
         barFill: Color(0xFF1B7FC4),
@@ -103,6 +107,7 @@ _Variant _variantFor(BMICategory c) {
         message: 'Your BMI is above the healthy range.',
         messageColor: Color(0xFF9A4A0C),
         image: AppAssets.insightOver,
+        imageAspect: 1065 / 510,
         weightColor: Color(0xFF9A4A0C),
         barBg: Color(0xFFFFEFC2),
         barFill: Color(0xFF8A3B0E),
@@ -128,6 +133,7 @@ _Variant _variantFor(BMICategory c) {
         message: 'Your BMI is above the healthy range.',
         messageColor: Color(0xFFC01818),
         image: AppAssets.insightObese,
+        imageAspect: 1056 / 537,
         weightColor: Color(0xFFE11D1D),
         barBg: Color(0xFFFCCFCF),
         barFill: Color(0xFFB91C1C),
@@ -180,17 +186,22 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
             children: [
               InsightHeader(title: v.screenTitle),
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 20.h),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 10.h),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _buildHero(v),
-                      SizedBox(height: 14.h),
                       Text(
                         'Your Weight Progress',
-                        style: headStyle(17, weight: FontWeight.w700),
+                        style: TextStyle(
+                          color: const Color(0xFF141B2B),
+                          fontSize: 16,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w700,
+                          height: 1.13,
+                          letterSpacing: 0.14,
+                        ),
                       ),
                       SizedBox(height: 10.h),
                       _buildWeightCard(
@@ -202,7 +213,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                         fill: fill,
                       ),
                       SizedBox(height: 14.h),
-                      _buildWhyAndTips(v),
+                      // Remaining space is shared by the tip cards.
+                      Expanded(child: _buildWhyAndTips(v)),
                     ],
                   ),
                 ),
@@ -215,31 +227,17 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
   }
 
   Widget _buildHero(_Variant v) {
-    return SizedBox(
-      width: double.infinity,
-      height: 174.h,
+    return AspectRatio(
+      aspectRatio: v.imageAspect,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            v.image,
-            fit: BoxFit
-                .fill, // stretches to the new size, keeps the rounded border
-          ),
-
-          // Text stacked on the empty left side of the image
+          Image.asset(v.image, fit: BoxFit.cover),
           Positioned.fill(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Keep text out of the avatar area (~42% of the width on the right)
-                final rightInset = constraints.maxWidth * 0.42;
                 return Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    constraints.maxWidth * 0.06, // left
-                    0,
-                    rightInset,
-                    0,
-                  ),
+                  padding: EdgeInsets.fromLTRB(15.w, 0, 80.w, 25.h),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,11 +284,13 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(v.range, style: headStyle(32)),
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: 10.h),
 
                       // Message
                       Text(
                         v.message,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: bodyStyle(
                           13,
                           color: v.messageColor,
@@ -374,13 +374,22 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               width: double.infinity,
               height: 28.h,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: kMintBg,
-                borderRadius: BorderRadius.circular(14.r),
+              decoration: ShapeDecoration(
+                color: const Color(0x1E33D2AB),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9999),
+                ),
               ),
               child: Text(
                 'You’re in the healthy BMI range',
-                style: bodyStyle(12, color: kGreen, weight: FontWeight.w600),
+                style: TextStyle(
+                  color: const Color(0xFF09B389),
+                  fontSize: 12,
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontWeight: FontWeight.w600,
+                  height: 1.17,
+                  letterSpacing: 0.44,
+                ),
               ),
             )
           else
@@ -431,13 +440,13 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
 
     final grid = Column(
       children: [
-        IntrinsicHeight(
+        Expanded(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
                 child: _TipCard(
-                  icon: AppAssets.tipMeals,
+                  icon: AppAssets.mealIcon,
                   tile: const Color(0xFFE6F8EE),
                   title: 'Eat Balanced Meals',
                   subtitle: 'Choose balanced, nutritious foods.',
@@ -458,7 +467,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
           ),
         ),
         SizedBox(height: 12.h),
-        IntrinsicHeight(
+        Expanded(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -488,12 +497,24 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
     );
 
     final tips = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (hasWhy) SizedBox(height: collapsedH.h + 14.h),
-        Text(v.planTitle, style: headStyle(17, weight: FontWeight.w700)),
+        Text(
+          v.planTitle,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            color: const Color(0xFF141B2B),
+            fontSize: 18,
+            fontFamily: 'Plus Jakarta Sans',
+            fontWeight: FontWeight.w700,
+            height: 1.33,
+            letterSpacing: -0.18,
+          ),
+        ),
+
         SizedBox(height: 10.h),
-        grid,
+        Expanded(child: grid),
       ],
     );
 
@@ -503,7 +524,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        tips,
+        Positioned.fill(child: tips),
         Positioned(
           top: 0,
           left: 0,
@@ -536,7 +557,14 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                       Expanded(
                         child: Text(
                           v.whyTitle!,
-                          style: headStyle(15, weight: FontWeight.w600),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w600,
+                            height: 1.13,
+                            letterSpacing: 0.14,
+                          ),
                         ),
                       ),
                       Icon(
@@ -556,15 +584,16 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('•  ', style: bodyStyle(12, color: kInk)),
+                            Text('•  ', style: bodyStyle(13, color: kInk)),
                             Expanded(
                               child: Text(
                                 b,
-                                style: bodyStyle(
-                                  12,
-                                  color: kInk,
-                                  weight: FontWeight.w500,
-                                  height: 1.3,
+                                style: TextStyle(
+                                  color: const Color(0xFF141B2B),
+                                  fontSize: 11,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.36,
                                 ),
                               ),
                             ),
@@ -604,13 +633,45 @@ class _TipCard extends StatelessWidget {
       onTap: onTap,
       padding: EdgeInsets.all(14.w),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(icon, fit: BoxFit.contain, height: 50.h, width: 50.w),
-          SizedBox(height: 14.h),
-          Text(title, style: headStyle(15, weight: FontWeight.w700)),
+          Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 54.h, maxWidth: 54.h),
+              child: Image.asset(
+                icon,
+                fit: BoxFit.contain,
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: const Color(0xFF1E293B),
+              fontSize: 14,
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: FontWeight.w700,
+              height: 1.38,
+            ),
+          ),
           SizedBox(height: 4.h),
-          Text(subtitle, style: bodyStyle(12, height: 1.35)),
+          Text(
+            subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: const Color(0xFF94A3B8),
+              fontSize: 11.50,
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: FontWeight.w500,
+              height: 1.37,
+            ),
+          ),
         ],
       ),
     );

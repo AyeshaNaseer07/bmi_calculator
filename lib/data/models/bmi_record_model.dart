@@ -111,9 +111,6 @@ class BMIRecord {
   final String gender;
   final BMICategory category;
   final DateTime date;
-
-  /// Units the user entered the values in (values are always stored as cm/kg).
-  /// `false` means ft/in and lb were used. Old records default to metric.
   final bool isCm;
   final bool isKg;
 

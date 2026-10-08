@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bmi_calculator/views/insights/insight_common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +22,6 @@ import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
-import '../insights/insight_common.dart' show kInk, kGreen, kMuted;
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
@@ -358,9 +358,9 @@ class _HomeScreenState extends State<HomeScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: kInk,
-                fontSize: 14.sp,
-                fontFamily: 'Plus Jakarta Sans',
+                color: const Color(0xFF1A252C),
+                fontSize: 14,
+                fontFamily: 'Instrument Sans',
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -370,9 +370,11 @@ class _HomeScreenState extends State<HomeScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: kMuted,
-                fontSize: 11.sp,
-                fontFamily: 'Inter',
+                color: const Color(0xFF7A8B94),
+                fontSize: 11,
+                fontFamily: 'Instrument Sans',
+                fontWeight: FontWeight.w400,
+                height: 1.30,
               ),
             ),
           ],

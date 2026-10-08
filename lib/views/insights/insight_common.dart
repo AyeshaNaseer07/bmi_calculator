@@ -62,16 +62,16 @@ class InsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final card = Container(
       width: double.infinity,
-      padding: padding ?? EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: color ?? Colors.white,
-        borderRadius: BorderRadius.circular(radius.r),
-        border: Border.all(color: borderColor ?? kMintBorder, width: 1.2),
-        boxShadow: [
+      padding: const EdgeInsets.all(14),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shadows: [
           BoxShadow(
-            color: shadowColor ?? const Color(0x2633D2AB),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: Color(0x0A000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -163,7 +163,7 @@ class InsightHeader extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 onTap: () => Get.back(),
                 child: Image.asset(
-                  AppAssets.bmiCalBackIcon,
+                  AppAssets.insightBackIcon,
                   height: 36.h,
                   width: 36.w,
                 ),
@@ -173,15 +173,16 @@ class InsightHeader extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 48.w),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (titleIcon != null) ...[
-                      Icon(titleIcon, color: kGreen, size: 22.sp),
-                      SizedBox(width: 8.w),
-                    ],
-                    Text(title, style: headStyle(24)),
-                  ],
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: const Color(0xFF141B2B),
+                    fontSize: 26,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w700,
+                    height: 1.08,
+                    letterSpacing: -0.55,
+                  ),
                 ),
               ),
             ),
@@ -249,7 +250,8 @@ class SectionTitle extends StatelessWidget {
 
 /// Icon tile + title + subtitle (+ optional chevron) row card.
 class InfoRowCard extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final String? iconAsset;
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
@@ -263,7 +265,8 @@ class InfoRowCard extends StatelessWidget {
 
   const InfoRowCard({
     super.key,
-    required this.icon,
+    this.icon,
+    this.iconAsset,
     required this.title,
     required this.subtitle,
     this.onTap,
@@ -274,7 +277,10 @@ class InfoRowCard extends StatelessWidget {
     this.cardColor,
     this.borderColor,
     this.chevronColor,
-  });
+  }) : assert(
+         icon != null || iconAsset != null,
+         'Provide either icon or iconAsset',
+       );
 
   @override
   Widget build(BuildContext context) {
@@ -284,27 +290,47 @@ class InfoRowCard extends StatelessWidget {
         onTap: onTap,
         color: cardColor,
         borderColor: borderColor,
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
         child: Row(
           children: [
-            Container(
-              width: 42.w,
-              height: 42.w,
-              decoration: BoxDecoration(
-                color: tileColor,
-                shape: circleIcon ? BoxShape.circle : BoxShape.rectangle,
-                borderRadius: circleIcon ? null : BorderRadius.circular(12.r),
+            if (iconAsset != null)
+              Image.asset(iconAsset!, height: 44.h, fit: BoxFit.contain)
+            else
+              Container(
+                width: 42.w,
+                height: 42.w,
+                decoration: BoxDecoration(
+                  color: tileColor,
+                  shape: circleIcon ? BoxShape.circle : BoxShape.rectangle,
+                  borderRadius: circleIcon ? null : BorderRadius.circular(12.r),
+                ),
+                child: Icon(icon, color: iconColor, size: 21.sp),
               ),
-              child: Icon(icon, color: iconColor, size: 21.sp),
-            ),
             SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: headStyle(15, weight: FontWeight.w700)),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: const Color(0xFF111827),
+                      fontSize: 15,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   SizedBox(height: 2.h),
-                  Text(subtitle, style: bodyStyle(12, height: 1.35)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: const Color(0xFF6B7280),
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      height: 1.40,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -312,7 +338,7 @@ class InfoRowCard extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 color: chevronColor ?? const Color(0xFF9CA3AF),
-                size: 22.sp,
+                size: 24.sp,
               ),
           ],
         ),
