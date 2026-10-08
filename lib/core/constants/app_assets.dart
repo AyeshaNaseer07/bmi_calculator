@@ -123,19 +123,36 @@ abstract class AppAssets {
   static const String portionWholeGrain = '$_imagesBase/whole_grain.png';
   static const String portionVegs = '$_imagesBase/vegs.webp';
   static const String portionHeart = '$_imagesBase/pro_heart.png';
+  static const String mealSlotBreakfast = '$_imagesBase/breakfast.png';
+  static const String mealSlotLunch = '$_imagesBase/lunch.png';
+  static const String mealSlotDinner = '$_imagesBase/dinner.png';
 
   // Photos that exist already
   static const String photoVegetables = '$_imagesBase/vegs.webp';
   static const String photoBalancedMeal = '$_imagesBase/hero.webp';
 
-  // Photos still to be added (a soft placeholder shows until the file exists)
-  static const String photoMealHero = '$_imagesBase/meal_hero.webp';
-  static const String photoPortionVeg = '$_imagesBase/portion_veg.webp';
-  static const String photoSimpleMeal = '$_imagesBase/simple_meal.webp';
-  static const String photoBreakfast = '$_imagesBase/meal_breakfast.webp';
-  static const String photoLunch = '$_imagesBase/meal_lunch.webp';
-  static const String photoDinner = '$_imagesBase/meal_dinner.webp';
-  static const String photoLunchHero = '$_imagesBase/meal_lunch_hero.webp';
-  static const String photoWaterHero = '$_imagesBase/water_hero.webp';
-  static const String photoWaterEnergy = '$_imagesBase/water_energy.webp';
+  // ── Meal plan / hydration / activity screens ──
+  static const String mealGreekPhoto = '$_imagesBase/greek_yogurt.png';
+  static const String mealChickenPhoto = '$_imagesBase/grilled_chicken.png';
+  static const String mealSalmonPhoto = '$_imagesBase/salomn_fish.png';
+  static const String mealGreekBadge = '$_imagesBase/greek_icon.png';
+  static const String mealChickenBadge = '$_imagesBase/grilled_icon.png';
+  static const String mealSalmonBadge = '$_imagesBase/salmon_icon.png';
+  static const String mealLunchHero = '$_imagesBase/girlled.png';
+  static const String flowerIcon = '$_imagesBase/flower.png';
+  static const String waterHero = '$_imagesBase/hydrated.png';
+  static const String waterEnergy = '$_imagesBase/your_energy.png';
+  static const String waterSkin = '$_imagesBase/good_skin.png';
+  static const String waterGoalBanner = '$_imagesBase/daily_goal.png';
+  static const String waterBoostIcon = '$_imagesBase/boost.png';
+  static const String waterSupportIcon = '$_imagesBase/support.png';
+  static const String waterGoodIcon = '$_imagesBase/good.png';
+  static const String waterDailyIcon = '$_imagesBase/daily.png';
+  static const String pulseIcon = '$_imagesBase/activity.png';
+  static const String moonIcon = '$_imagesBase/star.png';
+  static const String brainIcon = '$_imagesBase/brain.png';
+  static const String glassTipIcon = '$_imagesBase/tip_icon.png';
+  static const String glassEmpty = '$_imagesBase/empty_glass.png';
+  static const String glassFull = '$_imagesBase/half_glass.png';
+  static const String activeHero = '$_imagesBase/active_stay.png';
 }

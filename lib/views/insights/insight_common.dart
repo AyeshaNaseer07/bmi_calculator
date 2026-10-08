@@ -173,16 +173,25 @@ class InsightHeader extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 48.w),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: const Color(0xFF141B2B),
-                    fontSize: 26,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w700,
-                    height: 1.08,
-                    letterSpacing: -0.55,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (titleIcon != null) ...[
+                      Icon(titleIcon, color: kGreen, size: 26),
+                      const SizedBox(width: 8),
+                    ],
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: const Color(0xFF141B2B),
+                        fontSize: 26,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w700,
+                        height: 1.08,
+                        letterSpacing: -0.55,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

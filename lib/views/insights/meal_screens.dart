@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,30 +5,58 @@ import 'package:get/get.dart';
 import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import 'insight_common.dart';
+import 'meal_progress_screens.dart';
+
+export 'meal_progress_screens.dart';
+
+const Color _kDeep = Color(0xFF006B4E);
+const Color _kLav = Color(0xFFEDEFFB);
 
 class MealInfo {
   final String key;
   final String slot;
   final String name;
+  final String blurb;
+  final String shortBlurb;
   final int kcal;
   final String photo;
+  final String badge;
+  final String tag;
+  final String tagIconAsset;
+  final String time;
+  final String prep;
+  final String heroLine;
+  final List<String> chips;
   final int protein, carbs, fat;
   final int proteinPct, carbsPct, fatPct;
+  final int target;
   final List<List<String>> ingredients;
+  final String note;
 
   const MealInfo({
     required this.key,
     required this.slot,
     required this.name,
+    required this.blurb,
+    required this.shortBlurb,
     required this.kcal,
     required this.photo,
+    required this.badge,
+    required this.tag,
+    required this.tagIconAsset,
+    required this.time,
+    required this.prep,
+    required this.heroLine,
+    required this.chips,
     required this.protein,
     required this.carbs,
     required this.fat,
     required this.proteinPct,
     required this.carbsPct,
     required this.fatPct,
+    required this.target,
     required this.ingredients,
+    required this.note,
   });
 }
 
@@ -39,194 +65,481 @@ const List<MealInfo> kMeals = [
     key: 'breakfast',
     slot: 'Breakfast',
     name: 'Greek Yogurt Bowl',
+    blurb: 'Greek yogurt, berries and oats',
+    shortBlurb: 'Greek yogurt, berries and oats',
     kcal: 380,
-    photo: AppAssets.photoBreakfast,
+    photo: AppAssets.mealGreekPhoto,
+    badge: AppAssets.mealGreekBadge,
+    tag: 'High Protein',
+    tagIconAsset: AppAssets.mealSlotBreakfast,
+    time: '8:00 AM',
+    prep: '5 min prep',
+    heroLine: 'A creamy, protein-rich start with berries and oats.',
+    chips: ['High Protein', 'Fibre Rich', 'Gut Friendly'],
     protein: 24,
     carbs: 42,
     fat: 12,
     proteinPct: 31,
     carbsPct: 44,
     fatPct: 25,
+    target: 25,
     ingredients: [
       ['Greek yogurt', '200g'],
       ['Mixed berries', '1/2 cup'],
-      ['Oats', '30g'],
+      ['Rolled oats', '30g'],
+      ['Chia seeds', '1 tsp'],
       ['Honey', '1 tsp'],
     ],
+    note:
+        'Topped with fresh berries and a light drizzle of honey. '
+        'Naturally rich in probiotics.',
   ),
   MealInfo(
     key: 'lunch',
     slot: 'Lunch',
     name: 'Grilled Chicken Salad',
+    blurb: 'Chicken, leafy greens and avocado',
+    shortBlurb: 'Chicken, leafy greens and…',
     kcal: 450,
-    photo: AppAssets.photoLunch,
+    photo: AppAssets.mealChickenPhoto,
+    badge: AppAssets.mealChickenBadge,
+    tag: 'Balanced Greens',
+    tagIconAsset: AppAssets.mealSlotLunch,
+    time: '1:00 PM',
+    prep: '15 min prep',
+    heroLine:
+        'A light, protein-rich meal with fresh vegetables and healthy fats.',
+    chips: ['High Protein', 'Low Carb', 'Heart Healthy'],
     protein: 38,
     carbs: 20,
     fat: 18,
     proteinPct: 35,
     carbsPct: 18,
     fatPct: 47,
+    target: 32,
     ingredients: [
       ['Grilled chicken', '150g'],
       ['Leafy greens', '2 cups'],
-      ['Cucumber', '1/2 cup sliced'],
-      ['Tomatoes', '6 cherry halved'],
+      ['Cucumber', '1/2 cup, sliced'],
+      ['Tomatoes', '6 cherry, halved'],
       ['Avocado', '1/4 fruit'],
     ],
+    note:
+        'Dressed in cold-pressed extra virgin olive oil & lemon juice. '
+        'Naturally gluten-free.',
   ),
   MealInfo(
     key: 'dinner',
     slot: 'Dinner',
     name: 'Salmon & Vegetables',
+    blurb: 'Grilled salmon with roasted vegetables',
+    shortBlurb: 'Grilled salmon with roasted…',
     kcal: 520,
-    photo: AppAssets.photoDinner,
+    photo: AppAssets.mealSalmonPhoto,
+    badge: AppAssets.mealSalmonBadge,
+    tag: 'Omega-3 Rich',
+    tagIconAsset: AppAssets.mealSlotDinner,
+    time: '7:00 PM',
+    prep: '25 min prep',
+    heroLine: 'Omega-3 rich salmon with roasted seasonal vegetables.',
+    chips: ['Omega-3 Rich', 'Heart Healthy', 'Gluten Free'],
     protein: 36,
     carbs: 30,
     fat: 24,
     proteinPct: 28,
     carbsPct: 23,
     fatPct: 49,
+    target: 38,
     ingredients: [
       ['Salmon fillet', '150g'],
-      ['Broccoli', '1 cup'],
-      ['Sweet potato', '100g'],
+      ['Asparagus', '1 cup'],
+      ['Cherry tomatoes', '6 halved'],
       ['Olive oil', '1 tsp'],
+      ['Lemon', '1/2 fruit'],
     ],
+    note:
+        'Roasted with olive oil, lemon and fresh herbs. Naturally '
+        'dairy-free.',
   ),
 ];
 
+/// "1 Week Meal Plan" — the Meal Planner list.
 class DailyMealPlanScreen extends StatelessWidget {
   const DailyMealPlanScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final c = MealPlanController.to;
     return InsightScaffold(
-      title: 'Daily Meal Plan',
-      titleIcon: Icons.calendar_month_rounded,
+      title: '1 Week Meal Plan',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AssetOrPlaceholder(
-            asset: AppAssets.photoMealHero,
-            width: double.infinity,
-            height: 140.h,
-            radius: 20,
-          ),
-          SizedBox(height: 14.h),
-          Text('Simple ideas for your day', style: headStyle(19)),
-          SizedBox(height: 14.h),
-          for (final m in kMeals)
-            Padding(
-              padding: EdgeInsets.only(bottom: 12.h),
-              child: InsightCard(
-                padding: EdgeInsets.all(12.w),
-                child: Row(
-                  children: [
-                    AssetOrPlaceholder(
-                      asset: m.photo,
-                      width: 64.w,
-                      height: 64.w,
-                      radius: 14,
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            m.slot.toUpperCase(),
-                            style: bodyStyle(
-                              11,
-                              color: kGreen,
-                              weight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            m.name,
-                            style: headStyle(15, weight: FontWeight.w700),
-                          ),
-                          Text('${m.kcal} kcal', style: bodyStyle(12)),
-                        ],
-                      ),
-                    ),
-                    Obx(() {
-                      final done = c.isEaten(m.key);
-                      return GestureDetector(
-                        onTap: () => Get.to(() => MealDetailScreen(meal: m)),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 14.w,
-                            vertical: 8.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: done ? kGreen : kMintBg,
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Text(
-                            done ? 'Done' : 'View',
-                            style: bodyStyle(
-                              13,
-                              color: done ? Colors.white : kGreen,
-                              weight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
+          SizedBox(height: 2.h),
+          Text(
+            'Meal Planner',
+            style: TextStyle(
+              color: const Color(0xFF141B2B),
+              fontSize: 18,
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: FontWeight.w600,
+              height: 1.33,
+              letterSpacing: -0.18,
             ),
+          ),
+          SizedBox(height: 12.h),
+          for (final m in kMeals) _MealCard(meal: m),
+          SizedBox(height: 4.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEAFBF3),
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: const Color(0xFFB7EBD2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Remember',
+                  style: TextStyle(
+                    color: const Color(0xFF166534),
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  'Choose portions that suit your needs and enjoy a variety '
+                  'of foods.',
+                  style: TextStyle(
+                    color: const Color(0xFF166534),
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
+class _MealCard extends StatelessWidget {
+  final MealInfo meal;
+  const _MealCard({required this.meal});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 14.h),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(14.w, 14.h, 12.w, 12.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: const Color(0xFFDDF4EC)),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1F33D2AB),
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 86.w,
+              height: 86.w,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned.fill(
+                    child: AssetOrPlaceholder(asset: meal.photo, circle: true),
+                  ),
+                  Positioned(
+                    right: -4.w,
+                    bottom: 2.h,
+                    child: Image.asset(meal.badge, width: 30.w, height: 30.w),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        meal.slot.toUpperCase(),
+                        style: TextStyle(
+                          color: const Color(0xFF006948),
+                          fontSize: 11,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w700,
+                          height: 1.27,
+                          letterSpacing: 0.55,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFDDF8EC),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.local_fire_department_rounded,
+                              size: 13.sp,
+                              color: _kDeep,
+                            ),
+                            SizedBox(width: 3.w),
+                            Text(
+                              '${meal.kcal} kcal',
+                              style: bodyStyle(
+                                12,
+                                color: _kDeep,
+                                weight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 3.h),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      meal.name,
+                      style: TextStyle(
+                        color: const Color(0xFF141B2B),
+                        fontSize: 18,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w600,
+                        height: 1.33,
+                        letterSpacing: -0.18,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    meal.shortBlurb,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: const Color(0xFF3D4A42),
+                      fontSize: 13,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w400,
+                      height: 1.38,
+                      letterSpacing: 0.06,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      Image.asset(meal.tagIconAsset, width: 14.w, height: 14.w),
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        child: Text(
+                          meal.tag,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: const Color(0xFF3D4A42),
+                            fontSize: 11,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w700,
+                            height: 1.27,
+                            letterSpacing: 0.44,
+                          ),
+                        ),
+                      ),
+                      Obx(() {
+                        final done = MealPlanController.to.isEaten(meal.key);
+                        return GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () =>
+                              Get.to(() => MealDetailScreen(meal: meal)),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 18.w,
+                              vertical: 7.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: done ? kGreen : _kDeep,
+                              borderRadius: BorderRadius.circular(20.r),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x33006B4E),
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'View',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
+                                height: 1.29,
+                                letterSpacing: 0.14,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TealPill extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _TealPill({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2FD4A8).withOpacity(0.6),
+        borderRadius: BorderRadius.circular(20.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16.sp, color: Colors.white),
+          SizedBox(width: 6.w),
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: FontWeight.w700,
+              height: 1.27,
+              letterSpacing: 0.44,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Today's Lunch" detail screen.
 class MealDetailScreen extends StatelessWidget {
   final MealInfo meal;
   const MealDetailScreen({super.key, required this.meal});
 
-  Widget _macro(String label, String value, Color color) => Expanded(
-    child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 3.w),
-      padding: EdgeInsets.symmetric(vertical: 10.h),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(12.r),
+  Widget _macro(String label, String value, String sub, {bool hi = false}) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 3.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        decoration: BoxDecoration(
+          color: hi ? const Color(0xFF8FF0CD) : _kLav,
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Stack(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Text(
+                    label,
+                    style: bodyStyle(
+                      11,
+                      color: hi ? _kDeep : const Color(0xFF4B5563),
+                      weight: FontWeight.w600,
+                    ).copyWith(letterSpacing: 0.4),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(value, style: headStyle(20, weight: FontWeight.w700)),
+                  SizedBox(height: 2.h),
+                  Text(
+                    sub,
+                    style: bodyStyle(
+                      12,
+                      color: hi ? _kDeep : const Color(0xFF6B7280),
+                      weight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (hi)
+              Positioned(
+                top: -4.h,
+                right: 2.w,
+                child: Container(
+                  width: 6.w,
+                  height: 6.w,
+                  decoration: const BoxDecoration(
+                    color: _kDeep,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
-      child: Column(
-        children: [
-          Text(value, style: headStyle(14, color: color)),
-          SizedBox(height: 2.h),
-          Text(label, style: bodyStyle(11)),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 
-  Widget _chip(String t) => Container(
-    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
-    decoration: BoxDecoration(
-      color: kMintBg,
-      borderRadius: BorderRadius.circular(20.r),
-    ),
-    child: Text(
-      t,
-      style: bodyStyle(12, color: kGreen, weight: FontWeight.w600),
-    ),
+  Widget _dot(Color c, String t) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 9.w,
+        height: 9.w,
+        decoration: BoxDecoration(color: c, shape: BoxShape.circle),
+      ),
+      SizedBox(width: 6.w),
+      Text(
+        t,
+        style: bodyStyle(
+          12.5,
+          color: const Color(0xFF1F3A34),
+          weight: FontWeight.w600,
+        ),
+      ),
+    ],
   );
 
   @override
   Widget build(BuildContext context) {
-    const blue = Color(0xFF3B82F6);
-    const orange = Color(0xFFF59E0B);
-    const purple = Color(0xFF8B5CF6);
+    final isLunch = meal.key == 'lunch';
     return InsightScaffold(
-      title: meal.name,
-      titleIcon: Icons.restaurant_rounded,
+      title: 'Today’s ${meal.slot}',
       bottom: GradientActionButton(
         text: 'Mark as Eaten',
         leading: Icons.check_circle_outline_rounded,
@@ -238,73 +551,304 @@ class MealDetailScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            spacing: 8.w,
-            children: [_chip(meal.slot), _chip('${meal.kcal} kcal')],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _TealPill(
+                icon: Icons.wb_sunny_outlined,
+                text: 'Day 1 • ${meal.slot}',
+              ),
+              _TealPill(icon: Icons.schedule_rounded, text: meal.time),
+            ],
           ),
           SizedBox(height: 12.h),
-          AssetOrPlaceholder(
-            asset: meal.key == 'lunch' ? AppAssets.photoLunchHero : meal.photo,
-            width: double.infinity,
-            height: 180.h,
-            radius: 20,
+          // Hero photo with overlays
+          AspectRatio(
+            aspectRatio: 1023 / 639,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.r),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  AssetOrPlaceholder(
+                    asset: isLunch ? AppAssets.mealLunchHero : meal.photo,
+                    fit: BoxFit.cover,
+                    radius: 0,
+                  ),
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.62),
+                          ],
+                          stops: const [0.0, 0.55, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 10.h,
+                    left: 10.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(18.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 8.w,
+                            height: 8.w,
+                            decoration: const BoxDecoration(
+                              color: _kDeep,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          Text(
+                            'BALANCED ${meal.slot.toUpperCase()} • '
+                            '${meal.kcal} KCAL',
+                            style: bodyStyle(
+                              11.5,
+                              color: _kDeep,
+                              weight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 12.w,
+                    right: 12.w,
+                    bottom: 10.h,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                meal.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: headStyle(
+                                  22,
+                                  color: Colors.white,
+                                  weight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                meal.heroLine,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: bodyStyle(
+                                  8.5,
+                                  color: Colors.white,
+                                  weight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.92),
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.schedule_rounded,
+                                size: 14.sp,
+                                color: _kDeep,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                meal.prep,
+                                style: bodyStyle(
+                                  12,
+                                  color: kInk,
+                                  weight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          SizedBox(height: 16.h),
-          const SectionTitle('Nutrition Summary'),
-          InsightCard(
-            padding: EdgeInsets.all(12.w),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              for (int i = 0; i < meal.chips.length; i++) ...[
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: i == 0 ? const Color(0xFFC5F6E3) : _kLav,
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child: Text(
+                    meal.chips[i],
+                    style: bodyStyle(
+                      12.5,
+                      color: _kDeep,
+                      weight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+              ],
+            ],
+          ),
+          SizedBox(height: 14.h),
+          // Nutrition summary
+          Container(
+            padding: EdgeInsets.fromLTRB(12.w, 14.h, 12.w, 6.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24.r),
+              border: Border.all(color: kMintBorder, width: 1.4),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1F33D2AB),
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
             child: Column(
               children: [
                 Row(
                   children: [
-                    _macro('Calories', '${meal.kcal}', kGreen),
-                    _macro('Protein', '${meal.protein}g', blue),
-                    _macro('Carbs', '${meal.carbs}g', orange),
-                    _macro('Fat', '${meal.fat}g', purple),
+                    Icon(Icons.apple_rounded, color: _kDeep, size: 20.sp),
+                    SizedBox(width: 6.w),
+                    Text(
+                      'Nutrition Summary',
+                      style: headStyle(16, weight: FontWeight.w600),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'Target: ${meal.target}% of daily plan',
+                      style: bodyStyle(12, color: const Color(0xFF4B5563)),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    _macro('ENERGY', '${meal.kcal}', 'kcal'),
+                    _macro(
+                      'PROTEIN',
+                      '${meal.protein}g',
+                      '${meal.proteinPct}%',
+                      hi: true,
+                    ),
+                    _macro('CARBS', '${meal.carbs}g', '${meal.carbsPct}%'),
+                    _macro('FAT', '${meal.fat}g', '${meal.fatPct}%'),
                   ],
                 ),
                 SizedBox(height: 12.h),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(6.r),
+                  borderRadius: BorderRadius.circular(5.r),
                   child: SizedBox(
-                    height: 10.h,
+                    height: 9.h,
                     child: Row(
                       children: [
                         Expanded(
                           flex: meal.proteinPct,
-                          child: Container(color: blue),
+                          child: Container(color: _kDeep),
                         ),
                         Expanded(
                           flex: meal.carbsPct,
-                          child: Container(color: orange),
+                          child: Container(color: const Color(0xFF3EE0A8)),
                         ),
                         Expanded(
                           flex: meal.fatPct,
-                          child: Container(color: purple),
+                          child: Container(color: const Color(0xFFC3CFCB)),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Protein ${meal.proteinPct}%', style: bodyStyle(11)),
-                    Text('Carbs ${meal.carbsPct}%', style: bodyStyle(11)),
-                    Text('Fat ${meal.fatPct}%', style: bodyStyle(11)),
+                    _dot(_kDeep, 'Protein'),
+                    _dot(const Color(0xFF3EE0A8), 'Carbs'),
+                    _dot(const Color(0xFFB9C5C1), 'Healthy Fats'),
                   ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    size: 18.sp,
+                    color: kInk,
+                  ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 16.h),
-          InfoRowCard(
-            icon: Icons.shopping_basket_outlined,
-            title: 'Ingredients',
-            subtitle: '${meal.ingredients.length} items',
-            chevron: true,
+          SizedBox(height: 12.h),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () => Get.to(() => IngredientsScreen(meal: meal)),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: kMintBorder, width: 1.4),
+              ),
+              child: Row(
+                children: [
+                  Image.asset(AppAssets.flowerIcon, width: 22.w, height: 24.h),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Ingredients',
+                    style: headStyle(18, weight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${meal.ingredients.length} items',
+                    style: bodyStyle(
+                      12.5,
+                      color: _kDeep,
+                      weight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -312,6 +856,7 @@ class MealDetailScreen extends StatelessWidget {
   }
 }
 
+/// Ingredients list.
 class IngredientsScreen extends StatelessWidget {
   final MealInfo meal;
   const IngredientsScreen({super.key, required this.meal});
@@ -320,253 +865,129 @@ class IngredientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return InsightScaffold(
       title: 'Ingredients',
-      titleIcon: Icons.shopping_basket_outlined,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(meal.name, style: headStyle(19)),
-          SizedBox(height: 14.h),
-          InsightCard(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+          Container(
+            padding: EdgeInsets.fromLTRB(6.w, 8.h, 6.w, 6.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: kMintBorder, width: 1.4),
+            ),
             child: Column(
               children: [
-                for (int i = 0; i < meal.ingredients.length; i++) ...[
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 6.h),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.check_circle_rounded,
-                          color: kGreen,
-                          size: 20.sp,
+                        Image.asset(
+                          AppAssets.flowerIcon,
+                          width: 16.w,
+                          height: 18.h,
                         ),
-                        SizedBox(width: 10.w),
-                        Expanded(
-                          child: Text(
-                            meal.ingredients[i][0],
-                            style: bodyStyle(
-                              14,
-                              color: kInk,
-                              weight: FontWeight.w600,
-                            ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          '${meal.ingredients.length} items',
+                          style: bodyStyle(
+                            12,
+                            color: _kDeep,
+                            weight: FontWeight.w700,
                           ),
                         ),
-                        Text(meal.ingredients[i][1], style: bodyStyle(13)),
                       ],
                     ),
                   ),
-                  if (i != meal.ingredients.length - 1)
-                    const Divider(height: 1, color: kMintBorder),
-                ],
+                ),
+                for (final ing in meal.ingredients)
+                  Container(
+                    margin: EdgeInsets.only(bottom: 6.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEBFAF4),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36.w,
+                          height: 36.w,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.check_circle_outline_rounded,
+                            size: 20.sp,
+                            color: _kDeep,
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Text(
+                            ing[0],
+                            style: bodyStyle(
+                              16,
+                              color: kInk,
+                              weight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          ing[1],
+                          style: bodyStyle(
+                            13,
+                            color: const Color(0xFF374151),
+                            weight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class MealCompletedScreen extends StatelessWidget {
-  final MealInfo meal;
-  const MealCompletedScreen({super.key, required this.meal});
-
-  @override
-  Widget build(BuildContext context) {
-    final c = MealPlanController.to;
-    return InsightScaffold(
-      title: 'Meal Completed',
-      titleIcon: Icons.check_circle_outline_rounded,
-      bottom: GradientActionButton(
-        text: 'View Your Progress',
-        trailing: Icons.arrow_forward_rounded,
-        onTap: () => Get.to(() => const MealProgressScreen()),
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 24.h),
-          Container(
-            width: 110.w,
-            height: 110.w,
-            decoration: const BoxDecoration(
-              color: kMintBg,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.check_rounded, color: kGreen, size: 60.sp),
-          ),
           SizedBox(height: 18.h),
-          Text(
-            '${meal.slot} Completed!',
-            style: headStyle(22),
-          ),
-          SizedBox(height: 10.h),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+            padding: EdgeInsets.fromLTRB(10.w, 12.h, 18.w, 12.h),
             decoration: BoxDecoration(
-              color: kMintBg,
-              borderRadius: BorderRadius.circular(20.r),
+              color: const Color(0xFFE5F5F0),
+              borderRadius: BorderRadius.circular(30.r),
             ),
-            child: Text(
-              'Milestone reached 🎉',
-              style: bodyStyle(12, color: kGreen, weight: FontWeight.w700),
-            ),
-          ),
-          SizedBox(height: 22.h),
-          Obx(() {
-            final done = c.completedCount.clamp(0, 3);
-            return InsightCard(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Day 1 of 7', style: headStyle(16)),
-                  SizedBox(height: 4.h),
-                  Text('$done of 3 meals logged today', style: bodyStyle(13)),
-                  SizedBox(height: 12.h),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6.r),
-                    child: LinearProgressIndicator(
-                      value: done / 3,
-                      minHeight: 10.h,
-                      backgroundColor: kMintBg,
-                      valueColor: const AlwaysStoppedAnimation(kGreen),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-}
-
-class MealProgressScreen extends StatelessWidget {
-  const MealProgressScreen({super.key});
-
-  Widget _stat(String label, String value, IconData icon) => Expanded(
-    child: InsightCard(
-      padding: EdgeInsets.all(14.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: kGreen, size: 22.sp),
-          SizedBox(height: 8.h),
-          Text(value, style: headStyle(17)),
-          SizedBox(height: 2.h),
-          Text(label, style: bodyStyle(12)),
-        ],
-      ),
-    ),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    final c = MealPlanController.to;
-    return InsightScaffold(
-      title: 'Your Progress',
-      titleIcon: Icons.insights_rounded,
-      body: Column(
-        children: [
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: 170.w,
-            height: 170.w,
-            child: CustomPaint(
-              painter: _RingPainter(12 / 30),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('12/30', style: headStyle(28)),
-                    Text('days', style: bodyStyle(13)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 18.h),
-          Obx(
-            () => Row(
+            child: Row(
               children: [
-                _stat(
-                  'Meals Logged',
-                  '${27 + c.completedCount}/90',
-                  Icons.restaurant_rounded,
+                Container(
+                  width: 38.w,
+                  height: 38.w,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFC1F0E0),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.eco_outlined, size: 18.sp, color: _kDeep),
                 ),
                 SizedBox(width: 12.w),
-                _stat(
-                  'Current Streak',
-                  '5 Days',
-                  Icons.local_fire_department_rounded,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12.h),
-          InsightCard(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Overall Plan Progress',
-                      style: headStyle(14, weight: FontWeight.w700),
+                Expanded(
+                  child: Text(
+                    meal.note,
+                    style: bodyStyle(
+                      13,
+                      color: const Color(0xFF1F3A34),
+                      weight: FontWeight.w500,
+                      height: 1.35,
                     ),
-                    Text('40%', style: headStyle(14, color: kGreen)),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6.r),
-                  child: LinearProgressIndicator(
-                    value: 0.4,
-                    minHeight: 10.h,
-                    backgroundColor: kMintBg,
-                    valueColor: const AlwaysStoppedAnimation(kGreen),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 12.h),
-          const TipBanner(
-            icon: Icons.format_quote_rounded,
-            text: 'Daily Wisdom: Small, consistent choices create lasting change.',
-            bold: true,
-          ),
         ],
       ),
     );
   }
-}
-
-class _RingPainter extends CustomPainter {
-  final double progress;
-  _RingPainter(this.progress);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final stroke = 14.0;
-    final rect = Offset(stroke / 2, stroke / 2) &
-        Size(size.width - stroke, size.height - stroke);
-    final bg = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..color = kMintBg;
-    final fg = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = stroke
-      ..color = kGreen;
-    canvas.drawArc(rect, 0, math.pi * 2, false, bg);
-    canvas.drawArc(rect, -math.pi / 2, math.pi * 2 * progress, false, fg);
-  }
-
-  @override
-  bool shouldRepaint(covariant _RingPainter old) => old.progress != progress;
 }
