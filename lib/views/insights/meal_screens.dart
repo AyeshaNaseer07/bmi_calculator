@@ -5,163 +5,14 @@ import 'package:get/get.dart';
 import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import 'insight_common.dart';
+import 'meal_plan_data.dart';
 import 'meal_progress_screens.dart';
 
+export 'meal_plan_data.dart';
 export 'meal_progress_screens.dart';
 
 const Color _kDeep = Color(0xFF006B4E);
 const Color _kLav = Color(0xFFEDEFFB);
-
-class MealInfo {
-  final String key;
-  final String slot;
-  final String name;
-  final String blurb;
-  final String shortBlurb;
-  final int kcal;
-  final String photo;
-  final String badge;
-  final String tag;
-  final String tagIconAsset;
-  final String time;
-  final String prep;
-  final String heroLine;
-  final List<String> chips;
-  final int protein, carbs, fat;
-  final int proteinPct, carbsPct, fatPct;
-  final int target;
-  final List<List<String>> ingredients;
-  final String note;
-
-  const MealInfo({
-    required this.key,
-    required this.slot,
-    required this.name,
-    required this.blurb,
-    required this.shortBlurb,
-    required this.kcal,
-    required this.photo,
-    required this.badge,
-    required this.tag,
-    required this.tagIconAsset,
-    required this.time,
-    required this.prep,
-    required this.heroLine,
-    required this.chips,
-    required this.protein,
-    required this.carbs,
-    required this.fat,
-    required this.proteinPct,
-    required this.carbsPct,
-    required this.fatPct,
-    required this.target,
-    required this.ingredients,
-    required this.note,
-  });
-}
-
-const List<MealInfo> kMeals = [
-  MealInfo(
-    key: 'breakfast',
-    slot: 'Breakfast',
-    name: 'Greek Yogurt Bowl',
-    blurb: 'Greek yogurt, berries and oats',
-    shortBlurb: 'Greek yogurt, berries and oats',
-    kcal: 380,
-    photo: AppAssets.mealGreekPhoto,
-    badge: AppAssets.mealGreekBadge,
-    tag: 'High Protein',
-    tagIconAsset: AppAssets.mealSlotBreakfast,
-    time: '8:00 AM',
-    prep: '5 min prep',
-    heroLine: 'A creamy, protein-rich start with berries and oats.',
-    chips: ['High Protein', 'Fibre Rich', 'Gut Friendly'],
-    protein: 24,
-    carbs: 42,
-    fat: 12,
-    proteinPct: 31,
-    carbsPct: 44,
-    fatPct: 25,
-    target: 25,
-    ingredients: [
-      ['Greek yogurt', '200g'],
-      ['Mixed berries', '1/2 cup'],
-      ['Rolled oats', '30g'],
-      ['Chia seeds', '1 tsp'],
-      ['Honey', '1 tsp'],
-    ],
-    note:
-        'Topped with fresh berries and a light drizzle of honey. '
-        'Naturally rich in probiotics.',
-  ),
-  MealInfo(
-    key: 'lunch',
-    slot: 'Lunch',
-    name: 'Grilled Chicken Salad',
-    blurb: 'Chicken, leafy greens and avocado',
-    shortBlurb: 'Chicken, leafy greens and…',
-    kcal: 450,
-    photo: AppAssets.mealChickenPhoto,
-    badge: AppAssets.mealChickenBadge,
-    tag: 'Balanced Greens',
-    tagIconAsset: AppAssets.mealSlotLunch,
-    time: '1:00 PM',
-    prep: '15 min prep',
-    heroLine:
-        'A light, protein-rich meal with fresh vegetables and healthy fats.',
-    chips: ['High Protein', 'Low Carb', 'Heart Healthy'],
-    protein: 38,
-    carbs: 20,
-    fat: 18,
-    proteinPct: 35,
-    carbsPct: 18,
-    fatPct: 47,
-    target: 32,
-    ingredients: [
-      ['Grilled chicken', '150g'],
-      ['Leafy greens', '2 cups'],
-      ['Cucumber', '1/2 cup, sliced'],
-      ['Tomatoes', '6 cherry, halved'],
-      ['Avocado', '1/4 fruit'],
-    ],
-    note:
-        'Dressed in cold-pressed extra virgin olive oil & lemon juice. '
-        'Naturally gluten-free.',
-  ),
-  MealInfo(
-    key: 'dinner',
-    slot: 'Dinner',
-    name: 'Salmon & Vegetables',
-    blurb: 'Grilled salmon with roasted vegetables',
-    shortBlurb: 'Grilled salmon with roasted…',
-    kcal: 520,
-    photo: AppAssets.mealSalmonPhoto,
-    badge: AppAssets.mealSalmonBadge,
-    tag: 'Omega-3 Rich',
-    tagIconAsset: AppAssets.mealSlotDinner,
-    time: '7:00 PM',
-    prep: '25 min prep',
-    heroLine: 'Omega-3 rich salmon with roasted seasonal vegetables.',
-    chips: ['Omega-3 Rich', 'Heart Healthy', 'Gluten Free'],
-    protein: 36,
-    carbs: 30,
-    fat: 24,
-    proteinPct: 28,
-    carbsPct: 23,
-    fatPct: 49,
-    target: 38,
-    ingredients: [
-      ['Salmon fillet', '150g'],
-      ['Asparagus', '1 cup'],
-      ['Cherry tomatoes', '6 halved'],
-      ['Olive oil', '1 tsp'],
-      ['Lemon', '1/2 fruit'],
-    ],
-    note:
-        'Roasted with olive oil, lemon and fresh herbs. Naturally '
-        'dairy-free.',
-  ),
-];
 
 /// "1 Week Meal Plan" — the Meal Planner list.
 class DailyMealPlanScreen extends StatelessWidget {
@@ -187,7 +38,7 @@ class DailyMealPlanScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
-          for (final m in kMeals) _MealCard(meal: m),
+          const _DayMeals(),
           SizedBox(height: 4.h),
           Container(
             width: double.infinity,
@@ -226,6 +77,73 @@ class DailyMealPlanScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Day selector + the three meals of the selected day.
+class _DayMeals extends StatelessWidget {
+  const _DayMeals();
+
+  Widget _dayChip(MealPlanController c, int d) {
+    final selected = c.selectedDay.value == d;
+    final done = c.eatenOnDay(d) == 3;
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => c.selectedDay.value = d,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 2.w),
+          padding: EdgeInsets.symmetric(vertical: 7.h),
+          decoration: BoxDecoration(
+            color: selected
+                ? _kDeep
+                : (done ? const Color(0xFFC9F7E3) : Colors.white),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: selected ? _kDeep : const Color(0xFFD5F2E8),
+              width: 1.2,
+            ),
+          ),
+          child: Column(
+            children: [
+              Text(
+                'DAY',
+                style: bodyStyle(
+                  8.5,
+                  color: selected ? Colors.white70 : const Color(0xFF6B7280),
+                  weight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                '$d',
+                style: headStyle(
+                  15,
+                  color: selected ? Colors.white : _kDeep,
+                  weight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    return Obx(() {
+      final day = c.selectedDay.value;
+      final meals = MealPlanData.mealsFor(c.category, day);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [for (int d = 1; d <= 7; d++) _dayChip(c, d)]),
+          SizedBox(height: 14.h),
+          for (final m in meals) _MealCard(meal: m),
+        ],
+      );
+    });
   }
 }
 
@@ -354,7 +272,7 @@ class _MealCard extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Row(
                     children: [
-                      Image.asset(meal.tagIconAsset, width: 14.w, height: 14.w),
+                      Icon(meal.tagIcon, size: 14.w, color: kGreen),
                       SizedBox(width: 5.w),
                       Expanded(
                         child: Text(
@@ -537,9 +455,12 @@ class MealDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLunch = meal.key == 'lunch';
+    final isLunch =
+        meal.slotKey == 'lunch' && !kMealPhotoOverrides.containsKey(meal.key);
     return InsightScaffold(
-      title: 'Today’s ${meal.slot}',
+      title: meal.day == 1
+          ? 'Today’s ${meal.slot}'
+          : 'Day ${meal.day} ${meal.slot}',
       bottom: GradientActionButton(
         text: 'Mark as Eaten',
         leading: Icons.check_circle_outline_rounded,
@@ -556,7 +477,7 @@ class MealDetailScreen extends StatelessWidget {
             children: [
               _TealPill(
                 icon: Icons.wb_sunny_outlined,
-                text: 'Day 1 • ${meal.slot}',
+                text: 'Day ${meal.day} • ${meal.slot}',
               ),
               _TealPill(icon: Icons.schedule_rounded, text: meal.time),
             ],
@@ -747,8 +668,12 @@ class MealDetailScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.apple_rounded, color: _kDeep, size: 20.sp),
-                    SizedBox(width: 6.w),
+                    Image.asset(
+                      AppAssets.mealSlotLunch,
+                      width: 14.w,
+                      height: 14.h,
+                    ),
+                    SizedBox(width: 4.w),
                     Text(
                       'Nutrition Summary',
                       style: headStyle(16, weight: FontWeight.w600),
@@ -868,7 +793,7 @@ class IngredientsScreen extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(6.w, 8.h, 6.w, 6.h),
+            padding: EdgeInsets.fromLTRB(6.w, 10.h, 6.w, 10.h),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16.r),
@@ -877,7 +802,7 @@ class IngredientsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 6.h),
+                  padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 8.h),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Row(
@@ -891,10 +816,13 @@ class IngredientsScreen extends StatelessWidget {
                         SizedBox(width: 6.w),
                         Text(
                           '${meal.ingredients.length} items',
-                          style: bodyStyle(
-                            12,
-                            color: _kDeep,
-                            weight: FontWeight.w700,
+                          style: TextStyle(
+                            color: const Color(0xFF006948),
+                            fontSize: 14,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w600,
+                            height: 1.27,
+                            letterSpacing: 0.44,
                           ),
                         ),
                       ],

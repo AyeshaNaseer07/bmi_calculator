@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../widgets/app_background.dart';
@@ -160,6 +161,13 @@ class BmiInsightScreen extends StatefulWidget {
 
 class _BmiInsightScreenState extends State<BmiInsightScreen> {
   bool _whyOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // The weekly meal plan follows this BMI category.
+    MealPlanController.to.category = widget.record.category;
+  }
 
   @override
   Widget build(BuildContext context) {
