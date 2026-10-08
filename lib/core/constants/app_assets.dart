@@ -18,10 +18,8 @@ abstract class AppAssets {
   static const String homeImgFemale = '$_imagesBase/home_img_1.webp';
   static const String btnRectangle = '$_imagesBase/btn.webp';
   static const String calcilatorIcon = '$_imagesBase/calculator.webp';
-  static const String tipIcon = '$_imagesBase/tip.webp';
   static const String resetIcon = '$_imagesBase/reset.webp';
 
-  static const String icDiamond = '$_imagesBase/ic_diamond.webp';
   static const String bmiGauge = '$_imagesBase/guagae.webp';
 
   // ── Onboarding ──
@@ -48,14 +46,11 @@ abstract class AppAssets {
   static const String navHistory = '$_imagesBase/nav_4.webp';
   static const String navAdd = '$_imagesBase/bmi_home.webp';
 
-  static const String btnBg = '$_imagesBase/btn_bg.webp';
   static const String premiumBg = '$_imagesBase/premium_bg.webp';
   static const String preCross = '$_imagesBase/pre_cross.webp';
   static const String preDown = '$_imagesBase/pre_download.webp';
   static const String bestValueCrown = '$_imagesBase/best_value_crown.webp';
-  static const String preOr = '$_imagesBase/pre_or.webp';
   static const String profileIcon = '$_imagesBase/profile.webp';
-  static const String chevronIcon = '$_imagesBase/chevron-right.webp';
   static const String bmiCalIcon = '$_imagesBase/bmi_cal_bg.webp';
   static const String bmiCalBackIcon = '$_imagesBase/bmi_cal_back.webp';
   static const String ageBack = '$_imagesBase/age_back.webp';
@@ -67,9 +62,6 @@ abstract class AppAssets {
   static const String ageicon = '$_imagesBase/age.webp';
   static const String arrowIcon = '$_imagesBase/arrow.webp';
   static const String gendericon = '$_imagesBase/gender.webp';
-  static const String iconFemale = '$_imagesBase/icon_female.webp';
-  static const String iconMale = '$_imagesBase/icon_male.webp';
-  static const String iconAge = '$_imagesBase/icon_age.webp';
   static const String bmiHearticon = '$_imagesBase/bmi_heart.webp';
   static const String weightTrackingicon = '$_imagesBase/weight_icon.webp';
   static const String addDataicon = '$_imagesBase/add_my_data.webp';
@@ -118,11 +110,23 @@ abstract class AppAssets {
   static const String tipLeanProtein = '$_imagesBase/lean_pro.png';
   static const String tipMoreVeggies = '$_imagesBase/more_vegs.png';
   static const String insightBackIcon = '$_imagesBase/back_btn.png';
+  static const String tipRichInFiber = '$_imagesBase/rich.png';
+  static const String tipFullOfNutrients = '$_imagesBase/nutrients.png';
+  static const String tipAddMoreColor = '$_imagesBase/more_color.png';
+  static const String tipSimpleMeal = '$_imagesBase/simple_meal.png';
+  static const String proteinEgg = '$_imagesBase/egg.png';
+  static const String proteinFish = '$_imagesBase/fish.png';
+  static const String proteinBeans = '$_imagesBase/beans.png';
+  static const String proteinChicken = '$_imagesBase/chicken.png';
+  static const String portionSizeHero = '$_imagesBase/portion_size.png';
+  static const String portionAddProtein = '$_imagesBase/add_protein.png';
+  static const String portionWholeGrain = '$_imagesBase/whole_grain.png';
+  static const String portionVegs = '$_imagesBase/vegs.webp';
+  static const String portionHeart = '$_imagesBase/pro_heart.png';
 
   // Photos that exist already
   static const String photoVegetables = '$_imagesBase/vegs.webp';
   static const String photoBalancedMeal = '$_imagesBase/hero.webp';
-  static const String photoChicken = '$_imagesBase/protein.webp';
 
   // Photos still to be added (a soft placeholder shows until the file exists)
   static const String photoMealHero = '$_imagesBase/meal_hero.webp';

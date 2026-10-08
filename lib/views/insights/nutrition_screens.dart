@@ -119,40 +119,90 @@ class EatVegetablesScreen extends StatelessWidget {
             icon: Icons.eco_rounded,
           ),
           SizedBox(height: 12.h),
-          Text(
-            'Add more color and fiber to your meals.',
-            textAlign: TextAlign.center,
-            style: bodyStyle(13, color: kMuted, weight: FontWeight.w500),
+          Center(
+            child: Text(
+              'Add more color and fiber to your meals.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
           SizedBox(height: 16.h),
           const SectionTitle('Why Vegetables Matter'),
           const InfoRowCard(
-            icon: Icons.favorite_border_rounded,
+            iconAsset: AppAssets.tipRichInFiber,
             title: 'Rich in Fiber',
             subtitle: 'Fiber helps you feel full and supports digestion.',
           ),
           const InfoRowCard(
-            icon: Icons.auto_awesome_rounded,
+            iconAsset: AppAssets.tipFullOfNutrients,
             title: 'Full of Nutrients',
             subtitle: 'Vegetables provide vitamins and minerals.',
           ),
           const InfoRowCard(
-            icon: Icons.palette_outlined,
+            iconAsset: AppAssets.tipAddMoreColor,
             title: 'Add More Color',
             subtitle: 'Choose different vegetables for variety.',
           ),
           SizedBox(height: 4.h),
           const SectionTitle('Try This Today'),
-          InfoRowCard(
-            iconAsset: AppAssets.photoVegetables,
-            title: 'Simple Meal',
-            subtitle:
-                'Half plate of vegetables, quarter protein, quarter grains.',
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            'Start by adding vegetables to one meal. You can build up to more over time.',
-            style: bodyStyle(12.5, color: kMuted, height: 1.4),
+          InsightCard(
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: Image.asset(
+                        AppAssets.tipSimpleMeal,
+                        width: 48.w,
+                        height: 48.w,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Simple Meal',
+                            style: TextStyle(
+                              color: const Color(0xFF111827),
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            'Half plate of vegetables, quarter protein, quarter grains.',
+                            style: TextStyle(
+                              color: const Color(0xFF6B7280),
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 1.40,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  'Start by adding vegetables to one meal. You can build up to more over time.',
+                  style: bodyStyle(12.5, color: kMuted, height: 1.4),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -163,13 +213,47 @@ class EatVegetablesScreen extends StatelessWidget {
 class LeanProteinScreen extends StatelessWidget {
   const LeanProteinScreen({super.key});
 
-  Widget _choice(String emoji, String label) => InsightCard(
-    padding: EdgeInsets.symmetric(vertical: 18.h),
+  Widget _choice(String asset, String title, String subtitle) => Container(
+    width: double.infinity,
+    padding: EdgeInsets.all(14.w),
+    decoration: BoxDecoration(
+      color: const Color(0xFFE3F7EC),
+      borderRadius: BorderRadius.circular(20.r),
+      border: Border.all(color: const Color(0xFF33D2AB), width: 1.2),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x0A000000),
+          blurRadius: 12,
+          offset: Offset(0, 4),
+        ),
+      ],
+    ),
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(emoji, style: TextStyle(fontSize: 34.sp)),
-        SizedBox(height: 8.h),
-        Text(label, style: headStyle(14, weight: FontWeight.w700)),
+        Image.asset(asset, width: 50.w, height: 50.w, fit: BoxFit.contain),
+        SizedBox(height: 10.h),
+        Text(
+          title,
+          style: TextStyle(
+            color: const Color(0xFF111827),
+            fontSize: 15,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Text(
+          subtitle,
+          style: TextStyle(
+            color: const Color(0xFF6B7280),
+            fontSize: 12,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+            height: 1.0,
+          ),
+        ),
       ],
     ),
   );
@@ -178,7 +262,6 @@ class LeanProteinScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return InsightScaffold(
       title: 'Choose Lean Protein',
-      titleIcon: Icons.set_meal_rounded,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -190,22 +273,38 @@ class LeanProteinScreen extends StatelessWidget {
           ),
           SizedBox(height: 14.h),
           const TipBanner(
-            text: 'Include a source of protein in every main meal.',
+            text: 'Include a source of protein in your main meals.',
           ),
           SizedBox(height: 14.h),
-          const SectionTitle('Good choices'),
+          const SectionTitle('Healthy Protein Choices'),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 12.h,
             crossAxisSpacing: 12.w,
-            childAspectRatio: 1.35,
+            childAspectRatio: 1.15,
             children: [
-              _choice('🥚', 'Eggs'),
-              _choice('🐟', 'Fish'),
-              _choice('🫘', 'Beans & Lentils'),
-              _choice('🍗', 'Chicken'),
+              _choice(
+                AppAssets.proteinEgg,
+                'Eggs',
+                'An easy source of protein.',
+              ),
+              _choice(
+                AppAssets.proteinFish,
+                'Fish',
+                'Provides protein and important nutrients.',
+              ),
+              _choice(
+                AppAssets.proteinBeans,
+                'Beans & Lentils',
+                'Offer protein and fiber.',
+              ),
+              _choice(
+                AppAssets.proteinChicken,
+                'Chicken',
+                'A versatile source of lean protein.',
+              ),
             ],
           ),
         ],
@@ -220,39 +319,55 @@ class PortionSizesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Watch Portion Sizes',
-      titleIcon: Icons.pie_chart_outline_rounded,
+      title: 'Control Portion Sizes',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AssetOrPlaceholder(
-            asset: AppAssets.photoPortionVeg,
-            width: double.infinity,
-            height: 160.h,
-            radius: 20,
-            icon: Icons.pie_chart_outline_rounded,
+          AspectRatio(
+            // Matches the asset's own 1005×540 canvas so it renders at its
+            // natural size instead of being cropped/stretched to a guess.
+            aspectRatio: 1020 / 550,
+            child: AssetOrPlaceholder(
+              asset: AppAssets.portionSizeHero,
+              width: double.infinity,
+              fit: BoxFit.contain,
+              radius: 20,
+            ),
           ),
           SizedBox(height: 14.h),
-          Text('Enjoy your food, mindfully.', style: headStyle(19)),
+          Center(
+            child: Text(
+              'Enjoy balanced portions without skipping meals.',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                height: 1.57,
+              ),
+            ),
+          ),
           SizedBox(height: 14.h),
-          const SectionTitle('Simple ways to start'),
           const InfoRowCard(
-            icon: Icons.dinner_dining_rounded,
-            title: 'Use Smaller Plates',
-            subtitle: 'Helps keep portions in check',
+            iconAsset: AppAssets.tipMoreVeggies,
+            title: 'Half Your Plate',
+            subtitle: 'Fill half your plate with vegetables.',
           ),
           const InfoRowCard(
-            icon: Icons.timer_outlined,
-            title: 'Eat Slowly',
-            subtitle: 'Notice when you feel full',
+            iconAsset: AppAssets.portionAddProtein,
+            title: 'Add Protein',
+            subtitle: 'Use one quarter of your plate for protein.',
           ),
           const InfoRowCard(
-            icon: Icons.back_hand_outlined,
-            title: 'Use Your Hand',
-            subtitle: 'A palm of protein, a fist of carbs',
+            iconAsset: AppAssets.portionWholeGrain,
+            title: 'Include Whole Grains',
+            subtitle: 'Fill the remaining quarter with whole grains.',
           ),
           SizedBox(height: 4.h),
-          const TipBanner(text: 'Stop eating when you feel comfortably full.'),
+          const TipBanner(
+            iconAsset: AppAssets.portionHeart,
+            text: 'A Simple Habit: Eat slowly and pause to notice when you feel comfortably full.',
+          ),
         ],
       ),
     );

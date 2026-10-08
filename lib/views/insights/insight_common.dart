@@ -293,19 +293,7 @@ class InfoRowCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
         child: Row(
           children: [
-            if (iconAsset != null)
-              Image.asset(iconAsset!, height: 44.h, fit: BoxFit.contain)
-            else
-              Container(
-                width: 42.w,
-                height: 42.w,
-                decoration: BoxDecoration(
-                  color: tileColor,
-                  shape: circleIcon ? BoxShape.circle : BoxShape.rectangle,
-                  borderRadius: circleIcon ? null : BorderRadius.circular(12.r),
-                ),
-                child: Icon(icon, color: iconColor, size: 21.sp),
-              ),
+            Image.asset(iconAsset!, height: 44.h, fit: BoxFit.contain),
             SizedBox(width: 12.w),
             Expanded(
               child: Column(
@@ -321,16 +309,7 @@ class InfoRowCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: const Color(0xFF6B7280),
-                      fontSize: 12,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 1.40,
-                    ),
-                  ),
+                  Text(subtitle, style: bodyStyle(12, height: 1.35)),
                 ],
               ),
             ),
@@ -338,7 +317,7 @@ class InfoRowCard extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 color: chevronColor ?? const Color(0xFF9CA3AF),
-                size: 24.sp,
+                size: 22.sp,
               ),
           ],
         ),
@@ -351,12 +330,14 @@ class InfoRowCard extends StatelessWidget {
 class TipBanner extends StatelessWidget {
   final String text;
   final IconData icon;
+  final String? iconAsset;
   final bool bold;
 
   const TipBanner({
     super.key,
     required this.text,
     this.icon = Icons.lightbulb_outline_rounded,
+    this.iconAsset,
     this.bold = false,
   });
 
@@ -372,15 +353,18 @@ class TipBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 30.w,
-            height: 30.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFFCDF3E4),
-              shape: BoxShape.circle,
+          if (iconAsset != null)
+            Image.asset(iconAsset!, width: 30.w, height: 30.w)
+          else
+            Container(
+              width: 30.w,
+              height: 30.w,
+              decoration: const BoxDecoration(
+                color: Color(0xFFCDF3E4),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 16.sp, color: kGreen),
             ),
-            child: Icon(icon, size: 16.sp, color: kGreen),
-          ),
           SizedBox(width: 10.w),
           Expanded(
             child: Text(
