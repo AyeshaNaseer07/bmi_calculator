@@ -47,65 +47,161 @@ const _rest = _Base(
 const Map<BMICategory, List<_Base>> _plans = {
   // Strength-focused, light cardio so energy is kept for gaining weight.
   BMICategory.underweight: [
-    _Base('Strength basics', 'Simple bodyweight moves to build muscle.',
-        Icons.fitness_center_rounded, 25),
-    _Base('Easy walk', 'Keep cardio gentle to save energy.',
-        Icons.directions_walk_rounded, 15),
-    _Base('Strength basics', 'Squats, push-ups and lunges at your pace.',
-        Icons.fitness_center_rounded, 25),
-    _Base('Yoga & stretch', 'Improve flexibility and relax.',
-        Icons.self_improvement_rounded, 15),
-    _Base('Strength basics', 'Add a little more resistance than last week.',
-        Icons.fitness_center_rounded, 25),
-    _Base('Easy walk', 'A relaxed walk or some light play.',
-        Icons.park_outlined, 20),
+    _Base(
+      'Strength basics',
+      'Simple bodyweight moves to build muscle.',
+      Icons.fitness_center_rounded,
+      25,
+    ),
+    _Base(
+      'Easy Walk',
+      'Keep cardio gentle to save energy.',
+      Icons.directions_walk_rounded,
+      15,
+    ),
+    _Base(
+      'Strength basics',
+      'Squats, push-ups and lunges at your pace.',
+      Icons.fitness_center_rounded,
+      25,
+    ),
+    _Base(
+      'Yoga & stretch',
+      'Improve flexibility and relax.',
+      Icons.self_improvement_rounded,
+      15,
+    ),
+    _Base(
+      'Strength basics',
+      'Add a little more resistance than last week.',
+      Icons.fitness_center_rounded,
+      25,
+    ),
+    _Base(
+      'Easy Walk',
+      'A relaxed walk or some light play.',
+      Icons.park_outlined,
+      20,
+    ),
     _rest,
   ],
   BMICategory.normal: [
-    _Base('Brisk walk', 'Walk fast enough to raise your heart rate.',
-        Icons.directions_walk_rounded, 30),
-    _Base('Strength circuit', 'Bodyweight moves for legs, core and arms.',
-        Icons.fitness_center_rounded, 20),
-    _Base('Cycling or jog', 'A steady cardio session you enjoy.',
-        Icons.directions_bike_rounded, 25),
-    _Base('Yoga & stretch', 'Improve flexibility and recover.',
-        Icons.self_improvement_rounded, 15),
-    _Base('Brisk walk', 'Keep a steady, comfortable pace.',
-        Icons.directions_walk_rounded, 30),
-    _Base('Active fun', 'Sport, hiking or anything that gets you moving.',
-        Icons.park_outlined, 30),
+    _Base(
+      'Brisk walk',
+      'Walk fast enough to raise your heart rate.',
+      Icons.directions_walk_rounded,
+      30,
+    ),
+    _Base(
+      'Strength circuit',
+      'Bodyweight moves for legs, core and arms.',
+      Icons.fitness_center_rounded,
+      20,
+    ),
+    _Base(
+      'Cycling or jog',
+      'A steady cardio session you enjoy.',
+      Icons.directions_bike_rounded,
+      25,
+    ),
+    _Base(
+      'Yoga & stretch',
+      'Improve flexibility and recover.',
+      Icons.self_improvement_rounded,
+      15,
+    ),
+    _Base(
+      'Brisk walk',
+      'Keep a steady, comfortable pace.',
+      Icons.directions_walk_rounded,
+      30,
+    ),
+    _Base(
+      'Active fun',
+      'Sport, hiking or anything that gets you moving.',
+      Icons.park_outlined,
+      30,
+    ),
     _rest,
   ],
   // Low-impact choices that are kind to the joints.
   BMICategory.overweight: [
-    _Base('Brisk walk', 'Walk at a pace where you can still talk.',
-        Icons.directions_walk_rounded, 25),
-    _Base('Bodyweight strength', 'Chair squats, wall push-ups and bridges.',
-        Icons.fitness_center_rounded, 20),
-    _Base('Cycling', 'Low-impact cardio, outdoors or stationary.',
-        Icons.directions_bike_rounded, 25),
-    _Base('Stretching', 'Loosen up and recover.',
-        Icons.self_improvement_rounded, 15),
-    _Base('Brisk walk', 'Aim to feel warm and slightly breathless.',
-        Icons.directions_walk_rounded, 25),
-    _Base('Swim or active fun', 'Gentle on joints and fun to do.',
-        Icons.pool_rounded, 30),
+    _Base(
+      'Brisk walk',
+      'Walk at a pace where you can still talk.',
+      Icons.directions_walk_rounded,
+      25,
+    ),
+    _Base(
+      'Bodyweight strength',
+      'Chair squats, wall push-ups and bridges.',
+      Icons.fitness_center_rounded,
+      20,
+    ),
+    _Base(
+      'Cycling',
+      'Low-impact cardio, outdoors or stationary.',
+      Icons.directions_bike_rounded,
+      25,
+    ),
+    _Base(
+      'Stretching',
+      'Loosen up and recover.',
+      Icons.self_improvement_rounded,
+      15,
+    ),
+    _Base(
+      'Brisk walk',
+      'Aim to feel warm and slightly breathless.',
+      Icons.directions_walk_rounded,
+      25,
+    ),
+    _Base(
+      'Swim or active fun',
+      'Gentle on joints and fun to do.',
+      Icons.pool_rounded,
+      30,
+    ),
     _rest,
   ],
   // Start small and build up slowly.
   BMICategory.obese: [
-    _Base('Easy walk', 'Start at a comfortable pace, rest when you need to.',
-        Icons.directions_walk_rounded, 15),
-    _Base('Seated strength', 'Gentle chair-based moves for arms and legs.',
-        Icons.chair_alt_rounded, 10),
-    _Base('Easy walk', 'Try to add a few minutes each week.',
-        Icons.directions_walk_rounded, 15),
-    _Base('Gentle stretching', 'Move slowly and breathe deeply.',
-        Icons.self_improvement_rounded, 10),
-    _Base('Easy walk', 'Keep it steady and pain-free.',
-        Icons.directions_walk_rounded, 20),
-    _Base('Water or low-impact fun', 'Walking in a pool or a relaxed dance.',
-        Icons.pool_rounded, 20),
+    _Base(
+      'Easy Walk',
+      'Start at a comfortable pace, rest when you need to.',
+      Icons.directions_walk_rounded,
+      15,
+    ),
+    _Base(
+      'Seated strength',
+      'Gentle chair-based moves for arms and legs.',
+      Icons.chair_alt_rounded,
+      10,
+    ),
+    _Base(
+      'Easy Walk',
+      'Try to add a few minutes each week.',
+      Icons.directions_walk_rounded,
+      15,
+    ),
+    _Base(
+      'Gentle stretching',
+      'Move slowly and breathe deeply.',
+      Icons.self_improvement_rounded,
+      10,
+    ),
+    _Base(
+      'Easy Walk',
+      'Keep it steady and pain-free.',
+      Icons.directions_walk_rounded,
+      20,
+    ),
+    _Base(
+      'Water or low-impact fun',
+      'Walking in a pool or a relaxed dance.',
+      Icons.pool_rounded,
+      20,
+    ),
     _rest,
   ],
 };
@@ -113,16 +209,16 @@ const Map<BMICategory, List<_Base>> _plans = {
 const Map<BMICategory, String> _tips = {
   BMICategory.underweight:
       'Strength training helps turn extra calories into muscle. Eat a snack '
-          'within an hour after exercise.',
+      'within an hour after exercise.',
   BMICategory.normal:
       'Mix cardio, strength and stretching to keep your weight and energy '
-          'steady.',
+      'steady.',
   BMICategory.overweight:
       'Low-impact activity protects your joints. Consistency matters more than '
-          'intensity.',
+      'intensity.',
   BMICategory.obese:
       'Start small and add a few minutes each week. Every bit of movement '
-          'counts.',
+      'counts.',
 };
 
 class ActivityPlanData {

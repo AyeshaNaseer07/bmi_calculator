@@ -54,15 +54,15 @@ class MainBottomNavBar extends StatelessWidget {
                     index: 0,
                   ),
                   _buildNavItem(
-                    icon: AppAssets.navProfile,
-                    label: 'Profile',
-                    index: 1,
-                  ),
-                  SizedBox(width: 56.w),
-                  _buildNavItem(
                     icon: AppAssets.navWeight,
                     label: 'Weight',
                     index: 2,
+                  ),
+                  SizedBox(width: 56.w),
+                  _buildNavItem(
+                    icon: AppAssets.navProfile,
+                    label: 'Profile',
+                    index: 1,
                   ),
                   _buildNavItem(
                     icon: AppAssets.navHistory,

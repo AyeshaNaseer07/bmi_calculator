@@ -23,7 +23,11 @@ class SleepWellScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: const Color(0xFFCFF1E5), width: 1.3),
         boxShadow: const [
-          BoxShadow(color: Color(0x1A33D2AB), blurRadius: 6, offset: Offset(0, 2)),
+          BoxShadow(
+            color: Color(0x1A33D2AB),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Row(
@@ -31,7 +35,10 @@ class SleepWellScreen extends StatelessWidget {
           Container(
             width: 36.w,
             height: 36.w,
-            decoration: const BoxDecoration(color: _kLav, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: _kLav,
+              shape: BoxShape.circle,
+            ),
             child: Icon(icon, size: 19.sp, color: _kDeep),
           ),
           SizedBox(width: 10.w),
@@ -106,8 +113,11 @@ class SleepWellScreen extends StatelessWidget {
                   SizedBox(width: 6.w),
                   Text(
                     'RESTFUL SLEEP',
-                    style: bodyStyle(12, color: _kDeep, weight: FontWeight.w800)
-                        .copyWith(letterSpacing: 0.4),
+                    style: bodyStyle(
+                      12,
+                      color: _kDeep,
+                      weight: FontWeight.w800,
+                    ).copyWith(letterSpacing: 0.4),
                   ),
                 ],
               ),
@@ -154,7 +164,11 @@ class SleepWellScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.schedule_rounded, size: 16.sp, color: _kDeep),
+                        Icon(
+                          Icons.schedule_rounded,
+                          size: 16.sp,
+                          color: _kDeep,
+                        ),
                         SizedBox(width: 6.w),
                         Text(
                           'RECOMMENDED SLEEP',
@@ -177,7 +191,11 @@ class SleepWellScreen extends StatelessWidget {
                       ),
                       child: Text(
                         'Optimal Rest',
-                        style: bodyStyle(12, color: _kDeep, weight: FontWeight.w700),
+                        style: bodyStyle(
+                          12,
+                          color: _kDeep,
+                          weight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -193,7 +211,8 @@ class SleepWellScreen extends StatelessWidget {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: '${PersonalTargets.sleepText(MealPlanController.to.age)} ',
+                                  text:
+                                      '${PersonalTargets.sleepText(MealPlanController.to.age)} ',
                                   style: headStyle(40, color: _kDeep),
                                 ),
                                 TextSpan(
@@ -217,7 +236,9 @@ class SleepWellScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 6.h),
                           Text(
-                            PersonalTargets.bedtimeText(MealPlanController.to.age),
+                            PersonalTargets.bedtimeText(
+                              MealPlanController.to.age,
+                            ),
                             style: bodyStyle(
                               14.5,
                               color: _kDeep,
@@ -234,7 +255,11 @@ class SleepWellScreen extends StatelessWidget {
                       child: CustomPaint(
                         painter: _SleepRing(0.78),
                         child: Center(
-                          child: Icon(Icons.bed_outlined, size: 22.sp, color: _kDeep),
+                          child: Icon(
+                            Icons.bed_outlined,
+                            size: 22.sp,
+                            color: _kDeep,
+                          ),
                         ),
                       ),
                     ),
@@ -249,12 +274,21 @@ class SleepWellScreen extends StatelessWidget {
             style: headStyle(14.5, weight: FontWeight.w800),
           ),
           SizedBox(height: 10.h),
-          _routine(Icons.brightness_5_outlined, 'Keep a Regular Schedule',
-              'Sleep and wake up around the same time.'),
-          _routine(Icons.phone_android_rounded, 'Limit Screen Time',
-              'Put your phone away before bedtime.'),
-          _routine(Icons.local_cafe_outlined, 'Avoid Late Caffeine',
-              'Choose caffeine-free drinks in the evening.'),
+          _routine(
+            Icons.brightness_5_outlined,
+            'Keep a Regular Schedule',
+            'Sleep and wake up around the same time.',
+          ),
+          _routine(
+            Icons.phone_android_rounded,
+            'Limit Screen Time',
+            'Put your phone away before bedtime.',
+          ),
+          _routine(
+            Icons.local_cafe_outlined,
+            'Avoid Late Caffeine',
+            'Choose caffeine-free drinks in the evening.',
+          ),
         ],
       ),
     );
@@ -268,7 +302,8 @@ class _SleepRing extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const stroke = 6.0;
-    final rect = Offset(stroke / 2, stroke / 2) &
+    final rect =
+        Offset(stroke / 2, stroke / 2) &
         Size(size.width - stroke, size.height - stroke);
     canvas.drawArc(
       rect,

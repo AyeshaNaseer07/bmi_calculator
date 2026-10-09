@@ -45,18 +45,7 @@ class StayActiveScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                width: 40.w,
-                height: 40.w,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFEDEFFB),
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(8.w),
-                  child: Image.asset(iconAsset, fit: BoxFit.contain),
-                ),
-              ),
+              Image.asset(iconAsset, fit: BoxFit.contain, width: 38.w),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
