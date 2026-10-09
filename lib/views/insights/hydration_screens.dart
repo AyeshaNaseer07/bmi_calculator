@@ -532,6 +532,7 @@ class GoodForSkinScreen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
+          SizedBox(height: 10.h),
           Center(
             child: Text(
               'Hydration is part of a healthy skincare routine.',
