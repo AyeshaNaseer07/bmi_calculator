@@ -10,7 +10,6 @@ const Color kGreen = Color(0xFF09B389);
 const Color kGreenDark = Color(0xFF006B4E);
 const Color kMuted = Color(0xFF6B7280);
 const Color kMintBorder = Color(0xFFD5F2E8);
-const Color kMintBg = Color(0xFFE6F8F1);
 const String kHeadFont = 'Plus Jakarta Sans';
 
 TextStyle headStyle(

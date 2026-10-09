@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_assets.dart';
 import '../../data/models/bmi_record_model.dart';
 import 'meal_plan_normal.dart';
 import 'meal_plan_obese.dart';
@@ -8,35 +7,16 @@ import 'meal_plan_overweight.dart';
 import 'meal_plan_raw.dart';
 import 'meal_plan_underweight.dart';
 
-/// Replace these dummy images with real ones.
-///
-/// Put a file in assets/images and map the meal key here, e.g.
+/// Optional per-meal photo overrides, by meal key. Put a file in
+/// assets/images and map the key here, e.g.
 ///   'underweight_d1_breakfast': 'assets/images/uw_d1_breakfast.png',
 /// Meal keys look like `<category>_d<day>_<slot>` (day is 1–7, slot is
 /// breakfast / lunch / dinner). Anything not listed uses the photo mapped to the
 /// dish name in `_mealPhotos`.
-const Map<String, String> kMealPhotoOverrides = {
-  'Egg Fried Rice Bowl': 'assets/images/meals/egg_fried_rice.jpg',
-  'Mediterranean Chicken Bowl': 'assets/images/meals/mediterranean_chicken_bowl.jpg',
-  'Turkey Hummus Sandwich': 'assets/images/meals/turkey_sandwich.jpg',
-  'Veggie Scramble & Toast': 'assets/images/meals/veggie_scramble_toast.jpg',
-  'Salmon & Quinoa': 'assets/images/meals/salmon_with_quinoa.jpg',
-};
-
-const Map<String, String> _dummyPhoto = {
-  'breakfast': AppAssets.mealGreekPhoto,
-  'lunch': AppAssets.mealChickenPhoto,
-  'dinner': AppAssets.mealSalmonPhoto,
-};
-
-const Map<String, String> _dummyBadge = {
-  'breakfast': AppAssets.mealGreekBadge,
-  'lunch': AppAssets.mealChickenBadge,
-  'dinner': AppAssets.mealSalmonBadge,
-};
-
+const Map<String, String> kMealPhotoOverrides = {};
 
 const String _meals = 'assets/images/meals';
+const String _fallbackPhoto = '$_meals/oatmeal_bowl.jpg';
 const String _badges = 'assets/images/badges';
 
 /// Photo for each dish, by meal name (shared by all four BMI plans).
@@ -51,7 +31,7 @@ const Map<String, String> _mealPhotos = {
   'Tuna Pasta Salad': '$_meals/tuna_pasta.jpg',
   'Lamb Curry with Rice': '$_meals/lamb_curry_rice.jpg',
   'Avocado Egg Toast': '$_meals/egg_avocado_toast.jpg',
-  'Turkey Hummus Sandwich': '$_meals/hummus_veggie_sandwich.jpg',
+  'Turkey Hummus Sandwich': '$_meals/turkey_sandwich.jpg',
   'Beef & Noodle Stir-fry': '$_meals/beef_stir_fry_noodles.jpg',
   'Granola Yogurt Parfait': '$_meals/granola_yogurt_parfait.jpg',
   'Falafel Rice Plate': '$_meals/falafel_plate.jpg',
@@ -60,12 +40,12 @@ const Map<String, String> _mealPhotos = {
   'Chicken Quesadilla': '$_meals/chicken_quesadilla.jpg',
   'Lentil Veggie Stew': '$_meals/lentil_soup.jpg',
   'Overnight Oats & Almonds': '$_meals/overnight_oats_jar.jpg',
-  'Egg Fried Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
+  'Egg Fried Rice Bowl': '$_meals/egg_fried_rice.jpg',
   'Roast Chicken & Mash': '$_meals/roast_chicken_mashed_potato.jpg',
   'Greek Yogurt Bowl': '$_meals/greek_yogurt_berries.jpg',
   'Grilled Chicken Salad': '$_meals/grilled_chicken_salad.jpg',
   'Salmon & Vegetables': '$_meals/salmon_vegetables.jpg',
-  'Veggie Scramble & Toast': '$_meals/mushroom_scramble.jpg',
+  'Veggie Scramble & Toast': '$_meals/veggie_scramble_toast.jpg',
   'Quinoa Chickpea Bowl': '$_meals/quinoa_chickpea_bowl.jpg',
   'Turkey Stir-fry & Rice': '$_meals/turkey_stir_fry.jpg',
   'Oats with Berries': '$_meals/oatmeal_bowl.jpg',
@@ -74,11 +54,11 @@ const Map<String, String> _mealPhotos = {
   'Lentil Veggie Soup': '$_meals/lentil_soup.jpg',
   'Chicken Fajita Plate': '$_meals/chicken_fajita.jpg',
   'Fruit & Cottage Cheese': '$_meals/cottage_cheese_fruit.jpg',
-  'Mediterranean Chicken Bowl': '$_meals/chicken_rice_bowl.jpg',
+  'Mediterranean Chicken Bowl': '$_meals/mediterranean_chicken_bowl.jpg',
   'Shrimp Veggie Noodles': '$_meals/shrimp_noodles.jpg',
   'Banana Oat Pancakes': '$_meals/banana_oat_pancakes.jpg',
   'Hummus Veggie Sandwich': '$_meals/hummus_veggie_sandwich.jpg',
-  'Salmon & Quinoa': '$_meals/salmon_quinoa_avocado.jpg',
+  'Salmon & Quinoa': '$_meals/salmon_with_quinoa.jpg',
   'Chia Pudding & Fruit': '$_meals/chia_pudding.jpg',
   'Chicken Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
   'Veggie Lentil Curry': '$_meals/lentil_curry.jpg',
@@ -330,7 +310,8 @@ class MealPlanData {
     double scale,
   ) {
     final key = '${cat.name}_d${day}_$slot';
-    final photo = kMealPhotoOverrides[key] ?? _mealPhotos[r.name];
+    final photo =
+        kMealPhotoOverrides[key] ?? _mealPhotos[r.name] ?? _fallbackPhoto;
     return MealInfo(
       key: key,
       category: cat,
@@ -339,8 +320,8 @@ class MealPlanData {
       name: r.name,
       blurb: r.blurb,
       kcal: _scaled(r.kcal, scale, step: 5),
-      photo: photo ?? _dummyPhoto[slot]!,
-      badge: photo != null ? _badgeFor(photo) : _dummyBadge[slot]!,
+      photo: photo,
+      badge: _badgeFor(photo),
       tag: r.tag,
       tagIcon: info.tagIcon,
       time: _slotTimes[slot]!,

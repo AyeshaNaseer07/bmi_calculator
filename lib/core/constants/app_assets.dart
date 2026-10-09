@@ -121,25 +121,15 @@ abstract class AppAssets {
   static const String portionSizeHero = '$_imagesBase/portion_size.png';
   static const String portionAddProtein = '$_imagesBase/add_protein.png';
   static const String portionWholeGrain = '$_imagesBase/whole_grain.png';
-  static const String portionVegs = '$_imagesBase/vegs.webp';
   static const String portionHeart = '$_imagesBase/pro_heart.png';
-  static const String mealSlotBreakfast = '$_imagesBase/breakfast.png';
   static const String mealSlotLunch = '$_imagesBase/lunch.png';
   static const String mealProgress = '$_imagesBase/progress.png';
-  static const String mealSlotDinner = '$_imagesBase/dinner.png';
 
   // Photos that exist already
   static const String photoVegetables = '$_imagesBase/vegs.webp';
   static const String photoBalancedMeal = '$_imagesBase/hero.webp';
 
   // ── Meal plan / hydration / activity screens ──
-  static const String mealGreekPhoto = '$_imagesBase/greek_yogurt.png';
-  static const String mealChickenPhoto = '$_imagesBase/grilled_chicken.png';
-  static const String mealSalmonPhoto = '$_imagesBase/salomn_fish.png';
-  static const String mealGreekBadge = '$_imagesBase/greek_icon.png';
-  static const String mealChickenBadge = '$_imagesBase/grilled_icon.png';
-  static const String mealSalmonBadge = '$_imagesBase/salmon_icon.png';
-  static const String mealLunchHero = '$_imagesBase/girlled.png';
   static const String flowerIcon = '$_imagesBase/flower.png';
   static const String waterHero = '$_imagesBase/hydrated.png';
   static const String waterEnergy = '$_imagesBase/your_energy.png';

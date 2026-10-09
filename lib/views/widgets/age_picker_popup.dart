@@ -17,8 +17,8 @@ class AgePickerPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 92.h,
-      width: 130.w,
+      height: 95.h,
+      width: 135.w,
       padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
         color: const Color(0xFFEBEBEB),
