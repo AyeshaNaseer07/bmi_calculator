@@ -455,8 +455,6 @@ class MealDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLunch =
-        meal.slotKey == 'lunch' && !kMealPhotoOverrides.containsKey(meal.key);
     return InsightScaffold(
       title: meal.day == 1
           ? 'Today’s ${meal.slot}'
@@ -492,7 +490,7 @@ class MealDetailScreen extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   AssetOrPlaceholder(
-                    asset: isLunch ? AppAssets.mealLunchHero : meal.photo,
+                    asset: meal.photo,
                     fit: BoxFit.cover,
                     radius: 0,
                   ),

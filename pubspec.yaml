@@ -47,6 +47,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/meals/
+    - assets/images/badges/
     - assets/lotties/
     - assets/locales/
 

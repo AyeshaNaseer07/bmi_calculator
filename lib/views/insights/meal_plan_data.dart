@@ -13,9 +13,15 @@ import 'meal_plan_underweight.dart';
 /// Put a file in assets/images and map the meal key here, e.g.
 ///   'underweight_d1_breakfast': 'assets/images/uw_d1_breakfast.png',
 /// Meal keys look like `<category>_d<day>_<slot>` (day is 1–7, slot is
-/// breakfast / lunch / dinner). Anything not listed uses the dummy photo of
-/// its slot.
-const Map<String, String> kMealPhotoOverrides = {};
+/// breakfast / lunch / dinner). Anything not listed uses the photo mapped to the
+/// dish name in `_mealPhotos`.
+const Map<String, String> kMealPhotoOverrides = {
+  'Egg Fried Rice Bowl': 'assets/images/meals/egg_fried_rice.jpg',
+  'Mediterranean Chicken Bowl': 'assets/images/meals/mediterranean_chicken_bowl.jpg',
+  'Turkey Hummus Sandwich': 'assets/images/meals/turkey_sandwich.jpg',
+  'Veggie Scramble & Toast': 'assets/images/meals/veggie_scramble_toast.jpg',
+  'Salmon & Quinoa': 'assets/images/meals/salmon_with_quinoa.jpg',
+};
 
 const Map<String, String> _dummyPhoto = {
   'breakfast': AppAssets.mealGreekPhoto,
@@ -28,6 +34,127 @@ const Map<String, String> _dummyBadge = {
   'lunch': AppAssets.mealChickenBadge,
   'dinner': AppAssets.mealSalmonBadge,
 };
+
+
+const String _meals = 'assets/images/meals';
+const String _badges = 'assets/images/badges';
+
+/// Photo for each dish, by meal name (shared by all four BMI plans).
+const Map<String, String> _mealPhotos = {
+  'Peanut Butter Oats': '$_meals/peanut_butter_oats.jpg',
+  'Chicken & Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
+  'Salmon, Quinoa & Avocado': '$_meals/salmon_quinoa_avocado.jpg',
+  'Cheese Omelette & Toast': '$_meals/cheese_omelette_toast.jpg',
+  'Beef & Sweet Potato Wrap': '$_meals/beef_sweet_potato_wrap.jpg',
+  'Creamy Chicken Pasta': '$_meals/creamy_chicken_pasta.jpg',
+  'Nutty Smoothie Bowl': '$_meals/smoothie_bowl.jpg',
+  'Tuna Pasta Salad': '$_meals/tuna_pasta.jpg',
+  'Lamb Curry with Rice': '$_meals/lamb_curry_rice.jpg',
+  'Avocado Egg Toast': '$_meals/egg_avocado_toast.jpg',
+  'Turkey Hummus Sandwich': '$_meals/hummus_veggie_sandwich.jpg',
+  'Beef & Noodle Stir-fry': '$_meals/beef_stir_fry_noodles.jpg',
+  'Granola Yogurt Parfait': '$_meals/granola_yogurt_parfait.jpg',
+  'Falafel Rice Plate': '$_meals/falafel_plate.jpg',
+  'Baked Cod & Potatoes': '$_meals/baked_cod.jpg',
+  'Banana Pancakes': '$_meals/banana_pancakes.jpg',
+  'Chicken Quesadilla': '$_meals/chicken_quesadilla.jpg',
+  'Lentil Veggie Stew': '$_meals/lentil_soup.jpg',
+  'Overnight Oats & Almonds': '$_meals/overnight_oats_jar.jpg',
+  'Egg Fried Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
+  'Roast Chicken & Mash': '$_meals/roast_chicken_mashed_potato.jpg',
+  'Greek Yogurt Bowl': '$_meals/greek_yogurt_berries.jpg',
+  'Grilled Chicken Salad': '$_meals/grilled_chicken_salad.jpg',
+  'Salmon & Vegetables': '$_meals/salmon_vegetables.jpg',
+  'Veggie Scramble & Toast': '$_meals/mushroom_scramble.jpg',
+  'Quinoa Chickpea Bowl': '$_meals/quinoa_chickpea_bowl.jpg',
+  'Turkey Stir-fry & Rice': '$_meals/turkey_stir_fry.jpg',
+  'Oats with Berries': '$_meals/oatmeal_bowl.jpg',
+  'Tuna Whole-grain Wrap': '$_meals/tuna_wrap.jpg',
+  'Baked Cod & Veg': '$_meals/baked_cod.jpg',
+  'Lentil Veggie Soup': '$_meals/lentil_soup.jpg',
+  'Chicken Fajita Plate': '$_meals/chicken_fajita.jpg',
+  'Fruit & Cottage Cheese': '$_meals/cottage_cheese_fruit.jpg',
+  'Mediterranean Chicken Bowl': '$_meals/chicken_rice_bowl.jpg',
+  'Shrimp Veggie Noodles': '$_meals/shrimp_noodles.jpg',
+  'Banana Oat Pancakes': '$_meals/banana_oat_pancakes.jpg',
+  'Hummus Veggie Sandwich': '$_meals/hummus_veggie_sandwich.jpg',
+  'Salmon & Quinoa': '$_meals/salmon_quinoa_avocado.jpg',
+  'Chia Pudding & Fruit': '$_meals/chia_pudding.jpg',
+  'Chicken Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
+  'Veggie Lentil Curry': '$_meals/lentil_curry.jpg',
+  'Veggie Egg-White Omelette': '$_meals/veggie_omelette.jpg',
+  'Grilled Chicken & Greens': '$_meals/grilled_chicken_salad.jpg',
+  'Baked Fish & Veg': '$_meals/baked_cod.jpg',
+  'Berry Protein Smoothie': '$_meals/smoothie_bowl.jpg',
+  'Turkey Lettuce Wraps': '$_meals/turkey_lettuce_wraps.jpg',
+  'Zucchini Noodles & Chicken': '$_meals/zucchini_noodles.jpg',
+  'Light Overnight Oats': '$_meals/overnight_oats_jar.jpg',
+  'Chickpea Salad Bowl': '$_meals/chickpea_salad.jpg',
+  'Grilled Shrimp & Veg': '$_meals/grilled_shrimp.jpg',
+  'Greek Yogurt & Apple': '$_meals/greek_yogurt_berries.jpg',
+  'Herbed Chicken & Broccoli': '$_meals/chicken_broccoli.jpg',
+  'Mushroom Scramble': '$_meals/mushroom_scramble.jpg',
+  'Tuna Cucumber Bowl': '$_meals/tuna_salad.jpg',
+  'Baked Cod & Cauli Mash': '$_meals/baked_cod.jpg',
+  'Cottage Cheese & Berries': '$_meals/cottage_cheese_fruit.jpg',
+  'Chicken Veggie Soup': '$_meals/chicken_soup.jpg',
+  'Turkey Meatballs & Salad': '$_meals/turkey_meatballs.jpg',
+  'Chia Oat Bowl': '$_meals/chia_pudding.jpg',
+  'Grilled Veggie Wrap': '$_meals/grilled_veggie_wrap.jpg',
+  'Steamed Fish & Greens': '$_meals/steamed_fish_greens.jpg',
+  'Spinach Egg-White Wrap': '$_meals/egg_white_wrap.jpg',
+  'Yogurt & Berries': '$_meals/greek_yogurt_berries.jpg',
+  'Veggie Lentil Soup': '$_meals/lentil_soup.jpg',
+  'Lemon Herb Chicken': '$_meals/lemon_herb_chicken.jpg',
+  'Veggie Omelette': '$_meals/veggie_omelette.jpg',
+  'Cucumber Tuna Bowl': '$_meals/tuna_salad.jpg',
+  'Baked Cod & Zucchini': '$_meals/baked_cod.jpg',
+  'Chickpea Veggie Bowl': '$_meals/chickpea_salad.jpg',
+  'Grilled Shrimp Salad': '$_meals/grilled_shrimp.jpg',
+  'Protein Smoothie': '$_meals/smoothie_bowl.jpg',
+  'Turkey Veggie Wrap': '$_meals/turkey_lettuce_wraps.jpg',
+  'Chicken & Broccoli': '$_meals/chicken_broccoli.jpg',
+  'Cottage Cheese & Fruit': '$_meals/cottage_cheese_fruit.jpg',
+  'Baked Fish & Cauliflower': '$_meals/baked_cod.jpg',
+  'Chia Berry Cup': '$_meals/chia_pudding.jpg',
+  'Grilled Veggie Bowl': '$_meals/grilled_veggie_wrap.jpg',
+  'Herbed Turkey & Salad': '$_meals/turkey_meatballs.jpg',
+};
+
+/// Picks the badge icon that best fits a dish photo file name.
+String _badgeFor(String photo) {
+  final n = photo.split('/').last.toLowerCase();
+  bool has(List<String> k) => k.any(n.contains);
+  String b;
+  if (has(['shrimp'])) {
+    b = 'shrimp';
+  } else if (has(['salmon', 'cod', 'tuna', 'fish'])) {
+    b = 'salmon';
+  } else if (has(['avocado'])) {
+    b = 'avocado';
+  } else if (has(['egg', 'omelette', 'scramble'])) {
+    b = 'egg';
+  } else if (has(['pancake'])) {
+    b = 'pancake';
+  } else if (has(['smoothie'])) {
+    b = 'smoothie';
+  } else if (has(['yogurt', 'cottage'])) {
+    b = 'yogurt';
+  } else if (has(['curry'])) {
+    b = 'curry';
+  } else if (has(['soup', 'stew'])) {
+    b = 'soup';
+  } else if (has(['oat', 'granola', 'chia'])) {
+    b = 'oats';
+  } else if (has(['wrap', 'sandwich', 'quesadilla', 'fajita'])) {
+    b = 'wrap';
+  } else if (has(['salad', 'chickpea', 'quinoa', 'falafel', 'zucchini'])) {
+    b = 'salad';
+  } else {
+    b = 'chicken';
+  }
+  return '$_badges/$b.png';
+}
 
 const _slots = ['breakfast', 'lunch', 'dinner'];
 const _slotTimes = {'breakfast': '8:00 AM', 'lunch': '1:00 PM', 'dinner': '7:00 PM'};
@@ -157,6 +284,7 @@ class MealPlanData {
     int dayTotal,
   ) {
     final key = '${cat.name}_d${day}_$slot';
+    final photo = kMealPhotoOverrides[key] ?? _mealPhotos[r.name];
     return MealInfo(
       key: key,
       category: cat,
@@ -165,8 +293,8 @@ class MealPlanData {
       name: r.name,
       blurb: r.blurb,
       kcal: r.kcal,
-      photo: kMealPhotoOverrides[key] ?? _dummyPhoto[slot]!,
-      badge: _dummyBadge[slot]!,
+      photo: photo ?? _dummyPhoto[slot]!,
+      badge: photo != null ? _badgeFor(photo) : _dummyBadge[slot]!,
       tag: r.tag,
       tagIcon: info.tagIcon,
       time: _slotTimes[slot]!,
