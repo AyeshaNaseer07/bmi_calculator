@@ -10,6 +10,7 @@ import 'hydration_screens.dart';
 import 'insight_common.dart';
 import 'lifestyle_screens.dart';
 import 'nutrition_screens.dart';
+import 'personal_targets.dart';
 
 class _Variant {
   final String screenTitle;
@@ -30,6 +31,9 @@ class _Variant {
   final String? whyTitle;
   final List<String> whyBullets;
 
+  /// True when the healthy goal means gaining weight (underweight).
+  final bool gain;
+
   const _Variant({
     required this.screenTitle,
     required this.planTitle,
@@ -48,6 +52,7 @@ class _Variant {
     required this.whyBorder,
     this.whyTitle,
     this.whyBullets = const [],
+    this.gain = false,
   });
 }
 
@@ -88,6 +93,7 @@ _Variant _variantFor(BMICategory c) {
         barFill: Color(0xFF1B7FC4),
         barText: Color(0xFF0A6FB0),
         whyBorder: Color(0xFFD3E8F8),
+        gain: true,
         whyTitle: 'Why You May Be Underweight?',
         whyBullets: [
           'Not getting enough calories or nutrients',
@@ -130,7 +136,7 @@ _Variant _variantFor(BMICategory c) {
         chip: 'OBESE',
         chipBg: Color(0xFFFDE4E4),
         chipFg: Color(0xFFC01818),
-        range: '30–34.9',
+        range: '30 and above',
         message: 'Your BMI is above the healthy range.',
         messageColor: Color(0xFFC01818),
         image: AppAssets.insightObese,
@@ -166,7 +172,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
   void initState() {
     super.initState();
     // The weekly meal plan follows this BMI category.
-    MealPlanController.to.category = widget.record.category;
+    MealPlanController.to.useRecord(widget.record);
   }
 
   @override
@@ -317,6 +323,14 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
     );
   }
 
+  /// Healthy weight range (BMI 18.5–24.9) for the user's height, e.g. `56–75`.
+  String _healthyRangeText() {
+    final h = widget.record.heightCm / 100;
+    final lo = (18.5 * h * h).ceil();
+    final hi = (24.9 * h * h).floor();
+    return '$lo–$hi';
+  }
+
   Widget _buildWeightCard(
     _Variant v, {
     required bool isNormal,
@@ -329,8 +343,9 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
       String label,
       double kg,
       Color color,
-      CrossAxisAlignment align,
-    ) {
+      CrossAxisAlignment align, {
+      String? text,
+    }) {
       return Column(
         crossAxisAlignment: align,
         children: [
@@ -340,7 +355,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
             TextSpan(
               children: [
                 TextSpan(
-                  text: kg.round().toString(),
+                  text: text ?? kg.round().toString(),
                   style: headStyle(24, color: color),
                 ),
                 TextSpan(
@@ -369,10 +384,11 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               ),
               Image.asset(AppAssets.insightRise, width: 38.w, height: 38.w),
               weightCol(
-                isNormal ? 'Ideal Weight' : 'Healthy Target',
+                isNormal ? 'Healthy Range' : 'Healthy Target',
                 target,
                 const Color(0xFF09B389),
                 CrossAxisAlignment.end,
+                text: isNormal ? _healthyRangeText() : null,
               ),
             ],
           ),
@@ -412,7 +428,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               child: Row(
                 children: [
                   Text(
-                    '+ $diff kg to healthy',
+                    '${v.gain ? '+' : '−'} $diff kg to healthy',
                     style: bodyStyle(
                       12,
                       color: v.barText,
@@ -494,7 +510,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                   icon: AppAssets.tipSleep,
                   tile: const Color(0xFFEBEEFD),
                   title: 'Sleep Well',
-                  subtitle: 'Aim for 7\u20139 hours nightly.',
+                  subtitle:
+                      'Aim for ${PersonalTargets.sleepText(widget.record.age)} hours nightly.',
                   onTap: () => Get.to(() => const SleepWellScreen()),
                 ),
               ),

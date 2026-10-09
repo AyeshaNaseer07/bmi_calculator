@@ -4,7 +4,7 @@ abstract class AppAssets {
   static const String _lottiesBase = 'assets/lotties';
 
   // ── Images ──
-  static const String appBg = '$_imagesBase/bg.webp';
+  static const String appBg = '$_imagesBase/bg.png';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
   static const String selectLanguage = '$_imagesBase/select_language.webp';
@@ -125,6 +125,7 @@ abstract class AppAssets {
   static const String portionHeart = '$_imagesBase/pro_heart.png';
   static const String mealSlotBreakfast = '$_imagesBase/breakfast.png';
   static const String mealSlotLunch = '$_imagesBase/lunch.png';
+  static const String mealProgress = '$_imagesBase/progress.png';
   static const String mealSlotDinner = '$_imagesBase/dinner.png';
 
   // Photos that exist already
@@ -155,4 +156,12 @@ abstract class AppAssets {
   static const String glassEmpty = '$_imagesBase/empty_glass.png';
   static const String glassFull = '$_imagesBase/half_glass.png';
   static const String activeHero = '$_imagesBase/active_stay.png';
+  static const String digestionIcon = '$_imagesBase/fock.png';
+  static const String regularityIcon = '$_imagesBase/reg.png';
+  static const String absorptionIcon = '$_imagesBase/absorb.png';
+  static const String skinHealthIcon = '$_imagesBase/skin.png';
+  static const String healthyHabitsIcon = '$_imagesBase/habit.png';
+  static const String easyWalkIcon = '$_imagesBase/easy_walk.png';
+  static const String stretchBreakIcon = '$_imagesBase/stretch_break.png';
+  static const String dailyMovementIcon = '$_imagesBase/daily_movement.png';
 }

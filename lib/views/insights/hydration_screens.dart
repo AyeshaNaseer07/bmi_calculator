@@ -8,7 +8,6 @@ import 'insight_common.dart';
 
 export 'hydration_goal_screens.dart';
 
-const Color _kDeep = Color(0xFF006B4E);
 const Color _kSub = Color(0xFF6B7280);
 
 class _Benefit extends StatelessWidget {
@@ -37,11 +36,21 @@ class _Benefit extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 12.h),
-          decoration: BoxDecoration(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: ShapeDecoration(
             color: bg,
-            borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: border, width: 1.2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            shadows: [
+              BoxShadow(
+                color: Color(0x0A000000),
+                blurRadius: 12,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              ),
+            ],
           ),
           child: Row(
             children: [
@@ -53,14 +62,27 @@ class _Benefit extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: headStyle(16, weight: FontWeight.w700),
+                      style: TextStyle(
+                        color: const Color(0xFF111827),
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     SizedBox(height: 2.h),
-                    Text(subtitle, style: bodyStyle(12.5, color: _kSub, height: 1.3)),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: const Color(0xFF6B7280),
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: chevron, size: 22.sp),
+              Icon(Icons.chevron_right_rounded, color: chevron, size: 24.sp),
             ],
           ),
         ),
@@ -91,11 +113,24 @@ class StayHydratedScreen extends StatelessWidget {
           Center(
             child: Text(
               'Drink enough water daily.',
-              style: bodyStyle(14, color: _kSub),
+              style: TextStyle(
+                color: const Color(0xFF6B7280),
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
           SizedBox(height: 10.h),
-          Text('Benefits', style: headStyle(18, weight: FontWeight.w600)),
+          Text(
+            'Benefits',
+            style: TextStyle(
+              color: const Color(0xFF111827),
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           SizedBox(height: 10.h),
           _Benefit(
             icon: AppAssets.waterBoostIcon,
@@ -155,33 +190,39 @@ class _MintRow extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 12.h),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 12.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFDDF7EE),
-          borderRadius: BorderRadius.circular(20.r),
+        padding: EdgeInsets.all(10.w),
+        decoration: ShapeDecoration(
+          color: const Color(0x2833D2AB),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         child: Row(
           children: [
-            Container(
-              width: 44.w,
-              height: 44.w,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: icon,
-            ),
+            icon,
             SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: headStyle(16, weight: FontWeight.w700)),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: const Color(0xFF111827),
+                      fontSize: 16,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   SizedBox(height: 2.h),
                   Text(
                     subtitle,
-                    style: bodyStyle(13, color: _kSub, height: 1.3),
+                    style: TextStyle(
+                      color: const Color(0xFF6B7280),
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
@@ -221,27 +262,42 @@ class BoostsEnergyScreen extends StatelessWidget {
           Center(
             child: Text(
               'Stay hydrated to help your body feel its best.',
-              style: bodyStyle(13, color: _kSub),
+              style: TextStyle(
+                color: const Color(0xFF6B7280),
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
           SizedBox(height: 12.h),
-          Text('How Water Helps', style: headStyle(18, weight: FontWeight.w600)),
+          Text(
+            'How Water Helps',
+            style: TextStyle(
+              color: const Color(0xFF111827),
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           SizedBox(height: 10.h),
           _MintRow(
-            icon: _asset(AppAssets.brainIcon, size: 26),
+            icon: _asset(AppAssets.brainIcon, size: 36),
             title: 'Supports Focus',
-            subtitle: 'Drinking enough water helps you stay focused '
+            subtitle:
+                'Drinking enough water helps you stay focused '
                 'throughout the day.',
           ),
           _MintRow(
-            icon: _asset(AppAssets.moonIcon, size: 26),
+            icon: _asset(AppAssets.moonIcon, size: 36),
             title: 'Helps Reduce Tiredness',
             subtitle: 'Dehydration can make you feel tired.',
           ),
           _MintRow(
-            icon: _asset(AppAssets.pulseIcon, size: 26),
+            icon: _asset(AppAssets.pulseIcon, size: 36),
             title: 'Supports Daily Activity',
-            subtitle: 'Water helps your body function during everyday '
+            subtitle:
+                'Water helps your body function during everyday '
                 'activities.',
           ),
           SizedBox(height: 14.h),
@@ -262,22 +318,23 @@ class _TipStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEFFCF6),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFD3F3E6)),
+      width: 341,
+      padding: EdgeInsets.all(12),
+      decoration: ShapeDecoration(
+        color: const Color(0xFFECFDF5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: Row(
         children: [
           icon ??
               Container(
-                width: 34.w,
-                height: 34.w,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFCDF3E4),
-                  shape: BoxShape.circle,
+                width: 32,
+                height: 32,
+                decoration: ShapeDecoration(
+                  color: const Color(0xFFD1FAE5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
                 child: Icon(
                   Icons.lightbulb_outline_rounded,
@@ -289,11 +346,11 @@ class _TipStrip extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: bodyStyle(
-                14,
-                color: _kDeep,
-                weight: FontWeight.w500,
-                height: 1.3,
+              style: TextStyle(
+                color: const Color(0xFF065F46),
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -311,39 +368,42 @@ class SupportsDigestionScreen extends StatelessWidget {
     padding: EdgeInsets.only(bottom: 12.h),
     child: Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 12.h),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(10),
+      decoration: ShapeDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: const Color(0xFFCDEFE2), width: 2),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x2633D2AB),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 1, color: const Color(0xFFE5E7EB)),
+          borderRadius: BorderRadius.circular(16),
+        ),
       ),
       child: Row(
         children: [
-          Container(
-            width: 46.w,
-            height: 46.w,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Color(0xFFE8FBF3),
-              shape: BoxShape.circle,
-            ),
-            child: icon,
-          ),
+          icon,
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: headStyle(16, weight: FontWeight.w700)),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: const Color(0xFF111827),
+                    fontSize: 15,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 SizedBox(height: 2.h),
-                Text(sub, style: bodyStyle(13, color: _kSub, height: 1.3)),
+                Text(
+                  sub,
+                  style: TextStyle(
+                    color: const Color(0xFF6B7280),
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    height: 1.40,
+                  ),
+                ),
               ],
             ),
           ),
@@ -362,35 +422,51 @@ class SupportsDigestionScreen extends StatelessWidget {
           Center(
             child: Text(
               'Water plays an important role in healthy digestion.',
-              style: bodyStyle(12, color: _kSub),
+              style: TextStyle(
+                color: const Color(0xFF6B7280),
+                fontSize: 11,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                height: 1.50,
+              ),
             ),
           ),
           SizedBox(height: 12.h),
           Text(
             'Why Water Matters',
-            style: headStyle(17, color: const Color(0xFF0B2B2B)),
+            style: TextStyle(
+              color: const Color(0xFF111827),
+              fontSize: 17,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+            ),
           ),
           SizedBox(height: 8.h),
           _card(
-            Icon(Icons.restaurant_rounded, size: 24.sp, color: kGreen),
+            _asset(AppAssets.digestionIcon, size: 36),
             'Helps Digestion',
             'Water helps your body digest food.',
           ),
           _card(
-            _asset(AppAssets.pulseIcon, size: 26),
+            _asset(AppAssets.regularityIcon, size: 36),
             'Supports Regularity',
             'Drinking enough water helps prevent constipation.',
           ),
           _card(
-            Icon(Icons.eco_outlined, size: 24.sp, color: kGreen),
+            _asset(AppAssets.absorptionIcon, size: 36),
             'Helps Nutrient Absorption',
             'Water supports the normal processes your body uses to absorb '
                 'nutrients.',
           ),
           SizedBox(height: 4.h),
           _TipStrip(
-            icon: Image.asset(AppAssets.glassTipIcon, width: 36.w, height: 36.w),
-            text: 'Drink water regularly throughout the day, especially with '
+            icon: Image.asset(
+              AppAssets.glassTipIcon,
+              width: 36.w,
+              height: 36.w,
+            ),
+            text:
+                'Drink water regularly throughout the day, especially with '
                 'meals.',
           ),
         ],
@@ -425,19 +501,13 @@ class GoodForSkinScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 34.w,
-                height: 34.w,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: tile,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: icon,
-              ),
+              icon,
               SizedBox(width: 10.w),
               Expanded(
-                child: Text(title, style: headStyle(16, weight: FontWeight.w700)),
+                child: Text(
+                  title,
+                  style: headStyle(16, weight: FontWeight.w700),
+                ),
               ),
             ],
           ),
@@ -458,7 +528,7 @@ class GoodForSkinScreen extends StatelessWidget {
           Center(
             child: Image.asset(
               AppAssets.waterSkin,
-              width: 230.w,
+              width: 250.w,
               fit: BoxFit.contain,
             ),
           ),
@@ -469,22 +539,25 @@ class GoodForSkinScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
-          Text('How Hydration Helps', style: headStyle(18, weight: FontWeight.w600)),
+          Text(
+            'How Hydration Helps',
+            style: headStyle(18, weight: FontWeight.w600),
+          ),
           SizedBox(height: 10.h),
           _card(
-            Icon(Icons.favorite_border_rounded, size: 19.sp, color: const Color(0xFF3B82F6)),
+            _asset(AppAssets.skinHealthIcon, size: 36),
             const Color(0xFFEAF3FE),
             'Supports Skin Health',
             'Water helps your body maintain normal skin function.',
           ),
           _card(
-            _asset(AppAssets.pulseIcon, size: 20),
+            _asset(AppAssets.regularityIcon, size: 36),
             const Color(0xFFE6F8F1),
             'Maintains Fluid Balance',
             'Drinking enough water helps maintain your body’s fluid balance.',
           ),
           _card(
-            Icon(Icons.auto_awesome_rounded, size: 19.sp, color: const Color(0xFF8B5CF6)),
+            _asset(AppAssets.healthyHabitsIcon, size: 36),
             const Color(0xFFF1ECFD),
             'Build Healthy Habits',
             'Regular hydration is one part of caring for your skin.',

@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
+import '../data/models/user_profile_model.dart' show ActivityLevel;
 import '../data/models/bmi_record_model.dart';
+import '../data/services/calorie_service.dart';
 
 /// Tracks the weekly meal plan: which meals were eaten and which day/category
 /// is being viewed.
@@ -17,6 +19,26 @@ class MealPlanController extends GetxController {
   BMICategory category = BMICategory.normal;
 
   /// Day (1–7) currently selected on the meal plan screen.
+  /// Personal daily calorie target (0 = unknown, plan shown at base size).
+  int targetKcal = 0;
+  String goal = '';
+  bool needsCare = false;
+  ActivityLevel activity = ActivityLevel.lightlyActive;
+  int age = 25;
+  double weightKg = 70;
+
+  /// Points the plan at a BMI record: its category and personal calorie target.
+  void useRecord(BMIRecord r) {
+    category = r.category;
+    activity = r.activity;
+    age = r.age;
+    weightKg = r.weightKg;
+    final t = CalorieService.forRecord(r);
+    targetKcal = t.kcal;
+    goal = t.goal;
+    needsCare = t.needsCare;
+  }
+
   final RxInt selectedDay = 1.obs;
 
   bool isEaten(String key) => eaten.contains(key);

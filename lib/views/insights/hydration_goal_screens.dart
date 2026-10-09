@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import 'insight_common.dart';
+import 'personal_targets.dart';
 
 const Color _kDeep = Color(0xFF006B4E);
 const Color _kSub = Color(0xFF6B7280);
 
-/// "Your Daily Goal" with a tappable 8-glass tracker.
+/// "Your Daily Goal" with a tappable glass tracker sized to the user.
 class DailyGoalScreen extends StatefulWidget {
   const DailyGoalScreen({super.key});
 
@@ -16,7 +18,13 @@ class DailyGoalScreen extends StatefulWidget {
 }
 
 class _DailyGoalScreenState extends State<DailyGoalScreen> {
-  int _glasses = 5;
+  int _glasses = 0;
+
+  late final int _ml = PersonalTargets.waterMl(
+    MealPlanController.to.weightKg,
+    MealPlanController.to.activity,
+  );
+  late final int _goal = PersonalTargets.glasses(_ml);
 
   Widget _glass(int n) {
     final on = n <= _glasses;
@@ -63,7 +71,13 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
     );
   }
 
-  Widget _tipRow(Color tile, IconData icon, Color ic, String lead, String text) {
+  Widget _tipRow(
+    Color tile,
+    IconData icon,
+    Color ic,
+    String lead,
+    String text,
+  ) {
     return Padding(
       padding: EdgeInsets.only(bottom: 14.h),
       child: Row(
@@ -150,50 +164,73 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                   children: [
                     Text(
                       'Daily Water\nIntake',
-                      style: headStyle(17, weight: FontWeight.w700)
-                          .copyWith(height: 1.15),
+                      style: headStyle(
+                        17,
+                        weight: FontWeight.w700,
+                      ).copyWith(height: 1.15),
                     ),
                     SizedBox(width: 10.w),
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 4.h,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE6F8F1),
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(color: const Color(0xFFBFEBDA)),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF0FDFA),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 1,
+                            color: const Color(0xFFCCFBF1),
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                       child: Text(
                         'RECOMMENDED',
-                        style: bodyStyle(
-                          11,
-                          color: _kDeep,
-                          weight: FontWeight.w700,
-                        ).copyWith(letterSpacing: 0.4),
+                        style: TextStyle(
+                          color: const Color(0xFF0F766E),
+                          fontSize: 10,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w600,
+                          height: 1.50,
+                          letterSpacing: 0.25,
+                        ),
                       ),
                     ),
-                    const Spacer(),
+                    SizedBox(width: 40.w),
                     Text(
-                      '$_glasses / 8\nGlasses',
+                      '$_glasses / $_goal\nGlasses',
                       textAlign: TextAlign.left,
-                      style: bodyStyle(
-                        15,
-                        color: kGreen,
-                        weight: FontWeight.w800,
-                        height: 1.2,
+                      style: TextStyle(
+                        color: const Color(0xFF059669),
+                        fontSize: 12,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w800,
+                        height: 1.33,
+                        letterSpacing: -0.25,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  'Your water needs depend on your activity, weather and '
-                  'health.',
+                  'Based on your weight and activity: about '
+                  '${PersonalTargets.litres(_ml)} L a day. Needs also vary '
+                  'with weather and health.',
                   style: bodyStyle(14, color: _kSub, height: 1.3),
                 ),
                 SizedBox(height: 12.h),
-                Row(children: [for (int i = 1; i <= 8; i++) _glass(i)]),
+                for (int start = 1; start <= _goal; start += 8) ...[
+                  if (start > 1) SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      for (int i = start; i < start + 8; i++)
+                        i <= _goal
+                            ? _glass(i)
+                            : const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -233,7 +270,8 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: 'Needs vary by activity, climate, and body '
+                          text:
+                              'Needs vary by activity, climate, and body '
                               'composition.',
                           style: bodyStyle(
                             12.5,
@@ -250,17 +288,20 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
           ),
           SizedBox(height: 16.h),
           Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 4.h),
-            decoration: BoxDecoration(
+            width: 341,
+            padding: const EdgeInsets.all(10),
+            decoration: ShapeDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: const Color(0xFFD5F2E8), width: 1.4),
-              boxShadow: const [
+              shape: RoundedRectangleBorder(
+                side: BorderSide(width: 1, color: const Color(0xCCE2E8F0)),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              shadows: [
                 BoxShadow(
-                  color: Color(0x1F33D2AB),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
+                  color: Color(0x5109B389),
+                  blurRadius: 4,
+                  offset: Offset(0, 0),
+                  spreadRadius: 0,
                 ),
               ],
             ),
@@ -283,6 +324,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                   'Start Your Morning',
                   'Drink a glass right after waking up.',
                 ),
+                SizedBox(height: 10.h),
                 _tipRow(
                   const Color(0xFFDCE9FD),
                   Icons.water_drop_outlined,
@@ -290,6 +332,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                   'Drink Throughout the Day',
                   'Sip regularly instead of all at once.',
                 ),
+                SizedBox(height: 10.h),
                 _tipRow(
                   const Color(0xFFD9F5E5),
                   Icons.eco_outlined,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
+import 'user_profile_model.dart' show ActivityLevel;
 
 enum BMICategory {
   underweight,
@@ -31,7 +32,7 @@ enum BMICategory {
       case BMICategory.overweight:
         return '25–29.9';
       case BMICategory.obese:
-        return '30–34.9';
+        return '30 and above';
     }
   }
 
@@ -113,6 +114,7 @@ class BMIRecord {
   final DateTime date;
   final bool isCm;
   final bool isKg;
+  final ActivityLevel activity;
 
   const BMIRecord({
     required this.id,
@@ -125,6 +127,7 @@ class BMIRecord {
     required this.date,
     this.isCm = true,
     this.isKg = true,
+    this.activity = ActivityLevel.lightlyActive,
   });
 
   /// Height formatted in the unit the user entered, e.g. `175 cm` or `5'9"`.
@@ -152,6 +155,7 @@ class BMIRecord {
       'date': date.toIso8601String(),
       'isCm': isCm,
       'isKg': isKg,
+      'activity': activity.name,
     };
   }
 
@@ -170,6 +174,10 @@ class BMIRecord {
       date: DateTime.parse(json['date'] as String),
       isCm: json['isCm'] as bool? ?? true,
       isKg: json['isKg'] as bool? ?? true,
+      activity: ActivityLevel.values.firstWhere(
+        (e) => e.name == json['activity'],
+        orElse: () => ActivityLevel.lightlyActive,
+      ),
     );
   }
 }

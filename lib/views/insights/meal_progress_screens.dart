@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -305,6 +306,7 @@ class MealCompletedScreen extends StatelessWidget {
                       for (final m in MealPlanData.mealsFor(
                         meal.category,
                         meal.day,
+                        targetKcal: c.targetKcal,
                       ))
                         _legend(m.slot, c.isEaten(m.key)),
                     ],
@@ -688,22 +690,31 @@ class MealProgressScreen extends StatelessWidget {
             SizedBox(height: 14.h),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 12.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1FCEA),
-                borderRadius: BorderRadius.circular(16.r),
+              height: 82.h,
+              padding: EdgeInsets.only(
+                top: 14.h,
+                left: 16.w,
+                right: 16.w,
+                bottom: 14.h,
+              ),
+              clipBehavior: Clip.antiAlias,
+              decoration: ShapeDecoration(
+                color: const Color(0xFFF7FFF1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x0C000000),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                    spreadRadius: 0,
+                  ),
+                ],
               ),
               child: Row(
                 children: [
-                  Container(
-                    width: 42.w,
-                    height: 42.w,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.spa_outlined, size: 22.sp, color: _kDeep),
-                  ),
+                  Image.asset(AppAssets.mealProgress),
                   SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
@@ -711,20 +722,24 @@ class MealProgressScreen extends StatelessWidget {
                       children: [
                         Text(
                           'DAILY WISDOM',
-                          style: bodyStyle(
-                            11.5,
-                            color: _kDeep,
-                            weight: FontWeight.w800,
-                          ).copyWith(letterSpacing: 0.4),
+                          style: TextStyle(
+                            color: const Color(0xFF006948),
+                            fontSize: 11,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w700,
+                            height: 1.27,
+                            letterSpacing: 0.28,
+                          ),
                         ),
                         SizedBox(height: 2.h),
                         Text(
                           'Keep going! Small daily choices build healthy habits.',
-                          style: bodyStyle(
-                            15,
-                            color: kInk,
-                            weight: FontWeight.w500,
-                            height: 1.3,
+                          style: TextStyle(
+                            color: const Color(0xFF141B2B),
+                            fontSize: 13,
+                            fontFamily: 'Playpen Sans Deva',
+                            fontWeight: FontWeight.w400,
+                            height: 1.48,
                           ),
                         ),
                       ],

@@ -450,6 +450,8 @@ class BMICalculatorScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 12.h),
+                          _buildActivitySelector(controller),
+                          SizedBox(height: 12.h),
                           // Calculate BMI Button
                           CustomGradientButton(
                             text: 'Calculate BMI',
@@ -520,6 +522,78 @@ class BMICalculatorScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Activity level picker — used to personalise the daily calorie target.
+  Widget _buildActivitySelector(BMIController controller) {
+    final selected = controller.activity.value;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Activity level',
+            style: TextStyle(
+              color: const Color(0xFF141B2B),
+              fontSize: 14.sp,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            selected.description,
+            style: TextStyle(
+              color: const Color(0xFF6B7280),
+              fontSize: 12.sp,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: [
+              for (final level in ActivityLevel.values)
+                GestureDetector(
+                  onTap: () => controller.setActivity(level),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 7.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: level == selected
+                          ? const Color(0xFF00BD8E)
+                          : const Color(0xFFF3F4F6),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      level.title,
+                      style: TextStyle(
+                        color: level == selected
+                            ? Colors.white
+                            : const Color(0xFF374151),
+                        fontSize: 12.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

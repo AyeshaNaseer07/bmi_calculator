@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/activity_plan_controller.dart';
+import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
+import 'activity_plan_data.dart';
 import 'insight_common.dart';
 
 export 'sleep_screens.dart';
@@ -15,7 +18,13 @@ const Color _kPill = Color(0xFF5CF2C0);
 class StayActiveScreen extends StatelessWidget {
   const StayActiveScreen({super.key});
 
-  Widget _row(IconData icon, String title, String sub, String chip, bool all) {
+  Widget _row(
+    String iconAsset,
+    String title,
+    String sub,
+    String chip,
+    bool all,
+  ) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: GestureDetector(
@@ -43,7 +52,10 @@ class StayActiveScreen extends StatelessWidget {
                   color: Color(0xFFEDEFFB),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 21.sp, color: _kDeep),
+                child: Padding(
+                  padding: EdgeInsets.all(8.w),
+                  child: Image.asset(iconAsset, fit: BoxFit.contain),
+                ),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -53,7 +65,10 @@ class StayActiveScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(title, style: headStyle(16, weight: FontWeight.w600)),
+                        Text(
+                          title,
+                          style: headStyle(16, weight: FontWeight.w600),
+                        ),
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 10.w,
@@ -97,6 +112,8 @@ class StayActiveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mc = MealPlanController.to;
+    final today = ActivityPlanData.today(mc.category, mc.activity);
     return InsightScaffold(
       title: 'Stay Active',
       body: Column(
@@ -131,8 +148,11 @@ class StayActiveScreen extends StatelessWidget {
                   SizedBox(width: 6.w),
                   Text(
                     'STAY ACTIVE',
-                    style: bodyStyle(12, color: _kDeep, weight: FontWeight.w800)
-                        .copyWith(letterSpacing: 0.5),
+                    style: bodyStyle(
+                      12,
+                      color: _kDeep,
+                      weight: FontWeight.w800,
+                    ).copyWith(letterSpacing: 0.5),
                   ),
                 ],
               ),
@@ -151,12 +171,27 @@ class StayActiveScreen extends StatelessWidget {
             style: headStyle(15, weight: FontWeight.w800),
           ),
           SizedBox(height: 10.h),
-          _row(Icons.directions_walk_rounded, 'Morning Walk',
-              'Start your day with a refreshing walk.', '15–20 min', false),
-          _row(Icons.self_improvement_rounded, 'Light Exercise',
-              'Try simple stretching or gentle movements.', '10 min', false),
-          _row(Icons.directions_walk_rounded, 'Daily Movement',
-              'Stay active throughout the day. Take breaks.', 'All-day', true),
+          _row(
+            AppAssets.easyWalkIcon,
+            today.title,
+            today.blurb,
+            today.chip,
+            false,
+          ),
+          _row(
+            AppAssets.stretchBreakIcon,
+            'Stretch Break',
+            'Loosen up with a few gentle stretches.',
+            '10 min',
+            false,
+          ),
+          _row(
+            AppAssets.dailyMovementIcon,
+            'Daily Movement',
+            'Stay active throughout the day. Take breaks.',
+            'All-day',
+            true,
+          ),
           SizedBox(height: 6.h),
           Container(
             width: double.infinity,
@@ -190,8 +225,7 @@ class StayActiveScreen extends StatelessWidget {
                         ).copyWith(letterSpacing: 0.3),
                       ),
                       Text(
-                        'Choose activities you enjoy and build a routine you '
-                        'can maintain.',
+                        ActivityPlanData.tipFor(mc.category),
                         style: bodyStyle(
                           13,
                           color: kInk,
@@ -205,8 +239,28 @@ class StayActiveScreen extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 10.h),
+          const _SafetyNote(),
         ],
       ),
+    );
+  }
+}
+
+/// Short safety reminder shown under the activity screens.
+class _SafetyNote extends StatelessWidget {
+  const _SafetyNote();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Stop if you feel pain, dizziness or chest discomfort. Check with a '
+      'doctor before starting if you have a heart or joint condition, are '
+      'pregnant, or have not exercised in a long time.',
+      style: bodyStyle(
+        11,
+        color: const Color(0xFF6B7280),
+      ).copyWith(height: 1.4),
     );
   }
 }
@@ -214,16 +268,6 @@ class StayActiveScreen extends StatelessWidget {
 /// "Your Activity Routine" — weekly plan.
 class ActivityRoutineScreen extends StatelessWidget {
   const ActivityRoutineScreen({super.key});
-
-  static const _days = <List<dynamic>>[
-    ['Mon', 'Brisk walk', '20 min', Icons.directions_walk_rounded],
-    ['Tue', 'Stretching', '10 min', Icons.accessibility_new_rounded],
-    ['Wed', 'Steady walk', '20 min', Icons.directions_walk_rounded],
-    ['Thu', 'Light exercise', '15 min', Icons.monitor_heart_outlined],
-    ['Fri', 'Rhythm walk', '20 min', Icons.directions_walk_rounded],
-    ['Sat', 'Active fun', '30 min', Icons.park_outlined],
-    ['Sun', 'Rest & stretch', 'Recovery', Icons.self_improvement_rounded],
-  ];
 
   Widget _pill(IconData i, String t) => Expanded(
     child: Container(
@@ -251,12 +295,26 @@ class ActivityRoutineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mc = MealPlanController.to;
+    final ac = ActivityPlanController.to;
+    final week = ActivityPlanData.weekFor(mc.category, mc.activity);
+    final total = ActivityPlanData.weeklyMinutes(mc.category, mc.activity);
     return InsightScaffold(
       title: 'Your Activity Routine',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final d in _days)
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: Obx(
+              () => Text(
+                '${ac.doneCount(week.map((d) => d.key))} of 7 days done  •  '
+                '$total min this week',
+                style: bodyStyle(13, color: _kDeep, weight: FontWeight.w700),
+              ),
+            ),
+          ),
+          for (final d in week)
             Padding(
               padding: EdgeInsets.only(bottom: 10.h),
               child: Container(
@@ -282,20 +340,24 @@ class ActivityRoutineScreen extends StatelessWidget {
                         color: Color(0xFFC8F7E4),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(d[3] as IconData, size: 20.sp, color: _kDeep),
+                      child: Icon(d.icon, size: 20.sp, color: _kDeep),
                     ),
                     SizedBox(width: 10.w),
                     Text(
-                      d[0] as String,
+                      d.dayLabel,
                       style: headStyle(15, weight: FontWeight.w800),
                     ),
                     SizedBox(width: 6.w),
                     Expanded(
                       child: Text(
-                        d[1] as String,
+                        d.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: bodyStyle(15, color: kInk, weight: FontWeight.w400),
+                        style: bodyStyle(
+                          15,
+                          color: kInk,
+                          weight: FontWeight.w400,
+                        ),
                       ),
                     ),
                     Container(
@@ -308,19 +370,42 @@ class ActivityRoutineScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Text(
-                        d[2] as String,
-                        style: bodyStyle(12, color: _kDeep, weight: FontWeight.w800),
+                        d.chip,
+                        style: bodyStyle(
+                          12,
+                          color: _kDeep,
+                          weight: FontWeight.w800,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 8.w),
-                    Container(
-                      width: 22.w,
-                      height: 22.w,
-                      decoration: const BoxDecoration(
-                        color: _kPill,
-                        shape: BoxShape.circle,
+                    SizedBox(width: 4.w),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => ac.toggle(d.key),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.w),
+                        child: Obx(() {
+                          final done = ac.isDone(d.key);
+                          return Container(
+                            width: 22.w,
+                            height: 22.w,
+                            decoration: BoxDecoration(
+                              color: done ? _kPill : Colors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: done ? _kPill : const Color(0xFFD1D5DB),
+                              ),
+                            ),
+                            child: done
+                                ? Icon(
+                                    Icons.check_rounded,
+                                    size: 14.sp,
+                                    color: _kDeep,
+                                  )
+                                : null,
+                          );
+                        }),
                       ),
-                      child: Icon(Icons.check_rounded, size: 14.sp, color: _kDeep),
                     ),
                   ],
                 ),
@@ -361,6 +446,8 @@ class ActivityRoutineScreen extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 10.h),
+          const _SafetyNote(),
         ],
       ),
     );

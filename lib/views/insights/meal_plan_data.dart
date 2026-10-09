@@ -184,6 +184,9 @@ class MealInfo {
   final List<List<String>> ingredients;
   final String note;
 
+  /// How much the base portion was scaled to fit the user's calorie target.
+  final double portion;
+
   const MealInfo({
     required this.key,
     required this.category,
@@ -205,7 +208,13 @@ class MealInfo {
     required this.target,
     required this.ingredients,
     required this.note,
+    this.portion = 1.0,
   });
+
+  /// e.g. `Portion ×1.3`, empty when the base portion is used.
+  String get portionLabel => (portion - 1).abs() < 0.04
+      ? ''
+      : 'Portion ×${portion.toStringAsFixed(1)}';
 
   String get slot => slotKey[0].toUpperCase() + slotKey.substring(1);
 
@@ -266,13 +275,49 @@ class MealPlanData {
 
   static String categoryKey(BMICategory c) => c.name;
 
-  static List<MealInfo> mealsFor(BMICategory cat, int day) {
+  /// The three meals of [day]. When [targetKcal] is given, portions are scaled
+  /// so the day adds up to that personal calorie target.
+  static List<MealInfo> mealsFor(
+    BMICategory cat,
+    int day, {
+    int targetKcal = 0,
+  }) {
     final info = _cats[cat]!;
     final raw = info.plan[(day - 1).clamp(0, 6)];
+    final dayTotal = raw.fold(0, (a, m) => a + m.kcal);
+    final scale = targetKcal > 0 ? targetKcal / dayTotal : 1.0;
     return [
       for (int i = 0; i < 3; i++)
-        _build(cat, info, day, _slots[i], raw[i], raw.fold(0, (a, m) => a + m.kcal)),
+        _build(cat, info, day, _slots[i], raw[i], dayTotal, scale),
     ];
+  }
+
+  static int _scaled(int v, double scale, {int step = 1}) =>
+      ((v * scale) / step).round() * step;
+
+  /// Scales the leading number of a quantity like `150g`, `1/2 cup`, `2 large`.
+  static String _scaleQty(String qty, double scale) {
+    if ((scale - 1).abs() < 0.04) return qty;
+    final m = RegExp(r'^\s*(\d+(?:\.\d+)?)(?:/(\d+))?(.*)$').firstMatch(qty);
+    if (m == null) return qty;
+    var n = double.parse(m.group(1)!);
+    final denom = m.group(2);
+    if (denom != null) {
+      n = n / double.parse(denom);
+    }
+    final rest = m.group(3)!;
+    n *= scale;
+    final isGrams = RegExp(r'^\s*g\b').hasMatch(rest) || rest.startsWith('g');
+    if (isGrams) {
+      final g = (n / 5).round() * 5;
+      return '${g < 5 ? 5 : g}$rest';
+    }
+    n = ((n * 4).round() / 4).clamp(0.25, 100.0).toDouble();
+    final whole = n.floor();
+    final frac = n - whole;
+    final fs = frac == 0.25 ? '1/4' : (frac == 0.5 ? '1/2' : '3/4');
+    final text = frac == 0 ? '$whole' : (whole == 0 ? fs : '$whole $fs');
+    return '$text$rest';
   }
 
   static MealInfo _build(
@@ -282,6 +327,7 @@ class MealPlanData {
     String slot,
     RawMeal r,
     int dayTotal,
+    double scale,
   ) {
     final key = '${cat.name}_d${day}_$slot';
     final photo = kMealPhotoOverrides[key] ?? _mealPhotos[r.name];
@@ -292,7 +338,7 @@ class MealPlanData {
       slotKey: slot,
       name: r.name,
       blurb: r.blurb,
-      kcal: r.kcal,
+      kcal: _scaled(r.kcal, scale, step: 5),
       photo: photo ?? _dummyPhoto[slot]!,
       badge: photo != null ? _badgeFor(photo) : _dummyBadge[slot]!,
       tag: r.tag,
@@ -300,13 +346,15 @@ class MealPlanData {
       time: _slotTimes[slot]!,
       prep: _slotPrep[slot]!,
       chips: [r.tag, ...info.chips.where((c) => c != r.tag).take(2)],
-      protein: r.p,
-      carbs: r.c,
-      fat: r.f,
+      protein: _scaled(r.p, scale),
+      carbs: _scaled(r.c, scale),
+      fat: _scaled(r.f, scale),
       target: (r.kcal * 100 / dayTotal).round().clamp(1, 99),
       ingredients: [
-        for (final part in r.ing.split(';')) part.split('|'),
+        for (final part in r.ing.split(';'))
+          [part.split('|')[0], _scaleQty(part.split('|')[1], scale)],
       ],
+      portion: scale,
       note: info.note,
     );
   }

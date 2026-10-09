@@ -3,7 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../controllers/meal_plan_controller.dart';
 import 'insight_common.dart';
+import 'personal_targets.dart';
 
 const Color _kDeep = Color(0xFF006B4E);
 const Color _kLav = Color(0xFFE8EBFB);
@@ -191,7 +193,7 @@ class SleepWellScreen extends StatelessWidget {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: '7–9 ',
+                                  text: '${PersonalTargets.sleepText(MealPlanController.to.age)} ',
                                   style: headStyle(40, color: _kDeep),
                                 ),
                                 TextSpan(
@@ -215,7 +217,7 @@ class SleepWellScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 6.h),
                           Text(
-                            '10:30 PM — 7:00 AM',
+                            PersonalTargets.bedtimeText(MealPlanController.to.age),
                             style: bodyStyle(
                               14.5,
                               color: _kDeep,

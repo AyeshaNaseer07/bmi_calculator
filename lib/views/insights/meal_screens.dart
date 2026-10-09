@@ -37,6 +37,8 @@ class DailyMealPlanScreen extends StatelessWidget {
               letterSpacing: -0.18,
             ),
           ),
+          SizedBox(height: 8.h),
+          const _TargetBanner(),
           SizedBox(height: 12.h),
           const _DayMeals(),
           SizedBox(height: 4.h),
@@ -74,7 +76,62 @@ class DailyMealPlanScreen extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 10.h),
+          const _PlanDisclaimer(),
         ],
+      ),
+    );
+  }
+}
+
+/// "Your daily target" line, shown when the user's profile is known.
+class _TargetBanner extends StatelessWidget {
+  const _TargetBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    if (c.targetKcal <= 0) return const SizedBox.shrink();
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: _kLav,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Text(
+        'Your daily target: ${c.targetKcal} kcal  •  ${c.goal}',
+        style: TextStyle(
+          color: const Color(0xFF141B2B),
+          fontSize: 12.sp,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _PlanDisclaimer extends StatelessWidget {
+  const _PlanDisclaimer();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    final extra = c.needsCare
+        ? ' Because you are under 18, please follow a plan from a doctor or '
+            'dietitian instead of this one.'
+        : '';
+    return Text(
+      'This plan is general guidance based on your BMI, age, height, weight '
+      'and activity level, not medical advice. Check with a doctor or '
+      'dietitian before changing your diet, especially if you are pregnant, '
+      'have a medical condition or a history of disordered eating.$extra',
+      style: TextStyle(
+        color: const Color(0xFF6B7280),
+        fontSize: 11.sp,
+        fontFamily: 'Inter',
+        height: 1.4,
       ),
     );
   }
@@ -134,7 +191,11 @@ class _DayMeals extends StatelessWidget {
     final c = MealPlanController.to;
     return Obx(() {
       final day = c.selectedDay.value;
-      final meals = MealPlanData.mealsFor(c.category, day);
+      final meals = MealPlanData.mealsFor(
+        c.category,
+        day,
+        targetKcal: c.targetKcal,
+      );
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -827,6 +888,19 @@ class IngredientsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (meal.portionLabel.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 6.h),
+                    child: Text(
+                      '${meal.portionLabel} — quantities are adjusted to your '
+                      'daily calorie target.',
+                      style: TextStyle(
+                        color: const Color(0xFF6B7280),
+                        fontSize: 11.sp,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
                 for (final ing in meal.ingredients)
                   Container(
                     margin: EdgeInsets.only(bottom: 6.h),

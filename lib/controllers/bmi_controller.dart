@@ -11,6 +11,7 @@ class BMIController extends GetxController {
 
   final Rx<Gender> selectedGender = Gender.male.obs;
   final RxInt age = 25.obs;
+  final Rx<ActivityLevel> activity = ActivityLevel.lightlyActive.obs;
   final RxDouble heightCm = 175.0.obs;
   final RxDouble weightKg = 70.0.obs;
 
@@ -33,6 +34,7 @@ class BMIController extends GetxController {
     bmiHistory.assignAll(list);
     if (list.isNotEmpty) {
       latestRecord.value = list.first;
+      activity.value = list.first.activity;
       final g = list.first.gender.trim().toLowerCase();
       if (g == 'female') {
         selectedGender.value = Gender.female;
@@ -55,6 +57,10 @@ class BMIController extends GetxController {
 
   void setGender(Gender gender) {
     selectedGender.value = gender;
+  }
+
+  void setActivity(ActivityLevel level) {
+    activity.value = level;
   }
 
   void setAge(int newAge) {
@@ -102,6 +108,7 @@ class BMIController extends GetxController {
   void resetInputs() {
     selectedGender.value = Gender.male;
     age.value = 25;
+    activity.value = ActivityLevel.lightlyActive;
     heightCm.value = 175.0;
     weightKg.value = 70.0;
     isCm.value = true;
@@ -123,6 +130,7 @@ class BMIController extends GetxController {
       date: DateTime.now(),
       isCm: isCm.value,
       isKg: isKg.value,
+      activity: activity.value,
     );
 
     await _storage.addBmiRecord(record);
