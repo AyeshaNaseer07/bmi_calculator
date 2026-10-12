@@ -18,7 +18,12 @@ import '../widgets/app_background.dart';
 enum _HandPhase { tapping, movingToDone, tappingDone, hidden }
 
 class LanguageSelectionScreen extends StatefulWidget {
-  const LanguageSelectionScreen({super.key});
+  /// True when opened from Profile → Language: same screen, but without the
+  /// tap-hand hint, with the current language pre-selected, and "done" goes
+  /// back instead of continuing the first-launch flow.
+  final bool fromProfile;
+
+  const LanguageSelectionScreen({super.key, this.fromProfile = false});
 
   @override
   State<LanguageSelectionScreen> createState() =>
@@ -52,11 +57,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   void initState() {
     super.initState();
     _selectedLang = _appController.selectedLanguage.value;
+    _hasSelected = widget.fromProfile;
+    if (widget.fromProfile) _handPhase = _HandPhase.hidden;
 
     _handController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
-    )..repeat();
+    );
+    if (!widget.fromProfile) _handController.repeat();
 
     _moveController = AnimationController(
       vsync: this,
@@ -133,6 +141,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   void _onDone() {
     _appController.changeLanguage(_selectedLang);
+
+    if (widget.fromProfile) {
+      Get.back();
+      return;
+    }
 
     // Same on/off check on every app flow (first launch and every launch
     // after): Remote Config's onboarding flag decides whether the

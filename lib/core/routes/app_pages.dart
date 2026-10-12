@@ -16,7 +16,6 @@ import '../../views/language/language_selection_screen.dart';
 import '../../views/main/main_navigation_screen.dart';
 import '../../views/onboarding/onboarding_screen.dart';
 import '../../views/onboarding/paywall_screen.dart';
-import '../../views/profile/languages_screen.dart';
 import '../../views/profile/profile_screen.dart';
 import '../../views/splash/splash_screen.dart';
 import '../../views/weight_tracking/add_weight_screen.dart';
@@ -86,7 +85,7 @@ class AppPages {
     GetPage(name: AppRoutes.profile, page: () => const ProfileScreen()),
     GetPage(
       name: AppRoutes.languagesSettings,
-      page: () => const LanguagesScreen(),
+      page: () => const LanguageSelectionScreen(fromProfile: true),
     ),
   ];
 }

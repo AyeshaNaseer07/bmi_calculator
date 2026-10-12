@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../controllers/profile_controller.dart';
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../widgets/app_background.dart';
@@ -98,8 +99,9 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(title: 'Profile'),
         body: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+          // Fixed layout (no scrolling): the account list takes the space
+          // left over, and its rows share it evenly.
+          child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,161 +271,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   );
                 }),
-                SizedBox(height: 18.h),
-
-                // Account List Card
-                Container(
-                  width: double.infinity,
-                  height: 426.h,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 0.25,
-                        color: const Color(0xFF33D2AB),
-                      ),
-                      borderRadius: BorderRadius.circular(14.r),
-                    ),
-                    shadows: [
-                      BoxShadow(
-                        color: Color(0x3A33D2AB),
-                        blurRadius: 6.80,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0.r),
-                    child: Column(
-                      children: [
-                        // Language
-                        _buildAccountRow(
-                          icon: CupertinoIcons.globe,
-                          title: 'Language',
-                          subtitle: 'Select your app language',
-                          onTap: () => Get.toNamed(AppRoutes.languagesSettings),
-                        ),
-                        // Notifications Switch
-                        Obx(() {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.h),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 38.w,
-                                  height: 38.h,
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFF33D2AB)
-                                        .withValues(alpha: 0.15),
-                                    shape: OvalBorder(),
-                                  ),
-                                  child: Icon(
-                                    CupertinoIcons.bell,
-                                    color: const Color(0xFF33D2AB),
-                                    size: 18.sp,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Theme',
-                                        style: TextStyle(
-                                          color: const Color(0xFF111827),
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(height: 1.h),
-                                      Text(
-                                        'Manage your theme preferences',
-                                        style: TextStyle(
-                                          color: const Color(0xFF111827)
-                                              .withValues(alpha: 0.82),
-                                          fontSize: 11.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                CupertinoSwitch(
-                                  value:
-                                      appController.notificationsEnabled.value,
-                                  activeTrackColor: const Color(0xFF2FD1A6),
-                                  onChanged: (val) =>
-                                      appController.toggleNotifications(val),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                        // Rate Us
-                        _buildAccountRow(
-                          icon: Icons.star_outline_rounded,
-                          title: 'Rate Us',
-                          subtitle: 'Rate your experience with us',
-                          onTap: () => _openRateUsDialog(context),
-                        ),
-                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                        // Privacy Policy
-                        _buildAccountRow(
-                          icon: Icons.shield_outlined,
-                          title: 'Privacy Policy',
-                          subtitle: 'Read our privacy policy',
-                          onTap: () => _showInfoDialog(
-                            'Privacy Policy',
-                            'Your health data is stored securely on your local device. We respect your privacy and do not sell personal health information.',
-                          ),
-                        ),
-                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                        // Terms of Use
-                        _buildAccountRow(
-                          icon: Icons.description_outlined,
-                          title: 'Terms of Use',
-                          subtitle: 'Read our terms and conditions',
-                          onTap: () => _showInfoDialog(
-                            'Terms of Use',
-                            'BMI calculations are provided for general informational and wellness tracking purposes only and should not replace professional medical advice.',
-                          ),
-                        ),
-                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                        // Feedback
-                        _buildAccountRow(
-                          icon: Icons.chat_bubble_outline_rounded,
-                          title: 'Feedback',
-                          subtitle: 'Send us your suggestions & ideas',
-                          onTap: () => sendFeedback(),
-                        ),
-                        const Divider(height: 1, color: Color(0xFFF1F5F9)),
-
-                        // Share App
-                        _buildAccountRow(
-                          icon: CupertinoIcons.share_up,
-                          title: 'Share App',
-                          subtitle: 'Share this app with friends & family',
-                          onTap: () {
-                            SharePlus.instance.share(
-                              ShareParams(
-                                text: 'Check out this BMI Calculator app! Track your health and stay fit. Download it now!',
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 // Already premium — nothing to upsell, so the banner is
                 // removed rather than left as dead space.
                 Obx(() {
@@ -431,86 +278,333 @@ class ProfileScreen extends StatelessWidget {
                     return const SizedBox.shrink();
                   }
                   return Padding(
-                    padding: EdgeInsets.only(top: 18.h),
+                    padding: EdgeInsets.only(top: 10.h),
                     child: GestureDetector(
                       onTap: () => Get.toNamed(AppRoutes.paywall),
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(20.r),
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFFDFDFE),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.r),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24.r),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF064E3B),
+                              Color(0xFF0B8F6F),
+                              Color(0xFF2FD1A6),
+                            ],
+                            stops: [0.0, 0.55, 1.0],
                           ),
-                          shadows: [
+                          boxShadow: [
                             BoxShadow(
-                              color: Color(0x3F000000),
-                              blurRadius: 4,
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
+                              color: const Color(0xFF09B389)
+                                  .withValues(alpha: 0.35),
+                              blurRadius: 18,
+                              offset: const Offset(0, 8),
                             ),
                           ],
                         ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.emoji_events_outlined,
-                              color: const Color(0xFFFFD700),
-                              size: 26.sp,
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Unlock Premium',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 13.sp,
-                                    ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24.r),
+                          child: Stack(
+                            children: [
+                              // Soft decorative glows.
+                              Positioned(
+                                right: -30.w,
+                                top: -40.h,
+                                child: Container(
+                                  width: 130.w,
+                                  height: 130.w,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white.withValues(alpha: 0.10),
                                   ),
-                                  SizedBox(height: 2.h),
-                                  Text(
-                                    'Get advanced insights, reports &\nmore',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 10.sp,
-                                      height: 1.2,
-                                    ),
+                                ),
+                              ),
+                              Positioned(
+                                left: -24.w,
+                                bottom: -46.h,
+                                child: Container(
+                                  width: 110.w,
+                                  height: 110.w,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color(0xFFFFD54F)
+                                        .withValues(alpha: 0.14),
                                   ),
-                                ],
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => Get.toNamed(AppRoutes.paywall),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF09B389),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.w,
-                                  vertical: 8.h,
                                 ),
                               ),
-                              child: Text(
-                                'Go Premium',
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.w700,
+                              Padding(
+                                padding: EdgeInsets.all(18.r),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 52.w,
+                                      height: 52.w,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white.withValues(
+                                          alpha: 0.18,
+                                        ),
+                                        border: Border.all(
+                                          color: const Color(0xFFFFE082),
+                                          width: 1.4,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.all(11.w),
+                                      child: Image.asset(
+                                        AppAssets.premiumCrown,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    SizedBox(width: 14.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Unlock Premium',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 15.sp,
+                                            ),
+                                          ),
+                                          SizedBox(height: 3.h),
+                                          Text(
+                                            'Get advanced insights, reports &\nmore',
+                                            style: TextStyle(
+                                              color: Colors.white.withValues(
+                                                alpha: 0.88,
+                                              ),
+                                              fontSize: 10.5.sp,
+                                              height: 1.25,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            Color(0xFFFFE27A),
+                                            Color(0xFFFFB300),
+                                          ],
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFFFFB300)
+                                                .withValues(alpha: 0.45),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: () =>
+                                            Get.toNamed(AppRoutes.paywall),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                          foregroundColor: const Color(
+                                            0xFF5A3A00,
+                                          ),
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              20.r,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 14.w,
+                                            vertical: 9.h,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Go Premium',
+                                          style: TextStyle(
+                                            fontSize: 11.sp,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   );
                 }),
+
+                SizedBox(height: 10.h),
+                // Account List Card
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          width: 0.25,
+                          color: const Color(0xFF33D2AB),
+                        ),
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      shadows: [
+                        BoxShadow(
+                          color: Color(0x3A33D2AB),
+                          blurRadius: 6.80,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0.r),
+                      child: Column(
+                        children: [
+                          // Language
+                          _buildAccountRow(
+                            icon: CupertinoIcons.globe,
+                            title: 'Language',
+                            subtitle: 'Select your app language',
+                            onTap: () =>
+                                Get.toNamed(AppRoutes.languagesSettings),
+                          ),
+                          // Notifications Switch
+                          Expanded(
+                            child: Obx(() {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 4.h),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 38.w,
+                                      height: 38.h,
+                                      decoration: ShapeDecoration(
+                                        color: const Color(0xFF33D2AB)
+                                            .withValues(alpha: 0.15),
+                                        shape: OvalBorder(),
+                                      ),
+                                      child: Icon(
+                                        CupertinoIcons.bell,
+                                        color: const Color(0xFF33D2AB),
+                                        size: 18.sp,
+                                      ),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Theme',
+                                            style: TextStyle(
+                                              color: const Color(0xFF111827),
+                                              fontSize: 12.sp,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(height: 1.h),
+                                          Text(
+                                            'Manage your theme preferences',
+                                            style: TextStyle(
+                                              color: const Color(0xFF111827)
+                                                  .withValues(alpha: 0.82),
+                                              fontSize: 11.sp,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    CupertinoSwitch(
+                                      value: appController
+                                          .notificationsEnabled
+                                          .value,
+                                      activeTrackColor: const Color(0xFF2FD1A6),
+                                      onChanged: (val) => appController
+                                          .toggleNotifications(val),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ),
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          // Rate Us
+                          _buildAccountRow(
+                            icon: Icons.star_outline_rounded,
+                            title: 'Rate Us',
+                            subtitle: 'Rate your experience with us',
+                            onTap: () => _openRateUsDialog(context),
+                          ),
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                          // Privacy Policy
+                          _buildAccountRow(
+                            icon: Icons.shield_outlined,
+                            title: 'Privacy Policy',
+                            subtitle: 'Read our privacy policy',
+                            onTap: () => _showInfoDialog(
+                              'Privacy Policy',
+                              'Your health data is stored securely on your local device. We respect your privacy and do not sell personal health information.',
+                            ),
+                          ),
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                          // Terms of Use
+                          _buildAccountRow(
+                            icon: Icons.description_outlined,
+                            title: 'Terms of Use',
+                            subtitle: 'Read our terms and conditions',
+                            onTap: () => _showInfoDialog(
+                              'Terms of Use',
+                              'BMI calculations are provided for general informational and wellness tracking purposes only and should not replace professional medical advice.',
+                            ),
+                          ),
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                          // Feedback
+                          _buildAccountRow(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            title: 'Feedback',
+                            subtitle: 'Send us your suggestions & ideas',
+                            onTap: () => sendFeedback(),
+                          ),
+                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+
+                          // Share App
+                          _buildAccountRow(
+                            icon: CupertinoIcons.share_up,
+                            title: 'Share App',
+                            subtitle: 'Share this app with friends & family',
+                            onTap: () {
+                              SharePlus.instance.share(
+                                ShareParams(
+                                  text: 'Check out this BMI Calculator app! Track your health and stay fit. Download it now!',
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -525,55 +619,57 @@ class ProfileScreen extends StatelessWidget {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
-        color: Colors.transparent,
-        child: Row(
-          children: [
-            Container(
-              width: 38.w,
-              height: 38.h,
-              decoration: ShapeDecoration(
-                color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
-                shape: OvalBorder(),
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 4.h),
+          color: Colors.transparent,
+          child: Row(
+            children: [
+              Container(
+                width: 38.w,
+                height: 38.h,
+                decoration: ShapeDecoration(
+                  color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
+                  shape: OvalBorder(),
+                ),
+                child: Icon(icon, color: const Color(0xFF33D2AB), size: 18.sp),
               ),
-              child: Icon(icon, color: const Color(0xFF33D2AB), size: 18.sp),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: const Color(0xFF111827),
-                      fontSize: 12.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: const Color(0xFF111827),
+                        fontSize: 12.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: const Color(0xFF111827).withValues(alpha: 0.82),
-                      fontSize: 11.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
+                    SizedBox(height: 1.h),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: const Color(0xFF111827).withValues(alpha: 0.82),
+                        fontSize: 11.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(
-              CupertinoIcons.chevron_right,
-              size: 14.sp,
-              color: Colors.black,
-            ),
-          ],
+              Icon(
+                CupertinoIcons.chevron_right,
+                size: 14.sp,
+                color: Colors.black,
+              ),
+            ],
+          ),
         ),
       ),
     );
