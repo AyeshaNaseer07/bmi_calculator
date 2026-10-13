@@ -27,6 +27,20 @@ abstract class AppAssets {
   static const String onboarding2 = '$_imagesBase/onboarding_2.webp';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
+  // ── Soft Paywall (meal plan) ──
+  static const String softBg = '$_imagesBase/soft_paywall_bg.png';
+  static const String softCrown = '$_imagesBase/soft_paywall_icon.png';
+  static const String softBadge = '$_imagesBase/soft_paywall.png';
+  static const String softLeft = '$_imagesBase/s_left.png';
+  static const String softRight = '$_imagesBase/s_right.png';
+  static const List<String> softIcons = [
+    '$_imagesBase/s_icon1.png',
+    '$_imagesBase/s_icon2.png',
+    '$_imagesBase/s_icon3.png',
+    '$_imagesBase/s_icon4.png',
+    '$_imagesBase/s_icon5.png',
+  ];
+
   // ── Paywall Premium Feature Icons ──
   static const String preIcon1 = '$_imagesBase/pre_icon1.webp';
   static const String preIcon2 = '$_imagesBase/pre_icon2.webp';
