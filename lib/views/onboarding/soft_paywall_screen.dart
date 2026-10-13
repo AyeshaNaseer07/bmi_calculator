@@ -7,13 +7,8 @@ import '../../core/constants/app_assets.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/animated_cta_button.dart';
 
-/// Soft paywall shown when a free user opens the 1 Week Meal Plan.
-/// The hard paywall ([PaywallScreen]) is untouched.
 class SoftPaywallScreen extends StatefulWidget {
-  /// Called after a successful purchase (the screen closes first).
-  /// Defaults to just going back.
   final VoidCallback? onUnlocked;
-
   const SoftPaywallScreen({super.key, this.onUnlocked});
 
   @override
@@ -116,6 +111,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           AppAssets.preCross,
                           width: 12.w,
                           height: 12.w,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),

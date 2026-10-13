@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_colors.dart';
 
-/// Branded loader: a rotating gradient arc around a softly pulsing icon.
 class CustomLoader extends StatefulWidget {
   const CustomLoader({
     super.key,
@@ -14,10 +13,7 @@ class CustomLoader extends StatefulWidget {
     this.icon = CupertinoIcons.camera_fill,
   });
 
-  /// Outer diameter. Defaults to 64.w.
   final double? size;
-
-  /// Icon shown (pulsing) in the middle of the ring. Pass null to hide.
   final IconData? icon;
 
   @override
@@ -85,7 +81,6 @@ class _ArcPainter extends CustomPainter {
     final Rect rect = Offset.zero & size;
     final Rect arcRect = rect.deflate(strokeWidth / 2);
 
-    // Faint track.
     canvas.drawArc(
       arcRect,
       0,
@@ -97,7 +92,6 @@ class _ArcPainter extends CustomPainter {
         ..color = AppColors.primaryTeal.withValues(alpha: 0.15),
     );
 
-    // Rotating gradient sweep.
     final double start = progress * 2 * math.pi;
     final Paint sweep = Paint()
       ..style = PaintingStyle.stroke
@@ -121,7 +115,6 @@ class _ArcPainter extends CustomPainter {
   bool shouldRepaint(_ArcPainter old) => old.progress != progress;
 }
 
-/// Full-screen dimmed overlay with a [CustomLoader] and a label. Blocks touches.
 class LoaderOverlay extends StatelessWidget {
   const LoaderOverlay({super.key, this.message = 'Uploading photo...'});
 

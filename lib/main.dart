@@ -97,7 +97,6 @@ void main() async {
     AppLogger.e('RevenueCat initialization failed: $e');
   }
 
-  // Pass Flutter framework errors to Crashlytics
   FlutterError.onError = (details) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(details);
     AppLogger.e(

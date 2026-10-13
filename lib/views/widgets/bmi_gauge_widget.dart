@@ -227,13 +227,11 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
     canvas.drawPath(path, shadowPaint);
     canvas.restore();
 
-    // Draw Needle
     canvas.drawPath(path, needlePaint);
 
-    // Pivot (black base -> green ring -> white dot), all inside the needle
-    final pivotOuter = Paint()..color = const Color(0xFF1E293B); // black base
-    final pivotRing = Paint()..color = Colors.white; // green ring
-    final pivotInner = Paint()..color = const Color(0xFF2FD1A6); // white dot
+    final pivotOuter = Paint()..color = const Color(0xFF1E293B);
+    final pivotRing = Paint()..color = Colors.white;
+    final pivotInner = Paint()..color = const Color(0xFF2FD1A6);
 
     final outerRadius = size.width * 0.038;
     final ringRadius = size.width * 0.026;

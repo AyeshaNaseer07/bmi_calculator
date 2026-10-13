@@ -3,9 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-/// A manual value-entry dialog. Supports either a single numeric field
-/// (e.g. cm, kg, lb) or a compound feet + inches field pair for imperial
-/// height entry.
 class ManualInputDialog extends StatefulWidget {
   final String title;
   final String unitLabel;
