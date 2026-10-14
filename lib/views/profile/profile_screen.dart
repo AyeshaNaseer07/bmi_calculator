@@ -112,7 +112,7 @@ class ProfileScreen extends StatelessWidget {
                   final displayName = name.isNotEmpty ? name : 'Guest User';
                   final tagline = name.isNotEmpty
                       ? 'Manage your health profile'
-                      : 'Add your name to personalize\n your experience.';
+                      : 'Add your name to personalize\nyour experience.';
 
                   return CustomCard(
                     borderRadius: 20.r,
@@ -490,14 +490,15 @@ class ProfileScreen extends StatelessWidget {
                                   children: [
                                     Container(
                                       width: 38.w,
-                                      height: 38.h,
+                                      height: 38.w,
+                                      alignment: Alignment.center,
                                       decoration: ShapeDecoration(
                                         color: const Color(0xFF33D2AB)
                                             .withValues(alpha: 0.15),
                                         shape: OvalBorder(),
                                       ),
                                       child: Icon(
-                                        CupertinoIcons.bell,
+                                        CupertinoIcons.moon,
                                         color: const Color(0xFF33D2AB),
                                         size: 18.sp,
                                       ),
@@ -509,7 +510,7 @@ class ProfileScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Theme',
+                                            'Dark Mode',
                                             style: TextStyle(
                                               color: const Color(0xFF111827),
                                               fontSize: 12.sp,
@@ -519,7 +520,7 @@ class ProfileScreen extends StatelessWidget {
                                           ),
                                           SizedBox(height: 1.h),
                                           Text(
-                                            'Manage your theme preferences',
+                                            'Switch between light and dark theme',
                                             style: TextStyle(
                                               color: const Color(0xFF111827)
                                                   .withValues(alpha: 0.82),
@@ -629,7 +630,8 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Container(
                 width: 38.w,
-                height: 38.h,
+                height: 38.w,
+                alignment: Alignment.center,
                 decoration: ShapeDecoration(
                   color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
                   shape: OvalBorder(),
@@ -639,6 +641,8 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(

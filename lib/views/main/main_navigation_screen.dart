@@ -8,6 +8,7 @@ import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
 import '../weight_tracking/weight_tracking_screen.dart';
 import '../widgets/main_bottom_nav_bar.dart';
+import 'main_tab.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -17,7 +18,11 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    mainTabIndex.value = 0;
+  }
 
   static const _tabs = [
     HomeScreen(),
@@ -28,22 +33,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _tabs),
+    return Obx(() {
+      final currentIndex = mainTabIndex.value;
+      return Scaffold(
+      body: IndexedStack(index: currentIndex, children: _tabs),
       bottomNavigationBar: Obx(() {
         // Hidden on Home when there is no BMI record and the native ad failed.
         final bmi = Get.find<BMIController>();
         final noRecord =
             bmi.bmiHistory.isEmpty || bmi.latestRecord.value == null;
-        if (_currentIndex == 0 && noRecord && homeAdFailed.value) {
+        if (currentIndex == 0 && noRecord && homeAdFailed.value) {
           return const SizedBox.shrink();
         }
         return MainBottomNavBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
+          currentIndex: currentIndex,
+          onTap: (index) => mainTabIndex.value = index,
           onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
         );
       }),
-    );
+      );
+    });
   }
 }

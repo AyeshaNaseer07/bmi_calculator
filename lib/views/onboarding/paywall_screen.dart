@@ -8,6 +8,7 @@ import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
+import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/animated_cta_button.dart';
 
@@ -25,6 +26,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
   bool _fromOnboarding = false;
+  bool _pricesLoading = true;
+  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.fallback;
 
   static const Color _green = Color(0xFF0AA37D);
 
@@ -36,6 +39,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
       _fromOnboarding = true;
     }
     _initCrossDelay();
+    _loadPrices();
+  }
+
+  Future<void> _loadPrices() async {
+    final prices = await PriceService.load(_appController.remoteConfigService);
+    if (!mounted) return;
+    setState(() {
+      _prices = prices;
+      _pricesLoading = false;
+    });
   }
 
   void _initCrossDelay() {
@@ -196,12 +209,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       child: ConstrainedBox(
                         constraints: BoxConstraints(maxHeight: 88.w),
                         child: Image.asset(
-                          AppAssets.crown,
+                          AppAssets.softCrown,
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 6.h),
 
                     // Title with wreaths
                     Row(
@@ -259,8 +272,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     // Premium Health Pass Badge
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 6.h,
+                        horizontal: 22.w,
+                        vertical: 7.h,
                       ),
                       decoration: ShapeDecoration(
                         color: const Color(0x666CF8BB),
@@ -278,12 +291,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.workspace_premium_rounded,
-                            size: 16.sp,
-                            color: const Color(0xFF00714D),
+                          Image.asset(
+                            AppAssets.softBadge,
+                            width: 20.w,
+                            height: 20.w,
                           ),
-                          SizedBox(width: 5.w),
+                          SizedBox(width: 6.w),
                           Text(
                             'PREMIUM HEALTH PASS',
                             style: TextStyle(
@@ -366,8 +379,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.monthly,
                             title: 'Monthly Plan',
-                            price: '\$4.99',
-                            period: 'month',
+                            price: _pricesLoading
+                                ? ''
+                                : _prices[SubscriptionPlan.monthly]!
+                                      .priceString,
+                            period: _pricesLoading
+                                ? ''
+                                : '${_prices[SubscriptionPlan.monthly]!.perWeek} / week',
                             shadowColor: const Color(0x9189DED6),
                             shadowBlur: 13.1,
                             shadowOffset: Offset.zero,
@@ -410,8 +428,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.yearly,
                             title: 'Yearly Plan',
-                            price: '\$29.99',
-                            period: 'year',
+                            price: _pricesLoading
+                                ? ''
+                                : _prices[SubscriptionPlan.yearly]!.priceString,
+                            period: _pricesLoading
+                                ? ''
+                                : '${_prices[SubscriptionPlan.yearly]!.perMonth} / month',
                             showBestValue: true,
                             shadowColor: const Color(0x2433D2AB),
                             shadowBlur: 12,
@@ -424,52 +446,77 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
                     // CTA Button (no Obx: nothing observable is read here,
                     // which would throw a GetX "improper use" error)
-                    AnimatedCtaButton(
-                      text: _isLoading
-                          ? 'Processing...'
-                          : _appController.remoteConfigService.buttonText,
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
-                      ),
-                      borderRadius: BorderRadius.circular(28.r),
-                      height: 52.h,
-                      isLoading: _isLoading,
-                      leadingIcon: Image.asset(
-                        AppAssets.premiumCrown,
-                        width: 18.w,
-                        height: 18.w,
-                        color: Colors.white,
-                        fit: BoxFit.contain,
-                      ),
-                      trailingIcon: Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 20.sp,
-                      ),
-                      onPressed: _isLoading ? null : _onSubscribe,
+                    Row(
+                      children: [
+                        Image.asset(
+                          AppAssets.softLeft,
+                          width: 16.w,
+                          height: 30.h,
+                          fit: BoxFit.contain,
+                        ),
+                        SizedBox(width: 6.w),
+                        Expanded(
+                          child: AnimatedCtaButton(
+                            text: _isLoading
+                                ? 'Processing...'
+                                : _appController.remoteConfigService.buttonText,
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
+                            ),
+                            borderRadius: BorderRadius.circular(28.r),
+                            height: 52.h,
+                            isLoading: _isLoading,
+                            leadingIcon: Image.asset(
+                              AppAssets.premiumCrown,
+                              width: 18.w,
+                              height: 18.w,
+                              color: Colors.white,
+                              fit: BoxFit.contain,
+                            ),
+                            trailingIcon: Icon(
+                              Icons.arrow_forward_rounded,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                            onPressed: (_isLoading || _pricesLoading)
+                                ? null
+                                : _onSubscribe,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Image.asset(
+                          AppAssets.softRight,
+                          width: 16.w,
+                          height: 30.h,
+                          fit: BoxFit.contain,
+                        ),
+                      ],
                     ),
                     SizedBox(height: 10.h),
 
-                    Text(
-                      '7 Days Free • Cancel Anytime',
-                      style: TextStyle(
-                        color: const Color(0xFF6B7280),
-                        fontSize: 12.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
-                      ),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Divider(height: 1, color: Color(0xFFD1D5DB)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Text(
+                            '7 Days Free • Cancel Anytime',
+                            style: TextStyle(
+                              color: const Color(0xFF6B7280),
+                              fontSize: 12.sp,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          child: Divider(height: 1, color: Color(0xFFD1D5DB)),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 6.h),
-
-                    Container(
-                      width: 48.w,
-                      height: 2.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE2E8F0),
-                        borderRadius: BorderRadius.circular(2.r),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 12.h),
 
                     // Footer links
                     FittedBox(
@@ -544,9 +591,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
     return GestureDetector(
       onTap: () => setState(() => _selectedPlan = plan),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Color(0xFFEFFAF6)],
+          ),
           borderRadius: BorderRadius.circular(18.r),
           border: Border.all(
             color: selected ? _green : const Color(0xFFE2F4EE),
@@ -560,89 +611,117 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildPlanRadio(selected),
-                if (showBestValue)
-                  Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.5.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFB800),
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              AppAssets.bestValueCrown,
-                              height: 9.h,
-                              width: 9.w,
-                            ),
-                            SizedBox(width: 3.w),
-                            Text(
-                              'BEST VALUE',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 7.5.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 26.h,
+              child: CustomPaint(painter: _WavePainter(selected)),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 14.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildPlanRadio(selected),
+                      if (showBestValue)
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFB800),
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    AppAssets.bestValueCrown,
+                                    height: 9.h,
+                                    width: 9.w,
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Text(
+                                    'BEST VALUE',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 7.5.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: const Color(0xFF0F1F4B),
+                              fontSize: 14.sp,
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          // Loader while the store prices are fetched.
+                          if (price.isEmpty)
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 6.h),
+                              child: SizedBox(
+                                width: 20.w,
+                                height: 20.w,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                  color: Color(0xFF09B389),
+                                ),
+                              ),
+                            )
+                          else
+                            Text(
+                              price,
+                              style: TextStyle(
+                                color: const Color(0xFF09B389),
+                                fontSize: 22.sp,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          Text(
+                            period,
+                            style: TextStyle(
+                              color: const Color(0xFF9CA3AF),
+                              fontSize: 12.sp,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-            Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: const Color(0xFF4B5563),
-                        fontSize: 14.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      price,
-                      style: TextStyle(
-                        color: const Color(0xFF09B389),
-                        fontSize: 22.sp,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      period,
-                      style: TextStyle(
-                        color: const Color(0xFF9CA3AF),
-                        fontSize: 12.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
             ),
           ],
@@ -696,10 +775,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: const Color(0xFF111827),
-                  fontSize: 14.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF0F1F2E),
+                  fontSize: 15.sp,
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -734,4 +813,43 @@ class _PaywallScreenState extends State<PaywallScreen> {
       ),
     );
   }
+}
+
+/// Soft wave along the bottom of a plan card.
+class _WavePainter extends CustomPainter {
+  final bool selected;
+  const _WavePainter(this.selected);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(0, size.height * 0.55)
+      ..cubicTo(
+        size.width * 0.25,
+        size.height * 0.15,
+        size.width * 0.45,
+        size.height * 0.95,
+        size.width * 0.7,
+        size.height * 0.55,
+      )
+      ..cubicTo(
+        size.width * 0.85,
+        size.height * 0.3,
+        size.width * 0.95,
+        size.height * 0.4,
+        size.width,
+        size.height * 0.5,
+      )
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = selected ? const Color(0x3333D2AB) : const Color(0x2294A3B8),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_WavePainter old) => old.selected != selected;
 }

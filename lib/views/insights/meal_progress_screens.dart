@@ -141,7 +141,7 @@ class MealCompletedScreen extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: ShapeDecoration(
               color: const Color(0x666CF8BB),
               shape: RoundedRectangleBorder(
@@ -152,7 +152,7 @@ class MealCompletedScreen extends StatelessWidget {
               _milestone,
               style: TextStyle(
                 color: const Color(0xFF00714D),
-                fontSize: 11,
+                fontSize: 14,
                 fontFamily: 'Plus Jakarta Sans',
                 fontWeight: FontWeight.w700,
                 height: 1.27,

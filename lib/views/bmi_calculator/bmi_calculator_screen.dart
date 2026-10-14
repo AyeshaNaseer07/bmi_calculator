@@ -14,8 +14,8 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/mandatory_label.dart';
-import '../widgets/manual_input_dialog.dart';
 import 'dialogs/calculating_dialog.dart';
+import 'widgets/inline_value_field.dart';
 
 class BMICalculatorScreen extends StatelessWidget {
   const BMICalculatorScreen({super.key});
@@ -102,23 +102,9 @@ class BMICalculatorScreen extends StatelessWidget {
                   final isCm = controller.isCm.value;
                   final isKg = controller.isKg.value;
 
-                  // Height display text
-                  String heightDisplay;
-                  if (isCm) {
-                    heightDisplay = '${heightCm.toStringAsFixed(0)} cm';
-                  } else {
-                    final (ft, inches) = BMIService.cmToFeetAndInches(heightCm);
-                    heightDisplay = "$ft'$inches\"";
-                  }
-
-                  // Weight display text
-                  String weightDisplay;
-                  if (isKg) {
-                    weightDisplay = '${weightKg.toStringAsFixed(1)} kg';
-                  } else {
-                    final lb = BMIService.kgToLbs(weightKg);
-                    weightDisplay = '${lb.toStringAsFixed(1)} lb';
-                  }
+                  final hasHeight = controller.hasHeight;
+                  final hasWeight = controller.hasWeight;
+                  final (curFt, curIn) = BMIService.cmToFeetAndInches(heightCm);
 
                   // Slider min/max range labels based on selected units
                   final (minFt, minInches) = BMIService.cmToFeetAndInches(
@@ -127,8 +113,8 @@ class BMICalculatorScreen extends StatelessWidget {
                   final (maxFt, maxInches) = BMIService.cmToFeetAndInches(
                     220.0,
                   );
-                  final minHeightText = isCm ? '120 cm' : "$minFt'$minInches\"";
-                  final maxHeightText = isCm ? '220 cm' : "$maxFt'$maxInches\"";
+                  final minHeightText = isCm ? '120 cm' : '$minFt ft $minInches in';
+                  final maxHeightText = isCm ? '220 cm' : '$maxFt ft $maxInches in';
 
                   final minWeightText = isKg
                       ? '30 kg'
@@ -151,23 +137,29 @@ class BMICalculatorScreen extends StatelessWidget {
                                 asset: AppAssets.homeMale,
                                 label: 'Male',
                                 isSelected: isMale,
-                                ageText: isMale ? '$age' : null,
-                                onTap: () => controller.setGender(Gender.male),
+                                ageText: isMale ? (age > 0 ? '$age' : '--') : null,
+                                onTap: () {
+                                  controller.setGender(Gender.male);
+                                  controller.openAgePicker();
+                                },
                                 onAgeTap: () {
                                   controller.setGender(Gender.male);
-                                  controller.toggleAgePicker();
+                                  controller.openAgePicker();
                                 },
                               ),
                               _buildGenderCard(
                                 asset: AppAssets.homeFemale,
                                 label: 'Female',
                                 isSelected: isFemale,
-                                ageText: isFemale ? '$age' : null,
-                                onTap: () =>
-                                    controller.setGender(Gender.female),
+                                ageText:
+                                    isFemale ? (age > 0 ? '$age' : '--') : null,
+                                onTap: () {
+                                  controller.setGender(Gender.female);
+                                  controller.openAgePicker();
+                                },
                                 onAgeTap: () {
                                   controller.setGender(Gender.female);
-                                  controller.toggleAgePicker();
+                                  controller.openAgePicker();
                                 },
                               ),
                             ],
@@ -203,56 +195,61 @@ class BMICalculatorScreen extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(height: 10.h),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      heightDisplay,
-                                      style: TextStyle(
-                                        color: const Color(0xFF08B289),
-                                        fontSize: 36.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w800,
+                                // Edited in place (underlined) — no dialog.
+                                isCm
+                                    ? InlineValueField(
+                                        key: const ValueKey('h_cm'),
+                                        value: hasHeight ? heightCm : null,
+                                        unit: 'cm',
+                                        min: 120,
+                                        max: 220,
+                                        showEdit: true,
+                                        onChanged: controller.setHeight,
+                                        onCommitted:
+                                            controller.setHeightFromInput,
+                                      )
+                                    : Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          InlineValueField(
+                                            key: const ValueKey('h_ft'),
+                                            value: hasHeight
+                                                ? curFt.toDouble()
+                                                : null,
+                                            unit: 'ft',
+                                            min: 3,
+                                            max: 7,
+                                            width: 44,
+                                            onCommitted: (f) =>
+                                                controller.setHeightFromInput(
+                                                  BMIService.inchesToCm(
+                                                    f * 12 +
+                                                        (hasHeight ? curIn : 0),
+                                                  ),
+                                                ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          InlineValueField(
+                                            key: const ValueKey('h_in'),
+                                            value: hasHeight
+                                                ? curIn.toDouble()
+                                                : null,
+                                            unit: 'in',
+                                            min: 0,
+                                            max: 11,
+                                            width: 52,
+                                            showEdit: true,
+                                            onCommitted: (i) =>
+                                                controller.setHeightFromInput(
+                                                  BMIService.inchesToCm(
+                                                    (hasHeight ? curFt : 5) *
+                                                            12 +
+                                                        i,
+                                                  ),
+                                                ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    _buildEditButton(
-                                      onTap: () {
-                                        if (isCm) {
-                                          ManualInputDialog.show(
-                                            title: 'Enter Height',
-                                            unitLabel: 'cm',
-                                            initialValue: heightCm
-                                                .toStringAsFixed(0),
-                                            min: 120,
-                                            max: 220,
-                                            onSubmit:
-                                                controller.setHeightFromInput,
-                                          );
-                                        } else {
-                                          final (
-                                            ft,
-                                            inches,
-                                          ) = BMIService.cmToFeetAndInches(
-                                            heightCm,
-                                          );
-                                          ManualInputDialog.showFeetInches(
-                                            title: 'Enter Height',
-                                            initialFeet: ft,
-                                            initialInches: inches,
-                                            onSubmit: (feet, inchesVal) {
-                                              final cm = BMIService.inchesToCm(
-                                                (feet * 12) + inchesVal,
-                                              );
-                                              controller.setHeightFromInput(cm);
-                                            },
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
                                 SizedBox(height: 4.h),
                                 SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
@@ -273,11 +270,20 @@ class BMICalculatorScreen extends StatelessWidget {
                                     trackHeight: 6.h,
                                   ),
                                   child: Slider(
-                                    value: heightCm.clamp(120.0, 220.0),
+                                    value: hasHeight
+                                        ? heightCm.clamp(120.0, 220.0)
+                                        : 120.0,
                                     min: 120.0,
                                     max: 220.0,
-                                    onChanged: (val) =>
-                                        controller.setHeight(val),
+                                    // In ft mode snap to whole inches so the
+                                    // ft/in value always matches the slider.
+                                    onChanged: (val) => controller.setHeight(
+                                      isCm
+                                          ? val.roundToDouble()
+                                          : BMIService.inchesToCm(
+                                              (val / 2.54).roundToDouble(),
+                                            ),
+                                    ),
                                   ),
                                 ),
                                 Padding(
@@ -343,53 +349,36 @@ class BMICalculatorScreen extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(height: 10.h),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      weightDisplay,
-                                      style: TextStyle(
-                                        color: const Color(0xFF08B289),
-                                        fontSize: 36.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w800,
+                                isKg
+                                    ? InlineValueField(
+                                        key: const ValueKey('w_kg'),
+                                        value: hasWeight ? weightKg : null,
+                                        unit: 'kg',
+                                        decimals: 1,
+                                        min: 30,
+                                        max: 130,
+                                        width: 110,
+                                        showEdit: true,
+                                        onChanged: controller.setWeight,
+                                        onCommitted:
+                                            controller.setWeightFromInput,
+                                      )
+                                    : InlineValueField(
+                                        key: const ValueKey('w_lb'),
+                                        value: hasWeight
+                                            ? BMIService.kgToLbs(weightKg)
+                                            : null,
+                                        unit: 'lb',
+                                        decimals: 1,
+                                        min: BMIService.kgToLbs(30),
+                                        max: BMIService.kgToLbs(130),
+                                        width: 110,
+                                        showEdit: true,
+                                        onCommitted: (v) =>
+                                            controller.setWeightFromInput(
+                                              BMIService.lbsToKg(v),
+                                            ),
                                       ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    _buildEditButton(
-                                      onTap: () {
-                                        if (isKg) {
-                                          ManualInputDialog.show(
-                                            title: 'Enter Weight',
-                                            unitLabel: 'kg',
-                                            initialValue: weightKg
-                                                .toStringAsFixed(1),
-                                            min: 30,
-                                            max: 130,
-                                            onSubmit:
-                                                controller.setWeightFromInput,
-                                          );
-                                        } else {
-                                          final lb = BMIService.kgToLbs(
-                                            weightKg,
-                                          );
-                                          ManualInputDialog.show(
-                                            title: 'Enter Weight',
-                                            unitLabel: 'lb',
-                                            initialValue: lb.toStringAsFixed(1),
-                                            min: BMIService.kgToLbs(30),
-                                            max: BMIService.kgToLbs(130),
-                                            onSubmit: (val) =>
-                                                controller.setWeightFromInput(
-                                                  BMIService.lbsToKg(val),
-                                                ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
                                 SizedBox(height: 4.h),
                                 SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
@@ -410,7 +399,9 @@ class BMICalculatorScreen extends StatelessWidget {
                                     trackHeight: 6.h,
                                   ),
                                   child: Slider(
-                                    value: weightKg.clamp(30.0, 130.0),
+                                    value: hasWeight
+                                        ? weightKg.clamp(30.0, 130.0)
+                                        : 30.0,
                                     min: 30.0,
                                     max: 130.0,
                                     onChanged: (val) =>
@@ -449,9 +440,7 @@ class BMICalculatorScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 12.h),
-                          _buildActivitySelector(controller),
-                          SizedBox(height: 12.h),
+                          SizedBox(height: 16.h),
                           // Calculate BMI Button
                           CustomGradientButton(
                             text: 'Calculate BMI',
@@ -469,10 +458,7 @@ class BMICalculatorScreen extends StatelessWidget {
                               fontFamily: 'Instrument Sans',
                               fontWeight: FontWeight.w700,
                             ),
-                            onPressed:
-                                (controller.age.value > 0 &&
-                                    controller.heightCm.value > 0 &&
-                                    controller.weightKg.value > 0)
+                            onPressed: controller.canCalculate
                                 ? () => _onCalculate(controller)
                                 : null,
                           ),
@@ -522,78 +508,6 @@ class BMICalculatorScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  /// Activity level picker — used to personalise the daily calorie target.
-  Widget _buildActivitySelector(BMIController controller) {
-    final selected = controller.activity.value;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Activity level',
-            style: TextStyle(
-              color: const Color(0xFF141B2B),
-              fontSize: 14.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 2.h),
-          Text(
-            selected.description,
-            style: TextStyle(
-              color: const Color(0xFF6B7280),
-              fontSize: 12.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: [
-              for (final level in ActivityLevel.values)
-                GestureDetector(
-                  onTap: () => controller.setActivity(level),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: 7.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: level == selected
-                          ? const Color(0xFF00BD8E)
-                          : const Color(0xFFF3F4F6),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Text(
-                      level.title,
-                      style: TextStyle(
-                        color: level == selected
-                            ? Colors.white
-                            : const Color(0xFF374151),
-                        fontSize: 12.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -686,7 +600,9 @@ class BMICalculatorScreen extends StatelessWidget {
                 ),
                 if (ageText != null) ...[
                   SizedBox(width: 10.w),
-                  Text.rich(
+                  GestureDetector(
+                    onTap: onAgeTap,
+                    child: Text.rich(
                     TextSpan(
                       children: [
                         TextSpan(
@@ -715,26 +631,12 @@ class BMICalculatorScreen extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  ),
                 ],
               ],
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildEditButton({required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: EdgeInsets.all(4.w),
-        decoration: const BoxDecoration(
-          color: Color(0xFFE6F8F4),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(Icons.edit, size: 14.sp, color: const Color(0xFF08B289)),
       ),
     );
   }

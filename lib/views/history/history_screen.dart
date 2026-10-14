@@ -1005,10 +1005,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final isSelected = _selectedRecordIds.contains(record.id);
     final dayStr = DateFormat('dd').format(record.date);
     final monthYearStr = DateFormat('MMM yyyy').format(record.date);
-    final isNormal = record.category == BMICategory.normal;
-    final statusColor = isNormal
-        ? const Color(0xFF09B389)
-        : const Color(0xFFEF4444);
+    // BMI, weight and status all use the record's category colour
+    // (blue underweight, green normal, orange overweight, red obese).
+    final statusColor = record.category.color;
 
     final cardContent = GestureDetector(
       onTap: () {
@@ -1119,7 +1118,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   record.bmiValue.toStringAsFixed(1),
                   style: TextStyle(
-                    color: const Color(0xFF33D2AB),
+                    color: statusColor,
                     fontSize: 13.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
@@ -1147,7 +1146,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   record.weightDisplay,
                   style: TextStyle(
-                    color: const Color(0xFF33D2AB),
+                    color: statusColor,
                     fontSize: 13.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
@@ -1389,16 +1388,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ],
                 ),
               ),
-              // BMI illustration — overflows card edge like in the image
-              SizedBox(
-                width: 110.w,
-                height: 110.w,
-                child: OverflowBox(
-                  maxWidth: 160.w,
-                  maxHeight: 160.w,
+              // BMI illustration — kept inside the card, vertically centred
+              Padding(
+                padding: EdgeInsets.only(left: 6.w, right: 14.w),
+                child: SizedBox(
+                  width: 104.w,
+                  height: 104.w,
                   child: Image.asset(
                     AppAssets.historyIcon,
                     fit: BoxFit.contain,
+                    alignment: Alignment.center,
                   ),
                 ),
               ),

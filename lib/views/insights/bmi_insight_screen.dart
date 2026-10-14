@@ -382,7 +382,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 v.weightColor,
                 CrossAxisAlignment.start,
               ),
-              Image.asset(AppAssets.insightRise, width: 38.w, height: 38.w),
+              Image.asset(AppAssets.insightRise, width: 52.w, height: 52.w),
               weightCol(
                 isNormal ? 'Healthy Range' : 'Healthy Target',
                 target,
@@ -661,13 +661,16 @@ class _TipCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Same fixed square for every card so all icons line up
+          // (Flexible lets it shrink on very short screens).
           Flexible(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 54.h, maxWidth: 54.h),
+            child: SizedBox(
+              width: 48.w,
+              height: 48.w,
               child: Image.asset(
                 icon,
                 fit: BoxFit.contain,
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
               ),
             ),
           ),

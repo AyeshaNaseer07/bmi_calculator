@@ -58,13 +58,30 @@ class BMIService {
     return (feet, inches);
   }
 
-  /// Returns normalized gauge needle percentage (0.0 to 1.0)
-  /// Scale from BMI 12 to BMI 38
+  /// Returns normalized gauge needle position (0.0 = left end, 1.0 = right).
+  ///
+  /// The gauge is drawn as four equal quarters (underweight, normal,
+  /// overweight, obese) labelled 9.9 at the left end and 34.9 at the right,
+  /// so each category maps onto its own quarter. Anything above 34.9 sits on
+  /// the extreme right edge and anything below 9.9 on the extreme left.
   static double getGaugeProgress(double bmi) {
-    const minBmi = 12.0;
-    const maxBmi = 38.0;
-    final clamped = bmi.clamp(minBmi, maxBmi);
-    return (clamped - minBmi) / (maxBmi - minBmi);
+    const stops = <(double, double)>[
+      (9.9, 0.0),
+      (18.5, 0.25),
+      (25.0, 0.5),
+      (30.0, 0.75),
+      (34.9, 1.0),
+    ];
+    if (bmi <= stops.first.$1) return 0.0;
+    if (bmi >= stops.last.$1) return 1.0;
+    for (var i = 1; i < stops.length; i++) {
+      final (b1, p1) = stops[i];
+      if (bmi <= b1) {
+        final (b0, p0) = stops[i - 1];
+        return p0 + (bmi - b0) / (b1 - b0) * (p1 - p0);
+      }
+    }
+    return 1.0;
   }
 
   /// Ideal weight range for a given height in cm

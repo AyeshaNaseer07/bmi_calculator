@@ -22,6 +22,7 @@ import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
+import '../main/main_tab.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
@@ -293,11 +294,14 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Expanded(
+              // New design: Profile replaces the old Health Insights card.
+              // Opens the Profile tab instead of pushing a new page.
               child: _featureCard(
-                AppAssets.homeIcon3,
-                'Health Insights',
-                'Daily wellness advice',
-                AppRoutes.healthInsights,
+                AppAssets.profileIcon,
+                'Profile',
+                'Manage your details',
+                '',
+                onTap: () => mainTabIndex.value = kProfileTab,
               ),
             ),
             SizedBox(width: 12.w),
@@ -319,11 +323,12 @@ class _HomeScreenState extends State<HomeScreen> {
     String iconAsset,
     String title,
     String subtitle,
-    String route,
-  ) {
+    String route, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => Get.toNamed(route),
+      onTap: onTap ?? () => Get.toNamed(route),
       child: Container(
         padding: EdgeInsets.fromLTRB(12.w, 12.h, 10.w, 12.h),
         decoration: ShapeDecoration(

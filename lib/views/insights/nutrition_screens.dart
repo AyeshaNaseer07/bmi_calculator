@@ -95,6 +95,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
             title: '1 Week Meal Plan',
             subtitle: 'Explore simple ideas for balanced meals.',
             chevron: true,
+            pro: !Get.find<AppController>().isPremium.value,
             onTap: () {
               if (Get.find<AppController>().isPremium.value) {
                 Get.to(() => const DailyMealPlanScreen());
@@ -121,6 +122,7 @@ class EatVegetablesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return InsightScaffold(
       title: 'Eat More Vegetables',
+      bounce: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

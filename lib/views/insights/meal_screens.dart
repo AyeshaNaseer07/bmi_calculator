@@ -448,6 +448,8 @@ class MealDetailScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Stack(
+          // The highlight dot sits in the card's top padding — don't clip it.
+          clipBehavior: Clip.none,
           children: [
             SizedBox(
               width: double.infinity,
@@ -477,11 +479,11 @@ class MealDetailScreen extends StatelessWidget {
             ),
             if (hi)
               Positioned(
-                top: -4.h,
-                right: 2.w,
+                top: -6.h,
+                right: 4.w,
                 child: Container(
-                  width: 6.w,
-                  height: 6.w,
+                  width: 7.w,
+                  height: 7.w,
                   decoration: const BoxDecoration(
                     color: _kDeep,
                     shape: BoxShape.circle,
@@ -790,14 +792,7 @@ class MealDetailScreen extends StatelessWidget {
                     _dot(const Color(0xFFB9C5C1), 'Healthy Fats'),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 18.sp,
-                    color: kInk,
-                  ),
-                ),
+                SizedBox(height: 6.h),
               ],
             ),
           ),

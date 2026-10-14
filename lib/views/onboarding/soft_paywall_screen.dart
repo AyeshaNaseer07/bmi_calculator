@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/animated_cta_button.dart';
 
@@ -19,6 +20,20 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   final AppController _app = Get.find<AppController>();
   SubscriptionPlan _plan = SubscriptionPlan.yearly;
   bool _loading = false;
+  bool _pricesLoading = true;
+  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.fallback;
+
+  @override
+  void initState() {
+    super.initState();
+    PriceService.load(_app.remoteConfigService).then((p) {
+      if (!mounted) return;
+      setState(() {
+        _prices = p;
+        _pricesLoading = false;
+      });
+    });
+  }
 
   static const Color _green = Color(0xFF0AA37D);
   static const Color _navy = Color(0xFF0F1F4B);
@@ -148,7 +163,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         child: _planCard(
                           SubscriptionPlan.monthly,
                           'Monthly Plan',
-                          '\$4.99',
+                          _pricesLoading
+                              ? ''
+                              : _prices[SubscriptionPlan.monthly]!.priceString,
                           '1 / month',
                         ),
                       ),
@@ -180,7 +197,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         child: _planCard(
                           SubscriptionPlan.yearly,
                           'Yearly Plan',
-                          '\$29.99',
+                          _pricesLoading
+                              ? ''
+                              : _prices[SubscriptionPlan.yearly]!.priceString,
                           '1 / year',
                           best: true,
                         ),
@@ -188,7 +207,13 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                     ],
                   ),
                   SizedBox(height: 16.h),
-                  AnimatedCtaButton(
+                  Row(
+                    children: [
+                      Image.asset(AppAssets.softLeft,
+                          width: 16.w, height: 30.h, fit: BoxFit.contain),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: AnimatedCtaButton(
                     text: _loading
                         ? 'Processing...'
                         : _app.remoteConfigService.buttonText,
@@ -210,7 +235,13 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       color: Colors.white,
                       size: 20.sp,
                     ),
-                    onPressed: _loading ? null : _subscribe,
+                    onPressed: (_loading || _pricesLoading) ? null : _subscribe,
+                  ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Image.asset(AppAssets.softRight,
+                          width: 16.w, height: 30.h, fit: BoxFit.contain),
+                    ],
                   ),
                   SizedBox(height: 8.h),
                   Row(
@@ -258,7 +289,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(AppAssets.softLeft, height: 40.h, fit: BoxFit.contain),
+        Image.asset(AppAssets.wreathRight, height: 44.h, fit: BoxFit.contain),
         SizedBox(width: 6.w),
         Flexible(
           child: FittedBox(
@@ -291,7 +322,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
           ),
         ),
         SizedBox(width: 6.w),
-        Image.asset(AppAssets.softRight, height: 40.h, fit: BoxFit.contain),
+        Image.asset(AppAssets.wreathLeft, height: 44.h, fit: BoxFit.contain),
       ],
     );
   }
@@ -500,15 +531,28 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            Text(
-              price,
-              style: TextStyle(
-                color: const Color(0xFF09B389),
-                fontSize: 24.sp,
-                fontFamily: 'Outfit',
-                fontWeight: FontWeight.w800,
+            if (price.isEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 7.h),
+                child: SizedBox(
+                  width: 20.w,
+                  height: 20.w,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2.4,
+                    color: Color(0xFF09B389),
+                  ),
+                ),
+              )
+            else
+              Text(
+                price,
+                style: TextStyle(
+                  color: const Color(0xFF09B389),
+                  fontSize: 24.sp,
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-            ),
             Text(
               period,
               style: TextStyle(

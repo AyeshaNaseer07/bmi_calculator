@@ -81,8 +81,6 @@ class StayActiveScreen extends StatelessWidget {
                     SizedBox(height: 2.h),
                     Text(
                       sub,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                       style: bodyStyle(
                         13,
                         color: const Color(0xFF4B5563),
@@ -268,7 +266,13 @@ class ActivityRoutineScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(i, size: 16.sp, color: _kDeep),
+          // Moon faces the same way as on the Sleep screen.
+          i == Icons.nightlight_outlined
+              ? Transform.flip(
+                  flipX: true,
+                  child: Icon(i, size: 16.sp, color: _kDeep),
+                )
+              : Icon(i, size: 16.sp, color: _kDeep),
           SizedBox(height: 2.h),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -338,10 +342,9 @@ class ActivityRoutineScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 6.w),
                     Expanded(
+                      // Full activity name — wraps instead of "...".
                       child: Text(
                         d.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                         style: bodyStyle(
                           15,
                           color: kInk,

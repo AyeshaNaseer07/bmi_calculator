@@ -208,12 +208,17 @@ class InsightScaffold extends StatelessWidget {
   final Widget body;
   final Widget? bottom;
 
+  /// false = the page doesn't "slide" (no bounce) when its content already
+  /// fits; it still scrolls if a small screen can't fit everything.
+  final bool bounce;
+
   const InsightScaffold({
     super.key,
     required this.title,
     required this.body,
     this.titleIcon,
     this.bottom,
+    this.bounce = true,
   });
 
   @override
@@ -227,7 +232,9 @@ class InsightScaffold extends StatelessWidget {
               InsightHeader(title: title, titleIcon: titleIcon),
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: bounce
+                      ? const BouncingScrollPhysics()
+                      : const ClampingScrollPhysics(),
                   padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
                   child: body,
                 ),
@@ -271,6 +278,9 @@ class InfoRowCard extends StatelessWidget {
   final Color? borderColor;
   final Color? chevronColor;
 
+  /// Shows a gold "PRO" badge next to the title (premium-only feature).
+  final bool pro;
+
   const InfoRowCard({
     super.key,
     this.icon,
@@ -285,6 +295,7 @@ class InfoRowCard extends StatelessWidget {
     this.cardColor,
     this.borderColor,
     this.chevronColor,
+    this.pro = false,
   }) : assert(
          icon != null || iconAsset != null,
          'Provide either icon or iconAsset',
@@ -307,14 +318,24 @@ class InfoRowCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: const Color(0xFF111827),
-                      fontSize: 15,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            color: const Color(0xFF111827),
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      if (pro) ...[
+                        SizedBox(width: 6.w),
+                        const ProBadge(),
+                      ],
+                    ],
                   ),
                   SizedBox(height: 2.h),
                   Text(subtitle, style: bodyStyle(12, height: 1.35)),
@@ -448,6 +469,41 @@ class GradientActionButton extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Small gold "PRO" pill used on premium-only features.
+class ProBadge extends StatelessWidget {
+  const ProBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFD54F), Color(0xFFFFA000)],
+        ),
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.workspace_premium_rounded, size: 11.sp, color: Colors.white),
+          SizedBox(width: 2.w),
+          Text(
+            'PRO',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 9.sp,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
       ),
     );
   }
