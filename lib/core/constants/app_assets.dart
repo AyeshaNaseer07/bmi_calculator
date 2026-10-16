@@ -9,6 +9,7 @@ abstract class AppAssets {
   static const String splashBg = '$_imagesBase/splash_bg.webp';
   static const String selectLanguage = '$_imagesBase/select_language.webp';
   static const String crown = '$_imagesBase/crown.webp';
+  static const String weekPro = '$_imagesBase/week_pro.png';
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   static const String homeAvatar = '$_imagesBase/home_img.webp';
@@ -62,7 +63,8 @@ abstract class AppAssets {
 
   static const String premiumBg = '$_imagesBase/premium_bg.webp';
   static const String preCross = '$_imagesBase/pre_cross.webp';
-  static const String preDown = '$_imagesBase/pre_download.webp';
+  static const String preDown = '$_imagesBase/pre_download.png';
+  static const String sleepIcon = '$_imagesBase/sleep_icon.png';
   static const String bestValueCrown = '$_imagesBase/best_value_crown.webp';
   static const String profileIcon = '$_imagesBase/profile.webp';
   static const String bmiCalIcon = '$_imagesBase/bmi_cal_bg.webp';

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -67,38 +68,10 @@ class SleepWellScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: SizedBox(
-              width: 130.w,
-              height: 130.w,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 130.w,
-                    height: 130.w,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [Color(0xFFBFF5DF), Color(0x00FFFFFF)],
-                      ),
-                    ),
-                  ),
-                  Transform.flip(
-                    flipX: true,
-                    child: Icon(Icons.nightlight_round, size: 62.sp, color: _kDeep),
-                  ),
-                  Positioned(
-                    top: 18.h,
-                    left: 22.w,
-                    child: Icon(Icons.auto_awesome, size: 10.sp, color: kGreen),
-                  ),
-                  Positioned(
-                    bottom: 18.h,
-                    right: 26.w,
-                    child: Icon(Icons.auto_awesome, size: 10.sp, color: kGreen),
-                  ),
-                ],
-              ),
+            child: Image.asset(
+              AppAssets.sleepIcon,
+              width: 120.w,
+              height: 120.h,
             ),
           ),
           SizedBox(height: 6.h),
@@ -114,7 +87,11 @@ class SleepWellScreen extends StatelessWidget {
                 children: [
                   Transform.flip(
                     flipX: true,
-                    child: Icon(Icons.nightlight_round, size: 13.sp, color: _kDeep),
+                    child: Icon(
+                      Icons.nightlight_round,
+                      size: 13.sp,
+                      color: _kDeep,
+                    ),
                   ),
                   SizedBox(width: 6.w),
                   Text(

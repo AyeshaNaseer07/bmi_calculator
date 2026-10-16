@@ -158,7 +158,9 @@ class ProfileScreen extends StatelessWidget {
                                 if (uploading)
                                   Positioned.fill(
                                     child: Container(
-                                      color: Colors.black.withOpacity(0.3),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       child: Center(
                                         child: SizedBox(
                                           width: 24.w,

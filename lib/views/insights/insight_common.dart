@@ -114,7 +114,7 @@ class AssetOrPlaceholder extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      errorBuilder: (_, __, ___) => Container(
+      errorBuilder: (_, _, _) => Container(
         width: width,
         height: height,
         alignment: Alignment.center,
@@ -331,10 +331,7 @@ class InfoRowCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (pro) ...[
-                        SizedBox(width: 6.w),
-                        const ProBadge(),
-                      ],
+                      if (pro) ...[SizedBox(width: 6.w), const ProBadge()],
                     ],
                   ),
                   SizedBox(height: 2.h),
@@ -491,7 +488,11 @@ class ProBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.workspace_premium_rounded, size: 11.sp, color: Colors.white),
+          Icon(
+            Icons.workspace_premium_rounded,
+            size: 11.sp,
+            color: Colors.white,
+          ),
           SizedBox(width: 2.w),
           Text(
             'PRO',

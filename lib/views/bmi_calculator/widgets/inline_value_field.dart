@@ -15,7 +15,6 @@ class InlineValueField extends StatefulWidget {
   final double min;
   final double max;
   final double width;
-  final String hint;
   final FocusNode? focusNode;
   final bool showEdit;
   final ValueChanged<double>? onChanged;
@@ -31,7 +30,6 @@ class InlineValueField extends StatefulWidget {
     this.onChanged,
     this.decimals = 0,
     this.width = 92,
-    this.hint = '--',
     this.focusNode,
     this.showEdit = false,
   });
@@ -135,7 +133,6 @@ class _InlineValueFieldState extends State<InlineValueField> {
             onTapOutside: (_) => _focus.unfocus(),
             decoration: InputDecoration(
               isDense: true,
-              hintText: widget.hint,
               hintStyle: style.copyWith(color: const Color(0xFFB8E8DA)),
               contentPadding: EdgeInsets.only(bottom: 2.h),
               enabledBorder: const UnderlineInputBorder(

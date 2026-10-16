@@ -20,18 +20,43 @@ class EatBalancedMealsScreen extends StatelessWidget {
       title: 'Eat Balanced Meals',
       body: Column(
         children: [
-          SizedBox(height: 8.h),
-          AssetOrPlaceholder(
-            asset: AppAssets.tipMeals,
-            width: 150.w,
-            height: 150.w,
-            circle: true,
+          SizedBox(height: 4.h),
+          // Photo with the soft mint glow behind it (Figma).
+          SizedBox(
+            width: 230.w,
+            height: 170.w,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 230.w,
+                  height: 170.w,
+                  decoration: const BoxDecoration(
+                    gradient: RadialGradient(
+                      radius: 0.62,
+                      colors: [
+                        Color(0x6633D2AB),
+                        Color(0x2233D2AB),
+                        Color(0x0033D2AB),
+                      ],
+                      stops: [0.35, 0.7, 1.0],
+                    ),
+                  ),
+                ),
+                AssetOrPlaceholder(
+                  asset: AppAssets.tipMeals,
+                  width: 140.w,
+                  height: 140.w,
+                  circle: true,
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 6.h),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: ShapeDecoration(
-              color: const Color(0x666CF8BB).withOpacity(0.3),
+              color: const Color(0x666CF8BB).withValues(alpha: 0.3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(9999),
               ),
@@ -61,40 +86,36 @@ class EatBalancedMealsScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 10,
+              fontSize: 11.5,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w400,
-              height: 1.80,
+              height: 1.6,
               letterSpacing: 0.06,
             ),
           ),
-          SizedBox(height: 18.h),
-          InfoRowCard(
+          SizedBox(height: 16.h),
+          _HubCard(
             iconAsset: AppAssets.tipMoreVeggies,
             title: 'Eat More Vegetables',
             subtitle: 'Add vegetables and fiber to your meals.',
-            chevron: true,
             onTap: () => Get.to(() => const EatVegetablesScreen()),
           ),
-          InfoRowCard(
+          _HubCard(
             iconAsset: AppAssets.tipLeanProtein,
             title: 'Choose Lean Protein',
             subtitle: 'Include eggs, fish, beans or chicken.',
-            chevron: true,
             onTap: () => Get.to(() => const LeanProteinScreen()),
           ),
-          InfoRowCard(
+          _HubCard(
             iconAsset: AppAssets.tipPortionControl,
             title: 'Control Portion Sizes',
             subtitle: 'Enjoy balanced portions at every meal.',
-            chevron: true,
             onTap: () => Get.to(() => const PortionSizesScreen()),
           ),
-          InfoRowCard(
+          _HubCard(
             iconAsset: AppAssets.tipDailyMealPlan,
             title: '1 Week Meal Plan',
             subtitle: 'Explore simple ideas for balanced meals.',
-            chevron: true,
             pro: !Get.find<AppController>().isPremium.value,
             onTap: () {
               if (Get.find<AppController>().isPremium.value) {
@@ -102,14 +123,115 @@ class EatBalancedMealsScreen extends StatelessWidget {
               } else {
                 Get.to(
                   () => SoftPaywallScreen(
-                    onUnlocked: () =>
-                        Get.to(() => const DailyMealPlanScreen()),
+                    onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
                   ),
                 );
               }
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Card used on the Eat Balanced Meals hub (Figma): white card with a mint
+/// border, icon tile, bold title, grey subtitle and a chevron. [pro] adds a
+/// small gold crown after the title.
+class _HubCard extends StatelessWidget {
+  final String iconAsset;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+  final bool pro;
+
+  const _HubCard({
+    required this.iconAsset,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    this.pro = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 14.h),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(14),
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            shadows: [
+              BoxShadow(
+                color: Color(0x0A000000),
+                blurRadius: 12,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Image.asset(iconAsset, width: 50.w, height: 50.w),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              color: const Color(0xFF111827),
+                              fontSize: 15.5,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        if (pro) ...[
+                          SizedBox(width: 6.w),
+                          Image.asset(
+                            AppAssets.weekPro,
+                            width: 20.w,
+                            height: 20.w,
+                          ),
+                        ],
+                      ],
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: const Color(0xFF6B7280),
+                        fontSize: 12.5,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 6.w),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: const Color(0xFF9CA3AF),
+                size: 26.sp,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

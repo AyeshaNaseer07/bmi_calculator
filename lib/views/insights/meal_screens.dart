@@ -120,7 +120,7 @@ class _PlanDisclaimer extends StatelessWidget {
     final c = MealPlanController.to;
     final extra = c.needsCare
         ? ' Because you are under 18, please follow a plan from a doctor or '
-            'dietitian instead of this one.'
+              'dietitian instead of this one.'
         : '';
     return Text(
       'This plan is general guidance based on your BMI, age, height, weight '
@@ -408,7 +408,7 @@ class _TealPill extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF2FD4A8).withOpacity(0.6),
+        color: const Color(0xFF2FD4A8).withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
