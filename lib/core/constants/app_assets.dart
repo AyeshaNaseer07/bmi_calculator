@@ -142,7 +142,7 @@ abstract class AppAssets {
   static const String mealProgress = '$_imagesBase/progress.png';
 
   // Photos that exist already
-  static const String photoVegetables = '$_imagesBase/vegs.webp';
+  static const String photoVegetables = '$_imagesBase/vegs.png';
   static const String photoBalancedMeal = '$_imagesBase/hero.webp';
 
   // ── Meal plan / hydration / activity screens ──

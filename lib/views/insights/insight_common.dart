@@ -208,9 +208,9 @@ class InsightScaffold extends StatelessWidget {
   final Widget body;
   final Widget? bottom;
 
-  /// false = the page doesn't "slide" (no bounce) when its content already
-  /// fits; it still scrolls if a small screen can't fit everything.
-  final bool bounce;
+  /// false = no scroll view at all: [body] gets the remaining height and
+  /// must lay itself out to fit (use Expanded/Flexible inside it).
+  final bool scroll;
 
   const InsightScaffold({
     super.key,
@@ -218,7 +218,7 @@ class InsightScaffold extends StatelessWidget {
     required this.body,
     this.titleIcon,
     this.bottom,
-    this.bounce = true,
+    this.scroll = true,
   });
 
   @override
@@ -231,13 +231,16 @@ class InsightScaffold extends StatelessWidget {
             children: [
               InsightHeader(title: title, titleIcon: titleIcon),
               Expanded(
-                child: SingleChildScrollView(
-                  physics: bounce
-                      ? const BouncingScrollPhysics()
-                      : const ClampingScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
-                  child: body,
-                ),
+                child: scroll
+                    ? SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
+                        child: body,
+                      )
+                    : Padding(
+                        padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h),
+                        child: body,
+                      ),
               ),
               if (bottom != null)
                 Padding(

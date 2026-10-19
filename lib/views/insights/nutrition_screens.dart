@@ -240,105 +240,193 @@ class _HubCard extends StatelessWidget {
 class EatVegetablesScreen extends StatelessWidget {
   const EatVegetablesScreen({super.key});
 
+  /// Figma card: white, mint border, rounded 20, soft mint shadow.
+  static BoxDecoration get _cardDeco => BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(20.r),
+    border: Border.all(color: const Color(0xFFCDEFE3), width: 1.2),
+    boxShadow: const [
+      BoxShadow(color: Color(0x1233D2AB), blurRadius: 10, offset: Offset(0, 3)),
+    ],
+  );
+
+  static TextStyle _title(double size) => TextStyle(
+    color: const Color(0xFF111827),
+    fontSize: size,
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle get _sub => TextStyle(
+    color: const Color(0xFF6B7280),
+    fontSize: 13,
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w400,
+    height: 1.45,
+  );
+
+  static TextStyle get _section => TextStyle(
+    color: const Color(0xFF111827),
+    fontSize: 18,
+    fontFamily: 'Plus Jakarta Sans',
+    fontWeight: FontWeight.w700,
+  );
+
+  Widget _why(String icon, String title, String subtitle) => Container(
+    width: double.infinity,
+    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+    decoration: _cardDeco,
+    child: Row(
+      children: [
+        Image.asset(icon, width: 42.w, height: 42.w),
+        SizedBox(width: 14.w),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, maxLines: 1, style: _title(15)),
+              SizedBox(height: 3.h),
+              Text(
+                subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: _sub,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
+    // No scroll view: every block takes a share of the screen height so the
+    // whole page fits on one screen.
     return InsightScaffold(
       title: 'Eat More Vegetables',
-      bounce: false,
+      scroll: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AssetOrPlaceholder(
-            asset: AppAssets.photoVegetables,
-            width: double.infinity,
-            height: 180.h,
-            radius: 20,
-            icon: Icons.eco_rounded,
+          // Photo inside a mint-bordered card with a soft mint gradient.
+          Expanded(
+            flex: 5,
+            child: Center(
+              child: Container(
+                width: 280.w,
+                height: 250.h,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22.r),
+                ),
+                child: Image.asset(
+                  AppAssets.photoVegetables,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 10.h),
           Center(
             child: Text(
               'Add more color and fiber to your meals.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 12,
+                fontSize: 12.5,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
-          SizedBox(height: 16.h),
-          const SectionTitle('Why Vegetables Matter'),
-          const InfoRowCard(
-            iconAsset: AppAssets.tipRichInFiber,
-            title: 'Rich in Fiber',
-            subtitle: 'Fiber helps you feel full and supports digestion.',
-          ),
-          const InfoRowCard(
-            iconAsset: AppAssets.tipFullOfNutrients,
-            title: 'Full of Nutrients',
-            subtitle: 'Vegetables provide vitamins and minerals.',
-          ),
-          const InfoRowCard(
-            iconAsset: AppAssets.tipAddMoreColor,
-            title: 'Add More Color',
-            subtitle: 'Choose different vegetables for variety.',
-          ),
-          SizedBox(height: 4.h),
-          const SectionTitle('Try This Today'),
-          InsightCard(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+          SizedBox(height: 10.h),
+          Text('Why Vegetables Matter', style: _section),
+          SizedBox(height: 10.h),
+          Expanded(
+            flex: 10,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.r),
-                      child: Image.asset(
-                        AppAssets.tipSimpleMeal,
-                        width: 48.w,
-                        height: 48.w,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Simple Meal',
-                            style: TextStyle(
-                              color: const Color(0xFF111827),
-                              fontSize: 15,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            'Half plate of vegetables, quarter protein, quarter grains.',
-                            style: TextStyle(
-                              color: const Color(0xFF6B7280),
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              height: 1.40,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                Expanded(
+                  child: _why(
+                    AppAssets.tipRichInFiber,
+                    'Rich in Fiber',
+                    'Fiber helps you feel full and supports digestion.',
+                  ),
                 ),
                 SizedBox(height: 10.h),
-                Text(
-                  'Start by adding vegetables to one meal. You can build up to more over time.',
-                  style: bodyStyle(12.5, color: kMuted, height: 1.4),
+                Expanded(
+                  child: _why(
+                    AppAssets.tipFullOfNutrients,
+                    'Full of Nutrients',
+                    'Vegetables provide vitamins and minerals.',
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Expanded(
+                  child: _why(
+                    AppAssets.tipAddMoreColor,
+                    'Add More Color',
+                    'Choose different vegetables for variety.',
+                  ),
                 ),
               ],
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text('Try This Today', style: _section),
+          SizedBox(height: 10.h),
+          Expanded(
+            flex: 6,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              decoration: _cardDeco,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.r),
+                        child: Image.asset(
+                          AppAssets.tipSimpleMeal,
+                          width: 58.w,
+                          height: 58.w,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Simple Meal', style: _title(16.5)),
+                            SizedBox(height: 3.h),
+                            Text(
+                              'Half plate of vegetables, quarter protein, quarter grains.',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: _sub,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Flexible(
+                    child: Text(
+                      'Start by adding vegetables to one meal. You can build up to more over time.',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: _sub.copyWith(color: const Color(0xFF4B5563)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -81,14 +81,20 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   Future<void> _restore() async {
     if (_loading) return;
     setState(() => _loading = true);
+    bool restored = false;
     try {
-      await _app.subscriptionService.restorePurchases();
+      restored = await _app.subscriptionService.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
     if (!mounted) return;
     setState(() => _loading = false);
-    Get.snackbar('Restore', 'Purchase restored successfully (demo).');
+    Get.snackbar(
+      'Restore',
+      restored
+          ? 'Purchase restored successfully.'
+          : 'No previous purchase found.',
+    );
   }
 
   @override
@@ -109,8 +115,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                     child: GestureDetector(
                       onTap: Get.back,
                       child: Container(
-                        width: 34.w,
-                        height: 34.w,
+                        width: 28.w,
+                        height: 28.w,
+                        alignment: Alignment.center,
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
@@ -126,7 +133,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           AppAssets.preCross,
                           width: 12.w,
                           height: 12.w,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
@@ -209,38 +216,48 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   SizedBox(height: 16.h),
                   Row(
                     children: [
-                      Image.asset(AppAssets.softLeft,
-                          width: 16.w, height: 30.h, fit: BoxFit.contain),
+                      Image.asset(
+                        AppAssets.softLeft,
+                        width: 16.w,
+                        height: 30.h,
+                        fit: BoxFit.contain,
+                      ),
                       SizedBox(width: 6.w),
                       Expanded(
                         child: AnimatedCtaButton(
-                    text: _loading
-                        ? 'Processing...'
-                        : _app.remoteConfigService.buttonText,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],
-                    ),
-                    borderRadius: BorderRadius.circular(28.r),
-                    height: 52.h,
-                    isLoading: _loading,
-                    leadingIcon: Image.asset(
-                      AppAssets.premiumCrown,
-                      width: 18.w,
-                      height: 18.w,
-                      color: Colors.white,
-                      fit: BoxFit.contain,
-                    ),
-                    trailingIcon: Icon(
-                      Icons.arrow_forward_rounded,
-                      color: Colors.white,
-                      size: 20.sp,
-                    ),
-                    onPressed: (_loading || _pricesLoading) ? null : _subscribe,
-                  ),
+                          text: _loading
+                              ? 'Processing...'
+                              : _app.remoteConfigService.buttonText,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],
+                          ),
+                          borderRadius: BorderRadius.circular(28.r),
+                          height: 52.h,
+                          isLoading: _loading,
+                          leadingIcon: Image.asset(
+                            AppAssets.premiumCrown,
+                            width: 18.w,
+                            height: 18.w,
+                            color: Colors.white,
+                            fit: BoxFit.contain,
+                          ),
+                          trailingIcon: Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 20.sp,
+                          ),
+                          onPressed: (_loading || _pricesLoading)
+                              ? null
+                              : _subscribe,
+                        ),
                       ),
                       SizedBox(width: 6.w),
-                      Image.asset(AppAssets.softRight,
-                          width: 16.w, height: 30.h, fit: BoxFit.contain),
+                      Image.asset(
+                        AppAssets.softRight,
+                        width: 16.w,
+                        height: 30.h,
+                        fit: BoxFit.contain,
+                      ),
                     ],
                   ),
                   SizedBox(height: 8.h),
@@ -396,34 +413,15 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
         Image.asset(AppAssets.softIcons[i], width: 40.w, height: 40.w),
         SizedBox(width: 12.w),
         Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                f.$1,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: _navy,
-                  fontSize: 13.sp,
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontWeight: FontWeight.w700,
-                ),
+          child: LayoutBuilder(
+            builder: (context, constraints) => FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                width: constraints.maxWidth,
+                child: _featureText(f),
               ),
-              SizedBox(height: 2.h),
-              Text(
-                f.$2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: const Color(0xFF6B7280),
-                  fontSize: 10.sp,
-                  fontFamily: 'Inter',
-                  height: 1.25,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
         Container(
@@ -434,6 +432,38 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
             shape: BoxShape.circle,
           ),
           child: Icon(Icons.check_rounded, size: 14.sp, color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Widget _featureText((String, String) f) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          f.$1,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: _navy,
+            fontSize: 13.sp,
+            fontFamily: 'Plus Jakarta Sans',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Text(
+          f.$2,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: const Color(0xFF6B7280),
+            fontSize: 10.sp,
+            fontFamily: 'Inter',
+            height: 1.25,
+          ),
         ),
       ],
     );
