@@ -1293,8 +1293,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       children: [
         // Top empty card with clipboard graphic
         CustomCard(
-          borderRadius: 22.r,
-          padding: EdgeInsets.fromLTRB(18.w, 18.h, 0, 18.h),
+          borderRadius: 22,
+          padding: EdgeInsets.zero,
           shadows: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -1307,101 +1307,92 @@ class _HistoryScreenState extends State<HistoryScreen> {
               offset: Offset(0, 2.h),
             ),
           ],
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Circular history icon
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          AppAssets.historyRestart,
-                          width: 36.w,
-                          height: 36.w,
-                          fit: BoxFit.contain,
-                        ),
-                        SizedBox(
-                          width: 12.w,
-                        ), // Add spacing between image and text
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'No records yet',
-                                style: TextStyle(
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textDark,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                'Calculate your BMI to see\nyour history here.',
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  color: AppColors.textLight,
-                                  height: 1.4,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(AppRoutes.bmiCalculator),
-                      child: Container(
-                        width: 117.w,
-                        height: 36.h,
-                        decoration: ShapeDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment(0.50, 0.00),
-                            end: Alignment(0.50, 1.00),
-                            colors: [
-                              const Color(0xFF33D2AB),
-                              const Color(0xFF00946F),
-                            ],
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.r),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Calculate BMI',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // BMI illustration — kept inside the card, vertically centred
-              Padding(
-                padding: EdgeInsets.only(left: 6.w, right: 14.w),
-                child: SizedBox(
-                  width: 104.w,
-                  height: 104.w,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(22.r),
+            child: Stack(
+              children: [
+                // BMI illustration — anchored to the bottom-right corner
+                Positioned(
+                  right: -30.w,
+                  bottom: -50,
                   child: Image.asset(
                     AppAssets.historyIcon,
+                    width: 200.w,
                     fit: BoxFit.contain,
-                    alignment: Alignment.center,
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 20.h),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        AppAssets.historyRestart,
+                        width: 34.w,
+                        height: 34.w,
+                        fit: BoxFit.contain,
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'No records yet',
+                              style: TextStyle(
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              'Calculate your BMI to see\nyour history here.',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: AppColors.textLight,
+                                height: 1.35,
+                              ),
+                            ),
+                            SizedBox(height: 18.h),
+                            GestureDetector(
+                              onTap: () => Get.toNamed(AppRoutes.bmiCalculator),
+                              child: Container(
+                                width: 117.w,
+                                height: 38.h,
+                                decoration: ShapeDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment(0.50, 0.00),
+                                    end: Alignment(0.50, 1.00),
+                                    colors: [
+                                      Color(0xFF33D2AB),
+                                      Color(0xFF00946F),
+                                    ],
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Calculate BMI',
+                                    style: TextStyle(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(height: 18.h),
@@ -1418,15 +1409,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
         SizedBox(height: 8.h),
         Container(
           padding: EdgeInsets.all(14.w),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF0FAF6),
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFE2F3ED)),
+          width: double.infinity,
+          height: 63.h,
+          decoration: ShapeDecoration(
+            color: const Color(0xFFF0F9F8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(AppAssets.historyUp, height: 30.h, width: 30.w),
+              Image.asset(AppAssets.up, height: 30.h, width: 30.w),
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
@@ -1473,85 +1467,161 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         SizedBox(height: 20.h),
 
-        // Unlock Premium Banner (Screenshot 19)
-        GestureDetector(
-          onTap: () => Get.toNamed(AppRoutes.paywall),
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(20.r),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFFDFDFE),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.r),
+        // Unlock Premium Banner
+        _buildPremiumBanner(),
+      ],
+    );
+  }
+
+  Widget _buildPremiumBanner() {
+    return GestureDetector(
+      onTap: () => Get.toNamed(AppRoutes.paywall),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF0F766E), Color(0xFF00946F), Color(0xFF33D2AB)],
+          ),
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF09B389).withValues(alpha: 0.35),
+              blurRadius: 18.r,
+              offset: Offset(0, 8.h),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24.r),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -28.w,
+                top: -34.h,
+                child: _buildBannerCircle(120.w, 0.10),
               ),
-              shadows: [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.emoji_events_outlined,
-                  color: const Color(0xFFFFD700),
-                  size: 26.sp,
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Unlock Premium',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13.sp,
+              Positioned(
+                right: 56.w,
+                bottom: -46.h,
+                child: _buildBannerCircle(96.w, 0.07),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 18.h),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 46.w,
+                      height: 46.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xFFFFE08A), Color(0xFFFFB800)],
                         ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        'Get advanced insights, reports &\nmore',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 10.sp,
-                          height: 1.2,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          width: 1.5.w,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.15),
+                            blurRadius: 8.r,
+                            offset: Offset(0, 3.h),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                      child: Icon(
+                        Icons.workspace_premium_rounded,
+                        color: Colors.white,
+                        size: 26.sp,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Unlock Premium',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15.sp,
+                            ),
+                          ),
+                          SizedBox(height: 3.h),
+                          Text(
+                            'Get advanced insights, reports & more',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.88),
+                              fontFamily: 'Inter',
+                              fontSize: 10.5.sp,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 9.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.12),
+                            blurRadius: 8.r,
+                            offset: Offset(0, 3.h),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Go Premium',
+                            style: TextStyle(
+                              color: const Color(0xFF00946F),
+                              fontFamily: 'Inter',
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            color: const Color(0xFF00946F),
+                            size: 15.sp,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () => Get.toNamed(AppRoutes.paywall),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF09B389),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: 8.h,
-                    ),
-                  ),
-                  child: Text(
-                    'Go Premium',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildBannerCircle(double size, double alpha) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: alpha),
+      ),
     );
   }
 

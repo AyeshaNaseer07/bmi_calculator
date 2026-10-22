@@ -95,6 +95,7 @@ abstract class AppAssets {
   static const String improveHealthIcon = '$_imagesBase/improve_health.webp';
   static const String historyIcon = '$_imagesBase/history_bg.webp';
   static const String historyUp = '$_imagesBase/history_up.webp';
+  static const String up = '$_imagesBase/up.png';
   static const String historyCalander = '$_imagesBase/calander_history.webp';
   static const String historyRestart = '$_imagesBase/history_restart.webp';
   static const String premiumCrown = '$_imagesBase/premium_crown.webp';

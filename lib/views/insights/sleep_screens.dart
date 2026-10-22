@@ -33,7 +33,7 @@ class SleepWellScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(icon, width: 16.w, height: 16.w),
+          Image.asset(icon, width: 32.w, height: 32.w),
           SizedBox(width: 10.w),
           Expanded(
             child: Column(
