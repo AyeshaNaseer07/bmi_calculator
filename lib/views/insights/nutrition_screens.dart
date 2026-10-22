@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
-import '../onboarding/soft_paywall_screen.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
 
@@ -118,15 +117,16 @@ class EatBalancedMealsScreen extends StatelessWidget {
             subtitle: 'Explore simple ideas for balanced meals.',
             pro: !Get.find<AppController>().isPremium.value,
             onTap: () {
-              if (Get.find<AppController>().isPremium.value) {
-                Get.to(() => const DailyMealPlanScreen());
-              } else {
-                Get.to(
-                  () => SoftPaywallScreen(
-                    onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
-                  ),
-                );
-              }
+              Get.to(() => const DailyMealPlanScreen());
+              // if (Get.find<AppController>().isPremium.value) {
+              //   Get.to(() => const DailyMealPlanScreen());
+              // } else {
+              //   Get.to(
+              //     () => SoftPaywallScreen(
+              //       onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
+              //     ),
+              //   );
+              // }
             },
           ),
         ],

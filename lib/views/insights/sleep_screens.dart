@@ -15,7 +15,7 @@ const Color _kLav = Color(0xFFE8EBFB);
 class SleepWellScreen extends StatelessWidget {
   const SleepWellScreen({super.key});
 
-  Widget _routine(IconData icon, String title, String sub) => Padding(
+  Widget _routine(String icon, String title, String sub) => Padding(
     padding: EdgeInsets.only(bottom: 8.h),
     child: Container(
       padding: EdgeInsets.fromLTRB(8.w, 6.h, 12.w, 6.h),
@@ -33,15 +33,7 @@ class SleepWellScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 36.w,
-            height: 36.w,
-            decoration: const BoxDecoration(
-              color: _kLav,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: 19.sp, color: _kDeep),
-          ),
+          Image.asset(icon, width: 16.w, height: 16.w),
           SizedBox(width: 10.w),
           Expanded(
             child: Column(
@@ -258,17 +250,17 @@ class SleepWellScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           _routine(
-            Icons.brightness_5_outlined,
+            AppAssets.regSchedule,
             'Keep a Regular Schedule',
             'Sleep and wake up around the same time.',
           ),
           _routine(
-            Icons.phone_android_rounded,
+            AppAssets.limitScreen,
             'Limit Screen Time',
             'Put your phone away before bedtime.',
           ),
           _routine(
-            Icons.local_cafe_outlined,
+            AppAssets.avoidCaffine,
             'Avoid Late Caffeine',
             'Choose caffeine-free drinks in the evening.',
           ),

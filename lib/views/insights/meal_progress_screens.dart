@@ -4,6 +4,7 @@ import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../controllers/meal_plan_controller.dart';
 import 'insight_common.dart';
@@ -90,53 +91,10 @@ class MealCompletedScreen extends StatelessWidget {
           SizedBox(
             width: 150.w,
             height: 150.w,
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  width: 150.w,
-                  height: 150.w,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFEDF0FC),
-                    boxShadow: [
-                      BoxShadow(color: Color(0x6633D2AB), blurRadius: 40),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 112.w,
-                  height: 112.w,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFBDF2DF),
-                  ),
-                ),
-                Container(
-                  width: 74.w,
-                  height: 74.w,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _kDeep,
-                  ),
-                  child: Icon(
-                    Icons.check_rounded,
-                    color: Colors.white,
-                    size: 40.sp,
-                  ),
-                ),
-                Positioned(
-                  top: 6.h,
-                  right: 6.w,
-                  child: _mini(Icons.eco_rounded),
-                ),
-                Positioned(
-                  bottom: 2.h,
-                  left: 14.w,
-                  child: _mini(Icons.wb_sunny_outlined),
-                ),
-              ],
+            child: Lottie.asset(
+              AppAssets.foodCompleteLottie,
+              fit: BoxFit.contain,
+              repeat: true,
             ),
           ),
           SizedBox(height: 12.h),
@@ -319,17 +277,6 @@ class MealCompletedScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _mini(IconData i) => Container(
-    width: 24.w,
-    height: 24.w,
-    decoration: const BoxDecoration(
-      color: Colors.white,
-      shape: BoxShape.circle,
-      boxShadow: [BoxShadow(color: Color(0x22000000), blurRadius: 4)],
-    ),
-    child: Icon(i, size: 13.sp, color: _kDeep),
-  );
 }
 
 /// "Your Progress" screen.

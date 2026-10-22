@@ -65,6 +65,9 @@ abstract class AppAssets {
   static const String preCross = '$_imagesBase/pre_cross.webp';
   static const String preDown = '$_imagesBase/pre_download.png';
   static const String sleepIcon = '$_imagesBase/sleep_icon.png';
+  static const String regSchedule = '$_imagesBase/reg_schedule.png';
+  static const String limitScreen = '$_imagesBase/limit_screen.png';
+  static const String avoidCaffine = '$_imagesBase/avoid_caffine.png';
   static const String bestValueCrown = '$_imagesBase/best_value_crown.webp';
   static const String profileIcon = '$_imagesBase/profile.webp';
   static const String bmiCalIcon = '$_imagesBase/bmi_cal_bg.webp';
@@ -108,6 +111,8 @@ abstract class AppAssets {
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
   static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
+  static const String completeFoodVideo = '$_lottiesBase/complete_food.mp4';
+  static const String foodCompleteLottie = '$_lottiesBase/food_complete.json';
 
   // ── BMI insight / tips flow ──
   static const String insightNormal = '$_imagesBase/normal_bmi.webp';

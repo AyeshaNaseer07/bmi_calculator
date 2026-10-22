@@ -113,8 +113,12 @@ class BMICalculatorScreen extends StatelessWidget {
                   final (maxFt, maxInches) = BMIService.cmToFeetAndInches(
                     220.0,
                   );
-                  final minHeightText = isCm ? '120 cm' : '$minFt ft $minInches in';
-                  final maxHeightText = isCm ? '220 cm' : '$maxFt ft $maxInches in';
+                  final minHeightText = isCm
+                      ? '120 cm'
+                      : '$minFt ft $minInches in';
+                  final maxHeightText = isCm
+                      ? '220 cm'
+                      : '$maxFt ft $maxInches in';
 
                   final minWeightText = isKg
                       ? '30 kg'
@@ -137,7 +141,9 @@ class BMICalculatorScreen extends StatelessWidget {
                                 asset: AppAssets.homeMale,
                                 label: 'Male',
                                 isSelected: isMale,
-                                ageText: isMale ? (age > 0 ? '$age' : '--') : null,
+                                ageText: isMale
+                                    ? (age > 0 ? '$age' : '--')
+                                    : null,
                                 onTap: () {
                                   controller.setGender(Gender.male);
                                   controller.openAgePicker();
@@ -151,8 +157,9 @@ class BMICalculatorScreen extends StatelessWidget {
                                 asset: AppAssets.homeFemale,
                                 label: 'Female',
                                 isSelected: isFemale,
-                                ageText:
-                                    isFemale ? (age > 0 ? '$age' : '--') : null,
+                                ageText: isFemale
+                                    ? (age > 0 ? '$age' : '--')
+                                    : null,
                                 onTap: () {
                                   controller.setGender(Gender.female);
                                   controller.openAgePicker();
@@ -489,6 +496,14 @@ class BMICalculatorScreen extends StatelessWidget {
                         ],
                       ),
                       if (controller.isAgePickerVisible.value)
+                        Positioned.fill(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => controller.toggleAgePicker(),
+                            child: const SizedBox.expand(),
+                          ),
+                        ),
+                      if (controller.isAgePickerVisible.value)
                         Positioned(
                           top: 85.h,
                           left: 20,
@@ -603,34 +618,34 @@ class BMICalculatorScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: onAgeTap,
                     child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: ageText,
-                          style: TextStyle(
-                            color: const Color(0xFF09B389),
-                            fontSize: 15,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: ageText,
+                            style: TextStyle(
+                              color: const Color(0xFF09B389),
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: 'Yr',
-                          style: TextStyle(
-                            color: const Color(0xFF09B389),
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
+                          TextSpan(
+                            text: 'Yr',
+                            style: TextStyle(
+                              color: const Color(0xFF09B389),
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      style: const TextStyle(
+                        color: green,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    style: const TextStyle(
-                      color: green,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
                   ),
                 ],
               ],

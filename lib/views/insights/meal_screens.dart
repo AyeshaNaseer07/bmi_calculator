@@ -406,9 +406,9 @@ class _TealPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF2FD4A8).withValues(alpha: 0.6),
+        color: const Color(0xFF33D2AB),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
