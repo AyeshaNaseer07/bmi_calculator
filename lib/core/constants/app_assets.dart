@@ -74,6 +74,7 @@ abstract class AppAssets {
   static const String bmiCalBackIcon = '$_imagesBase/bmi_cal_back.webp';
   static const String ageBack = '$_imagesBase/age_back.webp';
   static const String ageForward = '$_imagesBase/age_forward.webp';
+  static const String viewHistory = '$_imagesBase/view_his.png';
   static const String hearticon = '$_imagesBase/heart.webp';
   static const String shieldicon = '$_imagesBase/shield.webp';
   static const String weighticon = '$_imagesBase/weight.webp';
@@ -100,6 +101,7 @@ abstract class AppAssets {
   static const String historyRestart = '$_imagesBase/history_restart.webp';
   static const String premiumCrown = '$_imagesBase/premium_crown.webp';
   static const String mealProtein = '$_imagesBase/meal_protein.png';
+  static const String categoryCross = '$_imagesBase/category_cross.png';
 
   // ── Health Insights ──
   static const String healthHeight = '$_imagesBase/health_height.webp';

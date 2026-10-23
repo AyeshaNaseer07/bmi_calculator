@@ -52,13 +52,13 @@ enum BMICategory {
   String get feedbackMessage {
     switch (this) {
       case BMICategory.underweight:
-        return 'Your BMI is in the underweight range. Focus on gaining weight in a healthy way.';
+        return ' Your BMI is in the underweight range. Nourish your body with healthy foods.';
       case BMICategory.normal:
         return 'Great job! Your BMI is in the normal range. Keep maintaining a healthy lifestyle.';
       case BMICategory.overweight:
-        return 'Your BMI is in the overweight range. Focus on a healthier lifestyle.';
+        return 'Your BMI is in the overweight range. Stay active and eat balanced meals.';
       case BMICategory.obese:
-        return 'Your BMI is in the obese range. Focus on a healthier lifestyle.';
+        return 'Your BMI is in the obese range. Start making healthier choices and work toward a healthier weight.';
     }
   }
 
@@ -75,10 +75,15 @@ enum BMICategory {
     }
   }
 
-  Widget buildFeedbackIcon({double size = 22}) {
+  Widget buildFeedbackIcon({double size = 20}) {
     switch (this) {
       case BMICategory.underweight:
-        return Icon(Icons.info_outline_rounded, color: color, size: size);
+        return Image.asset(
+          AppAssets.categoryCross,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+        );
       case BMICategory.normal:
         return Image.asset(
           AppAssets.shieldicon,
@@ -87,17 +92,18 @@ enum BMICategory {
           fit: BoxFit.contain,
         );
       case BMICategory.overweight:
-        return Icon(Icons.warning_amber_rounded, color: color, size: size);
-      case BMICategory.obese:
-        return Container(
+        return Image.asset(
+          AppAssets.categoryCross,
           width: size,
           height: size,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          child: Icon(
-            Icons.close_rounded,
-            color: Colors.white,
-            size: size * 0.65,
-          ),
+          fit: BoxFit.contain,
+        );
+      case BMICategory.obese:
+        return Image.asset(
+          AppAssets.categoryCross,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
         );
     }
   }

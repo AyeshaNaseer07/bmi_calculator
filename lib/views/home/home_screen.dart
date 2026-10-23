@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bmi_calculator/views/insights/insight_common.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -668,10 +667,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            CupertinoIcons.calendar,
-                            size: 10.sp,
-                            color: const Color(0xFF1E2D2F),
+                          Image.asset(
+                            AppAssets.viewHistory,
+                            width: 10.w,
+                            height: 10.w,
                           ),
                           SizedBox(width: 4.w),
                           Text(

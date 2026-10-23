@@ -37,13 +37,14 @@ class _Benefit extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
           decoration: ShapeDecoration(
             color: bg,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(width: 1, color: border),
+              borderRadius: BorderRadius.circular(20.r),
             ),
-            shadows: [
+            shadows: const [
               BoxShadow(
                 color: Color(0x0A000000),
                 blurRadius: 12,
@@ -53,35 +54,40 @@ class _Benefit extends StatelessWidget {
             ],
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(icon, width: 46.w, height: 46.w),
+              Image.asset(icon, width: 52.w, height: 52.w, fit: BoxFit.contain),
               SizedBox(width: 14.w),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
                       style: TextStyle(
                         color: const Color(0xFF111827),
-                        fontSize: 15,
+                        fontSize: 16,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
+                        height: 1.3,
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 4.h),
                     Text(
                       subtitle,
                       style: TextStyle(
                         color: const Color(0xFF6B7280),
-                        fontSize: 12,
+                        fontSize: 13,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
+                        height: 1.35,
                       ),
                     ),
                   ],
                 ),
               ),
+              SizedBox(width: 8.w),
               Icon(Icons.chevron_right_rounded, color: chevron, size: 24.sp),
             ],
           ),
@@ -190,11 +196,12 @@ class _MintRow extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 12.h),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(10.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         decoration: ShapeDecoration(
-          color: const Color(0x2833D2AB),
+          color: const Color(0xFFECFDF5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(width: 1, color: Color(0xFFD1FAE5)),
+            borderRadius: BorderRadius.circular(16.r),
           ),
         ),
         child: Row(
@@ -318,27 +325,28 @@ class _TipStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 341,
-      padding: EdgeInsets.all(12),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
       decoration: ShapeDecoration(
         color: const Color(0xFFECFDF5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 1, color: Color(0xFFD1FAE5)),
+          borderRadius: BorderRadius.circular(16.r),
+        ),
       ),
       child: Row(
         children: [
           icon ??
               Container(
-                width: 32,
-                height: 32,
-                decoration: ShapeDecoration(
-                  color: const Color(0xFFD1FAE5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                width: 36.w,
+                height: 36.w,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD1FAE5),
+                  shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.lightbulb_outline_rounded,
-                  size: 18.sp,
+                  size: 20.sp,
                   color: kGreen,
                 ),
               ),

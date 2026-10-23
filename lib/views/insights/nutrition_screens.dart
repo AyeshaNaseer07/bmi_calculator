@@ -493,8 +493,8 @@ class LeanProteinScreen extends StatelessWidget {
           AssetOrPlaceholder(
             asset: AppAssets.photoBalancedMeal,
             width: double.infinity,
-            height: 150.h,
-            radius: 20,
+            height: 182.h,
+            radius: 20.r,
           ),
           SizedBox(height: 14.h),
           const TipBanner(
@@ -541,6 +541,57 @@ class LeanProteinScreen extends StatelessWidget {
 class PortionSizesScreen extends StatelessWidget {
   const PortionSizesScreen({super.key});
 
+  Widget _step(String icon, String title, String subtitle) => Container(
+    width: double.infinity,
+    margin: EdgeInsets.only(bottom: 12.h),
+    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18.r),
+      border: Border.all(color: const Color(0xFFDDF3EA), width: 1.2),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x0F33D2AB),
+          blurRadius: 12,
+          offset: Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Image.asset(icon, width: 52.w, height: 52.w, fit: BoxFit.contain),
+        SizedBox(width: 14.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: const Color(0xFF111827),
+                  fontSize: 16,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: const Color(0xFF6B7280),
+                  fontSize: 13.5,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
@@ -573,20 +624,20 @@ class PortionSizesScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14.h),
-          const InfoRowCard(
-            iconAsset: AppAssets.tipMoreVeggies,
-            title: 'Half Your Plate',
-            subtitle: 'Fill half your plate with vegetables.',
+          _step(
+            AppAssets.tipMoreVeggies,
+            'Half Your Plate',
+            'Fill half your plate with vegetables.',
           ),
-          const InfoRowCard(
-            iconAsset: AppAssets.portionAddProtein,
-            title: 'Add Protein',
-            subtitle: 'Use one quarter of your plate for protein.',
+          _step(
+            AppAssets.portionAddProtein,
+            'Add Protein',
+            'Use one quarter of your plate for protein.',
           ),
-          const InfoRowCard(
-            iconAsset: AppAssets.portionWholeGrain,
-            title: 'Include Whole Grains',
-            subtitle: 'Fill the remaining quarter with whole grains.',
+          _step(
+            AppAssets.portionWholeGrain,
+            'Include Whole Grains',
+            'Fill the remaining quarter with whole grains.',
           ),
           SizedBox(height: 4.h),
           const TipBanner(
