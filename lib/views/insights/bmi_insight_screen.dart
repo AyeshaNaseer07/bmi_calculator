@@ -382,7 +382,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 v.weightColor,
                 CrossAxisAlignment.start,
               ),
-              Image.asset(AppAssets.insightRise, width: 52.w, height: 52.w),
+              Image.asset(AppAssets.insightRise, width: 64.w, height: 64.w),
               weightCol(
                 isNormal ? 'Healthy Range' : 'Healthy Target',
                 target,

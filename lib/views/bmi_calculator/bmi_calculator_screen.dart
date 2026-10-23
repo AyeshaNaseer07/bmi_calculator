@@ -144,10 +144,7 @@ class BMICalculatorScreen extends StatelessWidget {
                                 ageText: isMale
                                     ? (age > 0 ? '$age' : '--')
                                     : null,
-                                onTap: () {
-                                  controller.setGender(Gender.male);
-                                  controller.openAgePicker();
-                                },
+                                onTap: () => controller.setGender(Gender.male),
                                 onAgeTap: () {
                                   controller.setGender(Gender.male);
                                   controller.openAgePicker();
@@ -160,10 +157,8 @@ class BMICalculatorScreen extends StatelessWidget {
                                 ageText: isFemale
                                     ? (age > 0 ? '$age' : '--')
                                     : null,
-                                onTap: () {
-                                  controller.setGender(Gender.female);
-                                  controller.openAgePicker();
-                                },
+                                onTap: () =>
+                                    controller.setGender(Gender.female),
                                 onAgeTap: () {
                                   controller.setGender(Gender.female);
                                   controller.openAgePicker();
