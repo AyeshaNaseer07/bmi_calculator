@@ -112,7 +112,7 @@ class ProfileScreen extends StatelessWidget {
                   final displayName = name.isNotEmpty ? name : 'Guest User';
                   final tagline = name.isNotEmpty
                       ? 'Manage your health profile'
-                      : 'Add your name to personalize\nyour experience.';
+                      : 'Start your health journey\nby adding your details.';
 
                   return CustomCard(
                     borderRadius: 20.r,
@@ -592,7 +592,7 @@ class ProfileScreen extends StatelessWidget {
 
                           // Share App
                           _buildAccountRow(
-                            icon: CupertinoIcons.share_up,
+                            icon: CupertinoIcons.share,
                             title: 'Share App',
                             subtitle: 'Share this app with friends & family',
                             onTap: () {
@@ -651,7 +651,7 @@ class ProfileScreen extends StatelessWidget {
                       title,
                       style: TextStyle(
                         color: const Color(0xFF111827),
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
                       ),
@@ -660,8 +660,8 @@ class ProfileScreen extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: const Color(0xFF111827).withValues(alpha: 0.82),
-                        fontSize: 11.sp,
+                        color: const Color(0xFF111827),
+                        fontSize: 11,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                       ),

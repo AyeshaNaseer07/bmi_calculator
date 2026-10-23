@@ -333,7 +333,11 @@ class _MealCard extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Row(
                     children: [
-                      Icon(meal.tagIcon, size: 14.w, color: kGreen),
+                      Image.asset(
+                        AppAssets.mealProtein,
+                        width: 16.w,
+                        height: 16.h,
+                      ),
                       SizedBox(width: 5.w),
                       Expanded(
                         child: Text(
@@ -444,7 +448,7 @@ class MealDetailScreen extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 3.w),
         padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
-          color: hi ? const Color(0xFF8FF0CD) : _kLav,
+          color: hi ? const Color(0xFF8FF0CD).withOpacity(0.6) : _kLav,
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Stack(

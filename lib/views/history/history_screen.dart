@@ -1412,7 +1412,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           width: double.infinity,
           height: 63.h,
           decoration: ShapeDecoration(
-            color: const Color(0xFFF0F9F8),
+            color: const Color(0xFFE6F8F2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
@@ -1633,9 +1633,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0FAF6),
+        color: const Color(0xFFE6F8F2),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE2F3ED)),
       ),
       child: Row(
         children: [
