@@ -355,18 +355,16 @@ class InfoRowCard extends StatelessWidget {
   }
 }
 
-/// Mint tip banner with a lightbulb-style icon.
+/// Mint tip banner with a lightbulb icon (or a custom [iconAsset]).
 class TipBanner extends StatelessWidget {
   final String text;
-  final IconData icon;
-  final String? iconAsset;
+  final String iconAsset;
   final bool bold;
 
   const TipBanner({
     super.key,
     required this.text,
-    this.icon = Icons.lightbulb_outline_rounded,
-    this.iconAsset,
+    this.iconAsset = AppAssets.tipBulbIcon,
     this.bold = false,
   });
 
@@ -382,18 +380,7 @@ class TipBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (iconAsset != null)
-            Image.asset(iconAsset!, width: 30.w, height: 30.w)
-          else
-            Container(
-              width: 30.w,
-              height: 30.w,
-              decoration: const BoxDecoration(
-                color: Color(0xFFCDF3E4),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, size: 16.sp, color: kGreen),
-            ),
+          Image.asset(iconAsset, width: 30.w, height: 30.w),
           SizedBox(width: 10.w),
           Expanded(
             child: Text(

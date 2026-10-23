@@ -168,6 +168,7 @@ abstract class AppAssets {
   static const String moonIcon = '$_imagesBase/star.png';
   static const String brainIcon = '$_imagesBase/brain.png';
   static const String glassTipIcon = '$_imagesBase/tip_icon.png';
+  static const String tipBulbIcon = '$_imagesBase/tip.png';
   static const String glassEmpty = '$_imagesBase/empty_glass.png';
   static const String glassFull = '$_imagesBase/half_glass.png';
   static const String activeHero = '$_imagesBase/active_stay.png';

@@ -336,20 +336,7 @@ class _TipStrip extends StatelessWidget {
       ),
       child: Row(
         children: [
-          icon ??
-              Container(
-                width: 36.w,
-                height: 36.w,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFD1FAE5),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.lightbulb_outline_rounded,
-                  size: 20.sp,
-                  color: kGreen,
-                ),
-              ),
+          icon ?? Image.asset(AppAssets.tipBulbIcon, width: 36.w, height: 36.w),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
