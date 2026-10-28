@@ -71,46 +71,32 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
     );
   }
 
-  Widget _tipRow(
-    Color tile,
-    IconData icon,
-    Color ic,
-    String lead,
-    String text,
-  ) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 14.h),
-      child: Row(
-        children: [
-          Container(
-            width: 34.w,
-            height: 34.w,
-            decoration: BoxDecoration(color: tile, shape: BoxShape.circle),
-            child: Icon(icon, size: 18.sp, color: ic),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: '$lead: ',
-                    style: bodyStyle(13, color: kInk, weight: FontWeight.w800),
+  Widget _tipRow(String icon, String lead, String text) {
+    return Row(
+      children: [
+        Image.asset(icon, width: 36.w, height: 36.w, fit: BoxFit.contain),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: '$lead: ',
+                  style: bodyStyle(13, color: kInk, weight: FontWeight.w800),
+                ),
+                TextSpan(
+                  text: text,
+                  style: bodyStyle(
+                    12,
+                    color: const Color(0xFF4B5563),
+                    weight: FontWeight.w500,
                   ),
-                  TextSpan(
-                    text: text,
-                    style: bodyStyle(
-                      12,
-                      color: const Color(0xFF4B5563),
-                      weight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -214,9 +200,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  'Based on your weight and activity: about '
-                  '${PersonalTargets.litres(_ml)} L a day. Needs also vary '
-                  'with weather and health.',
+                  'Your water ${PersonalTargets.litres(_ml)} L a day needs depend on your activity, weather and health.',
                   style: bodyStyle(14, color: _kSub, height: 1.3),
                 ),
                 SizedBox(height: 12.h),
@@ -288,8 +272,8 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
           ),
           SizedBox(height: 16.h),
           Container(
-            width: 341,
-            padding: const EdgeInsets.all(10),
+            width: double.infinity,
+            padding: EdgeInsets.all(14.w),
             decoration: ShapeDecoration(
               color: Colors.white,
               shape: RoundedRectangleBorder(
@@ -318,25 +302,19 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 ),
                 SizedBox(height: 12.h),
                 _tipRow(
-                  const Color(0xFFFFF1C9),
-                  Icons.wb_sunny_outlined,
-                  const Color(0xFFE0A100),
+                  AppAssets.waterMorningIcon,
                   'Start Your Morning',
                   'Drink a glass right after waking up.',
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 12.h),
                 _tipRow(
-                  const Color(0xFFDCE9FD),
-                  Icons.water_drop_outlined,
-                  const Color(0xFF3B82F6),
+                  AppAssets.waterThroughDayIcon,
                   'Drink Throughout the Day',
                   'Sip regularly instead of all at once.',
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 12.h),
                 _tipRow(
-                  const Color(0xFFD9F5E5),
-                  Icons.eco_outlined,
-                  kGreen,
+                  AppAssets.waterListenBodyIcon,
                   'Listen to Your Body',
                   'Drink when thirsty; adjust for activity.',
                 ),

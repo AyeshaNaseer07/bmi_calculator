@@ -87,7 +87,7 @@ _Variant _variantFor(BMICategory c) {
         message: 'Your BMI is below the healthy range.',
         messageColor: Color(0xFF0A8FD6),
         image: AppAssets.insightUnder,
-        imageAspect: 1065 / 500,
+        imageAspect: 1065 / 507,
         weightColor: Color(0xFF0A8FD6),
         barBg: Color(0xFFD3ECFA),
         barFill: Color(0xFF1B7FC4),
@@ -136,7 +136,7 @@ _Variant _variantFor(BMICategory c) {
         chip: 'OBESE',
         chipBg: Color(0xFFFDE4E4),
         chipFg: Color(0xFFC01818),
-        range: '30 and above',
+        range: '30.0-34.9',
         message: 'Your BMI is above the healthy range.',
         messageColor: Color(0xFFC01818),
         image: AppAssets.insightObese,
@@ -243,82 +243,101 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
   Widget _buildHero(_Variant v) {
     return AspectRatio(
       aspectRatio: v.imageAspect,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(v.image, fit: BoxFit.cover),
-          Positioned.fill(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Padding(
-                  padding: EdgeInsets.fromLTRB(15.w, 0, 80.w, 25.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Chip: ● NORMAL
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 6.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: v.chipBg,
-                          borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(color: kMintBorder),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 7.w,
-                              height: 7.w,
-                              decoration: BoxDecoration(
-                                color: v.chipFg,
-                                shape: BoxShape.circle,
-                              ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Every hero image draws its card 15px from the top/left edge and
+          // 363px tall (on a ~1065px-wide source); the character hangs below
+          // it by a different amount per category. Lay the text out against
+          // the card, not the whole image, so it's centered the same on all.
+          final w = constraints.maxWidth;
+          final inset = w * 15 / 1065;
+          final cardH = w * 363 / 1065;
+          final textW = w * 0.55 - 18.w;
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(v.image, fit: BoxFit.cover),
+              Positioned(
+                left: inset,
+                top: inset,
+                height: cardH,
+                width: textW + 18.w,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(18.w, 6.h, 0, 6.h),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      width: textW,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Chip: ● NORMAL
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 5.h,
                             ),
-                            SizedBox(width: 6.w),
-                            Text(
-                              v.chip,
-                              style: bodyStyle(
-                                11,
-                                color: v.chipFg,
-                                weight: FontWeight.w700,
-                              ),
+                            decoration: BoxDecoration(
+                              color: v.chipBg,
+                              borderRadius: BorderRadius.circular(20.r),
+                              border: Border.all(color: kMintBorder),
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 7.w,
+                                  height: 7.w,
+                                  decoration: BoxDecoration(
+                                    color: v.chipFg,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  v.chip,
+                                  style: bodyStyle(
+                                    11,
+                                    color: v.chipFg,
+                                    weight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
 
-                      // Range: 18.5 – 24.9
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(v.range, style: headStyle(32)),
-                      ),
-                      SizedBox(height: 10.h),
+                          // Range: 18.5 – 24.9
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(v.range, style: headStyle(32)),
+                          ),
+                          SizedBox(height: 8.h),
 
-                      // Message
-                      Text(
-                        v.message,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: bodyStyle(
-                          13,
-                          color: v.messageColor,
-                          weight: FontWeight.w500,
-                          height: 1.3,
-                        ),
+                          // Message
+                          Text(
+                            v.message,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: bodyStyle(
+                              13,
+                              color: v.messageColor,
+                              weight: FontWeight.w500,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -349,7 +368,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
       return Column(
         crossAxisAlignment: align,
         children: [
-          Text(label, style: headStyle(12, weight: FontWeight.w700)),
+          Text(label, style: headStyle(13, weight: FontWeight.w700)),
           SizedBox(height: 4.h),
           Text.rich(
             TextSpan(
@@ -369,8 +388,21 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
       );
     }
 
-    return InsightCard(
+    return Container(
+      width: double.infinity,
       padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 12.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: kMintBorder, width: 1.5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x2633D2AB),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           Row(
@@ -382,7 +414,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 v.weightColor,
                 CrossAxisAlignment.start,
               ),
-              Image.asset(AppAssets.insightRise, width: 64.w, height: 64.w),
+              Image.asset(AppAssets.insightRise, width: 40.w, height: 40.w),
               weightCol(
                 isNormal ? 'Healthy Range' : 'Healthy Target',
                 target,
@@ -392,11 +424,12 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 12.h),
           if (isNormal)
             Container(
               width: double.infinity,
               height: 28.h,
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
               alignment: Alignment.center,
               decoration: ShapeDecoration(
                 color: const Color(0x1E33D2AB),
@@ -420,10 +453,10 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
             Container(
               width: double.infinity,
               height: 28.h,
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
               decoration: BoxDecoration(
                 color: v.barBg,
-                borderRadius: BorderRadius.circular(14.r),
+                borderRadius: BorderRadius.circular(9999),
               ),
               child: Row(
                 children: [
@@ -432,21 +465,23 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                     style: bodyStyle(
                       12,
                       color: v.barText,
-                      weight: FontWeight.w600,
+                      weight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(width: 14.w),
+                  SizedBox(width: 16.w),
+                  // Rounded bar anchored to the right end of the pill.
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4.r),
-                      child: Stack(
-                        children: [
-                          Container(height: 6.h, color: Colors.white),
-                          FractionallySizedBox(
-                            widthFactor: fill,
-                            child: Container(height: 6.h, color: v.barFill),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: FractionallySizedBox(
+                        widthFactor: fill,
+                        child: Container(
+                          height: 7.h,
+                          decoration: BoxDecoration(
+                            color: v.barFill,
+                            borderRadius: BorderRadius.circular(9999),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -653,54 +688,66 @@ class _TipCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final subStyle = TextStyle(
+      color: const Color(0xFF94A3B8),
+      fontSize: 11.50,
+      fontFamily: 'Plus Jakarta Sans',
+      fontWeight: FontWeight.w500,
+      height: 1.37,
+    );
     return InsightCard(
       radius: 20,
       onTap: onTap,
       padding: EdgeInsets.all(14.w),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Same fixed square for every card so all icons line up
-          // (Flexible lets it shrink on very short screens).
-          Flexible(
-            child: SizedBox(
-              width: 48.w,
-              height: 48.w,
-              child: Image.asset(
-                icon,
-                fit: BoxFit.contain,
-                alignment: Alignment.center,
-              ),
+      // Content keeps one fixed size on every card and every BMI category;
+      // it only scales down as a whole if a very short screen can't fit it.
+      child: LayoutBuilder(
+        builder: (context, c) => FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: c.maxWidth,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  icon,
+                  width: 44.w,
+                  height: 44.w,
+                  fit: BoxFit.contain,
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: const Color(0xFF1E293B),
+                    fontSize: 14,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w700,
+                    height: 1.38,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                // Always reserve two lines so one-line subtitles don't
+                // shift the icon down relative to the card beside it.
+                Stack(
+                  children: [
+                    Text('\n', style: subStyle),
+                    Text(
+                      subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: subStyle,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 10.h),
-          Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: const Color(0xFF1E293B),
-              fontSize: 14,
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: FontWeight.w700,
-              height: 1.38,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            subtitle,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: const Color(0xFF94A3B8),
-              fontSize: 11.50,
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: FontWeight.w500,
-              height: 1.37,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

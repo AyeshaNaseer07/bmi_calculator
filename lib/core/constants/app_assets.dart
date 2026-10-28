@@ -149,6 +149,7 @@ abstract class AppAssets {
   static const String portionHeart = '$_imagesBase/pro_heart.png';
   static const String mealSlotLunch = '$_imagesBase/lunch.png';
   static const String mealProgress = '$_imagesBase/progress.png';
+  static const String icProfile = '$_imagesBase/ic_profile.png';
 
   // Photos that exist already
   static const String photoVegetables = '$_imagesBase/vegs.png';
@@ -164,6 +165,9 @@ abstract class AppAssets {
   static const String waterSupportIcon = '$_imagesBase/support.png';
   static const String waterGoodIcon = '$_imagesBase/good.png';
   static const String waterDailyIcon = '$_imagesBase/daily.png';
+  static const String waterMorningIcon = '$_imagesBase/your_morning.png';
+  static const String waterThroughDayIcon = '$_imagesBase/drink_day.png';
+  static const String waterListenBodyIcon = '$_imagesBase/listen_body.png';
   static const String pulseIcon = '$_imagesBase/activity.png';
   static const String moonIcon = '$_imagesBase/star.png';
   static const String brainIcon = '$_imagesBase/brain.png';

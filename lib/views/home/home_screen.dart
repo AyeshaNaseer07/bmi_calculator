@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // New design: Profile replaces the old Health Insights card.
               // Opens the Profile tab instead of pushing a new page.
               child: _featureCard(
-                AppAssets.profileIcon,
+                AppAssets.icProfile,
                 'Profile',
                 'Manage your details',
                 '',
