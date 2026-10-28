@@ -60,7 +60,8 @@ class _SplashScreenState extends State<SplashScreen>
       // A premium user has already been through Language Selection,
       // Onboarding and the Paywall once — never show that flow again.
       // Every launch, they go straight to Home.
-      final isPremium = Get.isRegistered<AppController>() &&
+      final isPremium =
+          Get.isRegistered<AppController>() &&
           Get.find<AppController>().isPremium.value;
       if (isPremium) {
         Get.offAllNamed(AppRoutes.home);
@@ -71,6 +72,12 @@ class _SplashScreenState extends State<SplashScreen>
       // starts at Language Selection. Whether the Onboarding slides show
       // next, and the Paywall shown after that, is decided from there —
       // same check on every flow, no first-launch/later-launch distinction.
+      // Native splash ad first when it's on; it continues to Language
+      // Selection itself (or skips straight there if the ad fails).
+      if (AdPreloader.instance.splashEnabled) {
+        Get.offAllNamed(AppRoutes.splashAd);
+        return;
+      }
       Get.offAllNamed(AppRoutes.languageSelection);
     });
   }

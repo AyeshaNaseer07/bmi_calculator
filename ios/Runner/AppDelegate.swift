@@ -27,6 +27,13 @@ import UserNotifications
       nativeAdFactory: fullScreenAdFactory
     )
 
+    let splashAdFactory = SplashNativeAdFactory()
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+      self,
+      factoryId: "splashNativeAd",
+      nativeAdFactory: splashAdFactory
+    )
+
     if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
       SceneDelegate.pendingShortcutType = shortcutItem.type
     }
@@ -59,6 +66,13 @@ import UserNotifications
       engineBridge.pluginRegistry,
       factoryId: "fullScreenNativeAd",
       nativeAdFactory: fullScreenAdFactory
+    )
+
+    let splashAdFactory = SplashNativeAdFactory()
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+      engineBridge.pluginRegistry,
+      factoryId: "splashNativeAd",
+      nativeAdFactory: splashAdFactory
     )
   }
 }

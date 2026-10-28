@@ -1114,71 +1114,87 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             ),
 
-            const Spacer(),
-
+            // Fixed-flex columns so BMI / Weight / status line up across
+            // rows regardless of how long the status label is.
             // BMI value column
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'BMI',
-                  style: TextStyle(
-                    color: const Color(0xFF111827).withValues(alpha: .62),
-                    fontSize: 11.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'BMI',
+                    style: TextStyle(
+                      color: const Color(0xFF111827).withValues(alpha: .62),
+                      fontSize: 11.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  record.bmiValue.toStringAsFixed(1),
-                  style: TextStyle(
-                    color: statusColor,
-                    fontSize: 13.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
+                  SizedBox(height: 2.h),
+                  Text(
+                    record.bmiValue.toStringAsFixed(1),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontSize: 13.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-
-            const Spacer(),
 
             // Weight value column
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Weight',
-                  style: TextStyle(
-                    color: const Color(0xFF111827).withValues(alpha: .62),
-                    fontSize: 11.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Weight',
+                    style: TextStyle(
+                      color: const Color(0xFF111827).withValues(alpha: .62),
+                      fontSize: 11.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  record.weightDisplay,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontSize: 13.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
+                  SizedBox(height: 2.h),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      record.weightDisplay,
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: statusColor,
+                        fontSize: 13.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
-            const Spacer(),
-
             // Status label
-            Text(
-              record.category.label,
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w700,
-                color: statusColor,
+            Expanded(
+              flex: 3,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    record.category.label,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w700,
+                      color: statusColor,
+                    ),
+                  ),
+                ),
               ),
             ),
 

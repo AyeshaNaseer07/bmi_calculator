@@ -38,12 +38,11 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+  // ATT first, then the CMP consent form whatever the user chose.
   final PermissionStatus status = await Permission.appTrackingTransparency
       .request();
-  if (status.isGranted) {
-    await showCMP();
-    debugPrint('ATT Permission granted');
-  }
+  debugPrint('ATT status: $status');
+  await showCMP();
   await initializeFirebase();
   AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
     afDevKey: "HpMZN7qSFkAnYvUMpVMhBP",

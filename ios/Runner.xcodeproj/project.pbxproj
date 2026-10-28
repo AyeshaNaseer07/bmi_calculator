@@ -19,6 +19,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		B9B69C20C338027601C3A39F /* FullScreenNativeAdFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0A9B6E0776CFBD91A13687 /* FullScreenNativeAdFactory.swift */; };
+		5183CA3D534D439E84284F37 /* SplashNativeAdFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B86F4053A14889B5153CFC /* SplashNativeAdFactory.swift */; };
 		D08139809D1968C64C583505 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2C7D86DDA0C23D96AA4880 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,7 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE56E0949E8B88AF8D142BDF /* MediumNativeAdFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediumNativeAdFactory.swift; sourceTree = "<group>"; };
 		CF0A9B6E0776CFBD91A13687 /* FullScreenNativeAdFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FullScreenNativeAdFactory.swift; sourceTree = "<group>"; };
+		15B86F4053A14889B5153CFC /* SplashNativeAdFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SplashNativeAdFactory.swift; sourceTree = "<group>"; };
 		D3173E3E81DCF4D6F8A0B996 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		E1E61A75B78B1883A10998EE /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		FED0F5824520DB50E013F77A /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				AE56E0949E8B88AF8D142BDF /* MediumNativeAdFactory.swift */,
 				CF0A9B6E0776CFBD91A13687 /* FullScreenNativeAdFactory.swift */,
+				15B86F4053A14889B5153CFC /* SplashNativeAdFactory.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
 				65476262AFB3CDCD25D3C565 /* MediumNativeAdFactory.swift in Sources */,
 				B9B69C20C338027601C3A39F /* FullScreenNativeAdFactory.swift in Sources */,
+				5183CA3D534D439E84284F37 /* SplashNativeAdFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

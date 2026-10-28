@@ -13,6 +13,8 @@ class RemoteModel {
   String? _fullScreenNativeAd;
   String? _nativeAd;
   String? _fullScreenNativeAdId;
+  String? _splashNativeAd;
+  String? _splashNativeAdId;
   String? _localNotification;
   String? _notificationFrequency;
 
@@ -52,6 +54,12 @@ class RemoteModel {
   String get fullScreenNativeAdId => _fullScreenNativeAdId ?? defaultNativeAdId;
   set fullScreenNativeAdId(String value) => _fullScreenNativeAdId = value;
 
+  String get splashNativeAd => _splashNativeAd ?? 'on';
+  set splashNativeAd(String value) => _splashNativeAd = value;
+
+  String get splashNativeAdId => _splashNativeAdId ?? fullScreenNativeAdId;
+  set splashNativeAdId(String value) => _splashNativeAdId = value;
+
   String get localNotification => _localNotification ?? 'on';
   set localNotification(String value) => _localNotification = value;
 
@@ -69,6 +77,8 @@ class RemoteModel {
     this._fullScreenNativeAd,
     this._nativeAd,
     this._fullScreenNativeAdId,
+    this._splashNativeAd,
+    this._splashNativeAdId,
     this._localNotification,
     this._notificationFrequency,
   });
@@ -87,6 +97,9 @@ class RemoteModel {
 
   /// Full-screen native ad shown inside onboarding.
   bool get isFullScreenNativeAdEnabled => _isOn(fullScreenNativeAd);
+
+  /// Native ad screen shown right after the splash.
+  bool get isSplashNativeAdEnabled => _isOn(splashNativeAd);
 
   /// All other (inline/bottom) native ads: language, onboarding slide, home.
   bool get isNativeAdEnabled => _isOn(nativeAd);
@@ -195,6 +208,18 @@ class RemoteModel {
               remoteConfig['fullScreenNativeAdId'],
           nativeAdId,
         ),
+        splashNativeAd: _parseString(
+          remoteConfig['splash_native_ad'] ?? remoteConfig['splashNativeAd'],
+          'on',
+        ),
+        splashNativeAdId: _parseString(
+          remoteConfig['splash_native_ad_id'] ??
+              remoteConfig['splashNativeAdId'] ??
+              remoteConfig['full_screen_native_ad_id'] ??
+              remoteConfig['fullscreen_native_ad_id'] ??
+              remoteConfig['fullScreenNativeAdId'],
+          nativeAdId,
+        ),
         localNotification: _parseString(
           remoteConfig['local_notification'] ??
               remoteConfig['local_notifications'] ??
@@ -230,6 +255,8 @@ class RemoteModel {
       fullScreenNativeAd: 'on',
       nativeAd: 'on',
       fullScreenNativeAdId: defaultNativeAdId,
+      splashNativeAd: 'on',
+      splashNativeAdId: defaultNativeAdId,
       localNotification: 'on',
       notificationFrequency: 'd',
     );
@@ -247,6 +274,8 @@ class RemoteModel {
       'full_screen_native_ad': fullScreenNativeAd,
       'native_ad': nativeAd,
       'full_screen_native_ad_id': fullScreenNativeAdId,
+      'splash_native_ad': splashNativeAd,
+      'splash_native_ad_id': splashNativeAdId,
       'local_notification': localNotification,
       'show_notification_frequency': notificationFrequency,
     };

@@ -1,5 +1,6 @@
 abstract class AppRoutes {
   static const splash = '/splash';
+  static const splashAd = '/splash-ad';
   static const onboarding = '/onboarding';
   static const paywall = '/paywall';
   static const languageSelection = '/language-selection';

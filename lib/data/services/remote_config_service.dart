@@ -61,6 +61,16 @@ class RemoteConfigService extends GetxService {
   }
 
   String get fullScreenNativeAdId => model.value.fullScreenNativeAdId;
+
+  bool get isSplashNativeAdEnabled {
+    try {
+      return model.value.isSplashNativeAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  String get splashNativeAdId => model.value.splashNativeAdId;
   String get localNotification => model.value.localNotification;
   bool get isLocalNotificationEnabled {
     try {

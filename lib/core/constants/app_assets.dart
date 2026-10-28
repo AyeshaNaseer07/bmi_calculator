@@ -7,6 +7,7 @@ abstract class AppAssets {
   static const String appBg = '$_imagesBase/bg.webp';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
+  static const String appIcon = '$_imagesBase/app_icon.webp';
   static const String selectLanguage = '$_imagesBase/select_language.webp';
   static const String crown = '$_imagesBase/crown.webp';
   static const String weekPro = '$_imagesBase/week_pro.webp';
