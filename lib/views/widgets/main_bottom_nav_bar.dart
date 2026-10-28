@@ -84,22 +84,12 @@ class MainBottomNavBar extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: onAddTap,
-                child: Container(
-                  width: 56.w,
-                  height: 56.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 4.w),
-                    boxShadow: [
-                      BoxShadow(
-                        color: _kActiveNavColor.withValues(alpha: 0.35),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(AppAssets.navAdd, fit: BoxFit.cover),
+                child: ClipOval(
+                  child: Image.asset(
+                    AppAssets.navAdd,
+                    fit: BoxFit.cover,
+                    width: 52.w,
+                    height: 52.h,
                   ),
                 ),
               ),

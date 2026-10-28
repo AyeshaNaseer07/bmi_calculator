@@ -193,7 +193,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
     final needleAngle = math.pi - (progress * math.pi);
 
     final needlePaint = Paint()
-      ..color = const Color(0xFF1E293B)
+      ..color = const Color(0xFF0A0A0A)
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
 
@@ -202,44 +202,53 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       center.dy - needleLength * math.sin(needleAngle),
     );
 
+    // Tapered black needle: wide rounded base at the pivot, sharp tip.
     final perpAngle = needleAngle + math.pi / 2;
-    final baseWidth = size.width * 0.024;
+    final halfBase = size.width * 0.03;
     final base1 = Offset(
-      center.dx + baseWidth * math.cos(perpAngle),
-      center.dy - baseWidth * math.sin(perpAngle),
+      center.dx + halfBase * math.cos(perpAngle),
+      center.dy - halfBase * math.sin(perpAngle),
     );
     final base2 = Offset(
-      center.dx - baseWidth * math.cos(perpAngle),
-      center.dy + baseWidth * math.sin(perpAngle),
+      center.dx - halfBase * math.cos(perpAngle),
+      center.dy + halfBase * math.sin(perpAngle),
     );
 
     final path = Path()
       ..moveTo(base1.dx, base1.dy)
       ..lineTo(tip.dx, tip.dy)
       ..lineTo(base2.dx, base2.dy)
+      // Round the base off with a half circle behind the pivot.
+      ..arcToPoint(base1, radius: Radius.circular(halfBase))
       ..close();
 
     final shadowPaint = Paint()
-      ..color = const Color(0x33000000)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+      ..color = const Color(0x40000000)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.5);
     canvas.save();
-    canvas.translate(0.8, 1.2);
+    canvas.translate(1.0, 1.5);
     canvas.drawPath(path, shadowPaint);
     canvas.restore();
 
     canvas.drawPath(path, needlePaint);
 
-    final pivotOuter = Paint()..color = const Color(0xFF1E293B);
-    final pivotRing = Paint()..color = Colors.white;
-    final pivotInner = Paint()..color = const Color(0xFF2FD1A6);
+    // Pivot: teal dot with a white ring and a soft drop shadow.
+    final ringRadius = size.width * 0.044;
+    final innerRadius = size.width * 0.032;
 
-    final outerRadius = size.width * 0.038;
-    final ringRadius = size.width * 0.026;
-    final innerRadius = size.width * 0.014;
-
-    canvas.drawCircle(center, outerRadius, pivotOuter);
-    canvas.drawCircle(center, ringRadius, pivotRing);
-    canvas.drawCircle(center, innerRadius, pivotInner);
+    canvas.drawCircle(
+      center.translate(0, 1.5),
+      ringRadius,
+      Paint()
+        ..color = const Color(0x33000000)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+    );
+    canvas.drawCircle(center, ringRadius, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      center,
+      innerRadius,
+      Paint()..color = const Color(0xFF2FD1A6),
+    );
 
     // Labels below arc ends
     if (showLabels) {

@@ -595,7 +595,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14.r),
@@ -622,7 +622,6 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                             fontSize: 16,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w600,
-                            height: 1.13,
                             letterSpacing: 0.14,
                           ),
                         ),
@@ -639,26 +638,22 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                   if (_whyOpen) ...[
                     SizedBox(height: 8.h),
                     for (final b in v.whyBullets)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 6.h),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('•  ', style: bodyStyle(13, color: kInk)),
-                            Expanded(
-                              child: Text(
-                                b,
-                                style: TextStyle(
-                                  color: const Color(0xFF141B2B),
-                                  fontSize: 11,
-                                  fontFamily: 'Plus Jakarta Sans',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.36,
-                                ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('•  ', style: bodyStyle(16, color: kInk)),
+                          Expanded(
+                            child: Text(
+                              b,
+                              style: TextStyle(
+                                color: const Color(0xFF141B2B),
+                                fontSize: 12,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                   ],
                 ],

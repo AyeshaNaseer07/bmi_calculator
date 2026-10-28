@@ -850,8 +850,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildCategoryBadge(
                 'Underweight (<18.5)',
                 currentCategory == BMICategory.underweight,
-                inactiveBg: const Color(0xFFEAF5FD),
-                activeBg: const Color(0xFF5AC1E9),
+                inactiveBg: const Color(0xFFCDEBF8),
+                activeBg: AppColors.underweight,
               ),
             ),
             SizedBox(width: 10.w),
@@ -859,8 +859,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildCategoryBadge(
                 'Obese (30–34.9)',
                 currentCategory == BMICategory.obese,
-                inactiveBg: const Color(0xFFFFEDE6),
-                activeBg: const Color(0xFFFF0100),
+                inactiveBg: const Color(0xFFFFB1B2),
+                activeBg: AppColors.obese,
               ),
             ),
           ],
@@ -872,8 +872,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildCategoryBadge(
                 'Overweight (25–29.9)',
                 currentCategory == BMICategory.overweight,
-                inactiveBg: const Color(0xFFFEF6E9),
-                activeBg: const Color(0xFFFE9B20),
+                inactiveBg: const Color(0xFFFEDFC1),
+                activeBg: AppColors.overweight,
               ),
             ),
             SizedBox(width: 10.w),
@@ -881,10 +881,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildCategoryBadge(
                 'Normal (18.5–24.9)',
                 currentCategory == BMICategory.normal,
-                inactiveBg: const Color(0xFFE6F8F4),
-                activeBg: const Color(
-                  0xFF25C6A5,
-                ), // already full opacity, unchanged
+                inactiveBg: const Color(0xFFC0ECE6),
+                activeBg: AppColors.normal,
               ),
             ),
           ],

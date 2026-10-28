@@ -254,70 +254,12 @@ class _SafetyNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8EB),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFFDE7C1)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 30.w,
-            height: 30.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFFFEEBC8),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.health_and_safety_outlined,
-              size: 17.sp,
-              color: const Color(0xFFD97706),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'PRECAUTION',
-                  style: bodyStyle(
-                    12,
-                    color: const Color(0xFFB45309),
-                    weight: FontWeight.w800,
-                  ).copyWith(letterSpacing: 0.3),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  'Stop if you feel pain, dizziness or chest discomfort.',
-                  style: bodyStyle(
-                    12.5,
-                    color: kInk,
-                    weight: FontWeight.w600,
-                    height: 1.35,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  'Check with a doctor before starting if you have a heart or '
-                  'joint condition, are pregnant, or have not exercised in a '
-                  'long time.',
-                  style: bodyStyle(
-                    12,
-                    color: const Color(0xFF6B7280),
-                    weight: FontWeight.w500,
-                    height: 1.35,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return const PrecautionCard(
+      lead: 'Stop if you feel pain, dizziness or chest discomfort.',
+      body:
+          'Check with a doctor before starting if you have a heart or '
+          'joint condition, are pregnant, or have not exercised in a '
+          'long time.',
     );
   }
 }

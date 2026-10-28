@@ -26,6 +26,9 @@ class DailyMealPlanScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 2.h),
+          // Shown first so it's read before the plan itself.
+          const _PlanDisclaimer(),
+          SizedBox(height: 14.h),
           Text(
             'Meal Planner',
             style: TextStyle(
@@ -76,8 +79,6 @@ class DailyMealPlanScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 10.h),
-          const _PlanDisclaimer(),
         ],
       ),
     );
@@ -118,21 +119,17 @@ class _PlanDisclaimer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = MealPlanController.to;
-    final extra = c.needsCare
-        ? ' Because you are under 18, please follow a plan from a doctor or '
-              'dietitian instead of this one.'
-        : '';
-    return Text(
-      'This plan is general guidance based on your BMI, age, height, weight '
-      'and activity level, not medical advice. Check with a doctor or '
-      'dietitian before changing your diet, especially if you are pregnant, '
-      'have a medical condition or a history of disordered eating.$extra',
-      style: TextStyle(
-        color: const Color(0xFF6B7280),
-        fontSize: 11.sp,
-        fontFamily: 'Inter',
-        height: 1.4,
-      ),
+    return PrecautionCard(
+      // Under 18 the key message is to not follow this plan at all.
+      lead: c.needsCare
+          ? 'You are under 18 — please follow a plan from a doctor or '
+                'dietitian instead of this one.'
+          : 'This plan is general guidance, not medical advice.',
+      body:
+          'It is based on your BMI, age, height, weight and activity level. '
+          'Check with a doctor or dietitian before changing your diet, '
+          'especially if you are pregnant, have a medical condition or a '
+          'history of disordered eating.',
     );
   }
 }
