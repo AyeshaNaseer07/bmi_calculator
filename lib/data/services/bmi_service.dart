@@ -1,8 +1,8 @@
 import 'dart:math';
+
 import '../models/bmi_record_model.dart';
 
 class BMIService {
-  /// Calculates BMI: weightKg / (heightMeters ^ 2)
   static double calculateBMI({
     required double weightKg,
     required double heightCm,
@@ -29,10 +29,13 @@ class BMIService {
   }
 
   /// Unit conversion utilities
-  static double kgToLbs(double kg) => double.parse((kg * 2.20462).toStringAsFixed(1));
-  static double lbsToKg(double lbs) => double.parse((lbs / 2.20462).toStringAsFixed(1));
+  static double kgToLbs(double kg) =>
+      double.parse((kg * 2.20462).toStringAsFixed(1));
+  static double lbsToKg(double lbs) =>
+      double.parse((lbs / 2.20462).toStringAsFixed(1));
 
-  static double inchesToCm(double inches) => double.parse((inches * 2.54).toStringAsFixed(1));
+  static double inchesToCm(double inches) =>
+      double.parse((inches * 2.54).toStringAsFixed(1));
 
   static (int feet, int inches) cmToFeetAndInches(double cm) {
     final totalInches = (cm / 2.54).round();
@@ -41,12 +44,6 @@ class BMIService {
     return (feet, inches);
   }
 
-  /// Returns normalized gauge needle position (0.0 = left end, 1.0 = right).
-  ///
-  /// The gauge is drawn as four equal quarters (underweight, normal,
-  /// overweight, obese) labelled 9.9 at the left end and 34.9 at the right,
-  /// so each category maps onto its own quarter. Anything above 34.9 sits on
-  /// the extreme right edge and anything below 9.9 on the extreme left.
   static double getGaugeProgress(double bmi) {
     const stops = <(double, double)>[
       (9.9, 0.0),

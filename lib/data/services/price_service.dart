@@ -8,8 +8,6 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'remote_config_service.dart';
 import 'subscription_service.dart';
 
-/// What a product actually is, decided from the store product itself rather
-/// than from the Remote Config slot it was put in. Rank = enum index.
 enum PlanType {
   weekly('Weekly', 'week', 1),
   monthly('Monthly', 'month', 52 / 12),
@@ -25,7 +23,6 @@ enum PlanType {
   int get rank => index;
 }
 
-/// Price of one subscription plan as returned by the store.
 class PlanPrice {
   final double amount;
   final String currencyCode;
@@ -41,15 +38,12 @@ class PlanPrice {
     }
   }
 
-  /// Equivalent price per week for a plan of [type].
   String perWeek(PlanType type) => format(amount / type.weeksPerPeriod);
 
-  /// Equivalent price per month for a plan of [type].
   String perMonth(PlanType type) =>
       format(amount / type.weeksPerPeriod * 52 / 12);
 }
 
-/// Everything a paywall card needs for one Remote Config slot.
 class PlanOffer {
   final SubscriptionPlan slot;
   final String productId;
@@ -66,9 +60,6 @@ class PlanOffer {
   });
 }
 
-/// Loads plan products from the store (RevenueCat) and works out plan type,
-/// free trial and CTA text from them. Falls back to the default USD prices
-/// if the store can't be reached in time.
 class PriceService {
   static const Map<SubscriptionPlan, PlanPrice> fallback = {
     SubscriptionPlan.monthly: PlanPrice(4.99, 'USD', '\$4.99'),
@@ -76,14 +67,8 @@ class PriceService {
   };
 
   static Map<SubscriptionPlan, PlanPrice>? _cache;
-
-  /// Store products by product id (Android ids also stored without the
-  /// ":base-plan" suffix).
   static final Map<String, StoreProduct> _products = {};
-
-  /// Free-trial eligibility per product id. Missing = not eligible (yet).
   static final RxMap<String, bool> trialEligibility = <String, bool>{}.obs;
-
   static Future<Map<SubscriptionPlan, PlanPrice>> load(
     RemoteConfigService rc,
   ) async {
@@ -121,7 +106,6 @@ class PriceService {
 
   static StoreProduct? productFor(String productId) => _products[productId];
 
-  /// Card data for [slot], using the loaded [prices] (or the fallback).
   static PlanOffer offerFor(
     SubscriptionPlan slot,
     RemoteConfigService rc,
@@ -142,15 +126,11 @@ class PriceService {
     );
   }
 
-  /// Re-checks free-trial eligibility for every loaded product. Call when
-  /// products load and after every purchase or restore.
   static Future<void> refreshTrialEligibility() async {
     final products = {for (final p in _products.values) p.identifier: p};
     if (products.isEmpty) return;
     try {
       if (Platform.isAndroid) {
-        // Google Play only returns offers the user is eligible for, so a
-        // free phase on the default option means the user can take it.
         trialEligibility.addAll({
           for (final p in products.values)
             p.identifier: p.defaultOption?.freePhase != null,
@@ -202,10 +182,6 @@ class PriceService {
     return fallback;
   }
 
-  /// The product's free-trial length ("3 days", "1 week"), or null if its
-  /// introductory offer isn't a free trial. Promotional and win-back offers
-  /// are ignored. Does not check eligibility; UI should use
-  /// [getEligibleTrialPeriod].
   static String? getFreeTrialPeriod(StoreProduct? p) {
     final intro = p?.introductoryPrice;
     if (intro == null || intro.price != 0) return null;
@@ -222,8 +198,6 @@ class PriceService {
     return '$count $unit${count > 1 ? 's' : ''}';
   }
 
-  /// Trial length only if the product has a free trial AND the user is
-  /// eligible for it. All trial UI must go through this.
   static String? getEligibleTrialPeriod(StoreProduct? p) {
     if (p == null || trialEligibility[p.identifier] != true) return null;
     return getFreeTrialPeriod(p);
@@ -232,7 +206,6 @@ class PriceService {
   static String getCtaLabel(StoreProduct? selected) {
     if (getEligibleTrialPeriod(selected) != null) return 'Start Free Trial';
     final text = RemoteConfigService.to.buttonText.trim();
-    // Never show trial wording from Remote Config to someone without a trial.
     if (text.isEmpty || text.toLowerCase().contains('trial')) return 'Continue';
     return text;
   }

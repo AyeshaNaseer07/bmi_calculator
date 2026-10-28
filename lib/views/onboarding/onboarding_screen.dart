@@ -38,9 +38,6 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
-
-  /// False once the first-slide native ad fails to load (or ads are off).
-  /// Decides which layout page 0 uses: with ad (compact) or without (full).
   bool _bmiAdAvailable = true;
 
   // 4 steps:
@@ -63,11 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   int get _totalPages => _showFullScreenAd ? 4 : 3;
-
-  /// Index of the full-screen ad page, or -1 when it isn't shown.
   int get _adPageIndex => _showFullScreenAd ? 1 : -1;
-
-  /// Index of the first content slide (Weight Tracking).
   int get _firstContentIndex => _showFullScreenAd ? 2 : 1;
 
   void _onNext() {

@@ -1,6 +1,3 @@
-/// One meal in the weekly plan, in compact form.
-///
-/// [ing] is "name|qty;name|qty;..." (parsed by meal_plan_data.dart).
 class RawMeal {
   final String name;
   final String blurb;

@@ -1,7 +1,6 @@
 import '../models/bmi_record_model.dart';
 import '../models/user_profile_model.dart' show ActivityLevel;
 
-/// Multiplier applied to resting metabolic rate for each activity level.
 extension ActivityLevelFactor on ActivityLevel {
   double get factor {
     switch (this) {
@@ -19,14 +18,10 @@ extension ActivityLevelFactor on ActivityLevel {
   }
 }
 
-/// A personalised daily calorie suggestion.
 class CalorieTarget {
   final int kcal;
   final int maintenance;
   final String goal;
-
-  /// True when a generic plan is not appropriate (e.g. under 18) and the user
-  /// should be told to talk to a professional.
   final bool needsCare;
 
   const CalorieTarget({
@@ -37,8 +32,6 @@ class CalorieTarget {
   });
 }
 
-/// Estimates daily calories with the Mifflin-St Jeor equation, then applies a
-/// modest goal adjustment for the user's BMI category.
 class CalorieService {
   CalorieService._();
 

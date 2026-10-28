@@ -8,7 +8,6 @@ import 'meal_screens.dart';
 
 export 'meal_screens.dart';
 
-/// "Eat Balanced Meals" hub.
 class EatBalancedMealsScreen extends StatelessWidget {
   const EatBalancedMealsScreen({super.key});
 
@@ -19,8 +18,6 @@ class EatBalancedMealsScreen extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 4.h),
-          // Photo with the soft mint glow around it (Figma). The glow is a
-          // blurred shadow on the circle so it shows outside the photo edge.
           SizedBox(
             height: 170.w,
             child: Center(
@@ -131,9 +128,6 @@ class EatBalancedMealsScreen extends StatelessWidget {
   }
 }
 
-/// Card used on the Eat Balanced Meals hub (Figma): white card with a soft
-/// mint glow, icon tile, bold title, grey subtitle and a chevron. [pro] adds
-/// a small gold crown after the title.
 class _HubCard extends StatelessWidget {
   final String iconAsset;
   final String title;
@@ -233,7 +227,6 @@ class _HubCard extends StatelessWidget {
 class EatVegetablesScreen extends StatelessWidget {
   const EatVegetablesScreen({super.key});
 
-  /// Figma card: white, rounded 20, soft mint glow all round (no border).
   static BoxDecoration get _cardDeco => BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.circular(20.r),
@@ -294,16 +287,12 @@ class EatVegetablesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // No scroll view: the cards keep their natural height and the photo
-    // takes whatever height is left, so the page always fits one screen.
     return InsightScaffold(
       title: 'Eat More Vegetables',
       scroll: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // The asset already has its mint border and rounded corners baked
-          // in, so show it whole (contain) at its own 869×569 ratio.
           Expanded(
             child: Center(
               child: AspectRatio(
@@ -416,7 +405,6 @@ class LeanProteinScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // The asset includes its own light grey circle.
         Image.asset(asset, width: 40.w, height: 40.w, fit: BoxFit.contain),
         SizedBox(height: 12.h),
         Text(
@@ -443,7 +431,6 @@ class LeanProteinScreen extends StatelessWidget {
     ),
   );
 
-  /// Two cards side by side, both as tall as the taller one.
   Widget _choiceRow(Widget left, Widget right) => IntrinsicHeight(
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -508,7 +495,6 @@ class PortionSizesScreen extends StatelessWidget {
     width: double.infinity,
     margin: EdgeInsets.only(bottom: 12.h),
     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-    // Soft mint glow all round (no border), same as the other nutrition cards.
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(18.r),
@@ -559,8 +545,6 @@ class PortionSizesScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
-            // Matches the asset's own 1005×540 canvas so it renders at its
-            // natural size instead of being cropped/stretched to a guess.
             aspectRatio: 1020 / 550,
             child: AssetOrPlaceholder(
               asset: AppAssets.portionSizeHero,

@@ -32,7 +32,6 @@ class WeightTrackerController extends GetxController {
       goalWeight.value = profile.goalWeightKg > 0 ? profile.goalWeightKg : 60.0;
       _recalculateProgress();
     } else {
-      // No real data — leave history empty to show empty state
       weightHistory.clear();
       currentWeight.value = 0.0;
       goalWeight.value = profile.goalWeightKg > 0 ? profile.goalWeightKg : 60.0;
@@ -117,8 +116,18 @@ class WeightTrackerController extends GetxController {
   }
 
   static const List<String> _monthNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   List<FlSpot> getSpots() {
@@ -130,16 +139,13 @@ class WeightTrackerController extends GetxController {
     final now = DateTime.now();
 
     if (tf == 'week') {
-      // Map records to their weekday position (Mon=0 ... Sun=6)
-      // Use current Mon–Sun window
       final monday = now.subtract(Duration(days: now.weekday - 1));
       final weekStart = DateTime(monday.year, monday.month, monday.day);
-      // Build weekday -> latest weight map
       final Map<int, double> dayMap = {};
       for (final r in sorted) {
         final dayIndex = r.date.difference(weekStart).inDays;
         if (dayIndex >= 0 && dayIndex <= 6) {
-          dayMap[dayIndex] = r.weightKg; // last record wins
+          dayMap[dayIndex] = r.weightKg;
         }
       }
       if (dayMap.isNotEmpty) {
@@ -150,7 +156,6 @@ class WeightTrackerController extends GetxController {
               ..sort((a, b) => a.x.compareTo(b.x));
         return spots;
       }
-      // Fallback: records outside current week — place at sequential positions
       final recent = sorted.length > 7
           ? sorted.sublist(sorted.length - 7)
           : sorted;
@@ -159,15 +164,16 @@ class WeightTrackerController extends GetxController {
         (i) => FlSpot(i.toDouble(), recent[i].weightKg),
       );
     } else if (tf == 'month') {
-      // 6-month window ending at current month
       final Map<int, double> monthMap = {};
       for (int i = 5; i >= 0; i--) {
         final slotIndex = 5 - i;
         final startOfMonth = DateTime(now.year, now.month - i, 1);
         final endOfMonth = DateTime(now.year, now.month - i + 1, 1);
         final inMonth = sorted
-            .where((r) =>
-                !r.date.isBefore(startOfMonth) && r.date.isBefore(endOfMonth))
+            .where(
+              (r) =>
+                  !r.date.isBefore(startOfMonth) && r.date.isBefore(endOfMonth),
+            )
             .toList();
         if (inMonth.isNotEmpty) {
           monthMap[slotIndex] = inMonth.last.weightKg;
@@ -181,7 +187,6 @@ class WeightTrackerController extends GetxController {
               ..sort((a, b) => a.x.compareTo(b.x));
         return spots;
       }
-      // Fallback if no records in the current 6-month window
       final recent = sorted.length > 6
           ? sorted.sublist(sorted.length - 6)
           : sorted;
@@ -190,7 +195,6 @@ class WeightTrackerController extends GetxController {
         (i) => FlSpot(i.toDouble(), recent[i].weightKg),
       );
     } else {
-      // 5-year window ending at current year
       final Map<int, double> yearMap = {};
       for (int i = 4; i >= 0; i--) {
         final slotIndex = 4 - i;
@@ -208,7 +212,6 @@ class WeightTrackerController extends GetxController {
               ..sort((a, b) => a.x.compareTo(b.x));
         return spots;
       }
-      // Fallback if no records in the 5-year window
       final recent = sorted.length > 5
           ? sorted.sublist(sorted.length - 5)
           : sorted;
@@ -219,8 +222,6 @@ class WeightTrackerController extends GetxController {
     }
   }
 
-  /// Returns a flat horizontal dashed line at the goal weight value.
-  /// Spans across the full X-axis range of the chart.
   List<FlSpot> getGoalSpots() {
     final goal = goalWeight.value;
     if (goal <= 0) return [];

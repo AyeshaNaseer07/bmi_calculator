@@ -106,8 +106,6 @@ class StayActiveScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // The art's own card is white on the white page and its baked
-          // shadow is too faint, so the left edge fades out. Draw the edge here.
           Center(
             child: Container(
               width: 280.w,
@@ -248,7 +246,6 @@ class StayActiveScreen extends StatelessWidget {
   }
 }
 
-/// Short safety reminder shown under the activity screens.
 class _SafetyNote extends StatelessWidget {
   const _SafetyNote();
 
@@ -264,7 +261,6 @@ class _SafetyNote extends StatelessWidget {
   }
 }
 
-/// "Your Activity Routine" — weekly plan.
 class ActivityRoutineScreen extends StatelessWidget {
   const ActivityRoutineScreen({super.key});
 

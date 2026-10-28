@@ -142,9 +142,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Gender cards (avatar + age badge)
-                          // Tapping anywhere on a card (avatar, age, badge)
-                          // selects it and opens the age picker below it.
                           Row(
                             children: [
                               Expanded(
@@ -291,8 +288,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                         : 120.0,
                                     min: 120.0,
                                     max: 220.0,
-                                    // In ft mode snap to whole inches so the
-                                    // ft/in value always matches the slider.
                                     onChanged: (val) => controller.setHeight(
                                       isCm
                                           ? val.roundToDouble()

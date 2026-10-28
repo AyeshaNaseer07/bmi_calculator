@@ -245,10 +245,6 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
       aspectRatio: v.imageAspect,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Every hero image draws its card 15px from the top/left edge and
-          // 363px tall (on a ~1065px-wide source); the character hangs below
-          // it by a different amount per category. Lay the text out against
-          // the card, not the whole image, so it's centered the same on all.
           final w = constraints.maxWidth;
           final inset = w * 15 / 1065;
           final cardH = w * 363 / 1065;
@@ -696,7 +692,6 @@ class _TipCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(14.w),
-        // Soft mint glow all round (no border line), like the weight card.
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.r),
@@ -708,8 +703,6 @@ class _TipCard extends StatelessWidget {
             ),
           ],
         ),
-        // Content keeps one fixed size on every card and every BMI category;
-        // it only scales down as a whole if a very short screen can't fit it.
         child: LayoutBuilder(
           builder: (context, c) => FittedBox(
             fit: BoxFit.scaleDown,
@@ -740,8 +733,6 @@ class _TipCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4.h),
-                  // Always reserve two lines so one-line subtitles don't
-                  // shift the icon down relative to the card beside it.
                   Stack(
                     children: [
                       Text('\n', style: subStyle),

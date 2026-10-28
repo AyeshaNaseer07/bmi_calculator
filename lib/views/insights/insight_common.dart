@@ -85,8 +85,6 @@ class InsightCard extends StatelessWidget {
   }
 }
 
-/// Shows [asset] when the file exists, otherwise a soft placeholder, so
-/// screens look right now and pick the real photo up as soon as it is added.
 class AssetOrPlaceholder extends StatelessWidget {
   final String asset;
   final double? width;
@@ -207,9 +205,6 @@ class InsightScaffold extends StatelessWidget {
   final IconData? titleIcon;
   final Widget body;
   final Widget? bottom;
-
-  /// false = no scroll view at all: [body] gets the remaining height and
-  /// must lay itself out to fit (use Expanded/Flexible inside it).
   final bool scroll;
 
   const InsightScaffold({
@@ -355,8 +350,6 @@ class InfoRowCard extends StatelessWidget {
   }
 }
 
-/// Amber "PRECAUTION" card: a bold [lead] line (the key warning) followed by
-/// grey [body] text. Used on the activity and meal plan screens.
 class PrecautionCard extends StatelessWidget {
   final String lead;
   final String body;
@@ -431,7 +424,6 @@ class PrecautionCard extends StatelessWidget {
   }
 }
 
-/// Mint tip banner with a lightbulb icon (or a custom [iconAsset]).
 class TipBanner extends StatelessWidget {
   final String text;
   final String iconAsset;
@@ -475,7 +467,6 @@ class TipBanner extends StatelessWidget {
   }
 }
 
-/// Full-width green gradient button (Mark as Eaten / View Your Progress).
 class GradientActionButton extends StatelessWidget {
   final String text;
   final IconData? leading;
@@ -537,7 +528,6 @@ class GradientActionButton extends StatelessWidget {
   }
 }
 
-/// Small gold "PRO" pill used on premium-only features.
 class ProBadge extends StatelessWidget {
   const ProBadge({super.key});
 

@@ -231,8 +231,6 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       ),
                       SizedBox(width: 6.w),
                       Expanded(
-                        // Obx: the label follows trial eligibility and the
-                        // Remote Config text, both observable.
                         child: Obx(
                           () => AnimatedCtaButton(
                             text: PriceService.getCtaLabel(

@@ -99,8 +99,6 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(title: 'Profile'),
         body: SafeArea(
-          // Fixed layout (no scrolling): the account list takes the space
-          // left over, and its rows share it evenly.
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
             child: Column(
@@ -273,8 +271,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   );
                 }),
-                // Already premium — nothing to upsell, so the banner is
-                // removed rather than left as dead space.
                 Obx(() {
                   if (appController.isPremium.value) {
                     return const SizedBox.shrink();

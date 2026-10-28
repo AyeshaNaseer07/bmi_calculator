@@ -15,11 +15,6 @@ class SubscriptionService {
 
   bool get isPremium => _storageService.getIsPremium();
 
-  /// Checks the subscription with the App Store / Google Play (through
-  /// RevenueCat) and stores the result. A subscription or free trial that was
-  /// refunded or revoked comes back inactive, so this removes Premium.
-  /// Returns null if the store can't be reached; the stored status is then
-  /// left as it was.
   Future<bool?> verifyWithStore() async {
     try {
       if (!await Purchases.isConfigured) return null;

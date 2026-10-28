@@ -30,7 +30,6 @@ class AppController extends GetxController {
   final RxBool isPremium = false.obs;
   final RxBool onboardingSeen = false.obs;
 
-  /// Completes when the launch-time store check has finished (or failed).
   late final Future<void> subscriptionVerified;
 
   @override
@@ -46,8 +45,6 @@ class AppController extends GetxController {
     isPremium.value = _storage.getIsPremium();
     onboardingSeen.value = _storage.getOnboardingSeen();
 
-    // Re-check the subscription with the store on every launch, and keep
-    // listening so a refund/revocation during the session also drops Premium.
     subscriptionVerified = _verifySubscription();
     Purchases.addCustomerInfoUpdateListener(_onCustomerInfoUpdated);
 

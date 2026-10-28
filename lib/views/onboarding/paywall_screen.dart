@@ -451,9 +451,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       ],
                     ),
                     SizedBox(height: 28.h),
-
-                    // CTA Button. Obx: the label follows trial eligibility
-                    // and the Remote Config text, both observable.
                     Row(
                       children: [
                         Image.asset(
@@ -747,9 +744,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  /// One line of a plan card with a fixed height. Shows [placeholder] while
-  /// [loading], then fades to [child] (scaled down if it's too wide), so
-  /// fetching the store price never changes the card's size.
   Widget _priceSlot({
     required double height,
     required bool loading,
@@ -796,8 +790,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
     return const Divider(height: 1, thickness: 0.8, color: Color(0xFFF1F5F9));
   }
 
-  /// Each row is Expanded, so the 5 rows split the card height equally
-  /// and can never overflow vertically.
   Widget _buildFeatureRow({required String imagePath, required String title}) {
     return Expanded(
       child: Padding(

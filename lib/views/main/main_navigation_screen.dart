@@ -36,21 +36,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Obx(() {
       final currentIndex = mainTabIndex.value;
       return Scaffold(
-      body: IndexedStack(index: currentIndex, children: _tabs),
-      bottomNavigationBar: Obx(() {
-        // Hidden on Home when there is no BMI record and the native ad failed.
-        final bmi = Get.find<BMIController>();
-        final noRecord =
-            bmi.bmiHistory.isEmpty || bmi.latestRecord.value == null;
-        if (currentIndex == 0 && noRecord && homeAdFailed.value) {
-          return const SizedBox.shrink();
-        }
-        return MainBottomNavBar(
-          currentIndex: currentIndex,
-          onTap: (index) => mainTabIndex.value = index,
-          onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
-        );
-      }),
+        body: IndexedStack(index: currentIndex, children: _tabs),
+        bottomNavigationBar: Obx(() {
+          final bmi = Get.find<BMIController>();
+          final noRecord =
+              bmi.bmiHistory.isEmpty || bmi.latestRecord.value == null;
+          if (currentIndex == 0 && noRecord && homeAdFailed.value) {
+            return const SizedBox.shrink();
+          }
+          return MainBottomNavBar(
+            currentIndex: currentIndex,
+            onTap: (index) => mainTabIndex.value = index,
+            onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
+          );
+        }),
       );
     });
   }

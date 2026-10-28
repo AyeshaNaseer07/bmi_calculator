@@ -436,8 +436,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (hasRecords) ...[
-                    // Top "Your Progress" Card: white header, mint
-                    // gradient stats strip running edge to edge below it.
                     CustomCard(
                       borderRadius: 24,
                       padding: EdgeInsets.zero,
@@ -1035,10 +1033,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final isSelected = _selectedRecordIds.contains(record.id);
     final dayStr = DateFormat('dd').format(record.date);
     final monthYearStr = DateFormat('MMM yyyy').format(record.date);
-    // BMI, weight and status all use the record's category colour
-    // (blue underweight, green normal, orange overweight, red obese).
     final statusColor = record.category.color;
-    // "70.0 kg" -> number + smaller unit, as in the design.
     final weightParts = record.weightDisplay.split(' ');
     final labelStyle = TextStyle(
       color: const Color(0xFF111827),
@@ -1130,10 +1125,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ],
               ),
             ),
-
-            // Fixed-flex columns so BMI / Weight / status line up across
-            // rows regardless of how long the status label is.
-            // BMI value column
             Expanded(
               flex: 2,
               child: Column(
@@ -1208,7 +1199,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             ),
 
-            // Delete Specific History icon button (when not in selection mode)
             if (!_isSelectionMode)
               GestureDetector(
                 onTap: () => _confirmDeleteSingle(context, record),

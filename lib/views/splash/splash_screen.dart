@@ -47,8 +47,6 @@ class _SplashScreenState extends State<SplashScreen>
     _progressController.forward();
 
     _navigationTimer = Timer(const Duration(seconds: _splashSeconds), () async {
-      // Give the launch-time store check a moment to finish, so a user whose
-      // subscription was refunded/revoked isn't routed as premium.
       if (Get.isRegistered<AppController>()) {
         await Get.find<AppController>().subscriptionVerified.timeout(
           const Duration(seconds: 4),
@@ -56,10 +54,6 @@ class _SplashScreenState extends State<SplashScreen>
         );
       }
       if (!mounted) return;
-
-      // A premium user has already been through Language Selection,
-      // Onboarding and the Paywall once — never show that flow again.
-      // Every launch, they go straight to Home.
       final isPremium =
           Get.isRegistered<AppController>() &&
           Get.find<AppController>().isPremium.value;
@@ -67,13 +61,6 @@ class _SplashScreenState extends State<SplashScreen>
         Get.offAllNamed(AppRoutes.home);
         return;
       }
-
-      // Non-premium: every app flow (first launch and every one after)
-      // starts at Language Selection. Whether the Onboarding slides show
-      // next, and the Paywall shown after that, is decided from there —
-      // same check on every flow, no first-launch/later-launch distinction.
-      // Native splash ad first when it's on; it continues to Language
-      // Selection itself (or skips straight there if the ad fails).
       if (AdPreloader.instance.splashEnabled) {
         Get.offAllNamed(AppRoutes.splashAd);
         return;

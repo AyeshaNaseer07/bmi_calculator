@@ -12,9 +12,6 @@ import '../widgets/ads/ad_shimmer.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/app_background.dart';
 
-/// Shown right after the splash (non-premium only): a native ad on top
-/// (laid out natively by SplashNativeAdFactory.swift) and the app's own
-/// icon, name and Continue button below it.
 class SplashAdScreen extends StatefulWidget {
   const SplashAdScreen({super.key});
 
@@ -27,8 +24,6 @@ class _SplashAdScreenState extends State<SplashAdScreen> {
   bool _isLoaded = false;
   bool _hasAdvanced = false;
 
-  // If the ad still hasn't loaded after this long, move on rather than
-  // leave the user looking at a placeholder.
   static const int _maxWaitSeconds = 8;
   Timer? _safetyTimer;
 

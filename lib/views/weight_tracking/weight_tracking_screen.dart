@@ -52,7 +52,7 @@ class WeightTrackingScreen extends StatelessWidget {
                   ? (goal > 0
                         ? (current / goal).clamp(0.0, 1.0)
                         : (current / 60.0).clamp(0.0, 1.0))
-                  : 0.05; // tiny 1–2cm arc fill when no records
+                  : 0.05;
 
               final pWeek = controller.progressThisWeek.value;
               final pMonth = controller.progressThisMonth.value;
@@ -544,9 +544,6 @@ class WeightTrackingScreen extends StatelessWidget {
     );
   }
 
-  /// Chart that can be slid horizontally so the full graph can be viewed.
-  /// The chart is at least 68.w wide per x-axis label; when that
-  /// is wider than the card, the user swipes sideways to see the rest.
   Widget _buildSlidableChart({
     required Key key,
     required int pointCount,

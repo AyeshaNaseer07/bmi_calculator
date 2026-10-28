@@ -83,7 +83,6 @@ class RemoteModel {
     this._notificationFrequency,
   });
 
-  // Convenience boolean helpers
   bool get isFirstTimeOnboarding => _isOn(firstTimeOnboarding);
 
   static bool _isOn(String? v) {
@@ -92,13 +91,9 @@ class RemoteModel {
     return s == 'on' || s == 'true';
   }
 
-  /// Full-screen native ad shown inside onboarding.
   bool get isFullScreenNativeAdEnabled => _isOn(fullScreenNativeAd);
 
-  /// Native ad screen shown right after the splash.
   bool get isSplashNativeAdEnabled => _isOn(splashNativeAd);
-
-  /// All other (inline/bottom) native ads: language, onboarding slide, home.
   bool get isNativeAdEnabled => _isOn(nativeAd);
 
   bool get isLocalNotificationEnabled => _isOn(localNotification);

@@ -1,10 +1,8 @@
 import '../../data/models/user_profile_model.dart' show ActivityLevel;
 
-/// Water and sleep suggestions personalised from the user's profile.
 class PersonalTargets {
   PersonalTargets._();
 
-  /// Daily water in ml: about 33 ml per kg plus extra for activity.
   static int waterMl(double weightKg, ActivityLevel activity) {
     double extra;
     switch (activity) {

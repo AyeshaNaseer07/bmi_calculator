@@ -10,8 +10,6 @@ class BMIController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
 
   final Rx<Gender> selectedGender = Gender.male.obs;
-  // 0 = not entered yet: the calculator starts empty until the user enters
-  // age, height and weight.
   final RxInt age = 0.obs;
   final Rx<ActivityLevel> activity = ActivityLevel.lightlyActive.obs;
   final RxDouble heightCm = 0.0.obs;
@@ -78,7 +76,6 @@ class BMIController extends GetxController {
     isAgePickerVisible.value = !isAgePickerVisible.value;
   }
 
-  /// Opens the age picker; starts it at 25 if no age was entered yet.
   void openAgePicker() {
     if (age.value <= 0) age.value = 25;
     isAgePickerVisible.value = true;
@@ -92,12 +89,10 @@ class BMIController extends GetxController {
     weightKg.value = double.parse(kg.toStringAsFixed(1));
   }
 
-  /// Sets height from a manually entered value in cm.
   void setHeightFromInput(double cm) {
     setHeight(cm.clamp(120.0, 220.0));
   }
 
-  /// Sets weight from a manually entered value in kg.
   void setWeightFromInput(double kg) {
     setWeight(kg.clamp(30.0, 130.0));
   }

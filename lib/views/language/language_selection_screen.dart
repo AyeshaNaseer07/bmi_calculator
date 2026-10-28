@@ -18,9 +18,6 @@ import '../widgets/app_background.dart';
 enum _HandPhase { tapping, movingToDone, tappingDone, hidden }
 
 class LanguageSelectionScreen extends StatefulWidget {
-  /// True when opened from Profile → Language: same screen, but without the
-  /// tap-hand hint, with the current language pre-selected, and "done" goes
-  /// back instead of continuing the first-launch flow.
   final bool fromProfile;
 
   const LanguageSelectionScreen({super.key, this.fromProfile = false});
@@ -147,10 +144,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       return;
     }
 
-    // Same on/off check on every app flow (first launch and every launch
-    // after): Remote Config's onboarding flag decides whether the
-    // Onboarding slides are shown. The Paywall itself is constant either
-    // way — it always follows, whether via Onboarding or directly here.
     if (_isOnboardingEnabled) {
       Get.offNamed(AppRoutes.onboarding);
     } else {
@@ -170,8 +163,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   static const Color _kAdBackground = Color(0xFFF7F7F7);
 
   Widget _buildDoneChip() {
-    // Always laid out (so the hand animation can measure it) but only
-    // visible/tappable once a language has been picked.
     return IgnorePointer(
       ignoring: !_hasSelected,
       child: AnimatedOpacity(

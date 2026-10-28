@@ -26,8 +26,6 @@ import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 
-/// True while Home shows the "no BMI + ad failed" layout; the main bottom
-/// navigation is hidden in that state.
 final RxBool homeAdFailed = false.obs;
 
 class HomeScreen extends StatefulWidget {
@@ -38,7 +36,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  /// True once the home native ad failed / is unavailable (empty state only).
   RxBool get _adFailed => homeAdFailed;
 
   @override
@@ -106,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SafeArea(
               child: Column(
                 children: [
-                  // Fixed Header: Profile & Diamond Icons + Greeting & Welcome (Non-scrollable)
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 18.w),
                     child: Column(
@@ -136,8 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       if (!hasData || latest == null) {
                         if (_adFailed.value) {
-                          // No ad: card + Features grid as one proportioned
-                          // unit, matching the full "Features" view.
                           return Padding(
                             padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
                             child: Align(
@@ -163,8 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
 
-                        // Ad showing: card given priority flex, the ad
-                        // given the rest — both resized for real.
                         return Padding(
                           padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
                           child: Column(
@@ -293,8 +285,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Expanded(
-              // New design: Profile replaces the old Health Insights card.
-              // Opens the Profile tab instead of pushing a new page.
               child: _featureCard(
                 AppAssets.icProfile,
                 'Profile',
@@ -944,8 +934,6 @@ class _HomeNativeAdStripState extends State<_HomeNativeAdStrip> {
         padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
         child: NativeAdCard(
           slot: AdSlots.home,
-          // Real layout size (not a transform-scale), so the ad's
-          // platform view always fits within the space it's given.
           height: widget.height,
           backgroundColor: Colors.transparent,
           onAdAvailabilityChanged: (available) {
