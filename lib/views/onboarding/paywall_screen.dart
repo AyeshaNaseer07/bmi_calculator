@@ -185,8 +185,22 @@ class _PaywallScreenState extends State<PaywallScreen> {
     Get.snackbar('Restore', 'Purchase restored successfully (demo).');
   }
 
+  PlanOffer _offer(SubscriptionPlan slot) =>
+      PriceService.offerFor(slot, _appController.remoteConfigService, _prices);
+
+  String _breakdown(PlanOffer o) => switch (o.type) {
+    PlanType.yearly => '${o.price.perMonth(o.type)} / month',
+    PlanType.monthly => '${o.price.perWeek(o.type)} / week',
+    PlanType.weekly => 'Billed weekly',
+    PlanType.lifetime => 'One-time payment',
+  };
+
   @override
   Widget build(BuildContext context) {
+    // Card titles follow the product, not the slot it sits in.
+    final left = _offer(SubscriptionPlan.monthly);
+    final right = _offer(SubscriptionPlan.yearly);
+    final leftIsBest = left.type.rank > right.type.rank;
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -378,14 +392,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         Expanded(
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.monthly,
-                            title: 'Monthly Plan',
-                            price: _pricesLoading
-                                ? ''
-                                : _prices[SubscriptionPlan.monthly]!
-                                      .priceString,
-                            period: _pricesLoading
-                                ? ''
-                                : '${_prices[SubscriptionPlan.monthly]!.perWeek} / week',
+                            title: '${left.type.title} Plan',
+                            price: _pricesLoading ? '' : left.price.priceString,
+                            period: _pricesLoading ? '' : _breakdown(left),
+                            showBestValue: leftIsBest,
                             shadowColor: const Color(0x9189DED6),
                             shadowBlur: 13.1,
                             shadowOffset: Offset.zero,
@@ -427,14 +437,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         Expanded(
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.yearly,
-                            title: 'Yearly Plan',
+                            title: '${right.type.title} Plan',
                             price: _pricesLoading
                                 ? ''
-                                : _prices[SubscriptionPlan.yearly]!.priceString,
-                            period: _pricesLoading
-                                ? ''
-                                : '${_prices[SubscriptionPlan.yearly]!.perMonth} / month',
-                            showBestValue: true,
+                                : right.price.priceString,
+                            period: _pricesLoading ? '' : _breakdown(right),
+                            showBestValue: !leftIsBest,
                             shadowColor: const Color(0x2433D2AB),
                             shadowBlur: 12,
                             shadowOffset: const Offset(0, 3),
@@ -444,8 +452,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     ),
                     SizedBox(height: 28.h),
 
-                    // CTA Button (no Obx: nothing observable is read here,
-                    // which would throw a GetX "improper use" error)
+                    // CTA Button. Obx: the label follows trial eligibility
+                    // and the Remote Config text, both observable.
                     Row(
                       children: [
                         Image.asset(
@@ -456,31 +464,33 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         ),
                         SizedBox(width: 6.w),
                         Expanded(
-                          child: AnimatedCtaButton(
-                            text: _isLoading
-                                ? 'Processing...'
-                                : _appController.remoteConfigService.buttonText,
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
+                          child: Obx(
+                            () => AnimatedCtaButton(
+                              text: PriceService.getCtaLabel(
+                                _offer(_selectedPlan).product,
+                              ),
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
+                              ),
+                              borderRadius: BorderRadius.circular(28.r),
+                              height: 52.h,
+                              isLoading: _isLoading,
+                              leadingIcon: Image.asset(
+                                AppAssets.premiumCrown,
+                                width: 18.w,
+                                height: 18.w,
+                                color: Colors.white,
+                                fit: BoxFit.contain,
+                              ),
+                              trailingIcon: Icon(
+                                Icons.arrow_forward_rounded,
+                                color: Colors.white,
+                                size: 20.sp,
+                              ),
+                              onPressed: (_isLoading || _pricesLoading)
+                                  ? null
+                                  : _onSubscribe,
                             ),
-                            borderRadius: BorderRadius.circular(28.r),
-                            height: 52.h,
-                            isLoading: _isLoading,
-                            leadingIcon: Image.asset(
-                              AppAssets.premiumCrown,
-                              width: 18.w,
-                              height: 18.w,
-                              color: Colors.white,
-                              fit: BoxFit.contain,
-                            ),
-                            trailingIcon: Icon(
-                              Icons.arrow_forward_rounded,
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
-                            onPressed: (_isLoading || _pricesLoading)
-                                ? null
-                                : _onSubscribe,
                           ),
                         ),
                         SizedBox(width: 6.w),

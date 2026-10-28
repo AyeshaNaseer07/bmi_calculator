@@ -26,7 +26,7 @@ class RemoteModel {
   String get secondTimeOnboarding => _secondTimeOnboarding ?? 'off';
   set secondTimeOnboarding(String value) => _secondTimeOnboarding = value;
 
-  String get paywallBtnText => _paywallBtnText ?? 'Start Free Trial';
+  String get paywallBtnText => _paywallBtnText ?? '';
   set paywallBtnText(String value) => _paywallBtnText = value;
 
   int get crossDelay => _crossDelay ?? 3;
@@ -148,11 +148,12 @@ class RemoteModel {
           'off',
         ),
         paywallBtnText: _parseString(
-          remoteConfig['paywall_btn_text'] ??
+          remoteConfig['premium_btn_text'] ??
+              remoteConfig['paywall_btn_text'] ??
               remoteConfig['paywall_button_text'] ??
               remoteConfig['splash_product_btn_text'] ??
               remoteConfig['button_text'],
-          'Start Free Trial',
+          '',
         ),
         crossDelay: _parseInt(
           remoteConfig['cross_delay'] ??
@@ -221,7 +222,7 @@ class RemoteModel {
     return RemoteModel(
       firstTimeOnboarding: 'on',
       secondTimeOnboarding: 'off',
-      paywallBtnText: 'Start Free Trial',
+      paywallBtnText: '',
       crossDelay: 3,
       weeklyProductId: 'com.weekly.bmi.calculator.app',
       yearlyProductId: 'com.yearly.bmi.calculator.app',

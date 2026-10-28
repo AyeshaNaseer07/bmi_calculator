@@ -1,12 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+
+import 'price_service.dart';
 import 'storage_service.dart';
 
-enum SubscriptionPlan {
-  weekly,
-  monthly,
-  yearly,
-}
+enum SubscriptionPlan { weekly, monthly, yearly }
 
 class SubscriptionService {
   final StorageService _storageService;
@@ -35,7 +35,8 @@ class SubscriptionService {
 
   /// Stores the premium status implied by [info] and returns it.
   Future<bool> applyCustomerInfo(CustomerInfo info) async {
-    final active = info.entitlements.active.isNotEmpty ||
+    final active =
+        info.entitlements.active.isNotEmpty ||
         info.activeSubscriptions.isNotEmpty;
     await _storageService.setIsPremium(active);
     return active;
@@ -45,13 +46,17 @@ class SubscriptionService {
   Future<bool> purchase(SubscriptionPlan plan, {String? productId}) async {
     try {
       final id = productId ?? plan.name;
-      debugPrint('Purchasing plan: ${plan.name} with product ID: $id (development mock)');
+      debugPrint(
+        'Purchasing plan: ${plan.name} with product ID: $id (development mock)',
+      );
       await Future.delayed(const Duration(milliseconds: 800));
       await _storageService.setIsPremium(true);
       return true;
     } catch (e) {
       debugPrint('Purchase error: $e');
       return false;
+    } finally {
+      unawaited(PriceService.refreshTrialEligibility());
     }
   }
 
@@ -65,6 +70,8 @@ class SubscriptionService {
     } catch (e) {
       debugPrint('Purchase error: $e');
       return false;
+    } finally {
+      unawaited(PriceService.refreshTrialEligibility());
     }
   }
 
@@ -78,6 +85,8 @@ class SubscriptionService {
     } catch (e) {
       debugPrint('Restore error: $e');
       return false;
+    } finally {
+      unawaited(PriceService.refreshTrialEligibility());
     }
   }
 

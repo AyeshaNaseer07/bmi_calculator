@@ -7,12 +7,6 @@ import 'meal_plan_overweight.dart';
 import 'meal_plan_raw.dart';
 import 'meal_plan_underweight.dart';
 
-/// Optional per-meal photo overrides, by meal key. Put a file in
-/// assets/images and map the key here, e.g.
-///   'underweight_d1_breakfast': 'assets/images/uw_d1_breakfast.png',
-/// Meal keys look like `<category>_d<day>_<slot>` (day is 1–7, slot is
-/// breakfast / lunch / dinner). Anything not listed uses the photo mapped to the
-/// dish name in `_mealPhotos`.
 const Map<String, String> kMealPhotoOverrides = {};
 
 const String _meals = 'assets/images/meals';
@@ -21,84 +15,84 @@ const String _badges = 'assets/images/badges';
 
 /// Photo for each dish, by meal name (shared by all four BMI plans).
 const Map<String, String> _mealPhotos = {
-  'Peanut Butter Oats': '$_meals/peanut_butter_oats.jpg',
-  'Chicken & Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
-  'Salmon, Quinoa & Avocado': '$_meals/salmon_quinoa_avocado.jpg',
-  'Cheese Omelette & Toast': '$_meals/cheese_omelette_toast.jpg',
-  'Beef & Sweet Potato Wrap': '$_meals/beef_sweet_potato_wrap.jpg',
-  'Creamy Chicken Pasta': '$_meals/creamy_chicken_pasta.jpg',
-  'Nutty Smoothie Bowl': '$_meals/smoothie_bowl.jpg',
-  'Tuna Pasta Salad': '$_meals/tuna_pasta.jpg',
-  'Lamb Curry with Rice': '$_meals/lamb_curry_rice.jpg',
-  'Avocado Egg Toast': '$_meals/egg_avocado_toast.jpg',
-  'Turkey Hummus Sandwich': '$_meals/turkey_sandwich.jpg',
-  'Beef & Noodle Stir-fry': '$_meals/beef_stir_fry_noodles.jpg',
-  'Granola Yogurt Parfait': '$_meals/granola_yogurt_parfait.jpg',
-  'Falafel Rice Plate': '$_meals/falafel_plate.jpg',
-  'Baked Cod & Potatoes': '$_meals/baked_cod.jpg',
-  'Banana Pancakes': '$_meals/banana_pancakes.jpg',
-  'Chicken Quesadilla': '$_meals/chicken_quesadilla.jpg',
-  'Lentil Veggie Stew': '$_meals/lentil_soup.jpg',
-  'Overnight Oats & Almonds': '$_meals/overnight_oats_jar.jpg',
-  'Egg Fried Rice Bowl': '$_meals/egg_fried_rice.jpg',
-  'Roast Chicken & Mash': '$_meals/roast_chicken_mashed_potato.jpg',
-  'Greek Yogurt Bowl': '$_meals/greek_yogurt_berries.jpg',
-  'Grilled Chicken Salad': '$_meals/grilled_chicken_salad.jpg',
-  'Salmon & Vegetables': '$_meals/salmon_vegetables.jpg',
-  'Veggie Scramble & Toast': '$_meals/veggie_scramble_toast.jpg',
-  'Quinoa Chickpea Bowl': '$_meals/quinoa_chickpea_bowl.jpg',
-  'Turkey Stir-fry & Rice': '$_meals/turkey_stir_fry.jpg',
-  'Oats with Berries': '$_meals/oatmeal_bowl.jpg',
-  'Tuna Whole-grain Wrap': '$_meals/tuna_wrap.jpg',
-  'Baked Cod & Veg': '$_meals/baked_cod.jpg',
-  'Lentil Veggie Soup': '$_meals/lentil_soup.jpg',
-  'Chicken Fajita Plate': '$_meals/chicken_fajita.jpg',
-  'Fruit & Cottage Cheese': '$_meals/cottage_cheese_fruit.jpg',
-  'Mediterranean Chicken Bowl': '$_meals/mediterranean_chicken_bowl.jpg',
-  'Shrimp Veggie Noodles': '$_meals/shrimp_noodles.jpg',
-  'Banana Oat Pancakes': '$_meals/banana_oat_pancakes.jpg',
-  'Hummus Veggie Sandwich': '$_meals/hummus_veggie_sandwich.jpg',
-  'Salmon & Quinoa': '$_meals/salmon_with_quinoa.jpg',
-  'Chia Pudding & Fruit': '$_meals/chia_pudding.jpg',
-  'Chicken Rice Bowl': '$_meals/chicken_rice_bowl.jpg',
-  'Veggie Lentil Curry': '$_meals/lentil_curry.jpg',
-  'Veggie Egg-White Omelette': '$_meals/veggie_omelette.jpg',
-  'Grilled Chicken & Greens': '$_meals/grilled_chicken_salad.jpg',
-  'Baked Fish & Veg': '$_meals/baked_cod.jpg',
-  'Berry Protein Smoothie': '$_meals/smoothie_bowl.jpg',
-  'Turkey Lettuce Wraps': '$_meals/turkey_lettuce_wraps.jpg',
-  'Zucchini Noodles & Chicken': '$_meals/zucchini_noodles.jpg',
-  'Light Overnight Oats': '$_meals/overnight_oats_jar.jpg',
-  'Chickpea Salad Bowl': '$_meals/chickpea_salad.jpg',
-  'Grilled Shrimp & Veg': '$_meals/grilled_shrimp.jpg',
-  'Greek Yogurt & Apple': '$_meals/greek_yogurt_berries.jpg',
-  'Herbed Chicken & Broccoli': '$_meals/chicken_broccoli.jpg',
-  'Mushroom Scramble': '$_meals/mushroom_scramble.jpg',
-  'Tuna Cucumber Bowl': '$_meals/tuna_salad.jpg',
-  'Baked Cod & Cauli Mash': '$_meals/baked_cod.jpg',
-  'Cottage Cheese & Berries': '$_meals/cottage_cheese_fruit.jpg',
-  'Chicken Veggie Soup': '$_meals/chicken_soup.jpg',
-  'Turkey Meatballs & Salad': '$_meals/turkey_meatballs.jpg',
-  'Chia Oat Bowl': '$_meals/chia_pudding.jpg',
-  'Grilled Veggie Wrap': '$_meals/grilled_veggie_wrap.jpg',
-  'Steamed Fish & Greens': '$_meals/steamed_fish_greens.jpg',
-  'Spinach Egg-White Wrap': '$_meals/egg_white_wrap.jpg',
-  'Yogurt & Berries': '$_meals/greek_yogurt_berries.jpg',
-  'Veggie Lentil Soup': '$_meals/lentil_soup.jpg',
-  'Lemon Herb Chicken': '$_meals/lemon_herb_chicken.jpg',
-  'Veggie Omelette': '$_meals/veggie_omelette.jpg',
-  'Cucumber Tuna Bowl': '$_meals/tuna_salad.jpg',
-  'Baked Cod & Zucchini': '$_meals/baked_cod.jpg',
-  'Chickpea Veggie Bowl': '$_meals/chickpea_salad.jpg',
-  'Grilled Shrimp Salad': '$_meals/grilled_shrimp.jpg',
-  'Protein Smoothie': '$_meals/smoothie_bowl.jpg',
-  'Turkey Veggie Wrap': '$_meals/turkey_lettuce_wraps.jpg',
-  'Chicken & Broccoli': '$_meals/chicken_broccoli.jpg',
-  'Cottage Cheese & Fruit': '$_meals/cottage_cheese_fruit.jpg',
-  'Baked Fish & Cauliflower': '$_meals/baked_cod.jpg',
-  'Chia Berry Cup': '$_meals/chia_pudding.jpg',
-  'Grilled Veggie Bowl': '$_meals/grilled_veggie_wrap.jpg',
-  'Herbed Turkey & Salad': '$_meals/turkey_meatballs.jpg',
+  'Peanut Butter Oats': '$_meals/peanut_butter_oats.webp',
+  'Chicken & Rice Bowl': '$_meals/chicken_rice_bowl.webp',
+  'Salmon, Quinoa & Avocado': '$_meals/salmon_quinoa_avocado.webp',
+  'Cheese Omelette & Toast': '$_meals/cheese_omelette_toast.webp',
+  'Beef & Sweet Potato Wrap': '$_meals/beef_sweet_potato_wrap.webp',
+  'Creamy Chicken Pasta': '$_meals/creamy_chicken_pasta.webp',
+  'Nutty Smoothie Bowl': '$_meals/smoothie_bowl.webp',
+  'Tuna Pasta Salad': '$_meals/tuna_pasta.webp',
+  'Lamb Curry with Rice': '$_meals/lamb_curry_rice.webp',
+  'Avocado Egg Toast': '$_meals/egg_avocado_toast.webp',
+  'Turkey Hummus Sandwich': '$_meals/turkey_sandwich.webp',
+  'Beef & Noodle Stir-fry': '$_meals/beef_stir_fry_noodles.webp',
+  'Granola Yogurt Parfait': '$_meals/granola_yogurt_parfait.webp',
+  'Falafel Rice Plate': '$_meals/falafel_plate.webp',
+  'Baked Cod & Potatoes': '$_meals/baked_cod.webp',
+  'Banana Pancakes': '$_meals/banana_pancakes.webp',
+  'Chicken Quesadilla': '$_meals/chicken_quesadilla.webp',
+  'Lentil Veggie Stew': '$_meals/lentil_soup.webp',
+  'Overnight Oats & Almonds': '$_meals/overnight_oats_jar.webp',
+  'Egg Fried Rice Bowl': '$_meals/egg_fried_rice.webp',
+  'Roast Chicken & Mash': '$_meals/roast_chicken_mashed_potato.webp',
+  'Greek Yogurt Bowl': '$_meals/greek_yogurt_berries.webp',
+  'Grilled Chicken Salad': '$_meals/grilled_chicken_salad.webp',
+  'Salmon & Vegetables': '$_meals/salmon_vegetables.webp',
+  'Veggie Scramble & Toast': '$_meals/veggie_scramble_toast.webp',
+  'Quinoa Chickpea Bowl': '$_meals/quinoa_chickpea_bowl.webp',
+  'Turkey Stir-fry & Rice': '$_meals/turkey_stir_fry.webp',
+  'Oats with Berries': '$_meals/oatmeal_bowl.webp',
+  'Tuna Whole-grain Wrap': '$_meals/tuna_wrap.webp',
+  'Baked Cod & Veg': '$_meals/baked_cod.webp',
+  'Lentil Veggie Soup': '$_meals/lentil_soup.webp',
+  'Chicken Fajita Plate': '$_meals/chicken_fajita.webp',
+  'Fruit & Cottage Cheese': '$_meals/cottage_cheese_fruit.webp',
+  'Mediterranean Chicken Bowl': '$_meals/mediterranean_chicken_bowl.webp',
+  'Shrimp Veggie Noodles': '$_meals/shrimp_noodles.webp',
+  'Banana Oat Pancakes': '$_meals/banana_oat_pancakes.webp',
+  'Hummus Veggie Sandwich': '$_meals/hummus_veggie_sandwich.webp',
+  'Salmon & Quinoa': '$_meals/salmon_with_quinoa.webp',
+  'Chia Pudding & Fruit': '$_meals/chia_pudding.webp',
+  'Chicken Rice Bowl': '$_meals/chicken_rice_bowl.webp',
+  'Veggie Lentil Curry': '$_meals/lentil_curry.webp',
+  'Veggie Egg-White Omelette': '$_meals/veggie_omelette.webp',
+  'Grilled Chicken & Greens': '$_meals/grilled_chicken_salad.webp',
+  'Baked Fish & Veg': '$_meals/baked_cod.webp',
+  'Berry Protein Smoothie': '$_meals/smoothie_bowl.webp',
+  'Turkey Lettuce Wraps': '$_meals/turkey_lettuce_wraps.webp',
+  'Zucchini Noodles & Chicken': '$_meals/zucchini_noodles.webp',
+  'Light Overnight Oats': '$_meals/overnight_oats_jar.webp',
+  'Chickpea Salad Bowl': '$_meals/chickpea_salad.webp',
+  'Grilled Shrimp & Veg': '$_meals/grilled_shrimp.webp',
+  'Greek Yogurt & Apple': '$_meals/greek_yogurt_berries.webp',
+  'Herbed Chicken & Broccoli': '$_meals/chicken_broccoli.webp',
+  'Mushroom Scramble': '$_meals/mushroom_scramble.webp',
+  'Tuna Cucumber Bowl': '$_meals/tuna_salad.webp',
+  'Baked Cod & Cauli Mash': '$_meals/baked_cod.webp',
+  'Cottage Cheese & Berries': '$_meals/cottage_cheese_fruit.webp',
+  'Chicken Veggie Soup': '$_meals/chicken_soup.webp',
+  'Turkey Meatballs & Salad': '$_meals/turkey_meatballs.webp',
+  'Chia Oat Bowl': '$_meals/chia_pudding.webp',
+  'Grilled Veggie Wrap': '$_meals/grilled_veggie_wrap.webp',
+  'Steamed Fish & Greens': '$_meals/steamed_fish_greens.webp',
+  'Spinach Egg-White Wrap': '$_meals/egg_white_wrap.webp',
+  'Yogurt & Berries': '$_meals/greek_yogurt_berries.webp',
+  'Veggie Lentil Soup': '$_meals/lentil_soup.webp',
+  'Lemon Herb Chicken': '$_meals/lemon_herb_chicken.webp',
+  'Veggie Omelette': '$_meals/veggie_omelette.webp',
+  'Cucumber Tuna Bowl': '$_meals/tuna_salad.webp',
+  'Baked Cod & Zucchini': '$_meals/baked_cod.webp',
+  'Chickpea Veggie Bowl': '$_meals/chickpea_salad.webp',
+  'Grilled Shrimp Salad': '$_meals/grilled_shrimp.webp',
+  'Protein Smoothie': '$_meals/smoothie_bowl.webp',
+  'Turkey Veggie Wrap': '$_meals/turkey_lettuce_wraps.webp',
+  'Chicken & Broccoli': '$_meals/chicken_broccoli.webp',
+  'Cottage Cheese & Fruit': '$_meals/cottage_cheese_fruit.webp',
+  'Baked Fish & Cauliflower': '$_meals/baked_cod.webp',
+  'Chia Berry Cup': '$_meals/chia_pudding.webp',
+  'Grilled Veggie Bowl': '$_meals/grilled_veggie_wrap.webp',
+  'Herbed Turkey & Salad': '$_meals/turkey_meatballs.webp',
 };
 
 /// Picks the badge icon that best fits a dish photo file name.
@@ -133,11 +127,15 @@ String _badgeFor(String photo) {
   } else {
     b = 'chicken';
   }
-  return '$_badges/$b.png';
+  return '$_badges/$b.webp';
 }
 
 const _slots = ['breakfast', 'lunch', 'dinner'];
-const _slotTimes = {'breakfast': '8:00 AM', 'lunch': '1:00 PM', 'dinner': '7:00 PM'};
+const _slotTimes = {
+  'breakfast': '8:00 AM',
+  'lunch': '1:00 PM',
+  'dinner': '7:00 PM',
+};
 const _slotPrep = {
   'breakfast': '10 min prep',
   'lunch': '15 min prep',
@@ -198,7 +196,8 @@ class MealInfo {
 
   String get slot => slotKey[0].toUpperCase() + slotKey.substring(1);
 
-  String get shortBlurb => blurb.length > 30 ? '${blurb.substring(0, 29)}…' : blurb;
+  String get shortBlurb =>
+      blurb.length > 30 ? '${blurb.substring(0, 29)}…' : blurb;
 
   String get heroLine => '$blurb. Part of your Day $day plan.';
 
@@ -214,7 +213,13 @@ class _CatInfo {
   final IconData tagIcon;
   final List<String> chips;
   final String note;
-  const _CatInfo(this.plan, this.dailyTarget, this.tagIcon, this.chips, this.note);
+  const _CatInfo(
+    this.plan,
+    this.dailyTarget,
+    this.tagIcon,
+    this.chips,
+    this.note,
+  );
 }
 
 const Map<BMICategory, _CatInfo> _cats = {
@@ -225,13 +230,11 @@ const Map<BMICategory, _CatInfo> _cats = {
     ['Energy Dense', 'High Protein', 'Healthy Fats'],
     'Add a glass of milk or a handful of nuts if you are still hungry.',
   ),
-  BMICategory.normal: _CatInfo(
-    kNormalPlan,
-    1800,
-    Icons.eco_outlined,
-    ['High Protein', 'Balanced', 'Heart Healthy'],
-    'Swap ingredients freely to suit your taste and keep variety.',
-  ),
+  BMICategory.normal: _CatInfo(kNormalPlan, 1800, Icons.eco_outlined, [
+    'High Protein',
+    'Balanced',
+    'Heart Healthy',
+  ], 'Swap ingredients freely to suit your taste and keep variety.'),
   BMICategory.overweight: _CatInfo(
     kOverweightPlan,
     1200,
@@ -239,13 +242,11 @@ const Map<BMICategory, _CatInfo> _cats = {
     ['High Protein', 'High Fibre', 'Light & Lean'],
     'Fill half your plate with vegetables and eat slowly.',
   ),
-  BMICategory.obese: _CatInfo(
-    kObesePlan,
-    1100,
-    Icons.favorite_border_rounded,
-    ['Calorie Smart', 'High Protein', 'High Fibre'],
-    'Choose water or herbal tea with meals and watch portion sizes.',
-  ),
+  BMICategory.obese: _CatInfo(kObesePlan, 1100, Icons.favorite_border_rounded, [
+    'Calorie Smart',
+    'High Protein',
+    'High Fibre',
+  ], 'Choose water or herbal tea with meals and watch portion sizes.'),
 };
 
 class MealPlanData {

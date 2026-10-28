@@ -97,8 +97,18 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     );
   }
 
+  PlanOffer _offer(SubscriptionPlan slot) =>
+      PriceService.offerFor(slot, _app.remoteConfigService, _prices);
+
+  String _period(PlanOffer o) =>
+      o.type.periodWord == null ? 'One-time' : '1 / ${o.type.periodWord}';
+
   @override
   Widget build(BuildContext context) {
+    // Card titles follow the product, not the slot it sits in.
+    final left = _offer(SubscriptionPlan.monthly);
+    final right = _offer(SubscriptionPlan.yearly);
+    final leftIsBest = left.type.rank > right.type.rank;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -169,11 +179,10 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       Expanded(
                         child: _planCard(
                           SubscriptionPlan.monthly,
-                          'Monthly Plan',
-                          _pricesLoading
-                              ? ''
-                              : _prices[SubscriptionPlan.monthly]!.priceString,
-                          '1 / month',
+                          '${left.type.title} Plan',
+                          _pricesLoading ? '' : left.price.priceString,
+                          _period(left),
+                          best: leftIsBest,
                         ),
                       ),
                       Padding(
@@ -203,12 +212,10 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       Expanded(
                         child: _planCard(
                           SubscriptionPlan.yearly,
-                          'Yearly Plan',
-                          _pricesLoading
-                              ? ''
-                              : _prices[SubscriptionPlan.yearly]!.priceString,
-                          '1 / year',
-                          best: true,
+                          '${right.type.title} Plan',
+                          _pricesLoading ? '' : right.price.priceString,
+                          _period(right),
+                          best: !leftIsBest,
                         ),
                       ),
                     ],
@@ -224,31 +231,35 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       ),
                       SizedBox(width: 6.w),
                       Expanded(
-                        child: AnimatedCtaButton(
-                          text: _loading
-                              ? 'Processing...'
-                              : _app.remoteConfigService.buttonText,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],
+                        // Obx: the label follows trial eligibility and the
+                        // Remote Config text, both observable.
+                        child: Obx(
+                          () => AnimatedCtaButton(
+                            text: PriceService.getCtaLabel(
+                              _offer(_plan).product,
+                            ),
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],
+                            ),
+                            borderRadius: BorderRadius.circular(28.r),
+                            height: 52.h,
+                            isLoading: _loading,
+                            leadingIcon: Image.asset(
+                              AppAssets.premiumCrown,
+                              width: 18.w,
+                              height: 18.w,
+                              color: Colors.white,
+                              fit: BoxFit.contain,
+                            ),
+                            trailingIcon: Icon(
+                              Icons.arrow_forward_rounded,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                            onPressed: (_loading || _pricesLoading)
+                                ? null
+                                : _subscribe,
                           ),
-                          borderRadius: BorderRadius.circular(28.r),
-                          height: 52.h,
-                          isLoading: _loading,
-                          leadingIcon: Image.asset(
-                            AppAssets.premiumCrown,
-                            width: 18.w,
-                            height: 18.w,
-                            color: Colors.white,
-                            fit: BoxFit.contain,
-                          ),
-                          trailingIcon: Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
-                          onPressed: (_loading || _pricesLoading)
-                              ? null
-                              : _subscribe,
                         ),
                       ),
                       SizedBox(width: 6.w),

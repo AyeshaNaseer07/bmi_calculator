@@ -4,12 +4,12 @@ abstract class AppAssets {
   static const String _lottiesBase = 'assets/lotties';
 
   // ── Images ──
-  static const String appBg = '$_imagesBase/bg.png';
+  static const String appBg = '$_imagesBase/bg.webp';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
   static const String splashBg = '$_imagesBase/splash_bg.webp';
   static const String selectLanguage = '$_imagesBase/select_language.webp';
   static const String crown = '$_imagesBase/crown.webp';
-  static const String weekPro = '$_imagesBase/week_pro.png';
+  static const String weekPro = '$_imagesBase/week_pro.webp';
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   static const String homeAvatar = '$_imagesBase/home_img.webp';
@@ -29,17 +29,17 @@ abstract class AppAssets {
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
   // ── Soft Paywall (meal plan) ──
-  static const String softBg = '$_imagesBase/soft_paywall_bg.png';
-  static const String softCrown = '$_imagesBase/soft_paywall_icon.png';
-  static const String softBadge = '$_imagesBase/soft_paywall.png';
-  static const String softLeft = '$_imagesBase/s_left.png';
-  static const String softRight = '$_imagesBase/s_right.png';
+  static const String softBg = '$_imagesBase/soft_paywall_bg.webp';
+  static const String softCrown = '$_imagesBase/soft_paywall_icon.webp';
+  static const String softBadge = '$_imagesBase/soft_paywall.webp';
+  static const String softLeft = '$_imagesBase/s_left.webp';
+  static const String softRight = '$_imagesBase/s_right.webp';
   static const List<String> softIcons = [
-    '$_imagesBase/s_icon1.png',
-    '$_imagesBase/s_icon2.png',
-    '$_imagesBase/s_icon3.png',
-    '$_imagesBase/s_icon4.png',
-    '$_imagesBase/s_icon5.png',
+    '$_imagesBase/s_icon1.webp',
+    '$_imagesBase/s_icon2.webp',
+    '$_imagesBase/s_icon3.webp',
+    '$_imagesBase/s_icon4.webp',
+    '$_imagesBase/s_icon5.webp',
   ];
 
   // ── Paywall Premium Feature Icons ──

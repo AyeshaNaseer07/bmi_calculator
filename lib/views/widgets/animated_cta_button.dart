@@ -203,11 +203,12 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
               ),
               child: Stack(
                 children: [
+                  // While loading, the loader replaces the text and taps are off.
                   CustomGradientButton(
-                    text: widget.text,
-                    onPressed: widget.onPressed,
-                    leadingIcon: widget.leadingIcon,
-                    trailingIcon: effectiveTrailing,
+                    text: widget.isLoading ? '' : widget.text,
+                    onPressed: widget.isLoading ? null : widget.onPressed,
+                    leadingIcon: widget.isLoading ? null : widget.leadingIcon,
+                    trailingIcon: widget.isLoading ? null : effectiveTrailing,
                     height: widget.height,
                     width: widget.width,
                     gradient: widget.gradient,
@@ -247,6 +248,19 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
                                 ),
                               );
                             },
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (widget.isLoading)
+                    Positioned.fill(
+                      child: Center(
+                        child: SizedBox(
+                          width: 22.w,
+                          height: 22.w,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2.4,
+                            color: Colors.white,
                           ),
                         ),
                       ),
