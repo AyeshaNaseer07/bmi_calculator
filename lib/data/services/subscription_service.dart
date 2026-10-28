@@ -60,21 +60,6 @@ class SubscriptionService {
     }
   }
 
-  /// Purchase directly by remote product ID
-  Future<bool> purchaseByProductId(String productId) async {
-    try {
-      debugPrint('Purchasing product ID: $productId (development mock)');
-      await Future.delayed(const Duration(milliseconds: 800));
-      await _storageService.setIsPremium(true);
-      return true;
-    } catch (e) {
-      debugPrint('Purchase error: $e');
-      return false;
-    } finally {
-      unawaited(PriceService.refreshTrialEligibility());
-    }
-  }
-
   /// Mock restore purchases
   Future<bool> restorePurchases() async {
     try {
@@ -88,9 +73,5 @@ class SubscriptionService {
     } finally {
       unawaited(PriceService.refreshTrialEligibility());
     }
-  }
-
-  Future<void> cancelSubscription() async {
-    await _storageService.setIsPremium(false);
   }
 }

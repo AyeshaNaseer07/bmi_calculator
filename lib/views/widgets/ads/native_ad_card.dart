@@ -120,7 +120,9 @@ class _NativeAdCardState extends State<NativeAdCard> {
   void _loadAd() {
     if (!_isAdsEnabled) {
       _isFailed = true;
-      widget.onAdAvailabilityChanged?.call(false);
+      // Deferred: we're inside initState, and the parent usually calls
+      // setState in response, which isn't allowed mid-build.
+      _notifyAvailability(false);
       return;
     }
     if (_tryUsePreloaded()) return;

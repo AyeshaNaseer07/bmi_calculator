@@ -23,19 +23,6 @@ enum BMICategory {
     }
   }
 
-  String get rangeText {
-    switch (this) {
-      case BMICategory.underweight:
-        return '<18.5';
-      case BMICategory.normal:
-        return '18.5–24.9';
-      case BMICategory.overweight:
-        return '25–29.9';
-      case BMICategory.obese:
-        return '30 and above';
-    }
-  }
-
   Color get color {
     switch (this) {
       case BMICategory.underweight:

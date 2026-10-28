@@ -52,7 +52,6 @@ abstract class AppAssets {
 
   static const String homeIcon1 = '$_imagesBase/home_1.webp';
   static const String homeIcon2 = '$_imagesBase/home_2.webp';
-  static const String homeIcon3 = '$_imagesBase/home_3.webp';
   static const String homeIcon4 = '$_imagesBase/home_4.webp';
 
   // ── Bottom Nav ──
@@ -116,7 +115,6 @@ abstract class AppAssets {
   // ── Lotties / Animations ──
   static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
   static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
-  static const String completeFoodVideo = '$_lottiesBase/complete_food.mp4';
   static const String foodCompleteLottie = '$_lottiesBase/food_complete.json';
 
   // ── BMI insight / tips flow ──

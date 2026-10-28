@@ -71,8 +71,4 @@ class StoreConfig {
   StoreConfig._internal(this.store, this.apiKey);
 
   static StoreConfig get instance => _instance!;
-
-  static bool isForAppleStore() => instance.store == Store.appStore;
-  static bool isForGooglePlay() => instance.store == Store.playStore;
-  static bool isForAmazonAppstore() => instance.store == Store.amazon;
 }

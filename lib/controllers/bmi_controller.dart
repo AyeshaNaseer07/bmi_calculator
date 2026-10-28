@@ -74,14 +74,6 @@ class BMIController extends GetxController {
     age.value = newAge.clamp(1, 120);
   }
 
-  void incrementAge() {
-    if (age.value < 120) age.value++;
-  }
-
-  void decrementAge() {
-    if (age.value > 1) age.value--;
-  }
-
   void toggleAgePicker() {
     isAgePickerVisible.value = !isAgePickerVisible.value;
   }

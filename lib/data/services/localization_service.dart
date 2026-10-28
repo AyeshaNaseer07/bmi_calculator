@@ -182,13 +182,6 @@ class LocalizationService extends Translations {
     }
   }
 
-  static LanguageModel getLanguageModel(String code) {
-    return supportedLanguages.firstWhere(
-      (element) => element.code == code,
-      orElse: () => supportedLanguages.first,
-    );
-  }
-
   @override
   Map<String, Map<String, String>> get keys => _keys;
 }

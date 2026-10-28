@@ -29,13 +29,6 @@ class RemoteConfigService extends GetxService {
   }
 
   String get secondTimeOnboarding => model.value.secondTimeOnboarding;
-  bool get isSecondTimeOnboardingEnabled {
-    try {
-      return model.value.isSecondTimeOnboarding;
-    } catch (_) {
-      return false;
-    }
-  }
 
   String get paywallBtnText => model.value.paywallBtnText;
   String get buttonText => model.value.paywallBtnText;
@@ -138,12 +131,6 @@ class RemoteConfigService extends GetxService {
     model.value = parsed;
     remoteModel = parsed;
     _storage?.setRemoteButtonText(jsonEncode(parsed.toJson()));
-  }
-
-  void updateModel(RemoteModel newModel) {
-    model.value = newModel;
-    remoteModel = newModel;
-    _storage?.setRemoteButtonText(jsonEncode(newModel.toJson()));
   }
 
   String getProductId(SubscriptionPlan plan) {

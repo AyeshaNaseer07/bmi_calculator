@@ -181,7 +181,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
           key: _doneButtonKey,
           onTap: _onDone,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
             decoration: BoxDecoration(
               color: _kMint,
               borderRadius: BorderRadius.circular(20.r),
@@ -190,9 +190,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
               'done'.tr,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 12,
+                fontSize: 16,
                 fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),

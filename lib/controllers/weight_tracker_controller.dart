@@ -90,10 +90,6 @@ class WeightTrackerController extends GetxController {
     selectedTimeframe.value = timeframe;
   }
 
-  void updateGoalWeight(double weight) {
-    goalWeight.value = weight;
-  }
-
   Future<void> addWeight(
     double weight,
     DateTime date, {

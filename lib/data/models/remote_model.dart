@@ -86,9 +86,6 @@ class RemoteModel {
   // Convenience boolean helpers
   bool get isFirstTimeOnboarding => _isOn(firstTimeOnboarding);
 
-  /// Onboarding on every launch after the first one ("onward").
-  bool get isSecondTimeOnboarding => _isOn(secondTimeOnboarding);
-
   static bool _isOn(String? v) {
     if (v == null) return false;
     final s = v.trim().toLowerCase();
@@ -107,11 +104,7 @@ class RemoteModel {
   bool get isLocalNotificationEnabled => _isOn(localNotification);
 
   // Compatibility aliases
-  String get splashProductId => weeklyProductId;
-  String get splashWeeklyProductId => weeklyProductId;
   String get splashYearlyProductId => yearlyProductId;
-  int get splashProductCrossDelay => crossDelay;
-  String get splashProductBtnText => paywallBtnText;
 
   static String _parseString(dynamic val, String defaultValue) {
     if (val == null) return defaultValue;

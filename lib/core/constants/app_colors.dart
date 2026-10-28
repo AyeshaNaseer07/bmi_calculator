@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 abstract class AppColors {
   // ── Primary Palette ──
   static const Color primaryTeal = Color(0xFF09B389);
-  static const Color primaryTealDark = Color(0xFF138A76);
   static const Color primaryTealLight = Color(0xFF2FD1A6);
   static const Color accentBlue = Color(0xFF168EE2);
 
@@ -14,31 +13,8 @@ abstract class AppColors {
     end: Alignment.centerRight,
   );
 
-  static const LinearGradient backgroundGradient = LinearGradient(
-    colors: [Color(0xFFF0FDF8), Color(0xFFFFFFFF)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
-
-  static const LinearGradient splashGradient = LinearGradient(
-    colors: [Color(0xFFF3FAF7), Color(0xFFE8F7F2)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
-
-  static const LinearGradient cardMintGradient = LinearGradient(
-    colors: [Color(0xFFF4FCF9), Color(0xFFFFFFFF)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
   // ── Backgrounds & Cards ──
   static const Color scaffoldBackground = Color(0xFFF7FAF8);
-  static const Color cardBackground = Colors.white;
-  static const Color mintLight = Color(0xFFEDFAF5);
-  static const Color mintBorder = Color(0xFFD4EFE6);
-  static const Color lightGray = Color(0xFFF1F5F9);
-  static const Color borderGray = Color(0xFFE2E8F0);
 
   // ── Typography Colors ──
   static const Color textDark = Color(0xFF1E293B);
@@ -53,11 +29,7 @@ abstract class AppColors {
   static const Color obese = Color(0xFFFF2D2D);
 
   // ── Status & Accents ──
-  static const Color gold = Color(0xFFFFB800);
   static const Color error = Color(0xFFFF4D4F);
-  static const Color heartRed = Color(0xFFEF4444);
-  static const Color hydrationBlue = Color(0xFF0EA5E9);
-  static const Color progressGreen = Color(0xFF22C55E);
 
   // ── Shadows ──
   static List<BoxShadow> cardShadow = [
@@ -70,14 +42,6 @@ abstract class AppColors {
       color: Colors.black.withValues(alpha: 0.03),
       blurRadius: 8,
       offset: const Offset(0, 2),
-    ),
-  ];
-
-  static List<BoxShadow> buttonShadow = [
-    BoxShadow(
-      color: const Color(0xFF168EE2).withValues(alpha: 0.25),
-      blurRadius: 12,
-      offset: const Offset(0, 4),
     ),
   ];
 }

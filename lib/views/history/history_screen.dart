@@ -32,6 +32,10 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  // Header buttons match the calendar icon asset (translucent teal circle).
+  static const Color _headerButtonFill = Color(0x3634D0AD);
+  static const Color _headerButtonIcon = Color(0xFF003A29);
+
   DateTime? _selectedDate;
   HistorySortOption _currentSort = HistorySortOption.newest;
   bool _isSelectionMode = false;
@@ -432,123 +436,139 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (hasRecords) ...[
-                    // Top "Your Progress" Card
+                    // Top "Your Progress" Card: white header, mint
+                    // gradient stats strip running edge to edge below it.
                     CustomCard(
-                      borderRadius: 24.r,
-                      padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 14.h),
+                      borderRadius: 24,
+                      padding: EdgeInsets.zero,
                       shadows: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.04),
+                          color: const Color(0x2E33D2AB),
                           blurRadius: 18.r,
-                          offset: Offset(0, 4.h),
+                          offset: Offset(0, 6.h),
                         ),
                         BoxShadow(
-                          color: const Color(0xFF09B389)
-                              .withValues(alpha: 0.05),
-                          blurRadius: 12.r,
-                          offset: Offset(0, 2.h),
+                          color: const Color(0x1433D2AB),
+                          blurRadius: 4.r,
                         ),
                       ],
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AppAssets.historyUp,
-                                width: 32.w,
-                                height: 32.h,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24.r),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                14.w,
+                                14.h,
+                                10.w,
+                                12.h,
                               ),
-                              SizedBox(width: 10.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Your Progress',
-                                      style: TextStyle(
-                                        color: const Color(0xFF111827),
-                                        fontSize: 15.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    SizedBox(height: 3.h),
-                                    Opacity(
-                                      opacity: 0.71,
-                                      child: Text(
-                                        'Keep tracking to reach \nyour health goals.',
-                                        style: TextStyle(
-                                          color: const Color(0xFF111827),
-                                          fontSize: 11.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w400,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    AppAssets.historyUp,
+                                    width: 34.w,
+                                    height: 34.w,
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Your Progress',
+                                          style: TextStyle(
+                                            color: const Color(0xFF111827),
+                                            fontSize: 16.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
+                                        SizedBox(height: 4.h),
+                                        Text(
+                                          'Keep tracking to reach\nyour health goals.',
+                                          style: TextStyle(
+                                            color: const Color(0xFF111827)
+                                                .withValues(alpha: 0.7),
+                                            fontSize: 11.5.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.3,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // Graphic clipboard
+                                  SizedBox(
+                                    width: 110.w,
+                                    height: 96.h,
+                                    child: OverflowBox(
+                                      maxWidth: 190.w,
+                                      maxHeight: 190.h,
+                                      child: Image.asset(
+                                        AppAssets.historyIcon,
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 12.h,
+                                horizontal: 6.w,
+                              ),
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color(0xFFF1FBF7),
+                                    Color(0xFFE2F5EE),
                                   ],
                                 ),
-                              ),
-                              // Graphic clipboard
-                              SizedBox(
-                                width: 98.w,
-                                height: 98.h,
-                                child: OverflowBox(
-                                  maxWidth: 190.w,
-                                  maxHeight: 190.h,
-                                  child: Image.asset(
-                                    AppAssets.historyIcon,
-                                    fit: BoxFit.contain,
-                                  ),
+                                border: Border(
+                                  top: BorderSide(color: Color(0xFFDDF1E9)),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 12.h),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 14.h,
-                              horizontal: 8.w,
-                            ),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFF0F9F8),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.r),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: _buildSummaryItem(
-                                    label: 'Records',
-                                    value: '${allRecords.length}',
-                                    subtitle: 'Total',
-                                  ),
-                                ),
-                                _buildDivider(),
-                                Expanded(
-                                  child: _buildSummaryItem(
-                                    label: 'BMI',
-                                    value: allRecords.first.bmiValue
-                                        .toStringAsFixed(1),
-                                    subtitle: allRecords.first.category.label,
-                                  ),
-                                ),
-                                _buildDivider(),
-                                Expanded(
-                                  child: _buildSummaryItem(
-                                    label: 'Latest',
-                                    value: allRecords.first.bmiValue
-                                        .toStringAsFixed(1),
-                                    subtitle: _getLatestSubtitle(
-                                      allRecords.first.date,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildSummaryItem(
+                                      label: 'Records',
+                                      value: '${allRecords.length}',
+                                      subtitle: 'Total',
                                     ),
                                   ),
-                                ),
-                              ],
+                                  _buildDivider(),
+                                  Expanded(
+                                    child: _buildSummaryItem(
+                                      label: 'BMI',
+                                      value: allRecords.first.bmiValue
+                                          .toStringAsFixed(1),
+                                      subtitle: allRecords.first.category.label,
+                                    ),
+                                  ),
+                                  _buildDivider(),
+                                  Expanded(
+                                    child: _buildSummaryItem(
+                                      label: 'Latest',
+                                      value: allRecords.first.bmiValue
+                                          .toStringAsFixed(1),
+                                      subtitle: _getLatestSubtitle(
+                                        allRecords.first.date,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 16.h),
@@ -749,7 +769,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             'BMI History',
                             style: TextStyle(
                               color: const Color(0xFF111827),
-                              fontSize: 15.sp,
+                              fontSize: 16.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -767,29 +787,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 },
                                 child: Container(
                                   width: 32.w,
-                                  height: 32.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
+                                  height: 32.w,
+                                  decoration: const BoxDecoration(
+                                    color: _headerButtonFill,
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: const Color(0xFFE2E8F0),
-                                      width: 1.w,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.04,
-                                        ),
-                                        blurRadius: 4.r,
-                                        offset: Offset(0, 1.h),
-                                      ),
-                                    ],
                                   ),
                                   child: Center(
                                     child: Icon(
                                       CupertinoIcons.trash,
                                       size: 15.sp,
-                                      color: const Color(0xFF64748B),
+                                      color: _headerButtonIcon,
                                     ),
                                   ),
                                 ),
@@ -801,40 +808,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 onTap: () => _showSortOptions(context),
                                 child: Container(
                                   width: 32.w,
-                                  height: 32.h,
+                                  height: 32.w,
                                   decoration: BoxDecoration(
-                                    color:
-                                        _currentSort != HistorySortOption.newest
-                                        ? const Color(0xFFE8F7F2)
-                                        : Colors.white,
+                                    color: _headerButtonFill,
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color:
-                                          _currentSort !=
-                                              HistorySortOption.newest
-                                          ? const Color(0xFF09B389)
-                                          : const Color(0xFFE2E8F0),
-                                      width: 1.w,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.04,
-                                        ),
-                                        blurRadius: 4.r,
-                                        offset: Offset(0, 1.h),
-                                      ),
-                                    ],
+                                    // Ring marks a non-default sort.
+                                    border:
+                                        _currentSort != HistorySortOption.newest
+                                        ? Border.all(
+                                            color: const Color(0xFF09B389),
+                                            width: 1.2.w,
+                                          )
+                                        : null,
                                   ),
                                   child: Center(
                                     child: Icon(
                                       Icons.sort_rounded,
                                       size: 17.sp,
-                                      color:
-                                          _currentSort !=
-                                              HistorySortOption.newest
-                                          ? const Color(0xFF09B389)
-                                          : const Color(0xFF475569),
+                                      color: _headerButtonIcon,
                                     ),
                                   ),
                                 ),
@@ -850,7 +841,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     Image.asset(
                                       AppAssets.historyCalander,
                                       width: 32.w,
-                                      height: 32.h,
+                                      height: 32.w,
                                     ),
                                     if (_selectedDate != null)
                                       Positioned(
@@ -936,9 +927,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                     // List of Records or Filtered Empty State
                     if (displayedRecords.isNotEmpty)
-                      ...displayedRecords.map(
-                        (record) => _buildHistoryRow(record),
-                      )
+                      _buildRecordsGroup(displayedRecords)
                     else
                       _buildNoFilterResultsSection(),
                   ],
@@ -1016,6 +1005,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
+  /// All rows share one rounded mint card, separated by thin dividers.
+  Widget _buildRecordsGroup(List<BMIRecord> records) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFEAF8F3), Color(0xFFDFF4EC)],
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFD5EFE5), width: 1.w),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.r),
+        child: Column(
+          children: [
+            for (var i = 0; i < records.length; i++) ...[
+              if (i > 0) Container(height: 1, color: const Color(0xFFCDEBDF)),
+              _buildHistoryRow(records[i]),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildHistoryRow(BMIRecord record) {
     final isSelected = _selectedRecordIds.contains(record.id);
     final dayStr = DateFormat('dd').format(record.date);
@@ -1023,8 +1038,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     // BMI, weight and status all use the record's category colour
     // (blue underweight, green normal, orange overweight, red obese).
     final statusColor = record.category.color;
+    // "70.0 kg" -> number + smaller unit, as in the design.
+    final weightParts = record.weightDisplay.split(' ');
+    final labelStyle = TextStyle(
+      color: const Color(0xFF111827),
+      fontSize: 12.sp,
+      fontFamily: 'Inter',
+      fontWeight: FontWeight.w500,
+    );
 
-    final cardContent = GestureDetector(
+    final rowContent = GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         if (_isSelectionMode) {
           setState(() {
@@ -1045,17 +1069,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         }
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE6F7F2) : const Color(0xFFF0FAF6),
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: isSelected
-                ? const Color(0xFF09B389)
-                : const Color(0xFFE2F3ED),
-            width: isSelected ? 1.5.w : 1.w,
-          ),
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
+        color: isSelected
+            ? const Color(0xFF09B389).withValues(alpha: 0.12)
+            : Colors.transparent,
         child: Row(
           children: [
             // Selection Checkbox
@@ -1063,7 +1080,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               Container(
                 width: 20.w,
                 height: 20.w,
-                margin: EdgeInsets.only(right: 10.w),
+                margin: EdgeInsets.only(right: 8.w),
                 decoration: BoxDecoration(
                   color: isSelected ? const Color(0xFF09B389) : Colors.white,
                   borderRadius: BorderRadius.circular(6.r),
@@ -1090,8 +1107,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Text(
                     dayStr,
                     style: TextStyle(
-                      color: const Color(0xFF33D2AB),
-                      fontSize: 18.sp,
+                      color: const Color(0xFF09B389),
+                      fontSize: 20.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                       height: 1.1,
@@ -1101,8 +1118,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Text(
                     monthYearStr,
                     style: TextStyle(
-                      color: const Color(0xFF111827).withValues(alpha: 0.55),
-                      fontSize: 10.sp,
+                      color: const Color(0xFF111827).withValues(alpha: 0.5),
+                      fontSize: 9.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
                       height: 1.1,
@@ -1122,21 +1139,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'BMI',
-                    style: TextStyle(
-                      color: const Color(0xFF111827).withValues(alpha: .62),
-                      fontSize: 11.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
+                  Text('BMI', style: labelStyle),
+                  SizedBox(height: 4.h),
                   Text(
                     record.bmiValue.toStringAsFixed(1),
                     style: TextStyle(
                       color: statusColor,
-                      fontSize: 13.sp,
+                      fontSize: 15.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                     ),
@@ -1151,24 +1160,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Weight',
-                    style: TextStyle(
-                      color: const Color(0xFF111827).withValues(alpha: .62),
-                      fontSize: 11.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
+                  Text('Weight', style: labelStyle),
+                  SizedBox(height: 4.h),
                   FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text(
-                      record.weightDisplay,
+                    child: Text.rich(
+                      TextSpan(
+                        text: weightParts.first,
+                        children: [
+                          if (weightParts.length > 1)
+                            TextSpan(
+                              text: weightParts.last,
+                              style: TextStyle(fontSize: 11.sp),
+                            ),
+                        ],
+                      ),
                       maxLines: 1,
                       style: TextStyle(
                         color: statusColor,
-                        fontSize: 13.sp,
+                        fontSize: 15.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
@@ -1181,16 +1191,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
             // Status label
             Expanded(
               flex: 3,
-              child: Align(
-                alignment: Alignment.centerRight,
+              child: Center(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
                     record.category.label,
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 12.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
                       color: statusColor,
                     ),
                   ),
@@ -1199,11 +1209,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
 
             // Delete Specific History icon button (when not in selection mode)
-            if (!_isSelectionMode) ...[
-              SizedBox(width: 8.w),
+            if (!_isSelectionMode)
               GestureDetector(
                 onTap: () => _confirmDeleteSingle(context, record),
-                child: Container(
+                child: Padding(
                   padding: EdgeInsets.all(4.r),
                   child: Icon(
                     CupertinoIcons.trash,
@@ -1212,53 +1221,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ),
-            ],
           ],
         ),
       ),
     );
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
-      child: _isSelectionMode
-          ? cardContent
-          : Dismissible(
-              key: Key(record.id),
-              direction: DismissDirection.endToStart,
-              confirmDismiss: (_) async {
-                _confirmDeleteSingle(context, record);
-                return false;
-              },
-              background: Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.only(right: 20.w),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444),
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      CupertinoIcons.trash,
-                      color: Colors.white,
-                      size: 20.sp,
-                    ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      'Delete',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.sp,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                  ],
-                ),
+    if (_isSelectionMode) return rowContent;
+    return Dismissible(
+      key: Key(record.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) async {
+        _confirmDeleteSingle(context, record);
+        return false;
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.only(right: 20.w),
+        color: const Color(0xFFEF4444),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(CupertinoIcons.trash, color: Colors.white, size: 20.sp),
+            SizedBox(width: 6.w),
+            Text(
+              'Delete',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 13.sp,
+                fontFamily: 'Inter',
               ),
-              child: cardContent,
             ),
+          ],
+        ),
+      ),
+      child: rowContent,
     );
   }
 
@@ -1284,7 +1281,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Text(
           value,
           style: TextStyle(
-            color: const Color(0xFF33D2AB),
+            color: const Color(0xFF09B389),
             fontSize: 20.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w700,
@@ -1294,8 +1291,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Text(
           subtitle,
           style: TextStyle(
-            color: const Color(0xFF111827).withValues(alpha: .44),
-            fontSize: 8.sp,
+            color: const Color(0xFF111827).withValues(alpha: .5),
+            fontSize: 9.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
@@ -1305,7 +1302,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildDivider() {
-    return Container(height: 38.h, width: 1.w, color: const Color(0xFFD1E7DD));
+    return Container(height: 40.h, width: 1.w, color: const Color(0xFFBFDDD2));
   }
 
   String _getLatestSubtitle(DateTime date) {

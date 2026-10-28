@@ -7,8 +7,6 @@ PODS:
   - AppsFlyerFramework (6.17.7):
     - AppsFlyerFramework/Main (= 6.17.7)
   - AppsFlyerFramework/Main (6.17.7)
-  - device_info_plus (0.0.1):
-    - Flutter
   - Firebase/CoreOnly (12.19.0):
     - FirebaseCore (~> 12.19.0)
   - Firebase/Crashlytics (12.19.0):
@@ -203,16 +201,12 @@ PODS:
     - FlutterMacOS
   - url_launcher_ios (0.0.1):
     - Flutter
-  - video_player_avfoundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
   - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
-  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -229,7 +223,6 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
@@ -263,8 +256,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   appsflyer_sdk:
     :path: ".symlinks/plugins/appsflyer_sdk/ios"
-  device_info_plus:
-    :path: ".symlinks/plugins/device_info_plus/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -295,15 +286,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   appsflyer_sdk: 01d0cd834fe2fffd7f2372ab38690f7483587720
   AppsFlyerFramework: ae7caf1688348f2d7a742037bd4fc6966d39d362
-  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Firebase: 7ca191e43724142f79fae653547b3382c45413cc
   firebase_analytics: 99133ddb6f6cf89c0b49cafae131070607abbfa5
   firebase_core: 55de508663ceda7d1dc369a32b327a5655019ae2
@@ -343,7 +331,6 @@ SPEC CHECKSUMS:
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
-  video_player_avfoundation: 3453f792138786248960ca029747fcd9f318ef52
   webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
 PODFILE CHECKSUM: 076216c883b43f3951575b5113e5ed12c50904b5

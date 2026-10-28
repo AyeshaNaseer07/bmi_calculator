@@ -8,7 +8,6 @@ import '../models/weight_record_model.dart';
 
 class StorageService {
   static const String _keyOnboardingSeen = 'onboarding_seen';
-  static const String _keyHasLaunchedBefore = 'has_launched_before';
   static const String _keyLanguage = 'selected_language';
   static const String _keyUnitSystem = 'unit_system';
   static const String _keyNotifications = 'notifications_enabled';
@@ -17,9 +16,6 @@ class StorageService {
   static const String _keyBmiHistory = 'bmi_history';
   static const String _keyWeightHistory = 'weight_history';
   static const String _keyProfileImagePath = 'profile_image_path';
-  static const String _keyRemoteCrossDelay = 'rc_cross_delay_seconds';
-  static const String _keyRemoteWeeklyProductId = 'rc_weekly_product_id';
-  static const String _keyRemoteYearlyProductId = 'rc_yearly_product_id';
   static const String _keyRemoteButtonText = 'rc_button_text';
 
   late SharedPreferences _prefs;
@@ -32,12 +28,6 @@ class StorageService {
   // ── Onboarding ──
   bool getOnboardingSeen() => _prefs.getBool(_keyOnboardingSeen) ?? false;
 
-  /// False only on the very first app launch (used to pick between the
-  /// `first_time_onboarding` and `second_time_onboarding` Remote Config keys).
-  bool getHasLaunchedBefore() =>
-      _prefs.getBool(_keyHasLaunchedBefore) ?? false;
-  Future<void> setHasLaunchedBefore(bool value) =>
-      _prefs.setBool(_keyHasLaunchedBefore, value);
   Future<void> setOnboardingSeen(bool seen) =>
       _prefs.setBool(_keyOnboardingSeen, seen);
 
@@ -71,7 +61,6 @@ class StorageService {
   String? getProfileImagePath() => _prefs.getString(_keyProfileImagePath);
   Future<void> setProfileImagePath(String path) =>
       _prefs.setString(_keyProfileImagePath, path);
-  Future<void> clearProfileImagePath() => _prefs.remove(_keyProfileImagePath);
 
   // ── User Profile ──
   bool hasUserProfile() => _prefs.getString(_keyUserProfile) != null;
@@ -141,25 +130,8 @@ class StorageService {
   }
 
   // ── Remote Config ──
-  int? getRemoteCrossDelay() => _prefs.getInt(_keyRemoteCrossDelay);
-  Future<void> setRemoteCrossDelay(int seconds) =>
-      _prefs.setInt(_keyRemoteCrossDelay, seconds);
-
-  String? getRemoteWeeklyProductId() =>
-      _prefs.getString(_keyRemoteWeeklyProductId);
-  Future<void> setRemoteWeeklyProductId(String id) =>
-      _prefs.setString(_keyRemoteWeeklyProductId, id);
-
-  String? getRemoteYearlyProductId() =>
-      _prefs.getString(_keyRemoteYearlyProductId);
-  Future<void> setRemoteYearlyProductId(String id) =>
-      _prefs.setString(_keyRemoteYearlyProductId, id);
 
   String? getRemoteButtonText() => _prefs.getString(_keyRemoteButtonText);
   Future<void> setRemoteButtonText(String text) =>
       _prefs.setString(_keyRemoteButtonText, text);
-
-  Future<void> clearAll() async {
-    await _prefs.clear();
-  }
 }

@@ -4,8 +4,6 @@ import 'dart:ui' as ui;
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
-import 'package:bmi_calculator/core/constants/device_util.dart';
-import 'package:bmi_calculator/data/services/local_storage_service.dart';
 import 'package:bmi_calculator/data/services/logger_service.dart';
 import 'package:bmi_calculator/data/services/purchase_connector.dart';
 import 'package:bmi_calculator/data/services/revenue_cat_service.dart';
@@ -26,7 +24,6 @@ import 'controllers/app_controller.dart';
 import 'core/constants/app_colors.dart';
 import 'core/routes/app_pages.dart';
 import 'core/theme/app_theme.dart';
-import 'data/services/health_kit_service.dart';
 import 'data/services/localization_service.dart';
 import 'data/services/remote_config_service.dart';
 import 'data/services/quick_actions_service.dart';
@@ -70,8 +67,6 @@ void main() async {
         log("Error initializing PurchaseManager: $error");
       });
   await RevenueCat.configStore();
-  final storage = await LocalStorageService.init();
-  Get.put(storage, permanent: true);
 
   try {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.ios);
@@ -110,7 +105,6 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  await DeviceUtils.init();
   // Initialize Storage Service (SharedPreferences)
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
@@ -118,10 +112,6 @@ void main() async {
   // Initialize Remote Config Service
   final remoteConfigService = await RemoteConfigService(storageService).init();
   Get.put<RemoteConfigService>(remoteConfigService, permanent: true);
-
-  // Initialize HealthKit Service (graceful optional fallback)
-  final healthKitService = HealthKitService();
-  Get.put<HealthKitService>(healthKitService, permanent: true);
 
   // Initialize Global App Controller
   final appController = Get.put<AppController>(

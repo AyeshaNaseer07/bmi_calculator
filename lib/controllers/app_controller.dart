@@ -109,14 +109,6 @@ class AppController extends GetxController {
     return success;
   }
 
-  Future<bool> upgradeToPremiumWithProductId(String productId) async {
-    final success = await subscriptionService.purchaseByProductId(productId);
-    if (success) {
-      isPremium.value = true;
-    }
-    return success;
-  }
-
   void completeOnboarding() {
     onboardingSeen.value = true;
     _storage.setOnboardingSeen(true);

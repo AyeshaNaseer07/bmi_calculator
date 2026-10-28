@@ -15,21 +15,6 @@ class BMIService {
     return double.parse(bmi.toStringAsFixed(1));
   }
 
-  /// Calculates BMI from Imperial units (lb and ft/in)
-  static double calculateBMIImperial({
-    required double weightLb,
-    required double heightFeet,
-    double heightInches = 0.0,
-  }) {
-    final totalInches = (heightFeet * 12) + heightInches;
-    if (totalInches <= 0 || weightLb <= 0) {
-      throw ArgumentError('Height and weight must be greater than zero.');
-    }
-    final weightKg = lbsToKg(weightLb);
-    final heightCm = inchesToCm(totalInches);
-    return calculateBMI(weightKg: weightKg, heightCm: heightCm);
-  }
-
   /// Classifies BMI into category
   static BMICategory getCategory(double bmi) {
     if (bmi < 18.5) {
@@ -47,9 +32,7 @@ class BMIService {
   static double kgToLbs(double kg) => double.parse((kg * 2.20462).toStringAsFixed(1));
   static double lbsToKg(double lbs) => double.parse((lbs / 2.20462).toStringAsFixed(1));
 
-  static double cmToInches(double cm) => cm / 2.54;
   static double inchesToCm(double inches) => double.parse((inches * 2.54).toStringAsFixed(1));
-  static double feetToCm(double feet) => inchesToCm(feet * 12);
 
   static (int feet, int inches) cmToFeetAndInches(double cm) {
     final totalInches = (cm / 2.54).round();
