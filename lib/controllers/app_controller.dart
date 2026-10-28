@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../data/models/user_profile_model.dart';
 import '../data/services/localization_service.dart';
@@ -29,6 +30,9 @@ class AppController extends GetxController {
   final RxBool isPremium = false.obs;
   final RxBool onboardingSeen = false.obs;
 
+  /// Completes when the launch-time store check has finished (or failed).
+  late final Future<void> subscriptionVerified;
+
   @override
   void onInit() {
     super.onInit();
@@ -42,9 +46,29 @@ class AppController extends GetxController {
     isPremium.value = _storage.getIsPremium();
     onboardingSeen.value = _storage.getOnboardingSeen();
 
+    // Re-check the subscription with the store on every launch, and keep
+    // listening so a refund/revocation during the session also drops Premium.
+    subscriptionVerified = _verifySubscription();
+    Purchases.addCustomerInfoUpdateListener(_onCustomerInfoUpdated);
+
     if (isRemoteNotificationEnabled) {
       _checkLocalNotificationPermission();
     }
+  }
+
+  @override
+  void onClose() {
+    Purchases.removeCustomerInfoUpdateListener(_onCustomerInfoUpdated);
+    super.onClose();
+  }
+
+  Future<void> _verifySubscription() async {
+    final active = await subscriptionService.verifyWithStore();
+    if (active != null) isPremium.value = active;
+  }
+
+  Future<void> _onCustomerInfoUpdated(CustomerInfo info) async {
+    isPremium.value = await subscriptionService.applyCustomerInfo(info);
   }
 
   Future<void> _checkLocalNotificationPermission() async {

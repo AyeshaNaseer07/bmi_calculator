@@ -690,56 +690,71 @@ class _TipCard extends StatelessWidget {
       fontWeight: FontWeight.w500,
       height: 1.37,
     );
-    return InsightCard(
-      radius: 20,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      padding: EdgeInsets.all(14.w),
-      // Content keeps one fixed size on every card and every BMI category;
-      // it only scales down as a whole if a very short screen can't fit it.
-      child: LayoutBuilder(
-        builder: (context, c) => FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: c.maxWidth,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(
-                  icon,
-                  width: 44.w,
-                  height: 44.w,
-                  fit: BoxFit.contain,
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: const Color(0xFF1E293B),
-                    fontSize: 14,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w700,
-                    height: 1.38,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(14.w),
+        // Soft mint glow all round (no border line), like the weight card.
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x4033D2AB),
+              blurRadius: 8,
+              offset: Offset.zero,
+            ),
+          ],
+        ),
+        // Content keeps one fixed size on every card and every BMI category;
+        // it only scales down as a whole if a very short screen can't fit it.
+        child: LayoutBuilder(
+          builder: (context, c) => FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: c.maxWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    icon,
+                    width: 44.w,
+                    height: 44.w,
+                    fit: BoxFit.contain,
                   ),
-                ),
-                SizedBox(height: 4.h),
-                // Always reserve two lines so one-line subtitles don't
-                // shift the icon down relative to the card beside it.
-                Stack(
-                  children: [
-                    Text('\n', style: subStyle),
-                    Text(
-                      subtitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: subStyle,
+                  SizedBox(height: 10.h),
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: const Color(0xFF1E293B),
+                      fontSize: 14,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w700,
+                      height: 1.38,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 4.h),
+                  // Always reserve two lines so one-line subtitles don't
+                  // shift the icon down relative to the card beside it.
+                  Stack(
+                    children: [
+                      Text('\n', style: subStyle),
+                      Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: subStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

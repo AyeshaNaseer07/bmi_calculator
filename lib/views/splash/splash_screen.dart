@@ -46,7 +46,15 @@ class _SplashScreenState extends State<SplashScreen>
 
     _progressController.forward();
 
-    _navigationTimer = Timer(const Duration(seconds: _splashSeconds), () {
+    _navigationTimer = Timer(const Duration(seconds: _splashSeconds), () async {
+      // Give the launch-time store check a moment to finish, so a user whose
+      // subscription was refunded/revoked isn't routed as premium.
+      if (Get.isRegistered<AppController>()) {
+        await Get.find<AppController>().subscriptionVerified.timeout(
+          const Duration(seconds: 4),
+          onTimeout: () {},
+        );
+      }
       if (!mounted) return;
 
       // A premium user has already been through Language Selection,
