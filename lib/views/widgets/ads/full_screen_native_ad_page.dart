@@ -13,6 +13,7 @@ import '../../../main.dart';
 import 'ad_logger.dart';
 import 'ad_preloader.dart';
 import 'ad_shimmer.dart';
+import 'app_open_ad_manager.dart';
 
 class FullScreenNativeAdPage extends StatefulWidget {
   final String? adUnitId;
@@ -211,6 +212,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
         },
         onAdClicked: (ad) {
           debugPrint('👆 [FullScreenNativeAdPage] onAdClicked');
+          AppOpenAdManager.instance.skipNextResume();
         },
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
           debugPrint(

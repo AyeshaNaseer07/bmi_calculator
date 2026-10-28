@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_palette.dart';
 
 class MandatoryLabel extends StatelessWidget {
   final String text;
@@ -28,7 +29,7 @@ class MandatoryLabel extends StatelessWidget {
     final effectiveStyle =
         style ??
         TextStyle(
-          color: Color(0xFF111827),
+          color: AppPalette.textPrimary,
           fontSize: 13.sp,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w900,
@@ -37,7 +38,7 @@ class MandatoryLabel extends StatelessWidget {
     final effectiveUnitStyle =
         unitStyle ??
         effectiveStyle.copyWith(
-          color: const Color(0xFF6B7280),
+          color: AppPalette.textSecondary,
           fontWeight: FontWeight.w400,
         );
 

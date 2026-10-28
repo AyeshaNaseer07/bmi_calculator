@@ -1,6 +1,7 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../core/theme/app_palette.dart';
 
 class AgePickerPopup extends StatelessWidget {
   final int currentAge;
@@ -26,8 +27,8 @@ class AgePickerPopup extends StatelessWidget {
           width: 26.w,
           height: 26.w,
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF1F5F9),
+          decoration: BoxDecoration(
+            color: AppPalette.surfaceMuted,
             shape: BoxShape.circle,
           ),
           child: Image.asset(asset, width: 12.w, height: 12.w),
@@ -42,7 +43,7 @@ class AgePickerPopup extends StatelessWidget {
       text,
       textAlign: TextAlign.center,
       style: TextStyle(
-        color: const Color(0xFFC4CAD3),
+        color: AppPalette.textMuted,
         fontSize: 14,
         fontFamily: 'Inter',
         fontWeight: FontWeight.w600,
@@ -56,12 +57,12 @@ class AgePickerPopup extends StatelessWidget {
       width: 165.w,
       padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFD8F3EC), width: 1.2),
-        boxShadow: const [
+        border: Border.all(color: AppPalette.mintBorder, width: 1.2),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x3333D2AB),
+            color: AppPalette.shadow(const Color(0x3333D2AB)),
             blurRadius: 14,
             offset: Offset(0, 4),
           ),
@@ -73,7 +74,7 @@ class AgePickerPopup extends StatelessWidget {
           Text(
             'Your Age',
             style: TextStyle(
-              color: const Color(0xFF111827),
+              color: AppPalette.textPrimary,
               fontSize: 14,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
@@ -84,7 +85,7 @@ class AgePickerPopup extends StatelessWidget {
             'Your age helps calculate your BMI accurately.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: const Color(0xFF6B7280),
+              color: AppPalette.textSecondary,
               fontSize: 10,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
@@ -106,7 +107,7 @@ class AgePickerPopup extends StatelessWidget {
                 constraints: BoxConstraints(minWidth: 40.w),
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE9FBF3),
+                  color: AppPalette.surfaceMint,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Text(

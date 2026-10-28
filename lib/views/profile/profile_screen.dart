@@ -14,12 +14,14 @@ import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
+import '../widgets/ads/app_open_ad_manager.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_loader.dart';
 import '../widgets/mandatory_label.dart';
 import 'dialogs/rate_us_dialog.dart';
+import '../../core/theme/app_palette.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -54,6 +56,7 @@ class ProfileScreen extends StatelessWidget {
     final uri = Uri.parse(url);
     try {
       if (await canLaunchUrl(uri)) {
+        AppOpenAdManager.instance.skipNextResume();
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         AppLogger.e('Could not launch $url');
@@ -217,7 +220,7 @@ class ProfileScreen extends StatelessWidget {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: const Color(0xFF111827),
+                                        color: AppPalette.textPrimary,
                                         fontSize: 16.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w600,
@@ -256,7 +259,7 @@ class ProfileScreen extends StatelessWidget {
                                 Text(
                                   tagline,
                                   style: TextStyle(
-                                    color: const Color(0xFF111827)
+                                    color: AppPalette.textPrimary
                                         .withValues(alpha: 0.82),
                                     fontSize: 11.sp,
                                     fontFamily: 'Inter',
@@ -450,7 +453,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: ShapeDecoration(
-                      color: Colors.white,
+                      color: AppPalette.surface,
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
                           width: 0.25,
@@ -460,7 +463,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       shadows: [
                         BoxShadow(
-                          color: Color(0x3A33D2AB),
+                          color: AppPalette.shadow(const Color(0x3A33D2AB)),
                           blurRadius: 6.80,
                           offset: Offset(0, 4),
                           spreadRadius: 0,
@@ -510,7 +513,7 @@ class ProfileScreen extends StatelessWidget {
                                           Text(
                                             'Dark Mode',
                                             style: TextStyle(
-                                              color: const Color(0xFF111827),
+                                              color: AppPalette.textPrimary,
                                               fontSize: 12.sp,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w600,
@@ -520,7 +523,7 @@ class ProfileScreen extends StatelessWidget {
                                           Text(
                                             'Switch between light and dark theme',
                                             style: TextStyle(
-                                              color: const Color(0xFF111827)
+                                              color: AppPalette.textPrimary
                                                   .withValues(alpha: 0.82),
                                               fontSize: 11.sp,
                                               fontFamily: 'Inter',
@@ -531,19 +534,16 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                     CupertinoSwitch(
-                                      value: appController
-                                          .notificationsEnabled
-                                          .value,
+                                      value: appController.isDarkMode.value,
                                       activeTrackColor: const Color(0xFF2FD1A6),
-                                      onChanged: (val) => appController
-                                          .toggleNotifications(val),
+                                      onChanged: appController.setDarkMode,
                                     ),
                                   ],
                                 ),
                               );
                             }),
                           ),
-                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          Divider(height: 1, color: AppPalette.surfaceMuted),
                           // Rate Us
                           _buildAccountRow(
                             icon: Icons.star_outline_rounded,
@@ -551,7 +551,7 @@ class ProfileScreen extends StatelessWidget {
                             subtitle: 'Rate your experience with us',
                             onTap: () => _openRateUsDialog(context),
                           ),
-                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          Divider(height: 1, color: AppPalette.surfaceMuted),
 
                           // Privacy Policy
                           _buildAccountRow(
@@ -563,7 +563,7 @@ class ProfileScreen extends StatelessWidget {
                               'Your health data is stored securely on your local device. We respect your privacy and do not sell personal health information.',
                             ),
                           ),
-                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          Divider(height: 1, color: AppPalette.surfaceMuted),
 
                           // Terms of Use
                           _buildAccountRow(
@@ -575,7 +575,7 @@ class ProfileScreen extends StatelessWidget {
                               'BMI calculations are provided for general informational and wellness tracking purposes only and should not replace professional medical advice.',
                             ),
                           ),
-                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          Divider(height: 1, color: AppPalette.surfaceMuted),
 
                           // Feedback
                           _buildAccountRow(
@@ -584,7 +584,7 @@ class ProfileScreen extends StatelessWidget {
                             subtitle: 'Send us your suggestions & ideas',
                             onTap: () => sendFeedback(),
                           ),
-                          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                          Divider(height: 1, color: AppPalette.surfaceMuted),
 
                           // Share App
                           _buildAccountRow(
@@ -646,7 +646,7 @@ class ProfileScreen extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: const Color(0xFF111827),
+                        color: AppPalette.textPrimary,
                         fontSize: 12,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
@@ -656,7 +656,7 @@ class ProfileScreen extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: const Color(0xFF111827),
+                        color: AppPalette.textPrimary,
                         fontSize: 11,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -668,7 +668,7 @@ class ProfileScreen extends StatelessWidget {
               Icon(
                 CupertinoIcons.chevron_right,
                 size: 14.sp,
-                color: Colors.black,
+                color: AppPalette.textPrimary,
               ),
             ],
           ),
@@ -736,7 +736,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
       onTap: () => _focusNode.unfocus(),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         padding: EdgeInsets.only(
@@ -754,7 +754,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                 width: 44.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD1D5DB),
+                  color: AppPalette.border,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -779,13 +779,13 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
               width: double.infinity,
               height: 51.h,
               decoration: ShapeDecoration(
-                color: Colors.white,
+                color: AppPalette.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(13.r),
                 ),
                 shadows: [
                   BoxShadow(
-                    color: const Color(0x3A33D2AB),
+                    color: AppPalette.shadow(const Color(0x3A33D2AB)),
                     blurRadius: 6.80,
                     offset: const Offset(0, 4),
                     spreadRadius: 0,
@@ -833,7 +833,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      side: const BorderSide(color: Color(0xFFD4EFE6)),
+                      side: BorderSide(color: AppPalette.mintBorder),
                     ),
                     onPressed: () {
                       _focusNode.unfocus();

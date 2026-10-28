@@ -25,6 +25,7 @@ import '../main/main_tab.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../../core/theme/app_palette.dart';
 
 final RxBool homeAdFailed = false.obs;
 
@@ -321,14 +322,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: EdgeInsets.fromLTRB(12.w, 12.h, 10.w, 12.h),
         decoration: ShapeDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           shape: RoundedRectangleBorder(
             side: BorderSide(width: 0.50, color: const Color(0xFF33D2AB)),
             borderRadius: BorderRadius.circular(18),
           ),
           shadows: [
             BoxShadow(
-              color: Color(0x4C33D2AB),
+              color: AppPalette.shadow(const Color(0x4C33D2AB)),
               blurRadius: 4.70,
               offset: Offset(0, 2),
               spreadRadius: 0,
@@ -352,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: const Color(0xFF1A252C),
+                color: AppPalette.textPrimary,
                 fontSize: 14,
                 fontFamily: 'Instrument Sans',
                 fontWeight: FontWeight.w700,
@@ -477,7 +478,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? "Let's track your health today."
               : "Welcome! Let's begin your health journey.",
           style: TextStyle(
-            color: const Color(0xFF647E80),
+            color: AppPalette.textSecondary,
             fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
@@ -498,7 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
             'No BMI Record Yet',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: const Color(0xFF1A252C),
+              color: AppPalette.textPrimary,
               fontSize: 18.sp,
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w700,
@@ -563,7 +564,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Your BMI',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppPalette.textPrimary,
                       fontSize: 18,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w600,
@@ -585,7 +586,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         formattedTime,
                         style: TextStyle(
-                          color: const Color(0xFF1E2D2F),
+                          color: AppPalette.textPrimary,
                           fontSize: 10,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
@@ -649,7 +650,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         vertical: 6.h,
                       ),
                       decoration: ShapeDecoration(
-                        color: const Color(0xFFF1F5F7),
+                        color: AppPalette.surfaceMuted,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.r),
                         ),
@@ -666,7 +667,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'View History',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: AppPalette.textPrimary,
                               fontSize: 9,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
@@ -705,7 +706,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     record.category.feedbackMessage,
                     style: TextStyle(
-                      color: const Color(0xFF1E2D2F),
+                      color: AppPalette.textPrimary,
                       fontSize: 12,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
@@ -727,9 +728,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: const Color(0xFFE8F7F2)),
+        border: Border.all(color: AppPalette.surfaceMint),
         boxShadow: AppColors.cardShadow,
       ),
       child: Row(
@@ -780,7 +781,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           value,
           style: TextStyle(
-            color: const Color(0xFF1E2D2F),
+            color: AppPalette.textPrimary,
             fontSize: 12.sp,
             fontFamily: 'Outfit',
             fontWeight: FontWeight.w700,
@@ -790,7 +791,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           label,
           style: TextStyle(
-            color: const Color(0xFF647E80),
+            color: AppPalette.textSecondary,
             fontSize: 11.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
@@ -802,7 +803,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDivider() {
-    return Container(height: 44.h, width: 1.w, color: const Color(0xFFF1F5F9));
+    return Container(height: 44.h, width: 1.w, color: AppPalette.surfaceMuted);
   }
 
   Widget _buildBmiCategories(BMICategory currentCategory) {
@@ -815,7 +816,7 @@ class _HomeScreenState extends State<HomeScreen> {
               TextSpan(
                 text: 'BMI ',
                 style: TextStyle(
-                  color: const Color(0xFF1E2D2F),
+                  color: AppPalette.textPrimary,
                   fontSize: 20,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
@@ -891,7 +892,12 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 40.h,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: isCurrent ? activeBg : inactiveBg,
+        // Pastel fills are light-only; dark mode tints with the category colour.
+        color: isCurrent
+            ? activeBg
+            : AppPalette.isDark
+            ? activeBg.withValues(alpha: 0.22)
+            : inactiveBg,
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(
@@ -901,7 +907,7 @@ class _HomeScreenState extends State<HomeScreen> {
           fontSize: 12.sp,
           fontFamily: 'Outfit',
           fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
-          color: isCurrent ? Colors.white : const Color(0xFF1E2D2F),
+          color: isCurrent ? Colors.white : AppPalette.textPrimary,
         ),
       ),
     );
@@ -930,7 +936,7 @@ class _HomeNativeAdStripState extends State<_HomeNativeAdStrip> {
       offstage: !_available,
       child: Container(
         width: double.infinity,
-        color: const Color(0xFFF7F7F7),
+        color: AppPalette.surfaceMuted,
         padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
         child: NativeAdCard(
           slot: AdSlots.home,

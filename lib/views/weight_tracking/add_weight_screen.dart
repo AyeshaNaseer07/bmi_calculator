@@ -14,6 +14,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/gender_popup_menu.dart';
 import '../widgets/mandatory_label.dart';
+import '../../core/theme/app_palette.dart';
 
 class AddWeightScreen extends StatefulWidget {
   const AddWeightScreen({super.key});
@@ -177,7 +178,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     Text(
                       'Track your weight journey by entering your details below.',
                       style: TextStyle(
-                        color: const Color(0xFF6B7280),
+                        color: AppPalette.textSecondary,
                         fontSize: 14.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -366,8 +367,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         text: label,
         unitText: unit,
         isMandatory: isMandatory,
-        style: const TextStyle(
-          color: Color(0xFF111827),
+        style: TextStyle(
+          color: AppPalette.textPrimary,
           fontSize: 13,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
@@ -391,10 +392,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       height: 48.h,
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        color: isError ? const Color(0xFFFEF2F2) : Colors.white,
+        color: isError
+                ? (AppPalette.isDark
+                      ? const Color(0x33EF4444)
+                      : const Color(0xFFFEF2F2))
+                : AppPalette.surface,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-          color: isError ? const Color(0xFFEF4444) : const Color(0xFFD4EFE6),
+          color: isError ? const Color(0xFFEF4444) : AppPalette.mintBorder,
           width: isError ? 1.5.w : 1.w,
         ),
       ),
@@ -466,12 +471,12 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           height: 48.h,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppPalette.surface,
             borderRadius: BorderRadius.circular(14.r),
             border: Border.all(
               color: _isAgeMenuOpen
                   ? const Color(0xFF2FD1A6)
-                  : const Color(0xFFD4EFE6),
+                  : AppPalette.mintBorder,
             ),
           ),
           child: Row(
@@ -494,7 +499,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     ? CupertinoIcons.chevron_up
                     : CupertinoIcons.chevron_down,
                 size: 14.sp,
-                color: Colors.black,
+                color: AppPalette.textPrimary,
               ),
             ],
           ),
@@ -543,12 +548,12 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           height: 48.h,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppPalette.surface,
             borderRadius: BorderRadius.circular(14.r),
             border: Border.all(
               color: _isGenderMenuOpen
                   ? const Color(0xFF2FD1A6)
-                  : const Color(0xFFD4EFE6),
+                  : AppPalette.mintBorder,
             ),
           ),
           child: Row(
@@ -571,7 +576,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     ? CupertinoIcons.chevron_up
                     : CupertinoIcons.chevron_down,
                 size: 14.sp,
-                color: Colors.black,
+                color: AppPalette.textPrimary,
               ),
             ],
           ),

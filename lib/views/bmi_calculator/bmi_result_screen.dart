@@ -13,6 +13,7 @@ import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../../core/theme/app_palette.dart';
 
 class BMIResultScreen extends StatelessWidget {
   const BMIResultScreen({super.key});
@@ -47,7 +48,7 @@ class BMIResultScreen extends StatelessWidget {
                 width: 34.w,
                 height: 34.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppPalette.surface,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -61,7 +62,7 @@ class BMIResultScreen extends StatelessWidget {
                   child: Icon(
                     CupertinoIcons.share,
                     size: 17.sp,
-                    color: const Color(0xFF1E2D2F),
+                    color: AppPalette.textPrimary,
                   ),
                 ),
               ),
@@ -171,7 +172,7 @@ class BMIResultScreen extends StatelessWidget {
                                   child: Text(
                                     record.category.feedbackMessage,
                                     style: TextStyle(
-                                      color: const Color(0xFF1E2D2F),
+                                      color: AppPalette.textPrimary,
                                       fontSize: 11.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w400,
@@ -201,7 +202,7 @@ class BMIResultScreen extends StatelessWidget {
                       Text(
                         'Your Details',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: AppPalette.textPrimary,
                           fontSize: 15.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
@@ -254,7 +255,7 @@ class BMIResultScreen extends StatelessWidget {
                       Text(
                         'Health Advice',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: AppPalette.textPrimary,
                           fontSize: 15.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
@@ -391,7 +392,7 @@ ${record.category.feedbackMessage}
         Text(
           value,
           style: TextStyle(
-            color: const Color(0xFF1E2D2F),
+            color: AppPalette.textPrimary,
             fontSize: 12.sp,
             fontFamily: 'Outfit',
             fontWeight: FontWeight.w700,
@@ -412,7 +413,7 @@ ${record.category.feedbackMessage}
   }
 
   Widget _buildDetailDivider() {
-    return Container(height: 32.h, width: 1.w, color: const Color(0xFFF1F5F9));
+    return Container(height: 32.h, width: 1.w, color: AppPalette.surfaceMuted);
   }
 
   Widget _buildAdviceBullet(String text) {
@@ -428,7 +429,7 @@ ${record.category.feedbackMessage}
           child: Text(
             text,
             style: TextStyle(
-              color: const Color(0xFF647E80),
+              color: AppPalette.textSecondary,
               fontSize: 10.5.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,

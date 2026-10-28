@@ -9,6 +9,7 @@ import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_pages.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../../data/services/bmi_service.dart';
+import '../../core/theme/app_palette.dart';
 
 class BMIGaugeWidget extends StatefulWidget {
   final double bmiValue;
@@ -193,7 +194,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
     final needleAngle = math.pi - (progress * math.pi);
 
     final needlePaint = Paint()
-      ..color = const Color(0xFF0A0A0A)
+      ..color = AppPalette.textPrimary
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
 
@@ -256,7 +257,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
       final subFontSize = (size.width * 0.055).clamp(8.5, 11.0);
 
       final numStyle = TextStyle(
-        color: const Color(0xFF1E2D2F),
+        color: AppPalette.textPrimary,
         fontSize: numFontSize,
         fontWeight: FontWeight.w700,
         fontFamily: 'Outfit',

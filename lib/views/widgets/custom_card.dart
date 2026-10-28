@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/theme/app_palette.dart';
+
 class CustomCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
@@ -35,7 +37,7 @@ class CustomCard extends StatelessWidget {
 
     final defaultShadows = [
       BoxShadow(
-        color: Color(0x4C33D2AB),
+        color: AppPalette.shadow(const Color(0x4C33D2AB)),
         blurRadius: 4.70,
         offset: Offset(0, 2),
         spreadRadius: 0,
@@ -48,7 +50,7 @@ class CustomCard extends StatelessWidget {
       margin: margin,
       padding: padding ?? EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor ?? AppPalette.surface,
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
         border: showBorder
             ? Border.all(color: borderColor ?? Colors.transparent, width: 1.2.w)

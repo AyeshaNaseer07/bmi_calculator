@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../core/theme/app_palette.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -47,7 +48,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Text(
               title,
               style: TextStyle(
-                color: const Color(0xFF111827),
+                color: AppPalette.textPrimary,
                 fontSize: 20.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/app_palette.dart';
 
 class RateUsDialog extends StatefulWidget {
   const RateUsDialog({super.key});
@@ -39,7 +40,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           borderRadius: BorderRadius.circular(22.r),
           boxShadow: [
             BoxShadow(
@@ -103,7 +104,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
                       size: 36.sp,
                       color: isSelected
                           ? const Color(0xFFF59E0B)
-                          : const Color(0xFFCBD5E1),
+                          : AppPalette.border,
                     ),
                   ),
                 );
@@ -128,7 +129,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      side: const BorderSide(color: Color(0xFFE2E8F0)),
+                      side: BorderSide(color: AppPalette.border),
                     ),
                     onPressed: () => Get.back(),
                     child: Text(

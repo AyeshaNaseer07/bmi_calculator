@@ -21,14 +21,15 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'controllers/app_controller.dart';
-import 'core/constants/app_colors.dart';
 import 'core/routes/app_pages.dart';
+import 'core/theme/app_palette.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/localization_service.dart';
 import 'data/services/remote_config_service.dart';
 import 'data/services/quick_actions_service.dart';
 import 'data/services/storage_service.dart';
 import 'notifications/notification_service.dart';
+import 'views/widgets/ads/app_open_ad_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -118,6 +119,10 @@ void main() async {
     AppController(),
     permanent: true,
   );
+
+  // App open ad when returning from the background (needs Remote Config
+  // and AppController above).
+  AppOpenAdManager.instance.start();
 
   // Initialize Localization Service from JSON assets
   await LocalizationService.init();
@@ -241,6 +246,8 @@ class BMIApp extends StatelessWidget {
           title: 'BMI Calculator',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: AppPalette.isDark ? ThemeMode.dark : ThemeMode.light,
           translations: LocalizationService(),
           locale: initialLocale,
           fallbackLocale: LocalizationService.fallbackLocale,
@@ -265,7 +272,7 @@ class BMIApp extends StatelessWidget {
                 child: content,
               );
               content = ColoredBox(
-                color: AppColors.scaffoldBackground,
+                color: AppPalette.background,
                 child: Center(
                   child: SizedBox(width: contentWidth, child: content),
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../core/theme/app_palette.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
   final DateTime? selectedDate;
@@ -77,7 +78,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
       ),
       padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 24.h),
@@ -90,7 +91,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
             height: 4.h,
             margin: EdgeInsets.only(bottom: 16.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFE2E8F0),
+              color: AppPalette.border,
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -113,7 +114,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                   ),
                   decoration: BoxDecoration(
                     color: _isMonthYearPicker
-                        ? const Color(0xFFF0FAF6)
+                        ? AppPalette.surfaceMint
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
@@ -125,7 +126,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                         style: TextStyle(
                           color: _isMonthYearPicker
                               ? const Color(0xFF09B389)
-                              : const Color(0xFF111827),
+                              : AppPalette.textPrimary,
                           fontSize: 16.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
@@ -139,7 +140,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                         size: 14.sp,
                         color: _isMonthYearPicker
                             ? const Color(0xFF09B389)
-                            : const Color(0xFF64748B),
+                            : AppPalette.textSecondary,
                       ),
                     ],
                   ),
@@ -155,10 +156,10 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                       width: 36.w,
                       height: 36.w,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppPalette.surface,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFFF1F5F9),
+                          color: AppPalette.surfaceMuted,
                           width: 1.w,
                         ),
                         boxShadow: [
@@ -181,10 +182,10 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                       width: 36.w,
                       height: 36.w,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppPalette.surface,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFFF1F5F9),
+                          color: AppPalette.surfaceMuted,
                           width: 1.w,
                         ),
                         boxShadow: [
@@ -250,7 +251,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 Text(
                   'Tap a date to filter',
                   style: TextStyle(
-                    color: const Color(0xFF94A3B8),
+                    color: AppPalette.textMuted,
                     fontSize: 12.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -263,7 +264,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFFF0FAF6),
+                  backgroundColor: AppPalette.surfaceMint,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
@@ -316,12 +317,12 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 decoration: BoxDecoration(
                   color: isCurrentMonth
                       ? const Color(0xFF2FD1A6)
-                      : Colors.white,
+                      : AppPalette.surface,
                   borderRadius: BorderRadius.circular(10.r),
                   border: Border.all(
                     color: isCurrentMonth
                         ? const Color(0xFF2FD1A6)
-                        : const Color(0xFFE2E8F0),
+                        : AppPalette.border,
                     width: 1.w,
                   ),
                   boxShadow: isCurrentMonth
@@ -341,7 +342,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                     style: TextStyle(
                       color: isCurrentMonth
                           ? Colors.white
-                          : const Color(0xFF1E293B),
+                          : AppPalette.textPrimary,
                       fontSize: 13.sp,
                       fontFamily: 'Inter',
                       fontWeight: isCurrentMonth
@@ -394,7 +395,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                     child: Text(
                       day,
                       style: TextStyle(
-                        color: const Color(0xFF94A3B8),
+                        color: AppPalette.textMuted,
                         fontSize: 13.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
@@ -429,7 +430,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFFCBD5E1),
+                    color: AppPalette.border,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -443,7 +444,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFFCBD5E1),
+                    color: AppPalette.border,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -482,14 +483,14 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF2FD1A6) : Colors.white,
+                  color: isSelected ? const Color(0xFF2FD1A6) : AppPalette.surface,
                   borderRadius: BorderRadius.circular(8.r),
                   border: isSelected
                       ? null
                       : Border.all(
                           color: isToday
                               ? const Color(0xFF2FD1A6)
-                              : const Color(0xFFF1F5F9),
+                              : AppPalette.surfaceMuted,
                           width: isToday ? 1.5.w : 1.w,
                         ),
                   boxShadow: isSelected
@@ -521,7 +522,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                           ? Colors.white
                           : (isToday
                                 ? const Color(0xFF09B389)
-                                : const Color(0xFF0F172A)),
+                                : AppPalette.textPrimary),
                       fontFamily: 'Inter',
                     ),
                   ),

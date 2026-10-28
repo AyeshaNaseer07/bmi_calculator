@@ -61,10 +61,6 @@ class _SplashScreenState extends State<SplashScreen>
         Get.offAllNamed(AppRoutes.home);
         return;
       }
-      if (AdPreloader.instance.splashEnabled) {
-        Get.offAllNamed(AppRoutes.splashAd);
-        return;
-      }
       Get.offAllNamed(AppRoutes.languageSelection);
     });
   }

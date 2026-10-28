@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../core/theme/app_palette.dart';
 
 class AgePopupMenuEntry extends PopupMenuEntry<int> {
   const AgePopupMenuEntry({
@@ -63,10 +64,10 @@ class _AgePopupMenuEntryState extends State<AgePopupMenuEntry> {
               width: 144.w,
               height: 220.h,
               decoration: ShapeDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment(0.50, -2.0),
                   end: Alignment(0.50, 1.00),
-                  colors: [Color(0xFFD9F8F1), Colors.white],
+                  colors: [AppPalette.surfaceMintDeep, AppPalette.surface],
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(11.r),
@@ -92,7 +93,7 @@ class _AgePopupMenuEntryState extends State<AgePopupMenuEntry> {
                     separatorBuilder: (context, index) => Container(
                       margin: EdgeInsets.symmetric(horizontal: 14.w),
                       height: 1,
-                      color: const Color(0xFF9CA3AF).withValues(alpha: 0.3),
+                      color: AppPalette.textMuted.withValues(alpha: 0.3),
                     ),
                     itemBuilder: (context, i) {
                       final age = widget.items[i];
@@ -111,7 +112,7 @@ class _AgePopupMenuEntryState extends State<AgePopupMenuEntry> {
                                 style: TextStyle(
                                   color: isSelected
                                       ? const Color(0xFF2FD1A6)
-                                      : const Color(0xFF111827),
+                                      : AppPalette.textPrimary,
                                   fontSize: 16.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: isSelected

@@ -13,10 +13,14 @@ class RemoteModel {
   String? _fullScreenNativeAd;
   String? _nativeAd;
   String? _fullScreenNativeAdId;
-  String? _splashNativeAd;
-  String? _splashNativeAdId;
+  String? _appOpenAd;
+  String? _appOpenAdId;
   String? _localNotification;
   String? _notificationFrequency;
+
+  static String get defaultAppOpenAdId => Platform.isIOS
+      ? 'ca-app-pub-3940256099942544/5575463023'
+      : 'ca-app-pub-3940256099942544/9257395921';
 
   static String get defaultNativeAdId => Platform.isIOS
       ? 'ca-app-pub-3940256099942544/3986624511'
@@ -54,11 +58,11 @@ class RemoteModel {
   String get fullScreenNativeAdId => _fullScreenNativeAdId ?? defaultNativeAdId;
   set fullScreenNativeAdId(String value) => _fullScreenNativeAdId = value;
 
-  String get splashNativeAd => _splashNativeAd ?? 'on';
-  set splashNativeAd(String value) => _splashNativeAd = value;
+  String get appOpenAd => _appOpenAd ?? 'on';
+  set appOpenAd(String value) => _appOpenAd = value;
 
-  String get splashNativeAdId => _splashNativeAdId ?? fullScreenNativeAdId;
-  set splashNativeAdId(String value) => _splashNativeAdId = value;
+  String get appOpenAdId => _appOpenAdId ?? defaultAppOpenAdId;
+  set appOpenAdId(String value) => _appOpenAdId = value;
 
   String get localNotification => _localNotification ?? 'on';
   set localNotification(String value) => _localNotification = value;
@@ -77,8 +81,8 @@ class RemoteModel {
     this._fullScreenNativeAd,
     this._nativeAd,
     this._fullScreenNativeAdId,
-    this._splashNativeAd,
-    this._splashNativeAdId,
+    this._appOpenAd,
+    this._appOpenAdId,
     this._localNotification,
     this._notificationFrequency,
   });
@@ -93,7 +97,8 @@ class RemoteModel {
 
   bool get isFullScreenNativeAdEnabled => _isOn(fullScreenNativeAd);
 
-  bool get isSplashNativeAdEnabled => _isOn(splashNativeAd);
+  /// App open ad shown when returning to the app from the background.
+  bool get isAppOpenAdEnabled => _isOn(appOpenAd);
   bool get isNativeAdEnabled => _isOn(nativeAd);
 
   bool get isLocalNotificationEnabled => _isOn(localNotification);
@@ -196,17 +201,13 @@ class RemoteModel {
               remoteConfig['fullScreenNativeAdId'],
           nativeAdId,
         ),
-        splashNativeAd: _parseString(
-          remoteConfig['splash_native_ad'] ?? remoteConfig['splashNativeAd'],
+        appOpenAd: _parseString(
+          remoteConfig['app_open_ad'] ?? remoteConfig['appOpenAd'],
           'on',
         ),
-        splashNativeAdId: _parseString(
-          remoteConfig['splash_native_ad_id'] ??
-              remoteConfig['splashNativeAdId'] ??
-              remoteConfig['full_screen_native_ad_id'] ??
-              remoteConfig['fullscreen_native_ad_id'] ??
-              remoteConfig['fullScreenNativeAdId'],
-          nativeAdId,
+        appOpenAdId: _parseString(
+          remoteConfig['app_open_ad_id'] ?? remoteConfig['appOpenAdId'],
+          defaultAppOpenAdId,
         ),
         localNotification: _parseString(
           remoteConfig['local_notification'] ??
@@ -243,8 +244,8 @@ class RemoteModel {
       fullScreenNativeAd: 'on',
       nativeAd: 'on',
       fullScreenNativeAdId: defaultNativeAdId,
-      splashNativeAd: 'on',
-      splashNativeAdId: defaultNativeAdId,
+      appOpenAd: 'on',
+      appOpenAdId: defaultAppOpenAdId,
       localNotification: 'on',
       notificationFrequency: 'd',
     );
@@ -262,8 +263,8 @@ class RemoteModel {
       'full_screen_native_ad': fullScreenNativeAd,
       'native_ad': nativeAd,
       'full_screen_native_ad_id': fullScreenNativeAdId,
-      'splash_native_ad': splashNativeAd,
-      'splash_native_ad_id': splashNativeAdId,
+      'app_open_ad': appOpenAd,
+      'app_open_ad_id': appOpenAdId,
       'local_notification': localNotification,
       'show_notification_frequency': notificationFrequency,
     };

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../core/theme/app_palette.dart';
 
 class GenderPopupMenuItem<T> {
   final T value;
@@ -45,7 +46,7 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
                 gradient: LinearGradient(
                   begin: Alignment(0.50, -2.0),
                   end: Alignment(0.50, 1.00),
-                  colors: [const Color(0xFFD9F8F1), Colors.white],
+                  colors: [AppPalette.surfaceMintDeep, AppPalette.surface],
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(11.r),
@@ -79,7 +80,7 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
                             child: Text(
                               widget.items[i].label,
                               style: TextStyle(
-                                color: const Color(0xFF111827),
+                                color: AppPalette.textPrimary,
                                 fontSize: 16.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w600,
@@ -93,7 +94,7 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 14.w),
                         height: 1,
-                        color: const Color(0xFF9CA3AF).withValues(alpha: 0.5),
+                        color: AppPalette.textMuted.withValues(alpha: 0.5),
                       ),
                   ],
                 ],

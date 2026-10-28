@@ -17,7 +17,6 @@ import '../../views/main/main_navigation_screen.dart';
 import '../../views/onboarding/onboarding_screen.dart';
 import '../../views/onboarding/paywall_screen.dart';
 import '../../views/profile/profile_screen.dart';
-import '../../views/splash/splash_ad_screen.dart';
 import '../../views/splash/splash_screen.dart';
 import '../../views/weight_tracking/add_weight_screen.dart';
 import '../../views/weight_tracking/weight_tracking_screen.dart';
@@ -31,11 +30,6 @@ class AppPages {
 
   static final routes = [
     GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
-    GetPage(
-      name: AppRoutes.splashAd,
-      page: () => const SplashAdScreen(),
-      popGesture: false,
-    ),
     GetPage(name: AppRoutes.onboarding, page: () => const OnboardingScreen()),
     GetPage(
       name: AppRoutes.paywall,

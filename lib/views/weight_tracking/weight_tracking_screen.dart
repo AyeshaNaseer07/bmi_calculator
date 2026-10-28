@@ -13,6 +13,7 @@ import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../../core/theme/app_palette.dart';
 
 class WeightTrackingScreen extends StatelessWidget {
   const WeightTrackingScreen({super.key});
@@ -37,7 +38,6 @@ class WeightTrackingScreen extends StatelessWidget {
               final spots = controller.getSpots();
               final goalSpots = controller.getGoalSpots();
               final xLabels = controller.getXAxisLabels();
-
               final hasRecords = controller.weightHistory.isNotEmpty;
               final currentStr = hasRecords
                   ? '${current.toStringAsFixed(1)}kg'
@@ -90,7 +90,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Text(
                               'Current weight',
                               style: TextStyle(
-                                color: const Color(0xFF111827),
+                                color: AppPalette.textPrimary,
                                 fontSize: 14.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -123,7 +123,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                   painter: _GradientCircularProgressPainter(
                                     progress: progressVal,
                                     strokeWidth: 8.w,
-                                    backgroundColor: const Color(0xFFE8F7F2),
+                                    backgroundColor: AppPalette.surfaceMint,
                                   ),
                                 ),
                               ),
@@ -139,7 +139,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                   Text(
                                     centerValStr,
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: AppPalette.textPrimary,
                                       fontSize: 15.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
@@ -149,7 +149,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                   Text(
                                     'kg',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: AppPalette.textPrimary,
                                       fontSize: 11.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
@@ -169,7 +169,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Text(
                               'Goal weight',
                               style: TextStyle(
-                                color: const Color(0xFF111827),
+                                color: AppPalette.textPrimary,
                                 fontSize: 14.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -219,7 +219,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Text(
                               'Weight Progress',
                               style: TextStyle(
-                                color: const Color(0xFF111827),
+                                color: AppPalette.textPrimary,
                                 fontSize: 15.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w600,
@@ -228,7 +228,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(6.w),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE8F7F2),
+                                color: AppPalette.surfaceMint,
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
 
@@ -246,7 +246,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? Colors.white
+                                            ? AppPalette.surface
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.circular(
                                           8.r,
@@ -269,7 +269,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                           fontFamily: 'Inter',
                                           color: isSelected
                                               ? const Color(0xFF33D2AB)
-                                              : const Color(0xFF797979),
+                                              : AppPalette.textSecondary,
                                         ),
                                       ),
                                     ),
@@ -297,7 +297,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Text(
                               'Current Weight',
                               style: TextStyle(
-                                color: const Color(0xFF4B5563),
+                                color: AppPalette.textBody,
                                 fontSize: 11.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -317,7 +317,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             Text(
                               'Goal Weight',
                               style: TextStyle(
-                                color: const Color(0xFF4B5563),
+                                color: AppPalette.textBody,
                                 fontSize: 11.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -356,7 +356,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                           child: Text(
                                             xLabels[index],
                                             style: TextStyle(
-                                              color: const Color(0xFF797979),
+                                              color: AppPalette.textSecondary,
                                               fontSize: 11.sp,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w500,
@@ -381,7 +381,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                       return Text(
                                         value.toInt().toString(),
                                         style: TextStyle(
-                                          color: const Color(0xFF797979),
+                                          color: AppPalette.textSecondary,
                                           fontSize: 11.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
@@ -401,11 +401,11 @@ class WeightTrackingScreen extends StatelessWidget {
                                 show: true,
                                 border: Border(
                                   bottom: BorderSide(
-                                    color: const Color(0xFFE2E8F0),
+                                    color: AppPalette.border,
                                     width: 1.w,
                                   ),
                                   left: BorderSide(
-                                    color: const Color(0xFFE2E8F0),
+                                    color: AppPalette.border,
                                     width: 1.w,
                                   ),
                                 ),
@@ -508,7 +508,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             horizontal: 8.w,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE8F7F2),
+                            color: AppPalette.surfaceMint,
                             borderRadius: BorderRadius.circular(14.r),
                           ),
                           child: Row(
@@ -582,13 +582,13 @@ class WeightTrackingScreen extends StatelessWidget {
                   Icon(
                     Icons.swipe_rounded,
                     size: 14.sp,
-                    color: const Color(0xFF797979),
+                    color: AppPalette.textSecondary,
                   ),
                   SizedBox(width: 4.w),
                   Text(
                     'Swipe to see the full graph',
                     style: TextStyle(
-                      color: const Color(0xFF797979),
+                      color: AppPalette.textSecondary,
                       fontSize: 10.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
@@ -609,7 +609,7 @@ class WeightTrackingScreen extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            color: Colors.black,
+            color: AppPalette.textPrimary,
             fontSize: 13.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
@@ -619,7 +619,7 @@ class WeightTrackingScreen extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: Colors.black,
+            color: AppPalette.textPrimary,
             fontSize: 11.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
@@ -666,11 +666,11 @@ class _GradientCircularProgressPainter extends CustomPainter {
       final sweepAngle = (progress * 2 * math.pi).clamp(0.0, 2 * math.pi);
 
       final progressPaint = Paint()
-        ..shader = const LinearGradient(
+        ..shader = LinearGradient(
           begin: Alignment(0.8, -0.6),
           end: Alignment(-0.8, 0.7),
           colors: [
-            Color(0xFF33D2AB), // Vibrant mint at top-right
+            const Color(0xFF33D2AB), // Vibrant mint at top-right
             Color(0xFF20BC9A), // Teal
             Color(0xFF0F8C74), // Deep teal
             Color(0xFF025848), // Dark forest teal at bottom-left
@@ -800,7 +800,7 @@ class _WeightDotPainter extends FlDotPainter {
         text: TextSpan(
           text: valueStr,
           style: TextStyle(
-            color: Color(0xFF1E293B),
+            color: AppPalette.textPrimary,
             fontSize: 9.0.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,

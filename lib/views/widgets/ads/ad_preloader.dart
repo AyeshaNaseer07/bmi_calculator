@@ -9,6 +9,7 @@ import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
 import 'ad_logger.dart';
+import 'app_open_ad_manager.dart';
 
 /// Names of the preloadable native ad placements.
 class AdSlots {
@@ -16,7 +17,6 @@ class AdSlots {
   static const String onboarding = 'onboarding';
   static const String home = 'home';
   static const String fullScreen = 'fullscreen';
-  static const String splash = 'splash';
 }
 
 /// One preloaded (or still loading) native ad.
@@ -45,7 +45,6 @@ class AdPreloader {
 
   static const _mediumFactory = 'mediumNativeAd';
   static const _fullFactory = 'fullScreenNativeAd';
-  static const _splashFactory = 'splashNativeAd';
 
   bool get _isPremium =>
       Get.isRegistered<AppController>() &&
@@ -87,26 +86,6 @@ class AdPreloader {
     return _testId;
   }
 
-  /// Native ad screen shown right after the splash.
-  bool get splashEnabled {
-    if (_isPremium) return false;
-    if (Get.isRegistered<RemoteConfigService>()) {
-      return RemoteConfigService.to.isSplashNativeAdEnabled;
-    }
-    return remoteModel.isSplashNativeAdEnabled;
-  }
-
-  String get _splashId {
-    if (Get.isRegistered<RemoteConfigService>()) {
-      final id = RemoteConfigService.to.splashNativeAdId;
-      if (id.isNotEmpty) return id;
-    }
-    if (remoteModel.splashNativeAdId.isNotEmpty) {
-      return remoteModel.splashNativeAdId;
-    }
-    return _testId;
-  }
-
   String get _testId => Platform.isIOS
       ? 'ca-app-pub-3940256099942544/3986624511'
       : 'ca-app-pub-3940256099942544/2247696110';
@@ -116,10 +95,6 @@ class AdPreloader {
     if (_started) return;
     _started = true;
     try {
-      // Splash ad first: it's the one shown soonest.
-      if (splashEnabled) {
-        _preload(AdSlots.splash, _splashFactory, _splashId);
-      }
       if (_mediumEnabled) {
         _preload(AdSlots.language, _mediumFactory, _mediumId);
         _preload(AdSlots.onboarding, _mediumFactory, _mediumId);
@@ -160,6 +135,8 @@ class AdPreloader {
           holder.failed = true;
           holder.onDone?.call(false);
         },
+        // Leaving for the advertiser shouldn't trigger an app open ad on return.
+        onAdClicked: (_) => AppOpenAdManager.instance.skipNextResume(),
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
           logAdRevenue(
             adNetwork: 'AdMob',
@@ -170,7 +147,6 @@ class AdPreloader {
             mediationNetwork: 'GoogleAdMob',
             adType: switch (factoryId) {
               _fullFactory => 'FullScreenNativeAd',
-              _splashFactory => 'SplashNativeAd',
               _ => 'MediumNativeAd',
             },
           );
@@ -185,12 +161,4 @@ class AdPreloader {
   /// Hands the placement over to the caller (who now owns and must dispose
   /// the ad). Returns null if it was never preloaded or already claimed.
   PreloadedAd? claim(String slot) => _slots.remove(slot);
-
-  /// Claims the splash ad, starting a fresh load if it wasn't preloaded.
-  PreloadedAd claimSplash() {
-    if (!_slots.containsKey(AdSlots.splash)) {
-      _preload(AdSlots.splash, _splashFactory, _splashId);
-    }
-    return claim(AdSlots.splash)!;
-  }
 }

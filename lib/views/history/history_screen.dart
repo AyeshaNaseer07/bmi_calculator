@@ -13,6 +13,7 @@ import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import 'widgets/calendar_bottom_sheet.dart';
+import '../../core/theme/app_palette.dart';
 
 enum HistorySortOption {
   newest('Newest First (Date)'),
@@ -62,13 +63,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppPalette.surface,
         title: Text(
           'Delete Record?',
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF0F172A),
+            color: AppPalette.textPrimary,
             fontFamily: 'Inter',
           ),
         ),
@@ -76,7 +77,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           'Are you sure you want to delete this BMI record from ${DateFormat('dd MMM yyyy').format(record.date)}?',
           style: TextStyle(
             fontSize: 13.sp,
-            color: const Color(0xFF64748B),
+            color: AppPalette.textSecondary,
             fontFamily: 'Inter',
           ),
         ),
@@ -91,7 +92,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+                    side: BorderSide(color: AppPalette.border),
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
@@ -99,7 +100,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: AppPalette.textSecondary,
                     ),
                   ),
                 ),
@@ -121,7 +122,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       'Deleted',
                       'Record deleted successfully',
                       snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: const Color(0xFF0F172A),
+                      backgroundColor: AppPalette.textPrimary,
                       colorText: Colors.white,
                       duration: const Duration(seconds: 2),
                       margin: EdgeInsets.all(16.w),
@@ -163,13 +164,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppPalette.surface,
         title: Text(
           'Delete Records?',
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF0F172A),
+            color: AppPalette.textPrimary,
             fontFamily: 'Inter',
           ),
         ),
@@ -177,7 +178,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           'Are you sure you want to delete $count selected history record${count > 1 ? 's' : ''}? This action cannot be undone.',
           style: TextStyle(
             fontSize: 13.sp,
-            color: const Color(0xFF64748B),
+            color: AppPalette.textSecondary,
             fontFamily: 'Inter',
           ),
         ),
@@ -192,7 +193,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+                    side: BorderSide(color: AppPalette.border),
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
@@ -200,7 +201,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: AppPalette.textSecondary,
                     ),
                   ),
                 ),
@@ -220,7 +221,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       'Deleted',
                       '$count record${count > 1 ? 's' : ''} deleted successfully',
                       snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: const Color(0xFF0F172A),
+                      backgroundColor: AppPalette.textPrimary,
                       colorText: Colors.white,
                       duration: const Duration(seconds: 2),
                       margin: EdgeInsets.all(16.w),
@@ -258,7 +259,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 28.h),
@@ -272,7 +273,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 height: 4.h,
                 margin: EdgeInsets.only(bottom: 16.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE2E8F0),
+                  color: AppPalette.border,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -285,7 +286,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF0F172A),
+                    color: AppPalette.textPrimary,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -322,13 +323,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? const Color(0xFFF0FAF6)
-                        : const Color(0xFFF8FAFC),
+                        ? AppPalette.surfaceMint
+                        : AppPalette.surfaceMuted,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: isSelected
                           ? const Color(0xFF09B389)
-                          : const Color(0xFFE2E8F0),
+                          : AppPalette.border,
                       width: 1.w,
                     ),
                   ),
@@ -344,7 +345,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               : FontWeight.w500,
                           color: isSelected
                               ? const Color(0xFF0F766E)
-                              : const Color(0xFF1E293B),
+                              : AppPalette.textPrimary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -441,12 +442,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       padding: EdgeInsets.zero,
                       shadows: [
                         BoxShadow(
-                          color: const Color(0x2E33D2AB),
+                          color: AppPalette.shadow(const Color(0x2E33D2AB)),
                           blurRadius: 18.r,
                           offset: Offset(0, 6.h),
                         ),
                         BoxShadow(
-                          color: const Color(0x1433D2AB),
+                          color: AppPalette.shadow(const Color(0x1433D2AB)),
                           blurRadius: 4.r,
                         ),
                       ],
@@ -478,7 +479,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         Text(
                                           'Your Progress',
                                           style: TextStyle(
-                                            color: const Color(0xFF111827),
+                                            color: AppPalette.textPrimary,
                                             fontSize: 16.sp,
                                             fontFamily: 'Inter',
                                             fontWeight: FontWeight.w700,
@@ -488,7 +489,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         Text(
                                           'Keep tracking to reach\nyour health goals.',
                                           style: TextStyle(
-                                            color: const Color(0xFF111827)
+                                            color: AppPalette.textPrimary
                                                 .withValues(alpha: 0.7),
                                             fontSize: 11.5.sp,
                                             fontFamily: 'Inter',
@@ -520,17 +521,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 vertical: 12.h,
                                 horizontal: 6.w,
                               ),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   colors: [
-                                    Color(0xFFF1FBF7),
-                                    Color(0xFFE2F5EE),
+                                    AppPalette.surfaceMint,
+                                    AppPalette.surfaceMintDeep,
                                   ],
                                 ),
                                 border: Border(
-                                  top: BorderSide(color: Color(0xFFDDF1E9)),
+                                  top: BorderSide(color: AppPalette.mintBorder),
                                 ),
                               ),
                               child: Row(
@@ -579,7 +580,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           vertical: 8.h,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF1F5F9),
+                          color: AppPalette.surfaceMuted,
                           borderRadius: BorderRadius.circular(14.r),
                         ),
                         child: Row(
@@ -617,7 +618,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                     .contains(r.id),
                                               ))
                                           ? const Color(0xFF09B389)
-                                          : Colors.white,
+                                          : AppPalette.surface,
                                       borderRadius: BorderRadius.circular(6.r),
                                       border: Border.all(
                                         color:
@@ -627,7 +628,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       .contains(r.id),
                                                 ))
                                             ? const Color(0xFF09B389)
-                                            : const Color(0xFFCBD5E1),
+                                            : AppPalette.border,
                                         width: 1.5.w,
                                       ),
                                     ),
@@ -648,7 +649,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   Text(
                                     'Select All',
                                     style: TextStyle(
-                                      color: const Color(0xFF0F172A),
+                                      color: AppPalette.textPrimary,
                                       fontSize: 13.sp,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w700,
@@ -697,7 +698,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     decoration: BoxDecoration(
                                       color: _selectedRecordIds.isNotEmpty
                                           ? const Color(0xFF09B389)
-                                          : const Color(0xFFCBD5E1)
+                                          : AppPalette.border
                                                 .withValues(alpha: 0.99),
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
@@ -737,16 +738,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       vertical: 6.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: AppPalette.surface,
                                       borderRadius: BorderRadius.circular(8.r),
                                       border: Border.all(
-                                        color: const Color(0xFFE2E8F0),
+                                        color: AppPalette.border,
                                       ),
                                     ),
                                     child: Text(
                                       'Cancel',
                                       style: TextStyle(
-                                        color: const Color(0xFF64748B),
+                                        color: AppPalette.textSecondary,
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w600,
                                         fontFamily: 'Inter',
@@ -766,7 +767,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           Text(
                             'BMI History',
                             style: TextStyle(
-                              color: const Color(0xFF111827),
+                              color: AppPalette.textPrimary,
                               fontSize: 16.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
@@ -875,10 +876,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE8F7F2),
+                          color: AppPalette.surfaceMint,
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: const Color(0xFFC4ECE0),
+                            color: AppPalette.mintBorder,
                             width: 1.w,
                           ),
                         ),
@@ -905,8 +906,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               onTap: () => setState(() => _selectedDate = null),
                               child: Container(
                                 padding: EdgeInsets.all(2.r),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
+                                decoration: BoxDecoration(
+                                  color: AppPalette.surface,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -946,16 +947,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
       padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
       margin: EdgeInsets.only(top: 8.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: AppPalette.surfaceMuted,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppPalette.border),
       ),
       child: Column(
         children: [
           Icon(
             CupertinoIcons.calendar_today,
             size: 36.sp,
-            color: const Color(0xFF94A3B8),
+            color: AppPalette.textMuted,
           ),
           SizedBox(height: 10.h),
           Text(
@@ -963,7 +964,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF1E293B),
+              color: AppPalette.textPrimary,
               fontFamily: 'Inter',
             ),
           ),
@@ -974,7 +975,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 : '',
             style: TextStyle(
               fontSize: 12.sp,
-              color: const Color(0xFF64748B),
+              color: AppPalette.textSecondary,
               fontFamily: 'Inter',
             ),
           ),
@@ -1007,20 +1008,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _buildRecordsGroup(List<BMIRecord> records) {
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFEAF8F3), Color(0xFFDFF4EC)],
+          colors: [AppPalette.surfaceMint, AppPalette.surfaceMintDeep],
         ),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFD5EFE5), width: 1.w),
+        border: Border.all(color: AppPalette.mintBorder, width: 1.w),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16.r),
         child: Column(
           children: [
             for (var i = 0; i < records.length; i++) ...[
-              if (i > 0) Container(height: 1, color: const Color(0xFFCDEBDF)),
+              if (i > 0) Container(height: 1, color: AppPalette.mintBorder),
               _buildHistoryRow(records[i]),
             ],
           ],
@@ -1036,7 +1037,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final statusColor = record.category.color;
     final weightParts = record.weightDisplay.split(' ');
     final labelStyle = TextStyle(
-      color: const Color(0xFF111827),
+      color: AppPalette.textPrimary,
       fontSize: 12.sp,
       fontFamily: 'Inter',
       fontWeight: FontWeight.w500,
@@ -1077,12 +1078,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 height: 20.w,
                 margin: EdgeInsets.only(right: 8.w),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF09B389) : Colors.white,
+                  color: isSelected ? const Color(0xFF09B389) : AppPalette.surface,
                   borderRadius: BorderRadius.circular(6.r),
                   border: Border.all(
                     color: isSelected
                         ? const Color(0xFF09B389)
-                        : const Color(0xFFCBD5E1),
+                        : AppPalette.border,
                     width: 1.5.w,
                   ),
                 ),
@@ -1113,7 +1114,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Text(
                     monthYearStr,
                     style: TextStyle(
-                      color: const Color(0xFF111827).withValues(alpha: 0.5),
+                      color: AppPalette.textPrimary.withValues(alpha: 0.5),
                       fontSize: 9.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
@@ -1207,7 +1208,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   child: Icon(
                     CupertinoIcons.trash,
                     size: 15.sp,
-                    color: const Color(0xFF94A3B8),
+                    color: AppPalette.textMuted,
                   ),
                 ),
               ),
@@ -1261,7 +1262,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Text(
           label,
           style: TextStyle(
-            color: const Color(0xFF111827),
+            color: AppPalette.textPrimary,
             fontSize: 13.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
@@ -1281,7 +1282,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Text(
           subtitle,
           style: TextStyle(
-            color: const Color(0xFF111827).withValues(alpha: .5),
+            color: AppPalette.textPrimary.withValues(alpha: .5),
             fontSize: 9.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
@@ -1292,7 +1293,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildDivider() {
-    return Container(height: 40.h, width: 1.w, color: const Color(0xFFBFDDD2));
+    return Container(height: 40.h, width: 1.w, color: AppPalette.mintBorder);
   }
 
   String _getLatestSubtitle(DateTime date) {
@@ -1319,12 +1320,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           // Soft mint glow all round, a little deeper under the card.
           shadows: [
             BoxShadow(
-              color: const Color(0x3333D2AB),
+              color: AppPalette.shadow(const Color(0x3333D2AB)),
               blurRadius: 18.r,
               offset: Offset(0, 4.h),
             ),
             BoxShadow(
-              color: const Color(0x1F33D2AB),
+              color: AppPalette.shadow(const Color(0x1F33D2AB)),
               blurRadius: 4.r,
               offset: Offset.zero,
             ),
@@ -1383,11 +1384,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 width: 117.w,
                                 height: 38.h,
                                 decoration: ShapeDecoration(
-                                  gradient: const LinearGradient(
+                                  gradient: LinearGradient(
                                     begin: Alignment(0.50, 0.00),
                                     end: Alignment(0.50, 1.00),
                                     colors: [
-                                      Color(0xFF33D2AB),
+                                      const Color(0xFF33D2AB),
                                       Color(0xFF00946F),
                                     ],
                                   ),
@@ -1426,7 +1427,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           width: double.infinity,
           padding: EdgeInsets.fromLTRB(14.w, 14.h, 16.w, 14.h),
           decoration: BoxDecoration(
-            color: const Color(0xFFEFFAF6),
+            color: AppPalette.surfaceMint,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(
@@ -1437,7 +1438,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Text(
                   'Your BMI history helps you understand your health journey over time and stay on track with your goals.',
                   style: TextStyle(
-                    color: const Color(0xFF6B7280),
+                    color: AppPalette.textSecondary,
                     fontSize: 11.5.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
@@ -1480,10 +1481,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F766E), Color(0xFF00946F), Color(0xFF33D2AB)],
+            colors: [Color(0xFF0F766E), Color(0xFF00946F), const Color(0xFF33D2AB)],
           ),
           borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
@@ -1574,7 +1575,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         vertical: 9.h,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppPalette.surface,
                         borderRadius: BorderRadius.circular(20.r),
                         boxShadow: [
                           BoxShadow(
@@ -1627,7 +1628,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   TextStyle get _sectionTitleStyle => TextStyle(
-    color: const Color(0xFF111827),
+    color: AppPalette.textPrimary,
     fontSize: 16.sp,
     fontFamily: 'Inter',
     fontWeight: FontWeight.w700,
@@ -1642,7 +1643,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12.w, 12.h, 14.w, 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFE3F7EF),
+        color: AppPalette.surfaceMintDeep,
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
@@ -1650,8 +1651,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
           Container(
             width: 34.w,
             height: 34.w,
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: AppPalette.surface,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: const Color(0xFF09B389), size: 18.sp),
@@ -1664,7 +1665,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   title,
                   style: TextStyle(
-                    color: const Color(0xFF111827),
+                    color: AppPalette.textPrimary,
                     fontSize: 13.5.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
@@ -1674,7 +1675,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: const Color(0xFF1F2937),
+                    color: AppPalette.textPrimary,
                     fontSize: 12.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,

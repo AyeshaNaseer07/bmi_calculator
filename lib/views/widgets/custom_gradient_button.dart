@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_palette.dart';
 import '../../core/constants/app_typography.dart';
 
 class CustomGradientButton extends StatelessWidget {
@@ -123,7 +124,7 @@ class CustomGradientButton extends StatelessWidget {
         height: effectiveHeight,
         width: width ?? double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           borderRadius: effectiveBorderRadius,
           border: Border.all(
             color: outlineColor ?? AppColors.primaryTeal,

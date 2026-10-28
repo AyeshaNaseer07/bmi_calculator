@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/theme/app_palette.dart';
+
 /// A number that is edited in place (underlined), without opening a dialog.
 ///
 /// [value] is the current value in display units; `null` means "not entered
@@ -161,8 +163,8 @@ class _InlineValueFieldState extends State<InlineValueField> {
             behavior: HitTestBehavior.opaque,
             child: Container(
               padding: EdgeInsets.all(4.w),
-              decoration: const BoxDecoration(
-                color: Color(0xFFE6F8F4),
+              decoration: BoxDecoration(
+                color: AppPalette.surfaceMint,
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.edit, size: 14.sp, color: _green),

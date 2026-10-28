@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_palette.dart';
 
 class CustomLoader extends StatefulWidget {
   const CustomLoader({
@@ -130,7 +131,7 @@ class LoaderOverlay extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 24.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppPalette.surface,
               borderRadius: BorderRadius.circular(20.r),
               boxShadow: [
                 BoxShadow(

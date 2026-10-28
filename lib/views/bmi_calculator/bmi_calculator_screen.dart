@@ -16,6 +16,7 @@ import '../widgets/custom_gradient_button.dart';
 import '../widgets/mandatory_label.dart';
 import 'dialogs/calculating_dialog.dart';
 import 'widgets/inline_value_field.dart';
+import '../../core/theme/app_palette.dart';
 
 class BMICalculatorScreen extends StatefulWidget {
   const BMICalculatorScreen({super.key});
@@ -192,7 +193,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                     MandatoryLabel(
                                       text: 'Height',
                                       style: TextStyle(
-                                        color: Color(0xFF111827),
+                                        color: AppPalette.textPrimary,
                                         fontSize: 15.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
@@ -267,7 +268,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                 SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
                                     activeTrackColor: const Color(0xFF2EC4B6),
-                                    inactiveTrackColor: const Color(0xFFE2E8F0),
+                                    inactiveTrackColor: AppPalette.border,
                                     thumbColor: Colors.white,
                                     thumbShape: BorderedRoundSliderThumbShape(
                                       enabledThumbRadius: 10.r,
@@ -308,7 +309,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                       Text(
                                         minHeightText,
                                         style: TextStyle(
-                                          color: const Color(0xFF6B7280),
+                                          color: AppPalette.textSecondary,
                                           fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
@@ -317,7 +318,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                       Text(
                                         maxHeightText,
                                         style: TextStyle(
-                                          color: const Color(0xFF6B7280),
+                                          color: AppPalette.textSecondary,
                                           fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
@@ -344,7 +345,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                     MandatoryLabel(
                                       text: 'Weight',
                                       style: TextStyle(
-                                        color: Color(0xFF111827),
+                                        color: AppPalette.textPrimary,
                                         fontSize: 15.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
@@ -394,7 +395,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                 SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
                                     activeTrackColor: const Color(0xFF2FD1A6),
-                                    inactiveTrackColor: const Color(0xFFE2E8F0),
+                                    inactiveTrackColor: AppPalette.border,
                                     thumbColor: Colors.white,
                                     thumbShape: BorderedRoundSliderThumbShape(
                                       enabledThumbRadius: 10.r,
@@ -430,7 +431,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                       Text(
                                         minWeightText,
                                         style: TextStyle(
-                                          color: const Color(0xFF6B7280),
+                                          color: AppPalette.textSecondary,
                                           fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
@@ -439,7 +440,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                       Text(
                                         maxWeightText,
                                         style: TextStyle(
-                                          color: const Color(0xFF6B7280),
+                                          color: AppPalette.textSecondary,
                                           fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
@@ -552,17 +553,17 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
           width: double.infinity,
           padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppPalette.surface,
             borderRadius: BorderRadius.circular(18.r),
             border: Border.all(
               color: isSelected
                   ? const Color(0xFF8FE3C9)
-                  : const Color(0xFFD8F3EC),
+                  : AppPalette.mintBorder,
               width: 1.2,
             ),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Color(0x2633D2AB),
+                color: AppPalette.shadow(const Color(0x2633D2AB)),
                 blurRadius: 8,
                 offset: Offset(0, 2),
               ),
@@ -581,7 +582,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isSelected ? green : const Color(0xFFD1D5DB),
+                        color: isSelected ? green : AppPalette.border,
                         width: 2.w,
                       ),
                     ),
@@ -622,8 +623,8 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                       color: isSelected
-                          ? const Color(0xFF111827)
-                          : const Color(0xFF6B7280),
+                          ? AppPalette.textPrimary
+                          : AppPalette.textSecondary,
                     ),
                   ),
                   if (ageText != null) ...[
@@ -678,7 +679,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     return Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
+        color: AppPalette.surfaceMuted,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
@@ -701,7 +702,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   fontWeight: FontWeight.w600,
                   color: isLeftSelected
                       ? Colors.white
-                      : const Color(0xFF6B7280),
+                      : AppPalette.textSecondary,
                 ),
               ),
             ),
@@ -723,7 +724,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   fontWeight: FontWeight.w700,
                   color: !isLeftSelected
                       ? Colors.white
-                      : const Color(0xFF64748B),
+                      : AppPalette.textSecondary,
                 ),
               ),
             ),

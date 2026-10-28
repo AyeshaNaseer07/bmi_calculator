@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_assets.dart';
+import '../../core/theme/app_palette.dart';
 
 const Color _kActiveNavColor = Color(0xFF2EC4B6);
 
@@ -20,7 +21,7 @@ class MainBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: AppPalette.surface,
       child: SizedBox(
         height: 74.h,
         child: Stack(
@@ -33,7 +34,7 @@ class MainBottomNavBar extends StatelessWidget {
               left: 15.w,
               child: Container(
                 decoration: ShapeDecoration(
-                  color: Colors.white,
+                  color: AppPalette.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24),

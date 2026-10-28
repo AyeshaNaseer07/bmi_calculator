@@ -11,6 +11,7 @@ import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
 import 'ad_logger.dart';
 import 'ad_preloader.dart';
+import 'app_open_ad_manager.dart';
 import 'ad_shimmer.dart';
 
 const double _kDefaultNativeAdHeight = 350;
@@ -184,6 +185,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
         },
         onAdClicked: (ad) {
           debugPrint('👆 [NativeAdCard] onAdClicked');
+          AppOpenAdManager.instance.skipNextResume();
         },
         onPaidEvent: (ad, valueMicros, precision, currencyCode) {
           debugPrint(
