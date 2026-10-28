@@ -14,112 +14,117 @@ class AgePickerPopup extends StatelessWidget {
     required this.onClose,
   });
 
+  static const _green = Color(0xFF09B389);
+
+  Widget _arrow(String asset, bool enabled, VoidCallback onTap) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: enabled ? onTap : null,
+      child: Opacity(
+        opacity: enabled ? 1 : 0.35,
+        child: Container(
+          width: 26.w,
+          height: 26.w,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Color(0xFFF1F5F9),
+            shape: BoxShape.circle,
+          ),
+          child: Image.asset(asset, width: 12.w, height: 12.w),
+        ),
+      ),
+    );
+  }
+
+  Widget _sideAge(String text) => SizedBox(
+    width: 24.w,
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: const Color(0xFFC4CAD3),
+        fontSize: 14,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 95.h,
-      width: 135.w,
-      padding: EdgeInsets.all(6.w),
+      width: 165.w,
+      padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFEBEBEB),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
+        border: Border.all(color: const Color(0xFFD8F3EC), width: 1.2),
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12),
-            blurRadius: 16.r,
-            offset: Offset(0, 6.h),
+            color: Color(0x3333D2AB),
+            blurRadius: 14,
+            offset: Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Text(
-                  'Your Age',
-                  style: TextStyle(
-                    color: const Color(0xFF111827),
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+          Text(
+            'Your Age',
+            style: TextStyle(
+              color: const Color(0xFF111827),
+              fontSize: 14,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w700,
+            ),
           ),
           SizedBox(height: 2.h),
           Text(
             'Your age helps calculate your BMI accurately.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 7,
+              color: const Color(0xFF6B7280),
+              fontSize: 10,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w500,
+              height: 1.3,
             ),
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 10.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Left Arrow
-              GestureDetector(
-                onTap: () {
-                  if (currentAge > 1) onAgeChanged(currentAge - 1);
-                },
-                child: Image.asset(
-                  AppAssets.ageBack,
-                  height: 16.h,
-                  width: 16.w,
-                ),
+              _arrow(
+                AppAssets.ageBack,
+                currentAge > 1,
+                () => onAgeChanged(currentAge - 1),
               ),
-              // Previous age
-              Text(
-                '${currentAge > 1 ? currentAge - 1 : ''}',
-                style: TextStyle(
-                  color: const Color(0xFFDFDFDF),
-                  fontSize: 16,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              // Selected age (large teal)
+              _sideAge(currentAge > 1 ? '${currentAge - 1}' : ''),
+              // Selected age
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                constraints: BoxConstraints(minWidth: 40.w),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE9FBF3),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
                 child: Text(
                   '$currentAge',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: const Color(0xFF09B389),
-                    fontSize: 24,
+                    color: _green,
+                    fontSize: 22,
                     fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-              // Next age
-              Text(
-                '${currentAge < 120 ? currentAge + 1 : ''}',
-                style: TextStyle(
-                  color: const Color(0xFFDFDFDF),
-                  fontSize: 16,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              // Right Arrow
-              GestureDetector(
-                onTap: () {
-                  if (currentAge < 120) onAgeChanged(currentAge + 1);
-                },
-                child: Image.asset(
-                  AppAssets.ageForward,
-                  height: 16.h,
-                  width: 16.w,
-                ),
+              _sideAge(currentAge < 120 ? '${currentAge + 1}' : ''),
+              _arrow(
+                AppAssets.ageForward,
+                currentAge < 120,
+                () => onAgeChanged(currentAge + 1),
               ),
             ],
           ),

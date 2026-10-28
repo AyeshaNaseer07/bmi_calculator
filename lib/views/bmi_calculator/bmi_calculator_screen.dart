@@ -17,8 +17,17 @@ import '../widgets/mandatory_label.dart';
 import 'dialogs/calculating_dialog.dart';
 import 'widgets/inline_value_field.dart';
 
-class BMICalculatorScreen extends StatelessWidget {
+class BMICalculatorScreen extends StatefulWidget {
   const BMICalculatorScreen({super.key});
+
+  @override
+  State<BMICalculatorScreen> createState() => _BMICalculatorScreenState();
+}
+
+class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
+  // Anchors the age picker under whichever gender card is selected.
+  final _maleLink = LayerLink();
+  final _femaleLink = LayerLink();
 
   void _onCalculate(BMIController controller) async {
     // Show Calculating Animation popup
@@ -134,35 +143,40 @@ class BMICalculatorScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Gender cards (avatar + age badge)
+                          // Tapping anywhere on a card (avatar, age, badge)
+                          // selects it and opens the age picker below it.
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildGenderCard(
-                                asset: AppAssets.homeMale,
-                                label: 'Male',
-                                isSelected: isMale,
-                                ageText: isMale
-                                    ? (age > 0 ? '$age' : '--')
-                                    : null,
-                                onTap: () => controller.setGender(Gender.male),
-                                onAgeTap: () {
-                                  controller.setGender(Gender.male);
-                                  controller.openAgePicker();
-                                },
+                              Expanded(
+                                child: _buildGenderCard(
+                                  link: _maleLink,
+                                  asset: AppAssets.homeMale,
+                                  label: 'Male',
+                                  isSelected: isMale,
+                                  ageText: isMale
+                                      ? (age > 0 ? '$age' : '--')
+                                      : null,
+                                  onTap: () {
+                                    controller.setGender(Gender.male);
+                                    controller.openAgePicker();
+                                  },
+                                ),
                               ),
-                              _buildGenderCard(
-                                asset: AppAssets.homeFemale,
-                                label: 'Female',
-                                isSelected: isFemale,
-                                ageText: isFemale
-                                    ? (age > 0 ? '$age' : '--')
-                                    : null,
-                                onTap: () =>
-                                    controller.setGender(Gender.female),
-                                onAgeTap: () {
-                                  controller.setGender(Gender.female);
-                                  controller.openAgePicker();
-                                },
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: _buildGenderCard(
+                                  link: _femaleLink,
+                                  asset: AppAssets.homeFemale,
+                                  label: 'Female',
+                                  isSelected: isFemale,
+                                  ageText: isFemale
+                                      ? (age > 0 ? '$age' : '--')
+                                      : null,
+                                  onTap: () {
+                                    controller.setGender(Gender.female);
+                                    controller.openAgePicker();
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -500,10 +514,13 @@ class BMICalculatorScreen extends StatelessWidget {
                         ),
                       if (controller.isAgePickerVisible.value)
                         Positioned(
-                          top: 85.h,
-                          left: 20,
-                          right: 0,
-                          child: Center(
+                          top: 0,
+                          left: 0,
+                          child: CompositedTransformFollower(
+                            link: isFemale ? _femaleLink : _maleLink,
+                            targetAnchor: Alignment.bottomCenter,
+                            followerAnchor: Alignment.topCenter,
+                            offset: Offset(0, 6.h),
                             child: AgePickerPopup(
                               currentAge: age,
                               onAgeChanged: (val) => controller.setAge(val),
@@ -523,56 +540,63 @@ class BMICalculatorScreen extends StatelessWidget {
   }
 
   Widget _buildGenderCard({
+    required LayerLink link,
     required String asset,
     required String label,
     required bool isSelected,
     required VoidCallback onTap,
-    required VoidCallback onAgeTap,
     String? ageText,
   }) {
     const green = Color(0xFF09B389);
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 140.w,
-        padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 8.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(color: const Color(0xFFD8F3EC), width: 1.2),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x2633D2AB),
-              blurRadius: 8,
-              offset: Offset(0, 2),
+    return CompositedTransformTarget(
+      link: link,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18.r),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFF8FE3C9)
+                  : const Color(0xFFD8F3EC),
+              width: 1.2,
             ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  width: 88.w,
-                  height: 88.w,
-                  padding: EdgeInsets.all(3.w),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected ? green : const Color(0xFFD1D5DB),
-                      width: 2.w,
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x2633D2AB),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 88.w,
+                    height: 88.w,
+                    padding: EdgeInsets.all(3.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isSelected ? green : const Color(0xFFD1D5DB),
+                        width: 2.w,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(asset, fit: BoxFit.cover),
                     ),
                   ),
-                  child: ClipOval(child: Image.asset(asset, fit: BoxFit.cover)),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 2.h,
-                  child: GestureDetector(
-                    onTap: onAgeTap,
+                  Positioned(
+                    right: 0,
+                    bottom: 2.h,
                     child: Container(
                       width: 20.w,
                       height: 20.w,
@@ -588,64 +612,63 @@ class BMICalculatorScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 6.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
-                    color: isSelected
-                        ? const Color(0xFF111827)
-                        : const Color(0xFF6B7280),
-                  ),
-                ),
-                if (ageText != null) ...[
-                  SizedBox(width: 10.w),
-                  GestureDetector(
-                    onTap: onAgeTap,
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: ageText,
-                            style: TextStyle(
-                              color: const Color(0xFF09B389),
-                              fontSize: 15,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Yr',
-                            style: TextStyle(
-                              color: const Color(0xFF09B389),
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: const TextStyle(
-                        color: green,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
-                      ),
+                ],
+              ),
+              SizedBox(height: 6.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                      color: isSelected
+                          ? const Color(0xFF111827)
+                          : const Color(0xFF6B7280),
                     ),
                   ),
+                  if (ageText != null) ...[
+                    SizedBox(width: 10.w),
+                    Flexible(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: ageText,
+                              style: TextStyle(
+                                color: const Color(0xFF09B389),
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Yr',
+                              style: TextStyle(
+                                color: const Color(0xFF09B389),
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        style: const TextStyle(
+                          color: green,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
