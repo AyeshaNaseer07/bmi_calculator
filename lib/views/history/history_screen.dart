@@ -407,6 +407,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 break;
             }
 
+            // Empty state is a fixed page (no scrolling); on short screens
+            // it scales down as a whole instead of being cut off.
+            if (!hasRecords) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+                child: LayoutBuilder(
+                  builder: (context, constraints) => FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: constraints.maxWidth,
+                      child: _buildEmptyHistorySection(),
+                    ),
+                  ),
+                ),
+              );
+            }
+
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
@@ -923,9 +941,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       )
                     else
                       _buildNoFilterResultsSection(),
-                  ] else ...[
-                    // Empty State UI
-                    _buildEmptyHistorySection(),
                   ],
 
                   SizedBox(height: 24.h),
@@ -1291,20 +1306,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Unlock Premium Banner
+        _buildPremiumBanner(),
+        SizedBox(height: 18.h),
         // Top empty card with clipboard graphic
         CustomCard(
           borderRadius: 22,
           padding: EdgeInsets.zero,
+          // Soft mint glow all round, a little deeper under the card.
           shadows: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 16.r,
+              color: const Color(0x3333D2AB),
+              blurRadius: 18.r,
               offset: Offset(0, 4.h),
             ),
             BoxShadow(
-              color: const Color(0xFF09B389).withValues(alpha: 0.06),
-              blurRadius: 12.r,
-              offset: Offset(0, 2.h),
+              color: const Color(0x1F33D2AB),
+              blurRadius: 4.r,
+              offset: Offset.zero,
             ),
           ],
           child: ClipRRect(
@@ -1395,80 +1414,59 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
           ),
         ),
-        SizedBox(height: 18.h),
+        SizedBox(height: 12.h),
 
         // About History Section
-        Text(
-          'About History',
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textDark,
-          ),
-        ),
-        SizedBox(height: 8.h),
+        Text('About History', style: _sectionTitleStyle),
+        SizedBox(height: 12.h),
         Container(
-          padding: EdgeInsets.all(14.w),
           width: double.infinity,
-          height: 63.h,
-          decoration: ShapeDecoration(
-            color: const Color(0xFFE6F8F2),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
+          padding: EdgeInsets.fromLTRB(14.w, 14.h, 16.w, 14.h),
+          decoration: BoxDecoration(
+            color: const Color(0xFFEFFAF6),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(AppAssets.up, height: 30.h, width: 30.w),
-              SizedBox(width: 10.w),
+              Image.asset(AppAssets.up, width: 30.w, height: 30.w),
+              SizedBox(width: 14.w),
               Expanded(
                 child: Text(
                   'Your BMI history helps you understand your health journey over time and stay on track with your goals.',
                   style: TextStyle(
-                    color: const Color(0xFF111827),
-                    fontSize: 11.sp,
+                    color: const Color(0xFF6B7280),
+                    fontSize: 11.5.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
+                    height: 1.4,
                   ),
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 18.h),
+        SizedBox(height: 12.h),
 
         // What you'll see here Section
-        Text(
-          "What you'll see here",
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textDark,
-          ),
-        ),
-        SizedBox(height: 10.h),
+        Text("What you'll see here", style: _sectionTitleStyle),
+        SizedBox(height: 14.h),
         _buildFeatureItem(
           icon: Icons.trending_up,
           title: 'BMI',
           subtitle: 'See how your BMI changes over time.',
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 16.h),
         _buildFeatureItem(
           icon: Icons.shopping_bag_outlined,
           title: 'Weight Records',
           subtitle: 'Track your weight history.',
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 16.h),
         _buildFeatureItem(
           icon: Icons.flag_outlined,
           title: 'Goal Progress',
           subtitle: 'Monitor your progress towards your goals.',
         ),
-        SizedBox(height: 20.h),
-
-        // Unlock Premium Banner
-        _buildPremiumBanner(),
       ],
     );
   }
@@ -1625,51 +1623,62 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
+  TextStyle get _sectionTitleStyle => TextStyle(
+    color: const Color(0xFF111827),
+    fontSize: 16.sp,
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w700,
+  );
+
   Widget _buildFeatureItem({
     required IconData icon,
     required String title,
     required String subtitle,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(12.w, 12.h, 14.w, 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFE6F8F2),
-        borderRadius: BorderRadius.circular(16.r),
+        color: const Color(0xFFE3F7EF),
+        borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
+            width: 34.w,
+            height: 34.w,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: const Color(0xFF09B389), size: 18.sp),
           ),
-          SizedBox(width: 14.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w700,
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: const Color(0xFF111827),
+                    fontSize: 13.5.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
+                SizedBox(height: 3.h),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: const Color(0xFF1F2937),
+                    fontSize: 12.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

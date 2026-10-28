@@ -227,7 +227,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
               borderRadius: BorderRadius.circular(14.r),
             ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: EdgeInsets.only(top: 6.h),

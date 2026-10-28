@@ -391,15 +391,15 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 12.h),
+      // Soft mint glow all round (no border line).
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: kMintBorder, width: 1.5),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x2633D2AB),
-            blurRadius: 10,
-            offset: Offset(0, 2),
+            color: Color(0x4033D2AB),
+            blurRadius: 8,
+            offset: Offset.zero,
           ),
         ],
       ),

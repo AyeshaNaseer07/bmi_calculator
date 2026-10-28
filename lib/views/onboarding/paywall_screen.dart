@@ -624,7 +624,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 14.h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -669,55 +669,62 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              color: const Color(0xFF0F1F4B),
-                              fontSize: 14.sp,
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          // Loader while the store prices are fetched.
-                          if (price.isEmpty)
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 6.h),
-                              child: SizedBox(
-                                width: 20.w,
-                                height: 20.w,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 2.4,
-                                  color: Color(0xFF09B389),
-                                ),
-                              ),
-                            )
-                          else
-                            Text(
-                              price,
-                              style: TextStyle(
-                                color: const Color(0xFF09B389),
-                                fontSize: 22.sp,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          Text(
-                            period,
-                            style: TextStyle(
-                              color: const Color(0xFF9CA3AF),
-                              fontSize: 12.sp,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: const Color(0xFF0F1F4B),
+                        fontSize: 14.sp,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  // Fixed-height slots: the loader and the fetched price
+                  // take the same space, so the card never resizes.
+                  _priceSlot(
+                    height: 30.sp,
+                    loading: price.isEmpty,
+                    placeholder: SizedBox(
+                      width: 20.w,
+                      height: 20.w,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2.4,
+                        color: Color(0xFF09B389),
+                      ),
+                    ),
+                    child: Text(
+                      price,
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: const Color(0xFF09B389),
+                        fontSize: 22.sp,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  _priceSlot(
+                    height: 16.sp,
+                    loading: period.isEmpty,
+                    placeholder: Container(
+                      width: 56.w,
+                      height: 8.sp,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE5EAF0),
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                    child: Text(
+                      period,
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: const Color(0xFF9CA3AF),
+                        fontSize: 12.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -726,6 +733,31 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// One line of a plan card with a fixed height. Shows [placeholder] while
+  /// [loading], then fades to [child] (scaled down if it's too wide), so
+  /// fetching the store price never changes the card's size.
+  Widget _priceSlot({
+    required double height,
+    required bool loading,
+    required Widget placeholder,
+    required Widget child,
+  }) {
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: loading
+            ? Center(key: const ValueKey('loading'), child: placeholder)
+            : FittedBox(
+                key: const ValueKey('loaded'),
+                fit: BoxFit.scaleDown,
+                child: child,
+              ),
       ),
     );
   }

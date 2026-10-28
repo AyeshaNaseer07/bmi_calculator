@@ -19,6 +19,8 @@ class AnimatedCtaButton extends StatefulWidget {
   final BorderRadius? borderRadius;
   final TextStyle? textStyle;
   final Gradient? gradient;
+  final bool alignTrailingToEnd;
+  final EdgeInsetsGeometry? contentPadding;
 
   const AnimatedCtaButton({
     super.key,
@@ -36,6 +38,8 @@ class AnimatedCtaButton extends StatefulWidget {
     this.borderRadius,
     this.textStyle,
     this.gradient,
+    this.alignTrailingToEnd = true,
+    this.contentPadding,
   });
 
   @override
@@ -211,6 +215,8 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
                         widget.backgroundImage ?? AppAssets.btnRectangle,
                     borderRadius: effectiveBorderRadius,
                     textStyle: widget.textStyle,
+                    alignTrailingToEnd: widget.alignTrailingToEnd,
+                    contentPadding: widget.contentPadding,
                   ),
                   if (widget.enableShimmer && !widget.isLoading)
                     Positioned.fill(

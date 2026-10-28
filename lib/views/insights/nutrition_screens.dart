@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
@@ -20,35 +19,31 @@ class EatBalancedMealsScreen extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 4.h),
-          // Photo with the soft mint glow behind it (Figma).
+          // Photo with the soft mint glow around it (Figma). The glow is a
+          // blurred shadow on the circle so it shows outside the photo edge.
           SizedBox(
-            width: 230.w,
             height: 170.w,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: 230.w,
-                  height: 170.w,
-                  decoration: const BoxDecoration(
-                    gradient: RadialGradient(
-                      radius: 0.62,
-                      colors: [
-                        Color(0x6633D2AB),
-                        Color(0x2233D2AB),
-                        Color(0x0033D2AB),
-                      ],
-                      stops: [0.35, 0.7, 1.0],
+            child: Center(
+              child: Container(
+                width: 140.w,
+                height: 140.w,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x6633D2AB),
+                      blurRadius: 36,
+                      spreadRadius: 4,
                     ),
-                  ),
+                  ],
                 ),
-                AssetOrPlaceholder(
+                child: AssetOrPlaceholder(
                   asset: AppAssets.tipMeals,
                   width: 140.w,
                   height: 140.w,
                   circle: true,
                 ),
-              ],
+              ),
             ),
           ),
           SizedBox(height: 6.h),
@@ -115,7 +110,8 @@ class EatBalancedMealsScreen extends StatelessWidget {
             iconAsset: AppAssets.tipDailyMealPlan,
             title: '1 Week Meal Plan',
             subtitle: 'Explore simple ideas for balanced meals.',
-            pro: !Get.find<AppController>().isPremium.value,
+            // Always marked as a Pro feature, premium or not.
+            pro: true,
             onTap: () {
               Get.to(() => const DailyMealPlanScreen());
               // if (Get.find<AppController>().isPremium.value) {
@@ -135,9 +131,9 @@ class EatBalancedMealsScreen extends StatelessWidget {
   }
 }
 
-/// Card used on the Eat Balanced Meals hub (Figma): white card with a mint
-/// border, icon tile, bold title, grey subtitle and a chevron. [pro] adds a
-/// small gold crown after the title.
+/// Card used on the Eat Balanced Meals hub (Figma): white card with a soft
+/// mint glow, icon tile, bold title, grey subtitle and a chevron. [pro] adds
+/// a small gold crown after the title.
 class _HubCard extends StatelessWidget {
   final String iconAsset;
   final String title;
@@ -162,18 +158,15 @@ class _HubCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(14),
-          decoration: ShapeDecoration(
+          padding: EdgeInsets.all(14.w),
+          decoration: BoxDecoration(
             color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            shadows: [
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: const [
               BoxShadow(
-                color: Color(0x0A000000),
-                blurRadius: 12,
-                offset: Offset(0, 4),
-                spreadRadius: 0,
+                color: Color(0x3333D2AB),
+                blurRadius: 8,
+                offset: Offset.zero,
               ),
             ],
           ),
@@ -240,13 +233,12 @@ class _HubCard extends StatelessWidget {
 class EatVegetablesScreen extends StatelessWidget {
   const EatVegetablesScreen({super.key});
 
-  /// Figma card: white, mint border, rounded 20, soft mint shadow.
+  /// Figma card: white, rounded 20, soft mint glow all round (no border).
   static BoxDecoration get _cardDeco => BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.circular(20.r),
-    border: Border.all(color: const Color(0xFFCDEFE3), width: 1.2),
     boxShadow: const [
-      BoxShadow(color: Color(0x1233D2AB), blurRadius: 10, offset: Offset(0, 3)),
+      BoxShadow(color: Color(0x3333D2AB), blurRadius: 8, offset: Offset.zero),
     ],
   );
 
@@ -274,7 +266,8 @@ class EatVegetablesScreen extends StatelessWidget {
 
   Widget _why(String icon, String title, String subtitle) => Container(
     width: double.infinity,
-    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+    margin: EdgeInsets.only(bottom: 10.h),
+    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
     decoration: _cardDeco,
     child: Row(
       children: [
@@ -282,7 +275,6 @@ class EatVegetablesScreen extends StatelessWidget {
         SizedBox(width: 14.w),
         Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, maxLines: 1, style: _title(15)),
@@ -302,33 +294,28 @@ class EatVegetablesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // No scroll view: every block takes a share of the screen height so the
-    // whole page fits on one screen.
+    // No scroll view: the cards keep their natural height and the photo
+    // takes whatever height is left, so the page always fits one screen.
     return InsightScaffold(
       title: 'Eat More Vegetables',
       scroll: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Photo inside a mint-bordered card with a soft mint gradient.
+          // The asset already has its mint border and rounded corners baked
+          // in, so show it whole (contain) at its own 869×569 ratio.
           Expanded(
-            flex: 5,
             child: Center(
-              child: Container(
-                width: 280.w,
-                height: 250.h,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22.r),
-                ),
+              child: AspectRatio(
+                aspectRatio: 869 / 569,
                 child: Image.asset(
                   AppAssets.photoVegetables,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 8.h),
           Center(
             child: Text(
               'Add more color and fiber to your meals.',
@@ -344,89 +331,68 @@ class EatVegetablesScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           Text('Why Vegetables Matter', style: _section),
           SizedBox(height: 10.h),
-          Expanded(
-            flex: 10,
-            child: Column(
-              children: [
-                Expanded(
-                  child: _why(
-                    AppAssets.tipRichInFiber,
-                    'Rich in Fiber',
-                    'Fiber helps you feel full and supports digestion.',
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Expanded(
-                  child: _why(
-                    AppAssets.tipFullOfNutrients,
-                    'Full of Nutrients',
-                    'Vegetables provide vitamins and minerals.',
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Expanded(
-                  child: _why(
-                    AppAssets.tipAddMoreColor,
-                    'Add More Color',
-                    'Choose different vegetables for variety.',
-                  ),
-                ),
-              ],
-            ),
+          _why(
+            AppAssets.tipRichInFiber,
+            'Rich in Fiber',
+            'Fiber helps you feel full and supports digestion.',
           ),
-          SizedBox(height: 12.h),
+          _why(
+            AppAssets.tipFullOfNutrients,
+            'Full of Nutrients',
+            'Vegetables provide vitamins and minerals.',
+          ),
+          _why(
+            AppAssets.tipAddMoreColor,
+            'Add More Color',
+            'Choose different vegetables for variety.',
+          ),
+          SizedBox(height: 4.h),
           Text('Try This Today', style: _section),
           SizedBox(height: 10.h),
-          Expanded(
-            flex: 6,
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              decoration: _cardDeco,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10.r),
-                        child: Image.asset(
-                          AppAssets.tipSimpleMeal,
-                          width: 58.w,
-                          height: 58.w,
-                          fit: BoxFit.cover,
-                        ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+            decoration: _cardDeco,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Image.asset(
+                        AppAssets.tipSimpleMeal,
+                        width: 58.w,
+                        height: 58.w,
+                        fit: BoxFit.cover,
                       ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Simple Meal', style: _title(16.5)),
-                            SizedBox(height: 3.h),
-                            Text(
-                              'Half plate of vegetables, quarter protein, quarter grains.',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: _sub,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10.h),
-                  Flexible(
-                    child: Text(
-                      'Start by adding vegetables to one meal. You can build up to more over time.',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: _sub.copyWith(color: const Color(0xFF4B5563)),
                     ),
-                  ),
-                ],
-              ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Simple Meal', style: _title(16.5)),
+                          SizedBox(height: 3.h),
+                          Text(
+                            'Half plate of vegetables, quarter protein, quarter grains.',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: _sub,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  'Start by adding vegetables to one meal. You can build up to more over time.',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: _sub.copyWith(color: const Color(0xFF4B5563)),
+                ),
+              ],
             ),
           ),
         ],
@@ -440,25 +406,19 @@ class LeanProteinScreen extends StatelessWidget {
 
   Widget _choice(String asset, String title, String subtitle) => Container(
     width: double.infinity,
-    padding: EdgeInsets.all(14.w),
+    padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 14.h),
     decoration: BoxDecoration(
-      color: const Color(0xFFE3F7EC),
-      borderRadius: BorderRadius.circular(20.r),
-      border: Border.all(color: const Color(0xFF33D2AB), width: 1.2),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x0A000000),
-          blurRadius: 12,
-          offset: Offset(0, 4),
-        ),
-      ],
+      color: const Color(0xFFD9F5EC),
+      borderRadius: BorderRadius.circular(16.r),
+      border: Border.all(color: const Color(0xFF2CC99E)),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(asset, width: 50.w, height: 50.w, fit: BoxFit.contain),
-        SizedBox(height: 10.h),
+        // The asset includes its own light grey circle.
+        Image.asset(asset, width: 40.w, height: 40.w, fit: BoxFit.contain),
+        SizedBox(height: 12.h),
         Text(
           title,
           style: TextStyle(
@@ -468,7 +428,7 @@ class LeanProteinScreen extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: 4.h),
         Text(
           subtitle,
           style: TextStyle(
@@ -476,9 +436,21 @@ class LeanProteinScreen extends StatelessWidget {
             fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
-            height: 1.0,
+            height: 1.4,
           ),
         ),
+      ],
+    ),
+  );
+
+  /// Two cards side by side, both as tall as the taller one.
+  Widget _choiceRow(Widget left, Widget right) => IntrinsicHeight(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: left),
+        SizedBox(width: 16.w),
+        Expanded(child: right),
       ],
     ),
   );
@@ -502,35 +474,26 @@ class LeanProteinScreen extends StatelessWidget {
           ),
           SizedBox(height: 14.h),
           const SectionTitle('Healthy Protein Choices'),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 12.h,
-            crossAxisSpacing: 12.w,
-            childAspectRatio: 1.15,
-            children: [
-              _choice(
-                AppAssets.proteinEgg,
-                'Eggs',
-                'An easy source of protein.',
-              ),
-              _choice(
-                AppAssets.proteinFish,
-                'Fish',
-                'Provides protein and important nutrients.',
-              ),
-              _choice(
-                AppAssets.proteinBeans,
-                'Beans & Lentils',
-                'Offer protein and fiber.',
-              ),
-              _choice(
-                AppAssets.proteinChicken,
-                'Chicken',
-                'A versatile source of lean protein.',
-              ),
-            ],
+          _choiceRow(
+            _choice(AppAssets.proteinEgg, 'Eggs', 'An easy source of protein.'),
+            _choice(
+              AppAssets.proteinFish,
+              'Fish',
+              'Provides protein and important nutrients.',
+            ),
+          ),
+          SizedBox(height: 18.h),
+          _choiceRow(
+            _choice(
+              AppAssets.proteinBeans,
+              'Beans & Lentils',
+              'Offer protein and fiber.',
+            ),
+            _choice(
+              AppAssets.proteinChicken,
+              'Chicken',
+              'A versatile source of lean protein.',
+            ),
           ),
         ],
       ),
@@ -545,16 +508,12 @@ class PortionSizesScreen extends StatelessWidget {
     width: double.infinity,
     margin: EdgeInsets.only(bottom: 12.h),
     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+    // Soft mint glow all round (no border), same as the other nutrition cards.
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(18.r),
-      border: Border.all(color: const Color(0xFFDDF3EA), width: 1.2),
       boxShadow: const [
-        BoxShadow(
-          color: Color(0x0F33D2AB),
-          blurRadius: 12,
-          offset: Offset(0, 4),
-        ),
+        BoxShadow(color: Color(0x3333D2AB), blurRadius: 8, offset: Offset.zero),
       ],
     ),
     child: Row(

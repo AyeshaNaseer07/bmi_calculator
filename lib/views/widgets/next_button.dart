@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_assets.dart';
+import 'animated_cta_button.dart';
 
 class NextButton extends StatefulWidget {
   final VoidCallback onNext;
@@ -12,34 +13,10 @@ class NextButton extends StatefulWidget {
   State<NextButton> createState() => _NextButtonState();
 }
 
-class _NextButtonState extends State<NextButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
+/// Compact "Next" pill, animated like the premium screen CTA (pulse, glow,
+/// shimmer sweep, arrow nudge, press-down).
+class _NextButtonState extends State<NextButton> {
   bool _isNavigating = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0.6, 0),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // Continuously bounce the arrow left → right → left
-    _controller.repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   void _handleTap() {
     if (_isNavigating) return;
@@ -52,44 +29,33 @@ class _NextButtonState extends State<NextButton>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF24CCA7), Color(0xFF168EE2)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Next',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.sp,
-                fontFamily: 'Outfit',
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            SizedBox(width: 18.w),
-            SlideTransition(
-              position: _slideAnimation,
-              child: Image.asset(
-                AppAssets.arrowIcon,
-                width: 18.w,
-                height: 18.w,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
+    return AnimatedCtaButton(
+      text: 'Next',
+      width: 112.w,
+      height: 42.h,
+      borderRadius: BorderRadius.circular(24.r),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF24CCA7), Color(0xFF168EE2)],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
       ),
+      textStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 16.sp,
+        fontFamily: 'Outfit',
+        fontWeight: FontWeight.w800,
+      ),
+      // Keep text and arrow together (the pill is too narrow for the
+      // full-width layout that pins the arrow to the right edge).
+      alignTrailingToEnd: false,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+      trailingIcon: Image.asset(
+        AppAssets.arrowIcon,
+        width: 18.w,
+        height: 18.w,
+        color: Colors.white,
+      ),
+      onPressed: _handleTap,
     );
   }
 }

@@ -11,7 +11,7 @@ import '../widgets/ads/full_screen_native_ad_page.dart';
 import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
-import '../widgets/custom_gradient_button.dart';
+import '../widgets/animated_cta_button.dart';
 import '../widgets/next_button.dart';
 
 class OnboardingItem {
@@ -373,7 +373,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-/// Full-width "Next" button used on pages 2 & 3 with animated arrow.png icon.
+/// Full-width "Next" button used on pages 2 & 3, animated like the premium
+/// screen CTA (pulse, glow, shimmer sweep, arrow nudge, press-down).
 class _AnimatedGradientNextButton extends StatefulWidget {
   final VoidCallback onPressed;
 
@@ -385,33 +386,8 @@ class _AnimatedGradientNextButton extends StatefulWidget {
 }
 
 class _AnimatedGradientNextButtonState
-    extends State<_AnimatedGradientNextButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
+    extends State<_AnimatedGradientNextButton> {
   bool _isAnimating = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0.6, 0),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // Continuously bounce the arrow left → right → left
-    _controller.repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   void _handleTap() {
     if (_isAnimating) return;
@@ -424,18 +400,15 @@ class _AnimatedGradientNextButtonState
 
   @override
   Widget build(BuildContext context) {
-    return CustomGradientButton(
+    return AnimatedCtaButton(
       text: 'Next',
       backgroundImage: AppAssets.btnRectangle,
       borderRadius: BorderRadius.circular(12.r),
-      trailingIcon: SlideTransition(
-        position: _slideAnimation,
-        child: Image.asset(
-          AppAssets.arrowIcon,
-          width: 18.w,
-          height: 18.w,
-          color: Colors.white,
-        ),
+      trailingIcon: Image.asset(
+        AppAssets.arrowIcon,
+        width: 18.w,
+        height: 18.w,
+        color: Colors.white,
       ),
       onPressed: _handleTap,
     );

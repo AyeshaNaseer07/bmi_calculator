@@ -561,28 +561,41 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            if (price.isEmpty)
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 7.h),
-                child: SizedBox(
-                  width: 20.w,
-                  height: 20.w,
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2.4,
-                    color: Color(0xFF09B389),
-                  ),
-                ),
-              )
-            else
-              Text(
-                price,
-                style: TextStyle(
-                  color: const Color(0xFF09B389),
-                  fontSize: 24.sp,
-                  fontFamily: 'Outfit',
-                  fontWeight: FontWeight.w800,
-                ),
+            // Fixed-height slot: the loader and the fetched price take the
+            // same space, so the card never resizes when prices arrive.
+            SizedBox(
+              height: 32.sp,
+              width: double.infinity,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: price.isEmpty
+                    ? Center(
+                        key: const ValueKey('loading'),
+                        child: SizedBox(
+                          width: 20.w,
+                          height: 20.w,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2.4,
+                            color: Color(0xFF09B389),
+                          ),
+                        ),
+                      )
+                    : FittedBox(
+                        key: const ValueKey('loaded'),
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          price,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: const Color(0xFF09B389),
+                            fontSize: 24.sp,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
               ),
+            ),
             Text(
               period,
               style: TextStyle(

@@ -193,21 +193,18 @@ class _MintRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.only(bottom: 14.h),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-        decoration: ShapeDecoration(
-          color: const Color(0xFFECFDF5),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFD1FAE5)),
-            borderRadius: BorderRadius.circular(16.r),
-          ),
+        padding: EdgeInsets.fromLTRB(12.w, 14.h, 14.w, 14.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFFDFF7EF),
+          borderRadius: BorderRadius.circular(18.r),
         ),
         child: Row(
           children: [
             icon,
-            SizedBox(width: 12.w),
+            SizedBox(width: 14.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,14 +218,15 @@ class _MintRow extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 3.h),
                   Text(
                     subtitle,
                     style: TextStyle(
                       color: const Color(0xFF6B7280),
-                      fontSize: 14,
+                      fontSize: 13.5,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
+                      height: 1.35,
                     ),
                   ),
                 ],
@@ -289,25 +287,25 @@ class BoostsEnergyScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           _MintRow(
-            icon: _asset(AppAssets.brainIcon, size: 36),
+            icon: _asset(AppAssets.brainIcon, size: 40),
             title: 'Supports Focus',
             subtitle:
                 'Drinking enough water helps you stay focused '
                 'throughout the day.',
           ),
           _MintRow(
-            icon: _asset(AppAssets.moonIcon, size: 36),
+            icon: _asset(AppAssets.moonIcon, size: 40),
             title: 'Helps Reduce Tiredness',
             subtitle: 'Dehydration can make you feel tired.',
           ),
           _MintRow(
-            icon: _asset(AppAssets.pulseIcon, size: 36),
+            icon: _asset(AppAssets.pulseIcon, size: 40),
             title: 'Supports Daily Activity',
             subtitle:
                 'Water helps your body function during everyday '
                 'activities.',
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 24.h),
           const _TipStrip(
             text: 'Simple Tip: Keep a glass of water nearby and sip regularly.',
           ),
@@ -326,17 +324,14 @@ class _TipStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-      decoration: ShapeDecoration(
-        color: const Color(0xFFECFDF5),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: Color(0xFFD1FAE5)),
-          borderRadius: BorderRadius.circular(16.r),
-        ),
+      padding: EdgeInsets.fromLTRB(14.w, 14.h, 16.w, 14.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAFBF3),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
-          icon ?? Image.asset(AppAssets.tipBulbIcon, width: 36.w, height: 36.w),
+          icon ?? Image.asset(AppAssets.tipBulbIcon, width: 32.w, height: 32.w),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
@@ -346,6 +341,7 @@ class _TipStrip extends StatelessWidget {
                 fontSize: 14,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
+                height: 1.4,
               ),
             ),
           ),
@@ -360,21 +356,26 @@ class SupportsDigestionScreen extends StatelessWidget {
   const SupportsDigestionScreen({super.key});
 
   Widget _card(Widget icon, String title, String sub) => Padding(
-    padding: EdgeInsets.only(bottom: 12.h),
+    padding: EdgeInsets.only(bottom: 16.h),
     child: Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(10),
-      decoration: ShapeDecoration(
+      padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
+      // Soft mint glow all round (no border), like the nutrition cards.
+      decoration: BoxDecoration(
         color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: const Color(0xFFE5E7EB)),
-          borderRadius: BorderRadius.circular(16),
-        ),
+        borderRadius: BorderRadius.circular(18.r),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3333D2AB),
+            blurRadius: 8,
+            offset: Offset.zero,
+          ),
+        ],
       ),
       child: Row(
         children: [
           icon,
-          SizedBox(width: 12.w),
+          SizedBox(width: 16.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,12 +384,12 @@ class SupportsDigestionScreen extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: const Color(0xFF111827),
-                    fontSize: 15,
+                    fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 4.h),
                 Text(
                   sub,
                   style: TextStyle(
@@ -438,17 +439,17 @@ class SupportsDigestionScreen extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           _card(
-            _asset(AppAssets.digestionIcon, size: 36),
+            _asset(AppAssets.digestionIcon, size: 40),
             'Helps Digestion',
             'Water helps your body digest food.',
           ),
           _card(
-            _asset(AppAssets.regularityIcon, size: 36),
+            _asset(AppAssets.regularityIcon, size: 40),
             'Supports Regularity',
             'Drinking enough water helps prevent constipation.',
           ),
           _card(
-            _asset(AppAssets.absorptionIcon, size: 36),
+            _asset(AppAssets.absorptionIcon, size: 40),
             'Helps Nutrient Absorption',
             'Water supports the normal processes your body uses to absorb '
                 'nutrients.',

@@ -77,14 +77,7 @@ class SleepWellScreen extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Transform.flip(
-                    flipX: true,
-                    child: Icon(
-                      Icons.nightlight_round,
-                      size: 13.sp,
-                      color: _kDeep,
-                    ),
-                  ),
+                  Icon(Icons.dark_mode, size: 14.sp, color: _kDeep),
                   SizedBox(width: 6.w),
                   Text(
                     'RESTFUL SLEEP',
