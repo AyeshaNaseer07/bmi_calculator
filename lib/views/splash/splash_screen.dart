@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -9,6 +7,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
+import '../../data/services/app_startup.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/app_background.dart';
 
@@ -23,7 +22,6 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
-  Timer? _navigationTimer;
 
   /// Splash screen wait — was 10s, trimmed down so the app feels snappier.
   static const int _splashSeconds = 3;
@@ -35,8 +33,6 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    InterstitialAdManager.instance.load(InterstitialPlacement.splash);
-
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: _splashSeconds),
@@ -47,33 +43,40 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _progressController.forward();
+    _startUp();
+  }
 
-    _navigationTimer = Timer(const Duration(seconds: _splashSeconds), () async {
-      if (Get.isRegistered<AppController>()) {
-        await Get.find<AppController>().subscriptionVerified.timeout(
-          const Duration(seconds: 4),
-          onTimeout: () {},
-        );
-      }
-      if (!mounted) return;
-      final isPremium =
-          Get.isRegistered<AppController>() &&
-          Get.find<AppController>().isPremium.value;
-      if (isPremium) {
-        Get.offAllNamed(AppRoutes.home);
-        return;
-      }
-      await InterstitialAdManager.instance.show(
-        InterstitialPlacement.splash,
-        waitFor: _splashAdWait,
-        onDone: () => Get.offAllNamed(AppRoutes.languageSelection),
+  /// Starts Firebase, the SDKs and the ads, then moves on once that's done
+  /// and the splash has shown for at least [_splashSeconds].
+  Future<void> _startUp() async {
+    await Future.wait([
+      AppStartup.run(),
+      Future<void>.delayed(const Duration(seconds: _splashSeconds)),
+    ]);
+    if (!mounted) return;
+    if (Get.isRegistered<AppController>()) {
+      await Get.find<AppController>().subscriptionVerified.timeout(
+        const Duration(seconds: 4),
+        onTimeout: () {},
       );
-    });
+    }
+    if (!mounted) return;
+    final isPremium =
+        Get.isRegistered<AppController>() &&
+        Get.find<AppController>().isPremium.value;
+    if (isPremium) {
+      Get.offAllNamed(AppRoutes.home);
+      return;
+    }
+    await InterstitialAdManager.instance.show(
+      InterstitialPlacement.splash,
+      waitFor: _splashAdWait,
+      onDone: () => Get.offAllNamed(AppRoutes.languageSelection),
+    );
   }
 
   @override
   void dispose() {
-    _navigationTimer?.cancel();
     _progressController.dispose();
     super.dispose();
   }

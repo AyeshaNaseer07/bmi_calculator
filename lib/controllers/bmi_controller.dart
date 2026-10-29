@@ -7,6 +7,9 @@ import '../data/services/storage_service.dart';
 import 'profile_controller.dart';
 
 class BMIController extends GetxController {
+  static const int minAge = 1;
+  static const int maxAge = 120;
+
   final StorageService _storage = Get.find<StorageService>();
 
   final Rx<Gender> selectedGender = Gender.male.obs;
@@ -22,7 +25,6 @@ class BMIController extends GetxController {
 
   final RxBool isCm = true.obs;
   final RxBool isKg = true.obs;
-  final RxBool isAgePickerVisible = false.obs;
   final RxBool isCalculating = false.obs;
 
   final RxList<BMIRecord> bmiHistory = <BMIRecord>[].obs;
@@ -69,16 +71,7 @@ class BMIController extends GetxController {
   }
 
   void setAge(int newAge) {
-    age.value = newAge.clamp(1, 120);
-  }
-
-  void toggleAgePicker() {
-    isAgePickerVisible.value = !isAgePickerVisible.value;
-  }
-
-  void openAgePicker() {
-    if (age.value <= 0) age.value = 25;
-    isAgePickerVisible.value = true;
+    age.value = newAge.clamp(minAge, maxAge);
   }
 
   void setHeight(double cm) {
@@ -113,7 +106,6 @@ class BMIController extends GetxController {
     weightKg.value = 0.0;
     isCm.value = true;
     isKg.value = true;
-    isAgePickerVisible.value = false;
   }
 
   Future<BMIRecord> calculateAndSave() async {

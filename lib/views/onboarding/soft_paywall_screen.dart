@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/utils/open_url.dart';
 import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/animated_cta_button.dart';
@@ -293,11 +295,17 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _link('Privacy Policy', () {}),
+                        _link(
+                          'Privacy Policy',
+                          () => openUrl(AppStrings.privacyPolicyUrl),
+                        ),
                         _sep(),
                         _link('Restore Purchase', _restore),
                         _sep(),
-                        _link('Terms of Use', () {}),
+                        _link(
+                          'Terms of Use',
+                          () => openUrl(AppStrings.termsUrl),
+                        ),
                       ],
                     ),
                   ),

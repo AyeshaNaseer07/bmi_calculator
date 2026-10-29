@@ -1,15 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/theme/app_palette.dart';
+import 'number_keypad.dart';
 
-/// A number that is edited in place (underlined), without opening a dialog.
-///
-/// [value] is the current value in display units; `null` means "not entered
-/// yet" and shows [hint]. While the field has focus the text is left alone;
-/// the parsed value is reported through [onChanged] as the user types and is
-/// clamped to [min]..[max] through [onCommitted] when editing ends.
 class InlineValueField extends StatefulWidget {
   final double? value;
   final String unit;
@@ -47,6 +43,15 @@ class _InlineValueFieldState extends State<InlineValueField> {
 
   static const Color _green = Color(0xFF08B289);
 
+  bool get _useKeypad => defaultTargetPlatform == TargetPlatform.iOS;
+
+  late final NumberKeypadTarget _keypadTarget = NumberKeypadTarget(
+    allowDecimal: widget.decimals > 0,
+    onKey: _insert,
+    onBackspace: _backspace,
+    onOk: _focus.unfocus,
+  );
+
   String _format(double? v) =>
       v == null ? '' : v.toStringAsFixed(widget.decimals);
 
@@ -71,7 +76,68 @@ class _InlineValueFieldState extends State<InlineValueField> {
   }
 
   void _onFocusChange() {
-    if (!_focus.hasFocus) _commit();
+    if (_focus.hasFocus) {
+      _showKeypad();
+    } else {
+      _hideKeypad();
+      _commit();
+    }
+  }
+
+  void _showKeypad() {
+    if (!_useKeypad) return;
+    numberKeypadTarget.value = _keypadTarget;
+    // Once the keypad has taken its space, bring the field into view.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_focus.hasFocus) return;
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 200),
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
+  }
+
+  void _hideKeypad() {
+    if (numberKeypadTarget.value == _keypadTarget) {
+      numberKeypadTarget.value = null;
+    }
+  }
+
+  int get _maxLength => widget.decimals > 0 ? 5 : 3;
+
+  bool _isValidText(String s) =>
+      s.length <= _maxLength &&
+      RegExp(widget.decimals > 0 ? r'^\d*\.?\d*$' : r'^\d*$').hasMatch(s);
+
+  /// Keypad key: types at the cursor (replacing any selection).
+  void _insert(String key) {
+    final value = _text.value;
+    final sel = value.selection.isValid
+        ? value.selection
+        : TextSelection.collapsed(offset: value.text.length);
+    final next = value.text.replaceRange(sel.start, sel.end, key);
+    if (!_isValidText(next)) return;
+    _text.value = TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(offset: sel.start + key.length),
+    );
+    _onTextChanged(next);
+  }
+
+  void _backspace() {
+    final value = _text.value;
+    final sel = value.selection.isValid
+        ? value.selection
+        : TextSelection.collapsed(offset: value.text.length);
+    if (sel.isCollapsed && sel.start == 0) return;
+    final start = sel.isCollapsed ? sel.start - 1 : sel.start;
+    final next = value.text.replaceRange(start, sel.end, '');
+    _text.value = TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(offset: start),
+    );
+    _onTextChanged(next);
   }
 
   void _commit() {
@@ -85,8 +151,23 @@ class _InlineValueFieldState extends State<InlineValueField> {
     _text.text = _format(v);
   }
 
+  void _onTextChanged(String s) {
+    final v = double.tryParse(s);
+    if (v != null && v >= widget.min && v <= widget.max) {
+      widget.onChanged?.call(v);
+    }
+  }
+
+  /// Edit icon: focus the field with a blinking cursor after the value.
+  void _startEditing() {
+    _focus.requestFocus();
+    _text.selection = TextSelection.collapsed(offset: _text.text.length);
+  }
+
   @override
   void dispose() {
+    // Deferred: listeners can't rebuild while the tree is being torn down.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _hideKeypad());
     _focus.removeListener(_onFocusChange);
     if (_ownsFocus) _focus.dispose();
     _text.dispose();
@@ -115,9 +196,11 @@ class _InlineValueFieldState extends State<InlineValueField> {
             textAlign: TextAlign.center,
             style: style,
             cursorColor: _green,
-            keyboardType: TextInputType.numberWithOptions(
-              decimal: widget.decimals > 0,
-            ),
+            showCursor: true,
+            // On iOS the app keypad types instead of the system keyboard.
+            keyboardType: _useKeypad
+                ? TextInputType.none
+                : TextInputType.numberWithOptions(decimal: widget.decimals > 0),
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegExp(widget.decimals > 0 ? r'[0-9.]' : r'[0-9]'),
@@ -125,12 +208,7 @@ class _InlineValueFieldState extends State<InlineValueField> {
               LengthLimitingTextInputFormatter(widget.decimals > 0 ? 5 : 3),
             ],
             textInputAction: TextInputAction.done,
-            onChanged: (s) {
-              final v = double.tryParse(s);
-              if (v != null && v >= widget.min && v <= widget.max) {
-                widget.onChanged?.call(v);
-              }
-            },
+            onChanged: _onTextChanged,
             onSubmitted: (_) => _focus.unfocus(),
             onTapOutside: (_) => _focus.unfocus(),
             decoration: InputDecoration(
@@ -158,16 +236,20 @@ class _InlineValueFieldState extends State<InlineValueField> {
         ),
         if (widget.showEdit) ...[
           SizedBox(width: 8.w),
-          GestureDetector(
-            onTap: () => _focus.requestFocus(),
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: AppPalette.surfaceMint,
-                shape: BoxShape.circle,
+          // Part of the field, so tapping it while editing doesn't first
+          // count as a tap outside and drop focus.
+          TextFieldTapRegion(
+            child: GestureDetector(
+              onTap: _startEditing,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  color: AppPalette.surfaceMint,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.edit, size: 14.sp, color: _green),
               ),
-              child: Icon(Icons.edit, size: 14.sp, color: _green),
             ),
           ),
         ],

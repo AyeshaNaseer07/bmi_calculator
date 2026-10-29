@@ -8,7 +8,6 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/bmi_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
-import '../widgets/age_picker_popup.dart';
 import '../widgets/app_background.dart';
 import '../widgets/bordered_slider_thumb_shape.dart';
 import '../widgets/custom_app_bar.dart';
@@ -17,6 +16,7 @@ import '../widgets/custom_gradient_button.dart';
 import '../widgets/mandatory_label.dart';
 import 'dialogs/calculating_dialog.dart';
 import 'widgets/inline_value_field.dart';
+import 'widgets/number_keypad.dart';
 import '../../core/theme/app_palette.dart';
 
 class BMICalculatorScreen extends StatefulWidget {
@@ -27,10 +27,6 @@ class BMICalculatorScreen extends StatefulWidget {
 }
 
 class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
-  // Anchors the age picker under whichever gender card is selected.
-  final _maleLink = LayerLink();
-  final _femaleLink = LayerLink();
-
   @override
   void initState() {
     super.initState();
@@ -58,6 +54,8 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(title: 'BMI Calculator'),
+        // Number keypad for the value fields (iOS), shown while editing.
+        bottomNavigationBar: const NumberKeypadHost(),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -147,393 +145,431 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       ? '130 kg'
                       : '${BMIService.kgToLbs(130.0).round()} lb';
 
-                  return Stack(
-                    clipBehavior: Clip.none,
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildGenderCard(
-                                  link: _maleLink,
-                                  asset: AppAssets.homeMale,
-                                  label: 'Male',
-                                  isSelected: isMale,
-                                  ageText: isMale
-                                      ? (age > 0 ? '$age' : '--')
-                                      : null,
-                                  onTap: () {
-                                    controller.setGender(Gender.male);
-                                    controller.openAgePicker();
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: _buildGenderCard(
-                                  link: _femaleLink,
-                                  asset: AppAssets.homeFemale,
-                                  label: 'Female',
-                                  isSelected: isFemale,
-                                  ageText: isFemale
-                                      ? (age > 0 ? '$age' : '--')
-                                      : null,
-                                  onTap: () {
-                                    controller.setGender(Gender.female);
-                                    controller.openAgePicker();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12.h),
-
-                          // Card 3: Height Slider
-                          CustomCard(
-                            padding: EdgeInsets.all(14.w),
-                            borderRadius: 18.r,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    MandatoryLabel(
-                                      text: 'Height',
-                                      style: TextStyle(
-                                        color: AppPalette.textPrimary,
-                                        fontSize: 15.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    _buildUnitToggle(
-                                      leftLabel: 'cm',
-                                      rightLabel: 'ft',
-                                      isLeftSelected: isCm,
-                                      onToggle: (val) =>
-                                          controller.toggleHeightUnit(val),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10.h),
-                                // Edited in place (underlined) — no dialog.
-                                isCm
-                                    ? InlineValueField(
-                                        key: const ValueKey('h_cm'),
-                                        value: hasHeight ? heightCm : null,
-                                        unit: 'cm',
-                                        min: 120,
-                                        max: 220,
-                                        showEdit: true,
-                                        onChanged: controller.setHeight,
-                                        onCommitted:
-                                            controller.setHeightFromInput,
-                                      )
-                                    : Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          InlineValueField(
-                                            key: const ValueKey('h_ft'),
-                                            value: hasHeight
-                                                ? curFt.toDouble()
-                                                : null,
-                                            unit: 'ft',
-                                            min: 3,
-                                            max: 7,
-                                            width: 44,
-                                            onCommitted: (f) =>
-                                                controller.setHeightFromInput(
-                                                  BMIService.inchesToCm(
-                                                    f * 12 +
-                                                        (hasHeight ? curIn : 0),
-                                                  ),
-                                                ),
-                                          ),
-                                          SizedBox(width: 10.w),
-                                          InlineValueField(
-                                            key: const ValueKey('h_in'),
-                                            value: hasHeight
-                                                ? curIn.toDouble()
-                                                : null,
-                                            unit: 'in',
-                                            min: 0,
-                                            max: 11,
-                                            width: 52,
-                                            showEdit: true,
-                                            onCommitted: (i) =>
-                                                controller.setHeightFromInput(
-                                                  BMIService.inchesToCm(
-                                                    (hasHeight ? curFt : 5) *
-                                                            12 +
-                                                        i,
-                                                  ),
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                SizedBox(height: 4.h),
-                                SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor: const Color(0xFF2EC4B6),
-                                    inactiveTrackColor: AppPalette.border,
-                                    thumbColor: Colors.white,
-                                    thumbShape: BorderedRoundSliderThumbShape(
-                                      enabledThumbRadius: 10.r,
-                                      borderWidth: 2.5.w,
-                                      borderColor: const Color(0xFF08B289),
-                                      elevation: 2,
-                                    ),
-                                    overlayColor: const Color(0xFF08B289)
-                                        .withValues(alpha: 0.12),
-                                    overlayShape: RoundSliderOverlayShape(
-                                      overlayRadius: 18.r,
-                                    ),
-                                    trackHeight: 6.h,
-                                  ),
-                                  child: Slider(
-                                    value: hasHeight
-                                        ? heightCm.clamp(120.0, 220.0)
-                                        : 120.0,
-                                    min: 120.0,
-                                    max: 220.0,
-                                    onChanged: (val) => controller.setHeight(
-                                      isCm
-                                          ? val.roundToDouble()
-                                          : BMIService.inchesToCm(
-                                              (val / 2.54).roundToDouble(),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        minHeightText,
-                                        style: TextStyle(
-                                          color: AppPalette.textSecondary,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        maxHeightText,
-                                        style: TextStyle(
-                                          color: AppPalette.textSecondary,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                          Expanded(
+                            child: _buildGenderCard(
+                              asset: AppAssets.homeMale,
+                              label: 'Male',
+                              isSelected: isMale,
+                              onTap: () => controller.setGender(Gender.male),
                             ),
                           ),
-                          SizedBox(height: 12.h),
-
-                          // Card 4: Weight Slider
-                          CustomCard(
-                            padding: EdgeInsets.all(14.w),
-                            borderRadius: 18.r,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    MandatoryLabel(
-                                      text: 'Weight',
-                                      style: TextStyle(
-                                        color: AppPalette.textPrimary,
-                                        fontSize: 15.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    _buildUnitToggle(
-                                      leftLabel: 'kg',
-                                      rightLabel: 'lb',
-                                      isLeftSelected: isKg,
-                                      onToggle: (val) =>
-                                          controller.toggleWeightUnit(val),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10.h),
-                                isKg
-                                    ? InlineValueField(
-                                        key: const ValueKey('w_kg'),
-                                        value: hasWeight ? weightKg : null,
-                                        unit: 'kg',
-                                        decimals: 1,
-                                        min: 30,
-                                        max: 130,
-                                        width: 110,
-                                        showEdit: true,
-                                        onChanged: controller.setWeight,
-                                        onCommitted:
-                                            controller.setWeightFromInput,
-                                      )
-                                    : InlineValueField(
-                                        key: const ValueKey('w_lb'),
-                                        value: hasWeight
-                                            ? BMIService.kgToLbs(weightKg)
-                                            : null,
-                                        unit: 'lb',
-                                        decimals: 1,
-                                        min: BMIService.kgToLbs(30),
-                                        max: BMIService.kgToLbs(130),
-                                        width: 110,
-                                        showEdit: true,
-                                        onCommitted: (v) =>
-                                            controller.setWeightFromInput(
-                                              BMIService.lbsToKg(v),
-                                            ),
-                                      ),
-                                SizedBox(height: 4.h),
-                                SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor: const Color(0xFF2FD1A6),
-                                    inactiveTrackColor: AppPalette.border,
-                                    thumbColor: Colors.white,
-                                    thumbShape: BorderedRoundSliderThumbShape(
-                                      enabledThumbRadius: 10.r,
-                                      borderWidth: 2.5.w,
-                                      borderColor: const Color(0xFF08B289),
-                                      elevation: 2,
-                                    ),
-                                    overlayColor: const Color(0xFF08B289)
-                                        .withValues(alpha: 0.12),
-                                    overlayShape: RoundSliderOverlayShape(
-                                      overlayRadius: 18.r,
-                                    ),
-                                    trackHeight: 6.h,
-                                  ),
-                                  child: Slider(
-                                    value: hasWeight
-                                        ? weightKg.clamp(30.0, 130.0)
-                                        : 30.0,
-                                    min: 30.0,
-                                    max: 130.0,
-                                    onChanged: (val) =>
-                                        controller.setWeight(val),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        minWeightText,
-                                        style: TextStyle(
-                                          color: AppPalette.textSecondary,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        maxWeightText,
-                                        style: TextStyle(
-                                          color: AppPalette.textSecondary,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: _buildGenderCard(
+                              asset: AppAssets.homeFemale,
+                              label: 'Female',
+                              isSelected: isFemale,
+                              onTap: () => controller.setGender(Gender.female),
                             ),
                           ),
-                          SizedBox(height: 16.h),
-                          // Calculate BMI Button
-                          CustomGradientButton(
-                            text: 'Calculate BMI',
-                            leadingIcon: Image.asset(
-                              AppAssets.calcilatorIcon,
-                              width: 18.w,
-                              height: 18.w,
-                            ),
-                            solidColor: const Color(0xFF00BD8E),
-                            borderRadius: BorderRadius.circular(26.r),
-                            height: 48.h,
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.sp,
-                              fontFamily: 'Instrument Sans',
-                              fontWeight: FontWeight.w700,
-                            ),
-                            onPressed: controller.canCalculate
-                                ? () => _onCalculate(controller)
-                                : null,
-                          ),
-                          SizedBox(height: 10.h),
-
-                          // Reset Button
-                          CustomGradientButton(
-                            text: 'Reset',
-                            leadingIcon: Image.asset(
-                              AppAssets.resetIcon,
-                              width: 18.w,
-                              height: 18.w,
-                              color: const Color(0xFF00BD8E),
-                            ),
-                            isOutlined: true,
-                            outlineColor: const Color(0xFF00BD8E),
-                            borderRadius: BorderRadius.circular(26.r),
-                            height: 48.h,
-                            textStyle: TextStyle(
-                              color: const Color(0xFF00BD8E),
-                              fontSize: 15.sp,
-                              fontFamily: 'Instrument Sans',
-                              fontWeight: FontWeight.w700,
-                            ),
-                            onPressed: () => controller.resetInputs(),
-                          ),
-                          SizedBox(height: 24.h),
                         ],
                       ),
-                      if (controller.isAgePickerVisible.value)
-                        Positioned.fill(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => controller.toggleAgePicker(),
-                            child: const SizedBox.expand(),
-                          ),
-                        ),
-                      if (controller.isAgePickerVisible.value)
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          child: CompositedTransformFollower(
-                            link: isFemale ? _femaleLink : _maleLink,
-                            targetAnchor: Alignment.bottomCenter,
-                            followerAnchor: Alignment.topCenter,
-                            offset: Offset(0, 6.h),
-                            child: AgePickerPopup(
-                              currentAge: age,
-                              onAgeChanged: (val) => controller.setAge(val),
-                              onClose: () => controller.toggleAgePicker(),
+                      SizedBox(height: 12.h),
+
+                      // Age, edited the same way as height and weight.
+                      CustomCard(
+                        padding: EdgeInsets.all(14.w),
+                        borderRadius: 18.r,
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: MandatoryLabel(
+                                text: 'Age',
+                                style: TextStyle(
+                                  color: AppPalette.textPrimary,
+                                  fontSize: 15.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
-                          ),
+                            SizedBox(height: 10.h),
+                            InlineValueField(
+                              key: const ValueKey('age'),
+                              value: controller.hasAge ? age.toDouble() : null,
+                              unit: 'Yr',
+                              min: BMIController.minAge.toDouble(),
+                              max: BMIController.maxAge.toDouble(),
+                              width: 70,
+                              showEdit: true,
+                              onChanged: (v) => controller.setAge(v.round()),
+                              onCommitted: (v) => controller.setAge(v.round()),
+                            ),
+                            SizedBox(height: 4.h),
+                            SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: const Color(0xFF2EC4B6),
+                                inactiveTrackColor: AppPalette.border,
+                                thumbColor: Colors.white,
+                                thumbShape: BorderedRoundSliderThumbShape(
+                                  enabledThumbRadius: 10.r,
+                                  borderWidth: 2.5.w,
+                                  borderColor: const Color(0xFF08B289),
+                                  elevation: 2,
+                                ),
+                                overlayColor: const Color(0xFF08B289)
+                                    .withValues(alpha: 0.12),
+                                overlayShape: RoundSliderOverlayShape(
+                                  overlayRadius: 18.r,
+                                ),
+                                trackHeight: 6.h,
+                              ),
+                              child: Slider(
+                                value: controller.hasAge
+                                    ? age.toDouble()
+                                    : BMIController.minAge.toDouble(),
+                                min: BMIController.minAge.toDouble(),
+                                max: BMIController.maxAge.toDouble(),
+                                onChanged: (val) =>
+                                    controller.setAge(val.round()),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${BMIController.minAge} Yr',
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${BMIController.maxAge} Yr',
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      SizedBox(height: 12.h),
+
+                      // Card 3: Height Slider
+                      CustomCard(
+                        padding: EdgeInsets.all(14.w),
+                        borderRadius: 18.r,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MandatoryLabel(
+                                  text: 'Height',
+                                  style: TextStyle(
+                                    color: AppPalette.textPrimary,
+                                    fontSize: 15.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                _buildUnitToggle(
+                                  leftLabel: 'cm',
+                                  rightLabel: 'ft',
+                                  isLeftSelected: isCm,
+                                  onToggle: (val) =>
+                                      controller.toggleHeightUnit(val),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+                            // Edited in place (underlined) — no dialog.
+                            isCm
+                                ? InlineValueField(
+                                    key: const ValueKey('h_cm'),
+                                    value: hasHeight ? heightCm : null,
+                                    unit: 'cm',
+                                    min: 120,
+                                    max: 220,
+                                    showEdit: true,
+                                    onChanged: controller.setHeight,
+                                    onCommitted: controller.setHeightFromInput,
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      InlineValueField(
+                                        key: const ValueKey('h_ft'),
+                                        value: hasHeight
+                                            ? curFt.toDouble()
+                                            : null,
+                                        unit: 'ft',
+                                        min: 3,
+                                        max: 7,
+                                        width: 44,
+                                        onCommitted: (f) =>
+                                            controller.setHeightFromInput(
+                                              BMIService.inchesToCm(
+                                                f * 12 +
+                                                    (hasHeight ? curIn : 0),
+                                              ),
+                                            ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      InlineValueField(
+                                        key: const ValueKey('h_in'),
+                                        value: hasHeight
+                                            ? curIn.toDouble()
+                                            : null,
+                                        unit: 'in',
+                                        min: 0,
+                                        max: 11,
+                                        width: 52,
+                                        showEdit: true,
+                                        onCommitted: (i) =>
+                                            controller.setHeightFromInput(
+                                              BMIService.inchesToCm(
+                                                (hasHeight ? curFt : 5) * 12 +
+                                                    i,
+                                              ),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                            SizedBox(height: 4.h),
+                            SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: const Color(0xFF2EC4B6),
+                                inactiveTrackColor: AppPalette.border,
+                                thumbColor: Colors.white,
+                                thumbShape: BorderedRoundSliderThumbShape(
+                                  enabledThumbRadius: 10.r,
+                                  borderWidth: 2.5.w,
+                                  borderColor: const Color(0xFF08B289),
+                                  elevation: 2,
+                                ),
+                                overlayColor: const Color(0xFF08B289)
+                                    .withValues(alpha: 0.12),
+                                overlayShape: RoundSliderOverlayShape(
+                                  overlayRadius: 18.r,
+                                ),
+                                trackHeight: 6.h,
+                              ),
+                              child: Slider(
+                                value: hasHeight
+                                    ? heightCm.clamp(120.0, 220.0)
+                                    : 120.0,
+                                min: 120.0,
+                                max: 220.0,
+                                onChanged: (val) => controller.setHeight(
+                                  isCm
+                                      ? val.roundToDouble()
+                                      : BMIService.inchesToCm(
+                                          (val / 2.54).roundToDouble(),
+                                        ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    minHeightText,
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    maxHeightText,
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+
+                      // Card 4: Weight Slider
+                      CustomCard(
+                        padding: EdgeInsets.all(14.w),
+                        borderRadius: 18.r,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MandatoryLabel(
+                                  text: 'Weight',
+                                  style: TextStyle(
+                                    color: AppPalette.textPrimary,
+                                    fontSize: 15.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                _buildUnitToggle(
+                                  leftLabel: 'kg',
+                                  rightLabel: 'lb',
+                                  isLeftSelected: isKg,
+                                  onToggle: (val) =>
+                                      controller.toggleWeightUnit(val),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+                            isKg
+                                ? InlineValueField(
+                                    key: const ValueKey('w_kg'),
+                                    value: hasWeight ? weightKg : null,
+                                    unit: 'kg',
+                                    decimals: 1,
+                                    min: 30,
+                                    max: 130,
+                                    width: 110,
+                                    showEdit: true,
+                                    onChanged: controller.setWeight,
+                                    onCommitted: controller.setWeightFromInput,
+                                  )
+                                : InlineValueField(
+                                    key: const ValueKey('w_lb'),
+                                    value: hasWeight
+                                        ? BMIService.kgToLbs(weightKg)
+                                        : null,
+                                    unit: 'lb',
+                                    decimals: 1,
+                                    min: BMIService.kgToLbs(30),
+                                    max: BMIService.kgToLbs(130),
+                                    width: 110,
+                                    showEdit: true,
+                                    onCommitted: (v) =>
+                                        controller.setWeightFromInput(
+                                          BMIService.lbsToKg(v),
+                                        ),
+                                  ),
+                            SizedBox(height: 4.h),
+                            SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: const Color(0xFF2FD1A6),
+                                inactiveTrackColor: AppPalette.border,
+                                thumbColor: Colors.white,
+                                thumbShape: BorderedRoundSliderThumbShape(
+                                  enabledThumbRadius: 10.r,
+                                  borderWidth: 2.5.w,
+                                  borderColor: const Color(0xFF08B289),
+                                  elevation: 2,
+                                ),
+                                overlayColor: const Color(0xFF08B289)
+                                    .withValues(alpha: 0.12),
+                                overlayShape: RoundSliderOverlayShape(
+                                  overlayRadius: 18.r,
+                                ),
+                                trackHeight: 6.h,
+                              ),
+                              child: Slider(
+                                value: hasWeight
+                                    ? weightKg.clamp(30.0, 130.0)
+                                    : 30.0,
+                                min: 30.0,
+                                max: 130.0,
+                                onChanged: (val) => controller.setWeight(val),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    minWeightText,
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    maxWeightText,
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      // Calculate BMI Button
+                      CustomGradientButton(
+                        text: 'Calculate BMI',
+                        leadingIcon: Image.asset(
+                          AppAssets.calcilatorIcon,
+                          width: 18.w,
+                          height: 18.w,
+                        ),
+                        solidColor: const Color(0xFF00BD8E),
+                        borderRadius: BorderRadius.circular(26.r),
+                        height: 48.h,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontFamily: 'Instrument Sans',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        onPressed: controller.canCalculate
+                            ? () => _onCalculate(controller)
+                            : null,
+                      ),
+                      SizedBox(height: 10.h),
+
+                      // Reset Button
+                      CustomGradientButton(
+                        text: 'Reset',
+                        leadingIcon: Image.asset(
+                          AppAssets.resetIcon,
+                          width: 18.w,
+                          height: 18.w,
+                          color: const Color(0xFF00BD8E),
+                        ),
+                        isOutlined: true,
+                        outlineColor: const Color(0xFF00BD8E),
+                        borderRadius: BorderRadius.circular(26.r),
+                        height: 48.h,
+                        textStyle: TextStyle(
+                          color: const Color(0xFF00BD8E),
+                          fontSize: 15.sp,
+                          fontFamily: 'Instrument Sans',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        onPressed: () => controller.resetInputs(),
+                      ),
+                      SizedBox(height: 24.h),
                     ],
                   );
                 }),
@@ -546,135 +582,62 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   }
 
   Widget _buildGenderCard({
-    required LayerLink link,
     required String asset,
     required String label,
     required bool isSelected,
     required VoidCallback onTap,
-    String? ageText,
   }) {
     const green = Color(0xFF09B389);
-    return CompositedTransformTarget(
-      link: link,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
-          decoration: BoxDecoration(
-            color: AppPalette.surface,
-            borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF8FE3C9)
-                  : AppPalette.mintBorder,
-              width: 1.2,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
+        decoration: BoxDecoration(
+          color: AppPalette.surface,
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF8FE3C9) : AppPalette.mintBorder,
+            width: 1.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppPalette.shadow(const Color(0x2633D2AB)),
+              blurRadius: 8,
+              offset: Offset(0, 2),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: AppPalette.shadow(const Color(0x2633D2AB)),
-                blurRadius: 8,
-                offset: Offset(0, 2),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 88.w,
+              height: 88.w,
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? green : AppPalette.border,
+                  width: 2.w,
+                ),
               ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    width: 88.w,
-                    height: 88.w,
-                    padding: EdgeInsets.all(3.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected ? green : AppPalette.border,
-                        width: 2.w,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(asset, fit: BoxFit.cover),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 2.h,
-                    child: Container(
-                      width: 20.w,
-                      height: 20.w,
-                      decoration: BoxDecoration(
-                        color: green,
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(color: Colors.white, width: 1.5),
-                      ),
-                      child: Icon(
-                        Icons.calendar_today_rounded,
-                        size: 10.sp,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+              child: ClipOval(child: Image.asset(asset, fit: BoxFit.cover)),
+            ),
+            SizedBox(height: 6.h),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w700,
+                color: isSelected
+                    ? AppPalette.textPrimary
+                    : AppPalette.textSecondary,
               ),
-              SizedBox(height: 6.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
-                      color: isSelected
-                          ? AppPalette.textPrimary
-                          : AppPalette.textSecondary,
-                    ),
-                  ),
-                  if (ageText != null) ...[
-                    SizedBox(width: 10.w),
-                    Flexible(
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: ageText,
-                              style: TextStyle(
-                                color: const Color(0xFF09B389),
-                                fontSize: 15,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'Yr',
-                              style: TextStyle(
-                                color: const Color(0xFF09B389),
-                                fontSize: 12,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        style: const TextStyle(
-                          color: green,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,163 +1,65 @@
-import 'dart:developer';
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:applovin_max/applovin_max.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
-import 'package:bmi_calculator/data/services/logger_service.dart';
-import 'package:bmi_calculator/data/services/purchase_connector.dart';
-import 'package:bmi_calculator/data/services/revenue_cat_service.dart';
-import 'package:bmi_calculator/firebase_options.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'controllers/app_controller.dart';
 import 'core/routes/app_pages.dart';
 import 'core/theme/app_palette.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/localization_service.dart';
-import 'data/services/remote_config_service.dart';
-import 'data/services/quick_actions_service.dart';
 import 'data/services/storage_service.dart';
-import 'notifications/notification_service.dart';
-import 'views/widgets/ads/app_open_ad_manager.dart';
-import 'views/widgets/ads/applovin_sdk.dart';
-import 'views/widgets/ads/interstitial_ad_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // ATT first, then the CMP consent form whatever the user chose.
+  // ATT first, then the CMP consent form whatever the user chose. Both are
+  // answered over the launch screen, before the splash screen shows.
+  await _waitUntilAppActive();
   final PermissionStatus status = await Permission.appTrackingTransparency
       .request();
   debugPrint('ATT status: $status');
   await showCMP();
-  await initializeFirebase();
-  AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
-    afDevKey: "HpMZN7qSFkAnYvUMpVMhBP",
-    appId: "6779616188",
-    showDebug: kDebugMode,
-    timeToWaitForATTUserAuthorization: 30,
-    manualStart: false,
-    disableAdvertisingIdentifier: false,
-    disableCollectASA: false,
-  );
-  appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
-  await appsflyerSdk?.initSdk(
-    registerConversionDataCallback: true,
-    registerOnAppOpenAttributionCallback: true,
-    registerOnDeepLinkingCallback: true,
-  );
-
-  PurchaseManager.instance
-      .initialize()
-      .then((_) {
-        log("PurchaseManager initialized successfully.");
-      })
-      .catchError((error) {
-        log("Error initializing PurchaseManager: $error");
-      });
-  await RevenueCat.configStore();
-
-  try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.ios);
-    await FirebaseRemoteConfig.instance.ensureInitialized();
-  } catch (e) {
-    AppLogger.e('Firebase initialization failed: $e');
-  }
-  try {
-    await NotificationService.instance.initialize();
-  } catch (e) {
-    AppLogger.e('NotificationService initialization failed: $e');
-  }
-  AppLovinSdk.initialize();
-  InterstitialAdManager.instance.initialize();
-  try {
-    QuickActionsService.instance.initialize();
-  } catch (e) {
-    AppLogger.e('QuickActionsService initialization failed: $e');
-  }
-  try {
-    await RevenueCat.configStore();
-  } catch (e) {
-    AppLogger.e('RevenueCat initialization failed: $e');
-  }
-
-  FlutterError.onError = (details) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-    AppLogger.e(
-      'FlutterError: ${details.exceptionAsString()}',
-      details.exception,
-      details.stack,
-    );
-  };
-
-  // Pass uncaught async errors to Crashlytics
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-  // Initialize Storage Service (SharedPreferences)
+  // Only what the first frame needs. Firebase, the SDKs and the ads are
+  // started from the splash screen (see AppStartup).
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
+  AppPalette.isDark = storageService.getDarkMode();
 
-  // Initialize Remote Config Service
-  final remoteConfigService = await RemoteConfigService(storageService).init();
-  Get.put<RemoteConfigService>(remoteConfigService, permanent: true);
-
-  // Initialize Global App Controller
-  final appController = Get.put<AppController>(
-    AppController(),
-    permanent: true,
-  );
-
-  // App open ad when returning from the background (needs Remote Config
-  // and AppController above).
-  AppOpenAdManager.instance.start();
-
-  // Initialize Localization Service from JSON assets
   await LocalizationService.init();
-
-  // Determine initial locale
   final currentLocale = LocalizationService.getLocaleFromLanguage(
-    appController.selectedLanguage.value,
+    storageService.getLanguage(),
   );
 
   runApp(BMIApp(initialLocale: currentLocale));
 }
 
-Future<void> initializeFirebase() async {
-  try {
-    await Firebase.initializeApp();
-    log("Firebase initialized");
-
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-    await RemoteConfig.initialize()
-        .then((value) {
-          log("RemoteConfig initialized: $value");
-        })
-        .catchError((e) {
-          log("Error initializing Firebase Remote Config: $e");
-        });
-    log("Firebase initialization complete");
-  } catch (e) {
-    log("Error initializing Firebase: $e");
+/// iOS only shows the ATT prompt while the app is active; asked any earlier
+/// it returns "not determined" without showing anything.
+Future<void> _waitUntilAppActive() async {
+  if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+    return;
   }
+  final active = Completer<void>();
+  final listener = AppLifecycleListener(
+    onStateChange: (state) {
+      if (state == AppLifecycleState.resumed && !active.isCompleted) {
+        active.complete();
+      }
+    },
+  );
+  await active.future.timeout(const Duration(seconds: 3), onTimeout: () {});
+  listener.dispose();
 }
 
 String getDeviceCountry() {

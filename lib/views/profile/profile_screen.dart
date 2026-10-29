@@ -1,20 +1,18 @@
 import 'dart:io';
 
 import 'package:bmi_calculator/core/constants/app_strings.dart';
-import 'package:bmi_calculator/data/services/logger_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
-import '../widgets/ads/app_open_ad_manager.dart';
+import '../../core/utils/open_url.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
@@ -25,17 +23,6 @@ import '../../core/theme/app_palette.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-
-  void _showInfoDialog(String title, String content) {
-    Get.defaultDialog(
-      title: title,
-      middleText: content,
-      textConfirm: 'OK',
-      confirmTextColor: Colors.white,
-      buttonColor: AppColors.primaryTeal,
-      onConfirm: () => Get.back(),
-    );
-  }
 
   void _openRateUsDialog(BuildContext context) {
     showDialog(context: context, builder: (_) => const RateUsDialog());
@@ -49,21 +36,7 @@ class ProfileScreen extends StatelessWidget {
       path: email,
       query: 'subject=$subject',
     );
-    _launchUrl(emailLaunchUri.toString());
-  }
-
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    try {
-      if (await canLaunchUrl(uri)) {
-        AppOpenAdManager.instance.skipNextResume();
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        AppLogger.e('Could not launch $url');
-      }
-    } catch (e) {
-      AppLogger.e('Error launching $url', e);
-    }
+    openUrl(emailLaunchUri.toString());
   }
 
   void _showEditProfileBottomSheet(
@@ -558,10 +531,7 @@ class ProfileScreen extends StatelessWidget {
                             icon: Icons.shield_outlined,
                             title: 'Privacy Policy',
                             subtitle: 'Read our privacy policy',
-                            onTap: () => _showInfoDialog(
-                              'Privacy Policy',
-                              'Your health data is stored securely on your local device. We respect your privacy and do not sell personal health information.',
-                            ),
+                            onTap: () => openUrl(AppStrings.privacyPolicyUrl),
                           ),
                           Divider(height: 1, color: AppPalette.surfaceMuted),
 
@@ -570,10 +540,7 @@ class ProfileScreen extends StatelessWidget {
                             icon: Icons.description_outlined,
                             title: 'Terms of Use',
                             subtitle: 'Read our terms and conditions',
-                            onTap: () => _showInfoDialog(
-                              'Terms of Use',
-                              'BMI calculations are provided for general informational and wellness tracking purposes only and should not replace professional medical advice.',
-                            ),
+                            onTap: () => openUrl(AppStrings.termsUrl),
                           ),
                           Divider(height: 1, color: AppPalette.surfaceMuted),
 

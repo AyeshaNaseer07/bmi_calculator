@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/utils/open_url.dart';
 import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
@@ -540,11 +542,17 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildFooterLink('Privacy Policy', () {}),
+                          _buildFooterLink(
+                            'Privacy Policy',
+                            () => openUrl(AppStrings.privacyPolicyUrl),
+                          ),
                           _buildFooterDivider(),
                           _buildFooterLink('Restore Purchase', _onRestore),
                           _buildFooterDivider(),
-                          _buildFooterLink('Terms of Use', () {}),
+                          _buildFooterLink(
+                            'Terms of Use',
+                            () => openUrl(AppStrings.termsUrl),
+                          ),
                         ],
                       ),
                     ),
