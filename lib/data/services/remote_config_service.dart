@@ -44,14 +44,6 @@ class RemoteConfigService extends GetxService {
     }
   }
 
-  bool get isHomeNativeAdEnabled {
-    try {
-      return model.value.isHomeNativeAdEnabled;
-    } catch (_) {
-      return true;
-    }
-  }
-
   bool get isLanguageNativeAdEnabled {
     try {
       return model.value.isLanguageNativeAdEnabled;
@@ -71,7 +63,6 @@ class RemoteConfigService extends GetxService {
   String get fullScreenNativeAdId => model.value.fullScreenNativeAdId;
   String get languageNativeAdId => model.value.languageNativeAdId;
   String get onboardingNativeAdId => model.value.onboardingNativeAdId;
-  String get homeNativeAdId => model.value.homeNativeAdId;
 
   bool get isAppOpenAdEnabled {
     try {
@@ -155,7 +146,7 @@ class RemoteConfigService extends GetxService {
           updateWithMap(map);
         }
         log(
-          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, weeklyId="${model.value.weeklyProductId}", yearlyId="${model.value.yearlyProductId}", fullScreenNativeAd=${model.value.fullScreenNativeAd}, homeNativeAd=${model.value.homeNativeAd}, languageNativeAd=${model.value.languageNativeAd}, onboardingNativeAd=${model.value.onboardingNativeAd}, localNotification=${model.value.localNotification}',
+          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, weeklyId="${model.value.weeklyProductId}", yearlyId="${model.value.yearlyProductId}", fullScreenNativeAd=${model.value.fullScreenNativeAd}, languageNativeAd=${model.value.languageNativeAd}, onboardingNativeAd=${model.value.onboardingNativeAd}, localNotification=${model.value.localNotification}',
         );
         return;
       } catch (e) {

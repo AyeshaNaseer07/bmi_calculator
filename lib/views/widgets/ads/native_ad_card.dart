@@ -17,7 +17,7 @@ const double _kDefaultNativeAdHeight = 350;
 
 /// Screens with a native ad card, each switched on/off and given its ad unit
 /// ID from Remote Config.
-enum NativeAdPlacement { language, onboarding, home }
+enum NativeAdPlacement { language, onboarding }
 
 /// AppLovin MAX native ad with media: icon, headline, AD badge + body, media
 /// and a CTA button. Shows a shimmer while loading and nothing on failure.
@@ -61,7 +61,6 @@ class _NativeAdCardState extends State<NativeAdCard> {
       return switch (widget.placement) {
         NativeAdPlacement.language => _config.isLanguageNativeAdEnabled,
         NativeAdPlacement.onboarding => _config.isOnboardingNativeAdEnabled,
-        NativeAdPlacement.home => _config.isHomeNativeAdEnabled,
       };
     } catch (_) {
       return true;
@@ -77,10 +76,6 @@ class _NativeAdCardState extends State<NativeAdCard> {
       NativeAdPlacement.onboarding => (
         _config.onboardingNativeAdId,
         RemoteModel.defaultOnboardingNativeAdId,
-      ),
-      NativeAdPlacement.home => (
-        _config.homeNativeAdId,
-        RemoteModel.defaultHomeNativeAdId,
       ),
     };
     return id.isNotEmpty ? id : fallback;

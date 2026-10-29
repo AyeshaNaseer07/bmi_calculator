@@ -232,8 +232,9 @@ class ProfileScreen extends StatelessWidget {
                                 Text(
                                   tagline,
                                   style: TextStyle(
-                                    color: AppPalette.textPrimary
-                                        .withValues(alpha: 0.82),
+                                    color: AppPalette.textPrimary.withValues(
+                                      alpha: 0.82,
+                                    ),
                                     fontSize: 11.sp,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w400,

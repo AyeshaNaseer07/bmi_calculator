@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/bmi_controller.dart';
 import '../../core/routes/app_routes.dart';
 import '../history/history_screen.dart';
 import '../home/home_screen.dart';
@@ -37,19 +36,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       final currentIndex = mainTabIndex.value;
       return Scaffold(
         body: IndexedStack(index: currentIndex, children: _tabs),
-        bottomNavigationBar: Obx(() {
-          final bmi = Get.find<BMIController>();
-          final noRecord =
-              bmi.bmiHistory.isEmpty || bmi.latestRecord.value == null;
-          if (currentIndex == 0 && noRecord && homeAdFailed.value) {
-            return const SizedBox.shrink();
-          }
-          return MainBottomNavBar(
-            currentIndex: currentIndex,
-            onTap: (index) => mainTabIndex.value = index,
-            onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
-          );
-        }),
+        bottomNavigationBar: MainBottomNavBar(
+          currentIndex: currentIndex,
+          onTap: (index) => mainTabIndex.value = index,
+          onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
+        ),
       );
     });
   }

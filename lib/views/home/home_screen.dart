@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bmi_calculator/views/insights/insight_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,16 +16,12 @@ import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
-import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
-import '../main/main_tab.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../../core/theme/app_palette.dart';
-
-final RxBool homeAdFailed = false.obs;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,8 +31,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  RxBool get _adFailed => homeAdFailed;
-
   @override
   void initState() {
     super.initState();
@@ -78,8 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       bgImage = AppAssets.homeAvatar;
                     }
-                  } else if (_adFailed.value) {
-                    bgImage = AppAssets.homeAvatar;
                   } else if (profile.displayName.isNotEmpty) {
                     if (profile.gender == Gender.female) {
                       bgImage = AppAssets.homeImgFemale;
@@ -113,11 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 30.h),
                         Obx(() {
                           final hasData = bmiController.bmiHistory.isNotEmpty;
-                          return _buildGreeting(
-                            hasData,
-                            profileController,
-                            plain: !hasData && _adFailed.value,
-                          );
+                          return _buildGreeting(hasData, profileController);
                         }),
                         SizedBox(height: 20.h),
                       ],
@@ -131,68 +118,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       final latest = bmiController.latestRecord.value;
 
                       if (!hasData || latest == null) {
-                        if (_adFailed.value) {
-                          return Padding(
-                            padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width - 36.w,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      _buildEmptyBmiCard(showLabels: false),
-                                      SizedBox(height: 18.h),
-                                      _buildFeaturesSection(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-
+                        final isPremium =
+                            Get.find<AppController>().isPremium.value;
                         return Padding(
-                          padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 10.h),
+                          // Bottom clears the nav bar's raised + button.
+                          padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 24.h),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                flex: 58,
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width -
-                                          36.w,
-                                      child: _buildEmptyBmiCard(),
-                                    ),
+                              // Shrinks on small screens; the premium card
+                              // follows directly under it.
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width -
+                                        36.w,
+                                    child: _buildEmptyBmiCard(),
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 14.h),
-                              Expanded(
-                                flex: 42,
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    return _HomeNativeAdStrip(
-                                      height: constraints.maxHeight,
-                                      onAvailability: (ok) {
-                                        if (!ok && mounted) {
-                                          _adFailed.value = true;
-                                        }
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
+                              if (!isPremium) ...[
+                                SizedBox(height: 16.h),
+                                const _RemoveAdsCard(),
+                              ],
                             ],
                           ),
                         );
@@ -238,137 +187,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                   ),
                 ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFeaturesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Features',
-          style: TextStyle(
-            color: kInk,
-            fontSize: 20.sp,
-            fontFamily: 'Plus Jakarta Sans',
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        SizedBox(height: 12.h),
-        Row(
-          children: [
-            Expanded(
-              child: _featureCard(
-                AppAssets.homeIcon1,
-                'BMI Calculator',
-                'Calculate your BMI',
-                AppRoutes.bmiCalculator,
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: _featureCard(
-                AppAssets.homeIcon2,
-                'Weight Tracker',
-                'Record your weight',
-                AppRoutes.weightTracking,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 12.h),
-        Row(
-          children: [
-            Expanded(
-              child: _featureCard(
-                AppAssets.icProfile,
-                'Profile',
-                'Manage your details',
-                '',
-                onTap: () => mainTabIndex.value = kProfileTab,
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: _featureCard(
-                AppAssets.homeIcon4,
-                'History',
-                'Monitor your journey',
-                AppRoutes.history,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _featureCard(
-    String iconAsset,
-    String title,
-    String subtitle,
-    String route, {
-    VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap ?? () => Get.toNamed(route),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(12.w, 12.h, 10.w, 12.h),
-        decoration: ShapeDecoration(
-          color: AppPalette.surface,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(width: 0.50, color: const Color(0xFF33D2AB)),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          shadows: [
-            BoxShadow(
-              color: AppPalette.shadow(const Color(0x4C33D2AB)),
-              blurRadius: 4.70,
-              offset: Offset(0, 2),
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(iconAsset, width: 40.w, height: 40.w),
-                Icon(Icons.chevron_right_rounded, color: kGreen, size: 20.sp),
-              ],
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: AppPalette.textPrimary,
-                fontSize: 14,
-                fontFamily: 'Instrument Sans',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              subtitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: const Color(0xFF7A8B94),
-                fontSize: 11,
-                fontFamily: 'Instrument Sans',
-                fontWeight: FontWeight.w400,
-                height: 1.30,
               ),
             ),
           ],
@@ -440,11 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGreeting(
-    bool hasData,
-    ProfileController profileController, {
-    bool plain = false,
-  }) {
+  Widget _buildGreeting(bool hasData, ProfileController profileController) {
     final userName = profileController.userProfile.value.displayName;
     final greeting = userName.isNotEmpty ? 'Hello, $userName' : 'Hello, Guest';
 
@@ -460,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: plain ? kInk : const Color(0xFF63C9B7),
+                  color: const Color(0xFF63C9B7),
                   fontSize: 24,
                   fontFamily: 'Instrument Sans',
                   fontWeight: FontWeight.w700,
@@ -913,44 +727,206 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Full-width light-grey strip holding the home native ad (hidden if no ad).
-class _HomeNativeAdStrip extends StatefulWidget {
-  final ValueChanged<bool> onAvailability;
-  final double height;
-  const _HomeNativeAdStrip({
-    required this.onAvailability,
-    required this.height,
-  });
+/// Shown under the empty BMI card for free users; opens the paywall.
+class _RemoveAdsCard extends StatelessWidget {
+  const _RemoveAdsCard();
 
-  @override
-  State<_HomeNativeAdStrip> createState() => _HomeNativeAdStripState();
-}
-
-class _HomeNativeAdStripState extends State<_HomeNativeAdStrip> {
-  bool _available = true;
+  static const Color _gold = Color(0xFFFFC93C);
+  static const Color _goldDeep = Color(0xFFFFA800);
+  static const Color _onGold = Color(0xFF3D2A00);
 
   @override
   Widget build(BuildContext context) {
-    return Offstage(
-      offstage: !_available,
-      child: Container(
-        width: double.infinity,
-        color: AppPalette.surfaceMuted,
-        padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
-        child: NativeAdCard(
-          placement: NativeAdPlacement.home,
-          height: widget.height,
-          backgroundColor: Colors.transparent,
-          onAdAvailabilityChanged: (available) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!mounted) return;
-              if (_available != available) {
-                setState(() => _available = available);
-              }
-              widget.onAvailability(available);
-            });
-          },
+    final radius = BorderRadius.circular(24.r);
+    return Semantics(
+      button: true,
+      label: 'Remove annoying ads. Upgrade to Premium',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Get.toNamed(AppRoutes.paywall),
+        child: Container(
+          width: double.infinity,
+          height: 200.h,
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF06302B), Color(0xFF0B5A52), Color(0xFF0F766E)],
+            ),
+            border: Border.all(color: _gold.withValues(alpha: 0.55)),
+            boxShadow: [
+              BoxShadow(
+                color: AppPalette.shadow(
+                  const Color(0xFF06302B).withValues(alpha: 0.35),
+                ),
+                blurRadius: 18.r,
+                offset: Offset(0, 8.h),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: radius,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: -40.w,
+                  top: -40.w,
+                  child: _glow(150.w, _gold.withValues(alpha: 0.20)),
+                ),
+                Positioned(
+                  right: -30.w,
+                  bottom: -50.w,
+                  child: _glow(150.w, Colors.white.withValues(alpha: 0.07)),
+                ),
+                // Large faded crown watermark.
+                Positioned(
+                  right: -14.w,
+                  top: -6.h,
+                  child: Transform.rotate(
+                    angle: 0.25,
+                    child: Opacity(
+                      opacity: 0.16,
+                      child: Image.asset(AppAssets.crown, width: 110.w),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 110.w,
+                  top: 18.h,
+                  child: Icon(
+                    Icons.auto_awesome,
+                    size: 14.sp,
+                    color: _gold.withValues(alpha: 0.7),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 46.w,
+                            height: 46.w,
+                            padding: EdgeInsets.all(9.w),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withValues(alpha: 0.10),
+                              border: Border.all(
+                                color: _gold.withValues(alpha: 0.6),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Image.asset(AppAssets.crown),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'PREMIUM',
+                                  style: TextStyle(
+                                    color: _gold,
+                                    fontSize: 10.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.4,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                // Scales down rather than truncating.
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Remove Annoying Ads',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19.sp,
+                                      fontFamily: 'Instrument Sans',
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        'Enjoy a faster, distraction-free experience. Track your BMI and weight with no interruptions, plus detailed reports and smart insights.',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.82),
+                          fontSize: 12.sp,
+                          fontFamily: 'Instrument Sans',
+                          height: 1.35,
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        width: double.infinity,
+                        height: 44.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(22.r),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0xFFFFE08A), _gold, _goldDeep],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _goldDeep.withValues(alpha: 0.4),
+                              blurRadius: 10.r,
+                              offset: Offset(0, 3.h),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Upgrade to Premium',
+                              style: TextStyle(
+                                color: _onGold,
+                                fontSize: 14.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            SizedBox(width: 2.w),
+                            Icon(
+                              Icons.chevron_right_rounded,
+                              color: _onGold,
+                              size: 20.sp,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _glow(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(colors: [color, color.withValues(alpha: 0)]),
       ),
     );
   }

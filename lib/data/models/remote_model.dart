@@ -7,9 +7,7 @@ class RemoteModel {
   int? _crossDelay;
   String? _weeklyProductId;
   String? _yearlyProductId;
-  String? _homeNativeAdId;
   String? _fullScreenNativeAd;
-  String? _homeNativeAd;
   String? _languageNativeAd;
   String? _onboardingNativeAd;
   String? _fullScreenNativeAdId;
@@ -35,9 +33,6 @@ class RemoteModel {
   static const String defaultLanguageNativeAdId = '18189ba9818ddf0a';
   static const String defaultOnboardingNativeAdId = '99f2f2b2c1b0ca6a';
 
-  /// Home card: no unit of its own yet, so it shares the onboarding one.
-  static const String defaultHomeNativeAdId = defaultOnboardingNativeAdId;
-
   String get firstTimeOnboarding => _firstTimeOnboarding ?? 'on';
   set firstTimeOnboarding(String value) => _firstTimeOnboarding = value;
 
@@ -58,14 +53,8 @@ class RemoteModel {
       _yearlyProductId ?? 'com.yearly.bmi.calculator.app';
   set yearlyProductId(String value) => _yearlyProductId = value;
 
-  String get homeNativeAdId => _homeNativeAdId ?? defaultHomeNativeAdId;
-  set homeNativeAdId(String value) => _homeNativeAdId = value;
-
   String get fullScreenNativeAd => _fullScreenNativeAd ?? 'on';
   set fullScreenNativeAd(String value) => _fullScreenNativeAd = value;
-
-  String get homeNativeAd => _homeNativeAd ?? 'on';
-  set homeNativeAd(String value) => _homeNativeAd = value;
 
   String get languageNativeAd => _languageNativeAd ?? 'on';
   set languageNativeAd(String value) => _languageNativeAd = value;
@@ -124,9 +113,7 @@ class RemoteModel {
     this._crossDelay,
     this._weeklyProductId,
     this._yearlyProductId,
-    this._homeNativeAdId,
     this._fullScreenNativeAd,
-    this._homeNativeAd,
     this._languageNativeAd,
     this._onboardingNativeAd,
     this._fullScreenNativeAdId,
@@ -156,7 +143,6 @@ class RemoteModel {
 
   /// App open ad shown when returning to the app from the background.
   bool get isAppOpenAdEnabled => _isOn(appOpenAd);
-  bool get isHomeNativeAdEnabled => _isOn(homeNativeAd);
   bool get isLanguageNativeAdEnabled => _isOn(languageNativeAd);
   bool get isOnboardingNativeAdEnabled => _isOn(onboardingNativeAd);
 
@@ -236,14 +222,6 @@ class RemoteModel {
               remoteConfig['splash_yearly_product_id'] ??
               remoteConfig['yearlyProductId'],
           'com.yearly.bmi.calculator.app',
-        ),
-        homeNativeAd: _parseString(
-          remoteConfig['home_native_ad'] ?? remoteConfig['homeNativeAd'],
-          'on',
-        ),
-        homeNativeAdId: _parseString(
-          remoteConfig['home_native_ad_id'] ?? remoteConfig['homeNativeAdId'],
-          defaultHomeNativeAdId,
         ),
         languageNativeAd: _parseString(
           remoteConfig['language_native_ad'] ??
@@ -345,8 +323,6 @@ class RemoteModel {
       crossDelay: 3,
       weeklyProductId: 'com.weekly.bmi.calculator.app',
       yearlyProductId: 'com.yearly.bmi.calculator.app',
-      homeNativeAd: 'on',
-      homeNativeAdId: defaultHomeNativeAdId,
       languageNativeAd: 'on',
       onboardingNativeAd: 'on',
       fullScreenNativeAd: 'on',
@@ -374,8 +350,6 @@ class RemoteModel {
       'cross_delay': crossDelay,
       'weekly_product_id': weeklyProductId,
       'yearly_product_id': yearlyProductId,
-      'home_native_ad': homeNativeAd,
-      'home_native_ad_id': homeNativeAdId,
       'language_native_ad': languageNativeAd,
       'onboarding_native_ad': onboardingNativeAd,
       'full_screen_native_ad': fullScreenNativeAd,
