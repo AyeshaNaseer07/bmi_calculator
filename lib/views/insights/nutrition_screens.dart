@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../onboarding/soft_paywall_screen.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
 
@@ -110,16 +112,15 @@ class EatBalancedMealsScreen extends StatelessWidget {
             // Always marked as a Pro feature, premium or not.
             pro: true,
             onTap: () {
-              Get.to(() => const DailyMealPlanScreen());
-              // if (Get.find<AppController>().isPremium.value) {
-              //   Get.to(() => const DailyMealPlanScreen());
-              // } else {
-              //   Get.to(
-              //     () => SoftPaywallScreen(
-              //       onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
-              //     ),
-              //   );
-              // }
+              if (Get.find<AppController>().isPremium.value) {
+                Get.to(() => const DailyMealPlanScreen());
+              } else {
+                Get.to(
+                  () => SoftPaywallScreen(
+                    onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
+                  ),
+                );
+              }
             },
           ),
         ],

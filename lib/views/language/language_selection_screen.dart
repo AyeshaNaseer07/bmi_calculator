@@ -13,6 +13,7 @@ import '../../data/services/localization_service.dart';
 import '../../data/services/remote_config_service.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
+import '../../core/theme/app_palette.dart';
 
 enum _HandPhase { tapping, movingToDone, tappingDone, hidden }
 
@@ -159,7 +160,16 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   static const Color _kMint = Color(0xFFC9F2E5);
   static const Color _kCheckGreen = Color(0xFF1BA672);
-  static const Color _kAdBackground = Color(0xFFF7F7F7);
+
+  // Light values are the original design; dark ones follow [AppPalette].
+  Color get _doneChipColor => AppPalette.isDark ? _kCheckGreen : _kMint;
+  Color get _doneTextColor => AppPalette.isDark ? Colors.white : Colors.black;
+  Color get _radioColor =>
+      AppPalette.isDark ? AppPalette.surfaceMintDeep : _kMint;
+  Color get _radioBorder =>
+      AppPalette.isDark ? AppPalette.mintBorder : const Color(0xFFB3E6D3);
+  Color get _adBackground =>
+      AppPalette.isDark ? AppPalette.surfaceMuted : const Color(0xFFF7F7F7);
 
   Widget _buildDoneChip() {
     return IgnorePointer(
@@ -173,13 +183,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: _kMint,
+              color: _doneChipColor,
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
               'done'.tr,
               style: TextStyle(
-                color: Colors.black,
+                color: _doneTextColor,
                 fontSize: 16,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
@@ -198,7 +208,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.black12, width: 0.5),
+        border: Border.all(
+          color: AppPalette.isDark ? Colors.white12 : Colors.black12,
+          width: 0.5,
+        ),
       ),
       child: ClipOval(
         child: OverflowBox(
@@ -221,10 +234,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       height: 22.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isSelected ? _kCheckGreen : _kMint,
-        border: isSelected
-            ? null
-            : Border.all(color: const Color(0xFFB3E6D3), width: 1),
+        color: isSelected ? _kCheckGreen : _radioColor,
+        border: isSelected ? null : Border.all(color: _radioBorder, width: 1),
       ),
       child: isSelected
           ? Icon(CupertinoIcons.checkmark_alt, size: 13.sp, color: Colors.white)
@@ -259,7 +270,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                               Text(
                                 'languages'.tr,
                                 style: TextStyle(
-                                  color: const Color(0xFF111827),
+                                  color: AppPalette.textPrimary,
                                   fontSize: 24,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
@@ -269,7 +280,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                               Text(
                                 'select_lang_subtitle'.tr,
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: AppPalette.textBody,
                                   fontSize: 13,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w400,
@@ -320,7 +331,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                           horizontal: 14.w,
                                         ),
                                         decoration: ShapeDecoration(
-                                          color: Colors.white,
+                                          color: AppPalette.surface,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
                                               width: 0.25,
@@ -332,7 +343,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                           ),
                                           shadows: [
                                             BoxShadow(
-                                              color: Color(0x1633D2AB),
+                                              color: AppPalette.shadow(
+                                                const Color(0x1633D2AB),
+                                              ),
                                               blurRadius: 6.80,
                                               offset: Offset(0, 3),
                                               spreadRadius: 0,
@@ -351,9 +364,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                                 style: TextStyle(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w500,
-                                                  color: const Color(
-                                                    0xFF111827,
-                                                  ),
+                                                  color: AppPalette.textPrimary,
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
@@ -427,7 +438,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
         bottomNavigationBar: _bottomAdAvailable
             ? Container(
                 width: double.infinity,
-                color: _kAdBackground,
+                color: _adBackground,
                 child: SafeArea(
                   top: false,
                   child: Padding(

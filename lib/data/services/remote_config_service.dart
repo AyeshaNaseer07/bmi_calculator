@@ -36,6 +36,14 @@ class RemoteConfigService extends GetxService {
   String get weeklyProductId => model.value.weeklyProductId;
   String get yearlyProductId => model.value.yearlyProductId;
 
+  bool get isSoftPaywallAccessEnabled {
+    try {
+      return model.value.isSoftPaywallAccessEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
   bool get isFullScreenNativeAdEnabled {
     try {
       return model.value.isFullScreenNativeAdEnabled;

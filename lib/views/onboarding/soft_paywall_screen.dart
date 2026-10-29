@@ -81,6 +81,15 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     }
   }
 
+  /// Cross icon: `soft_paywall_access` decides whether the feature still
+  /// opens or the user just goes back.
+  void _close() {
+    Get.back();
+    if (_app.remoteConfigService.isSoftPaywallAccessEnabled) {
+      widget.onUnlocked?.call();
+    }
+  }
+
   Future<void> _restore() async {
     if (_loading) return;
     setState(() => _loading = true);
@@ -126,7 +135,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
-                      onTap: Get.back,
+                      onTap: _close,
                       child: Container(
                         width: 28.w,
                         height: 28.w,

@@ -23,6 +23,7 @@ class RemoteModel {
   String? _calculatorInterAdId;
   String? _localNotification;
   String? _notificationFrequency;
+  String? _softPaywallAccess;
 
   // AppLovin MAX ad units; Remote Config overrides each one.
   static const String defaultAppOpenAdId = '8912e79bed7e47df';
@@ -106,6 +107,9 @@ class RemoteModel {
   String get notificationFrequency => _notificationFrequency ?? 'd';
   set notificationFrequency(String value) => _notificationFrequency = value;
 
+  String get softPaywallAccess => _softPaywallAccess ?? 'true';
+  set softPaywallAccess(String value) => _softPaywallAccess = value;
+
   RemoteModel({
     this._firstTimeOnboarding,
     this._secondTimeOnboarding,
@@ -129,6 +133,7 @@ class RemoteModel {
     this._calculatorInterAdId,
     this._localNotification,
     this._notificationFrequency,
+    this._softPaywallAccess,
   });
 
   bool get isFirstTimeOnboarding => _isOn(firstTimeOnboarding);
@@ -151,6 +156,9 @@ class RemoteModel {
   bool get isCalculatorInterAdEnabled => _isOn(calculatorInterAd);
 
   bool get isLocalNotificationEnabled => _isOn(localNotification);
+
+  /// Closing the 1 Week Meal Plan soft paywall still opens the plan.
+  bool get isSoftPaywallAccessEnabled => _isOn(softPaywallAccess);
 
   // Compatibility aliases
   String get splashYearlyProductId => yearlyProductId;
@@ -305,6 +313,11 @@ class RemoteModel {
               remoteConfig['frequency'],
           'd',
         ),
+        softPaywallAccess: _parseString(
+          remoteConfig['soft_paywall_access'] ??
+              remoteConfig['softPaywallAccess'],
+          'true',
+        ),
       );
     } catch (e, stackTrace) {
       if (kDebugMode || kProfileMode) {
@@ -339,6 +352,7 @@ class RemoteModel {
       calculatorInterAdId: defaultCalculatorInterAdId,
       localNotification: 'on',
       notificationFrequency: 'd',
+      softPaywallAccess: 'true',
     );
   }
 
@@ -366,6 +380,7 @@ class RemoteModel {
       'calculator_inter_ad_id': calculatorInterAdId,
       'local_notification': localNotification,
       'show_notification_frequency': notificationFrequency,
+      'soft_paywall_access': softPaywallAccess,
     };
   }
 }
