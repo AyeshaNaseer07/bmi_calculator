@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -588,13 +589,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                 child: price.isEmpty
                     ? Center(
                         key: const ValueKey('loading'),
-                        child: SizedBox(
-                          width: 20.w,
-                          height: 20.w,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2.4,
-                            color: Color(0xFF09B389),
-                          ),
+                        child: const CupertinoActivityIndicator(
+                          color: Color(0xFF09B389),
                         ),
                       )
                     : FittedBox(

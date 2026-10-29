@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -870,45 +871,7 @@ class _RemoveAdsCard extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      Container(
-                        width: double.infinity,
-                        height: 44.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(22.r),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Color(0xFFFFE08A), _gold, _goldDeep],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: _goldDeep.withValues(alpha: 0.4),
-                              blurRadius: 10.r,
-                              offset: Offset(0, 3.h),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Upgrade to Premium',
-                              style: TextStyle(
-                                color: _onGold,
-                                fontSize: 14.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            SizedBox(width: 2.w),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              color: _onGold,
-                              size: 20.sp,
-                            ),
-                          ],
-                        ),
-                      ),
+                      const _UpgradeButton(),
                     ],
                   ),
                 ),
@@ -928,6 +891,143 @@ class _RemoveAdsCard extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: RadialGradient(colors: [color, color.withValues(alpha: 0)]),
       ),
+    );
+  }
+}
+
+/// Gold CTA that gently pulses and has a shine sweeping across it.
+class _UpgradeButton extends StatefulWidget {
+  const _UpgradeButton();
+
+  @override
+  State<_UpgradeButton> createState() => _UpgradeButtonState();
+}
+
+class _UpgradeButtonState extends State<_UpgradeButton>
+    with SingleTickerProviderStateMixin {
+  static const Color _gold = _RemoveAdsCard._gold;
+  static const Color _goldDeep = _RemoveAdsCard._goldDeep;
+  static const Color _onGold = _RemoveAdsCard._onGold;
+
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2400),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Honour the system "reduce motion" setting.
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.stop();
+      _controller.value = 0;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(22.r);
+    final label = Text(
+      'Upgrade to Premium',
+      style: TextStyle(
+        color: _onGold,
+        fontSize: 14.sp,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+      ),
+    );
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        final t = _controller.value;
+        // 0 → 1 → 0 once per cycle.
+        final pulse = 0.5 - 0.5 * math.cos(t * 2 * math.pi);
+        // Shine crosses during the first half, then rests.
+        final shine = (t / 0.5).clamp(0.0, 1.0);
+
+        return Transform.scale(
+          scale: 1 + 0.03 * pulse,
+          child: Container(
+            width: double.infinity,
+            height: 46.h,
+            decoration: BoxDecoration(
+              borderRadius: radius,
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFFFE08A), _gold, _goldDeep],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _goldDeep.withValues(alpha: 0.3 + 0.3 * pulse),
+                  blurRadius: (8 + 8 * pulse).r,
+                  offset: Offset(0, 3.h),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: radius,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final width = constraints.maxWidth;
+                  final bandWidth = width * 0.35;
+                  return Stack(
+                    children: [
+                      if (shine < 1)
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          width: bandWidth,
+                          left: -bandWidth + (width + bandWidth) * shine,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: const Alignment(-1, -0.4),
+                                end: const Alignment(1, 0.4),
+                                colors: [
+                                  Colors.white.withValues(alpha: 0),
+                                  Colors.white.withValues(alpha: 0.6),
+                                  Colors.white.withValues(alpha: 0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            label,
+                            SizedBox(width: 2.w),
+                            // Arrow nudges forward with the pulse.
+                            Transform.translate(
+                              offset: Offset(3.w * pulse, 0),
+                              child: Icon(
+                                Icons.chevron_right_rounded,
+                                color: _onGold,
+                                size: 20.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

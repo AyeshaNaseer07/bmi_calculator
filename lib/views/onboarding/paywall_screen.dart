@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -711,13 +712,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   _priceSlot(
                     height: 30.sp,
                     loading: price.isEmpty,
-                    placeholder: SizedBox(
-                      width: 20.w,
-                      height: 20.w,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2.4,
-                        color: Color(0xFF09B389),
-                      ),
+                    placeholder: const CupertinoActivityIndicator(
+                      color: Color(0xFF09B389),
                     ),
                     child: Text(
                       price,

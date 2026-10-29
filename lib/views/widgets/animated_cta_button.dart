@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -255,13 +256,9 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
                   if (widget.isLoading)
                     Positioned.fill(
                       child: Center(
-                        child: SizedBox(
-                          width: 22.w,
-                          height: 22.w,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2.4,
-                            color: Colors.white,
-                          ),
+                        child: CupertinoActivityIndicator(
+                          color: Colors.white,
+                          radius: 11.w,
                         ),
                       ),
                     ),
