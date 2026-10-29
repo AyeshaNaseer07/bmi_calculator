@@ -1,6 +1,5 @@
 import Flutter
 import UIKit
-import google_mobile_ads
 import UserNotifications
 
 @main
@@ -12,20 +11,6 @@ import UserNotifications
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
-
-    let mediumAdFactory = MediumNativeAdFactory()
-    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
-      self,
-      factoryId: "mediumNativeAd",
-      nativeAdFactory: mediumAdFactory
-    )
-
-    let fullScreenAdFactory = FullScreenNativeAdFactory()
-    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
-      self,
-      factoryId: "fullScreenNativeAd",
-      nativeAdFactory: fullScreenAdFactory
-    )
 
     if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
       SceneDelegate.pendingShortcutType = shortcutItem.type
@@ -46,19 +31,5 @@ import UserNotifications
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
-
-    let mediumAdFactory = MediumNativeAdFactory()
-    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
-      engineBridge.pluginRegistry,
-      factoryId: "mediumNativeAd",
-      nativeAdFactory: mediumAdFactory
-    )
-
-    let fullScreenAdFactory = FullScreenNativeAdFactory()
-    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
-      engineBridge.pluginRegistry,
-      factoryId: "fullScreenNativeAd",
-      nativeAdFactory: fullScreenAdFactory
-    )
   }
 }

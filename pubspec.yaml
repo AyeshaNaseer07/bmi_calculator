@@ -35,6 +35,7 @@ dependencies:
   firebase_messaging: ^16.7.0
   flutter_timezone: ^5.1.0
   lottie: ^3.6.1
+  applovin_max: ^4.6.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -6,6 +6,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 AppsflyerSdk? appsflyerSdk;
 
+const String appLovinSdkKey =
+    '8DN53TfgoAicQHzP1P2nOK18ast9QwoZ7AeBkJtVUa7ws5KtUMdtgf0FVuOxoBUvM854SyaxWirMoAEHWt8CW9';
+
 Future<void> showCMP() async {
   final completer = Completer<void>();
   try {

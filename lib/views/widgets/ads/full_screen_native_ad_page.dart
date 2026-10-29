@@ -1,20 +1,25 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../../controllers/app_controller.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
 import 'ad_logger.dart';
-import 'ad_preloader.dart';
 import 'ad_shimmer.dart';
 import 'app_open_ad_manager.dart';
+import 'applovin_sdk.dart';
 
+/// Full-screen AppLovin MAX native ad shown between onboarding pages.
+///
+/// Layout (from the 375 x 812 design): white header with the AD badge (the
+/// countdown / close control is drawn on the same row), media filling the
+/// middle at its own aspect ratio, then a centered 80pt icon, star rating,
+/// headline, body and a gradient CTA pill above the bottom safe area.
 class FullScreenNativeAdPage extends StatefulWidget {
   final String? adUnitId;
   final VoidCallback onNext;
@@ -32,9 +37,13 @@ class FullScreenNativeAdPage extends StatefulWidget {
 }
 
 class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
-  NativeAd? _nativeAd;
+  static const double _defaultMediaAspectRatio = 16 / 9;
+
+  bool _sdkReady = false;
   bool _isLoaded = false;
   bool _isFailed = false;
+  double _mediaAspectRatio = _defaultMediaAspectRatio;
+  bool _hasStarRating = false;
 
   // Close (X) button only appears after this many seconds; until then a
   // countdown circle is shown and swiping away this page is disabled — the
@@ -72,9 +81,7 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
     if (remoteModel.fullScreenNativeAdId.isNotEmpty) {
       return remoteModel.fullScreenNativeAdId;
     }
-    return Platform.isIOS
-        ? 'ca-app-pub-3940256099942544/3986624511'
-        : 'ca-app-pub-3940256099942544/2247696110';
+    return RemoteModel.defaultFullScreenNativeAdId;
   }
 
   @override
@@ -112,133 +119,42 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
     });
   }
 
-  /// Uses the ad preloaded on splash, if there is one.
-  bool _tryUsePreloaded() {
-    final pre = AdPreloader.instance.claim(AdSlots.fullScreen);
-    if (pre == null) return false;
-
-    if (pre.failed) {
-      _isFailed = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _advance();
-      });
-      return true;
-    }
-    _nativeAd = pre.ad;
-    if (pre.loaded) {
-      _isLoaded = true;
-    } else {
-      pre.onDone = (ok) {
-        if (!mounted) return;
-        setState(() {
-          _isLoaded = ok;
-          _isFailed = !ok;
-          if (!ok) _nativeAd = null;
-        });
-        if (!ok) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _advance();
-          });
-        }
-      };
-    }
-    return true;
+  /// No ad to show — don't leave the user staring at a blank screen waiting
+  /// out the close-button countdown; move on now.
+  void _fail() {
+    if (!mounted) return;
+    setState(() => _isFailed = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _advance();
+    });
   }
 
   void _loadAd() {
     if (!_isAdsEnabled) {
       _isFailed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _advance();
-        }
+        if (mounted) _advance();
       });
       return;
     }
-    if (_tryUsePreloaded()) return;
-    final adUnitId = _effectiveAdUnitId;
-    AdLogHelper.logRequest(
-      tag: 'FullScreenNativeAdPage',
-      adUnitId: adUnitId,
-      factoryId: 'fullScreenNativeAd',
-    );
-
-    _nativeAd = NativeAd(
-      adUnitId: adUnitId,
-      factoryId: 'fullScreenNativeAd',
-      request: const AdRequest(),
-      listener: NativeAdListener(
-        onAdLoaded: (ad) {
-          AdLogHelper.logLoaded(
-            tag: 'FullScreenNativeAdPage',
-            ad: ad as NativeAd,
-          );
-          if (!mounted) return;
-          setState(() {
-            _isLoaded = true;
-            _isFailed = false;
-          });
-        },
-        onAdFailedToLoad: (ad, error) {
-          AdLogHelper.logFailed(
-            tag: 'FullScreenNativeAdPage',
-            ad: ad as NativeAd,
-            error: error,
-          );
-          ad.dispose();
-          if (!mounted) return;
-          setState(() {
-            _isLoaded = false;
-            _isFailed = true;
-          });
-          // No ad to show — don't leave the user staring at a blank/black
-          // screen waiting out the close-button countdown; move on now.
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _advance();
-          });
-        },
-        onAdOpened: (ad) {
-          debugPrint(
-            '👀 [FullScreenNativeAdPage] onAdOpened (user opened ad overlay/content)',
-          );
-        },
-        onAdClosed: (ad) {
-          debugPrint(
-            '🔒 [FullScreenNativeAdPage] onAdClosed (user closed ad overlay/content)',
-          );
-        },
-        onAdImpression: (ad) {
-          debugPrint('👁️ [FullScreenNativeAdPage] onAdImpression logged');
-        },
-        onAdClicked: (ad) {
-          debugPrint('👆 [FullScreenNativeAdPage] onAdClicked');
-          AppOpenAdManager.instance.skipNextResume();
-        },
-        onPaidEvent: (ad, valueMicros, precision, currencyCode) {
-          debugPrint(
-            '💰 [FullScreenNativeAdPage] onPaidEvent: $valueMicros $currencyCode',
-          );
-          logAdRevenue(
-            adNetwork: 'AdMob',
-            revenue: valueMicros,
-            currency: currencyCode,
-            adFormat: 'native',
-            adUnitId: ad.adUnitId,
-            mediationNetwork: 'GoogleAdMob',
-            adType: 'FullScreenNativeAd',
-          );
-        },
-      ),
-    );
-
-    _nativeAd?.load();
+    AppLovinSdk.ready.then((ready) {
+      if (!mounted) return;
+      if (!ready) {
+        _fail();
+        return;
+      }
+      AdLogHelper.logRequest(
+        tag: 'FullScreenNativeAdPage',
+        adUnitId: _effectiveAdUnitId,
+      );
+      setState(() => _sdkReady = true);
+    });
   }
 
   @override
   void dispose() {
     _countdownTimer?.cancel();
     _safetyTimer?.cancel();
-    _nativeAd?.dispose();
     super.dispose();
   }
 
@@ -251,15 +167,47 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Ad or Shimmer View
-          Positioned.fill(
-            child: _isLoaded && _nativeAd != null && !_isFailed
-                ? AdWidget(
-                    key: ValueKey('full_screen_ad_${_nativeAd.hashCode}'),
-                    ad: _nativeAd!,
-                  )
-                : const FullScreenNativeAdShimmer(),
-          ),
+          if (_sdkReady && !_isFailed)
+            Positioned.fill(
+              child: MaxNativeAdView(
+                adUnitId: _effectiveAdUnitId,
+                placement: 'full_screen_native',
+                listener: NativeAdListener(
+                  onAdLoadedCallback: (ad) {
+                    AdLogHelper.logLoaded(
+                      tag: 'FullScreenNativeAdPage',
+                      ad: ad,
+                    );
+                    if (!mounted) return;
+                    final ratio = ad.nativeAd?.mediaContentAspectRatio;
+                    final rating = ad.nativeAd?.starRating;
+                    setState(() {
+                      _isLoaded = true;
+                      if (ratio != null && ratio > 0) _mediaAspectRatio = ratio;
+                      // Only show a rating the advertiser actually supplied.
+                      _hasStarRating = rating != null && rating > 0;
+                    });
+                  },
+                  onAdLoadFailedCallback: (adUnitId, error) {
+                    AdLogHelper.logFailed(
+                      tag: 'FullScreenNativeAdPage',
+                      adUnitId: adUnitId,
+                      error: error,
+                    );
+                    _fail();
+                  },
+                  onAdClickedCallback: (_) {
+                    debugPrint('👆 [FullScreenNativeAdPage] onAdClicked');
+                    AppOpenAdManager.instance.skipNextResume();
+                  },
+                  onAdRevenuePaidCallback: (ad) =>
+                      logMaxAdRevenue(ad, adType: 'FullScreenNativeAd'),
+                ),
+                child: _buildAssetViews(context),
+              ),
+            ),
+          if (!_isLoaded)
+            const Positioned.fill(child: FullScreenNativeAdShimmer()),
 
           Positioned(
             top: math.max(MediaQuery.of(context).padding.top, 20) + 16,
@@ -272,6 +220,134 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
                     child: const _CloseBadge(),
                   ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAssetViews(BuildContext context) {
+    final padding = MediaQuery.of(context).padding;
+    return ColoredBox(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(height: math.max(padding.top, 20)),
+          // Header: AD badge (countdown / close sits on this row too).
+          SizedBox(
+            height: 52,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, top: 21),
+                child: Container(
+                  width: 36,
+                  height: 23,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF26F1A5),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: const Text(
+                    'AD',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Stack(
+              children: [
+                Center(
+                  child: AspectRatio(
+                    aspectRatio: _mediaAspectRatio,
+                    child: const MaxNativeAdMediaView(),
+                  ),
+                ),
+                const Positioned(
+                  top: 4,
+                  right: 4,
+                  child: MaxNativeAdOptionsView(width: 20, height: 20),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 9),
+          Center(
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF6F6F6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: const MaxNativeAdIconView(width: 80, height: 80),
+            ),
+          ),
+          if (_hasStarRating) ...[
+            const SizedBox(height: 10),
+            const Center(
+              child: MaxNativeAdStarRatingView(
+                size: 12,
+                color: Color(0xFFF9AE0E),
+                shadowColor: Color(0xFFE8E7E8),
+              ),
+            ),
+          ],
+          const SizedBox(height: 9),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: MaxNativeAdTitleView(
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 11),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: MaxNativeAdBodyView(
+              style: TextStyle(fontSize: 13, color: Color(0xFF101010)),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Container(
+              height: 54,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF2FD1A6), Color(0xFF168EE2)],
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(27)),
+              ),
+              child: const MaxNativeAdCallToActionView(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                  foregroundColor: WidgetStatePropertyAll(Colors.black),
+                  shadowColor: WidgetStatePropertyAll(Colors.transparent),
+                  elevation: WidgetStatePropertyAll(0),
+                  shape: WidgetStatePropertyAll(StadiumBorder()),
+                  textStyle: WidgetStatePropertyAll(
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: padding.bottom + 15),
         ],
       ),
     );

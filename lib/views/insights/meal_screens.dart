@@ -445,7 +445,7 @@ class MealDetailScreen extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 3.w),
         padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
-          color: hi ? const Color(0xFF8FF0CD).withOpacity(0.6) : _kLav,
+          color: hi ? const Color(0xFF8FF0CD).withValues(alpha: 0.6) : _kLav,
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Stack(

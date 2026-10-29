@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class ShimmerLoading extends StatefulWidget {
   final Widget child;
 
@@ -191,7 +190,7 @@ class MediumNativeAdShimmer extends StatelessWidget {
   }
 }
 
-/// Full Screen Native Ad Shimmer Skeleton matching FullScreenNativeAdFactory layout
+/// Full Screen Native Ad Shimmer Skeleton matching the full-screen native ad layout
 class FullScreenNativeAdShimmer extends StatelessWidget {
   const FullScreenNativeAdShimmer({super.key});
 

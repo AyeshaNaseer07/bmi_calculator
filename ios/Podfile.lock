@@ -1,4 +1,8 @@
 PODS:
+  - applovin_max (4.6.4):
+    - AppLovinSDK (= 13.6.3)
+    - Flutter
+  - AppLovinSDK (13.6.3)
   - appsflyer_sdk (6.17.7):
     - appsflyer_sdk/Core (= 6.17.7)
   - appsflyer_sdk/Core (6.17.7):
@@ -206,6 +210,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - applovin_max (from `.symlinks/plugins/applovin_max/ios`)
   - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -227,6 +232,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppLovinSDK
     - AppsFlyerFramework
     - Firebase
     - FirebaseABTesting
@@ -254,6 +260,8 @@ SPEC REPOS:
     - RevenueCat
 
 EXTERNAL SOURCES:
+  applovin_max:
+    :path: ".symlinks/plugins/applovin_max/ios"
   appsflyer_sdk:
     :path: ".symlinks/plugins/appsflyer_sdk/ios"
   firebase_analytics:
@@ -290,6 +298,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
+  applovin_max: 90f1b944d5772b882ff8714d2c312901209c1289
+  AppLovinSDK: f3da9503e8193d8c4badc1a9965d73a0779812fa
   appsflyer_sdk: 01d0cd834fe2fffd7f2372ab38690f7483587720
   AppsFlyerFramework: ae7caf1688348f2d7a742037bd4fc6966d39d362
   Firebase: 7ca191e43724142f79fae653547b3382c45413cc

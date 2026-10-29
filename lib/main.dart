@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:applovin_max/applovin_max.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
 import 'package:bmi_calculator/data/services/logger_service.dart';
@@ -17,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'controllers/app_controller.dart';
@@ -30,6 +30,8 @@ import 'data/services/quick_actions_service.dart';
 import 'data/services/storage_service.dart';
 import 'notifications/notification_service.dart';
 import 'views/widgets/ads/app_open_ad_manager.dart';
+import 'views/widgets/ads/applovin_sdk.dart';
+import 'views/widgets/ads/interstitial_ad_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,7 +82,8 @@ void main() async {
   } catch (e) {
     AppLogger.e('NotificationService initialization failed: $e');
   }
-  await MobileAds.instance.initialize();
+  AppLovinSdk.initialize();
+  InterstitialAdManager.instance.initialize();
   try {
     QuickActionsService.instance.initialize();
   } catch (e) {
@@ -166,47 +169,25 @@ String getDeviceCountry() {
   }
 }
 
-Future<void> logAdRevenue({
-  required String adNetwork,
-  required dynamic revenue,
-  required String currency,
-  required String adFormat,
-  required String adUnitId,
-  required String mediationNetwork,
-  required String adType,
-}) async {
-  double parsedRevenue = 0.0;
+/// Sends an AppLovin MAX impression's revenue (in USD) to AppsFlyer.
+void logMaxAdRevenue(MaxAd ad, {required String adType}) {
   try {
-    debugPrint(
-      "📢 logAdRevenue called with: adNetwork=$adNetwork, revenue=$revenue, currency=$currency, adFormat=$adFormat, adUnitId=$adUnitId, mediationNetwork=$mediationNetwork, adType=$adType",
-    );
-
-    if (revenue is num) {
-      parsedRevenue = revenue.toDouble();
-    } else if (revenue is String) {
-      parsedRevenue = double.tryParse(revenue.trim()) ?? 0.0;
-    }
-
-    parsedRevenue = double.parse(
-      (parsedRevenue / 1000000.0).toStringAsFixed(5),
-    );
     appsflyerSdk?.logAdRevenue(
       AdRevenueData(
-        monetizationNetwork: adNetwork,
-        mediationNetwork: AFMediationNetwork.googleAdMob.value,
-        currencyIso4217Code: currency,
-        revenue: parsedRevenue,
+        monetizationNetwork: ad.networkName,
+        mediationNetwork: AFMediationNetwork.applovinMax.value,
+        currencyIso4217Code: 'USD',
+        revenue: ad.revenue,
         additionalParameters: {
           "country": getDeviceCountry(),
-          "adUnit": adUnitId,
+          "adUnit": ad.adUnitId,
           "adType": adType,
         },
       ),
     );
-
-    debugPrint("✅ logAdRevenue successful. Parsed revenue: $parsedRevenue");
+    debugPrint("✅ logMaxAdRevenue: $adType ${ad.revenue} USD");
   } catch (e, stackTrace) {
-    debugPrint("❌ logAdRevenue failed: $e");
+    debugPrint("❌ logMaxAdRevenue failed: $e");
     debugPrint("📌 Stack trace: $stackTrace");
   }
 }

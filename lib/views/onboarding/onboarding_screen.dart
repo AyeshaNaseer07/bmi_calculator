@@ -8,7 +8,6 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/remote_model.dart';
 import '../../data/services/remote_config_service.dart';
 import '../widgets/ads/full_screen_native_ad_page.dart';
-import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/animated_cta_button.dart';
@@ -281,7 +280,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
                 child: NativeAdCard(
-                  slot: AdSlots.onboarding,
+                  placement: NativeAdPlacement.onboarding,
                   height: 300.h,
                   backgroundColor: Colors.transparent,
                   onAdAvailabilityChanged: (available) {

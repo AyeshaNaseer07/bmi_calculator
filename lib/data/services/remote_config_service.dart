@@ -35,7 +35,6 @@ class RemoteConfigService extends GetxService {
   int get crossDelaySeconds => model.value.crossDelay;
   String get weeklyProductId => model.value.weeklyProductId;
   String get yearlyProductId => model.value.yearlyProductId;
-  String get nativeAdId => model.value.nativeAdId;
 
   bool get isFullScreenNativeAdEnabled {
     try {
@@ -45,15 +44,34 @@ class RemoteConfigService extends GetxService {
     }
   }
 
-  bool get isNativeAdEnabled {
+  bool get isHomeNativeAdEnabled {
     try {
-      return model.value.isNativeAdEnabled;
+      return model.value.isHomeNativeAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  bool get isLanguageNativeAdEnabled {
+    try {
+      return model.value.isLanguageNativeAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  bool get isOnboardingNativeAdEnabled {
+    try {
+      return model.value.isOnboardingNativeAdEnabled;
     } catch (_) {
       return true;
     }
   }
 
   String get fullScreenNativeAdId => model.value.fullScreenNativeAdId;
+  String get languageNativeAdId => model.value.languageNativeAdId;
+  String get onboardingNativeAdId => model.value.onboardingNativeAdId;
+  String get homeNativeAdId => model.value.homeNativeAdId;
 
   bool get isAppOpenAdEnabled {
     try {
@@ -64,6 +82,36 @@ class RemoteConfigService extends GetxService {
   }
 
   String get appOpenAdId => model.value.appOpenAdId;
+
+  bool get isSplashInterAdEnabled {
+    try {
+      return model.value.isSplashInterAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  String get splashInterAdId => model.value.splashInterAdId;
+
+  bool get isPaywallCrossInterAdEnabled {
+    try {
+      return model.value.isPaywallCrossInterAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  String get paywallCrossInterAdId => model.value.paywallCrossInterAdId;
+
+  bool get isCalculatorInterAdEnabled {
+    try {
+      return model.value.isCalculatorInterAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  String get calculatorInterAdId => model.value.calculatorInterAdId;
   String get localNotification => model.value.localNotification;
   bool get isLocalNotificationEnabled {
     try {
@@ -107,7 +155,7 @@ class RemoteConfigService extends GetxService {
           updateWithMap(map);
         }
         log(
-          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, weeklyId="${model.value.weeklyProductId}", yearlyId="${model.value.yearlyProductId}", fullScreenNativeAd=${model.value.fullScreenNativeAd}, nativeAd=${model.value.nativeAd}, localNotification=${model.value.localNotification}',
+          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, weeklyId="${model.value.weeklyProductId}", yearlyId="${model.value.yearlyProductId}", fullScreenNativeAd=${model.value.fullScreenNativeAd}, homeNativeAd=${model.value.homeNativeAd}, languageNativeAd=${model.value.languageNativeAd}, onboardingNativeAd=${model.value.onboardingNativeAd}, localNotification=${model.value.localNotification}',
         );
         return;
       } catch (e) {

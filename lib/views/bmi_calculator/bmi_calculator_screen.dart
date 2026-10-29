@@ -7,6 +7,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/bmi_service.dart';
+import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/age_picker_popup.dart';
 import '../widgets/app_background.dart';
 import '../widgets/bordered_slider_thumb_shape.dart';
@@ -30,6 +31,12 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   final _maleLink = LayerLink();
   final _femaleLink = LayerLink();
 
+  @override
+  void initState() {
+    super.initState();
+    InterstitialAdManager.instance.load(InterstitialPlacement.calculator);
+  }
+
   void _onCalculate(BMIController controller) async {
     // Show Calculating Animation popup
     Get.dialog(const CalculatingDialog(), barrierDismissible: false);
@@ -37,7 +44,10 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     await Future.delayed(const Duration(milliseconds: 1600));
     await controller.calculateAndSave();
     Get.back(); // close dialog
-    Get.offAllNamed(AppRoutes.home);
+    InterstitialAdManager.instance.show(
+      InterstitialPlacement.calculator,
+      onDone: () => Get.offAllNamed(AppRoutes.home),
+    );
   }
 
   @override

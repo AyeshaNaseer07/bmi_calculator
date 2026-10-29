@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 
 class RemoteModel {
@@ -9,22 +7,36 @@ class RemoteModel {
   int? _crossDelay;
   String? _weeklyProductId;
   String? _yearlyProductId;
-  String? _nativeAdId;
+  String? _homeNativeAdId;
   String? _fullScreenNativeAd;
-  String? _nativeAd;
+  String? _homeNativeAd;
+  String? _languageNativeAd;
+  String? _onboardingNativeAd;
   String? _fullScreenNativeAdId;
+  String? _languageNativeAdId;
+  String? _onboardingNativeAdId;
   String? _appOpenAd;
   String? _appOpenAdId;
+  String? _splashInterAd;
+  String? _splashInterAdId;
+  String? _paywallCrossInterAd;
+  String? _paywallCrossInterAdId;
+  String? _calculatorInterAd;
+  String? _calculatorInterAdId;
   String? _localNotification;
   String? _notificationFrequency;
 
-  static String get defaultAppOpenAdId => Platform.isIOS
-      ? 'ca-app-pub-3940256099942544/5575463023'
-      : 'ca-app-pub-3940256099942544/9257395921';
+  // AppLovin MAX ad units; Remote Config overrides each one.
+  static const String defaultAppOpenAdId = '8912e79bed7e47df';
+  static const String defaultSplashInterAdId = '85b22c87e3ca84c2';
+  static const String defaultPaywallCrossInterAdId = 'ff833ded57dafd9a';
+  static const String defaultCalculatorInterAdId = '0a4481fa2371003a';
+  static const String defaultFullScreenNativeAdId = '2854da2e9e4a2bc5';
+  static const String defaultLanguageNativeAdId = '18189ba9818ddf0a';
+  static const String defaultOnboardingNativeAdId = '99f2f2b2c1b0ca6a';
 
-  static String get defaultNativeAdId => Platform.isIOS
-      ? 'ca-app-pub-3940256099942544/3986624511'
-      : 'ca-app-pub-3940256099942544/2247696110';
+  /// Home card: no unit of its own yet, so it shares the onboarding one.
+  static const String defaultHomeNativeAdId = defaultOnboardingNativeAdId;
 
   String get firstTimeOnboarding => _firstTimeOnboarding ?? 'on';
   set firstTimeOnboarding(String value) => _firstTimeOnboarding = value;
@@ -46,23 +58,58 @@ class RemoteModel {
       _yearlyProductId ?? 'com.yearly.bmi.calculator.app';
   set yearlyProductId(String value) => _yearlyProductId = value;
 
-  String get nativeAdId => _nativeAdId ?? defaultNativeAdId;
-  set nativeAdId(String value) => _nativeAdId = value;
+  String get homeNativeAdId => _homeNativeAdId ?? defaultHomeNativeAdId;
+  set homeNativeAdId(String value) => _homeNativeAdId = value;
 
   String get fullScreenNativeAd => _fullScreenNativeAd ?? 'on';
   set fullScreenNativeAd(String value) => _fullScreenNativeAd = value;
 
-  String get nativeAd => _nativeAd ?? 'on';
-  set nativeAd(String value) => _nativeAd = value;
+  String get homeNativeAd => _homeNativeAd ?? 'on';
+  set homeNativeAd(String value) => _homeNativeAd = value;
 
-  String get fullScreenNativeAdId => _fullScreenNativeAdId ?? defaultNativeAdId;
+  String get languageNativeAd => _languageNativeAd ?? 'on';
+  set languageNativeAd(String value) => _languageNativeAd = value;
+
+  String get onboardingNativeAd => _onboardingNativeAd ?? 'on';
+  set onboardingNativeAd(String value) => _onboardingNativeAd = value;
+
+  String get fullScreenNativeAdId =>
+      _fullScreenNativeAdId ?? defaultFullScreenNativeAdId;
   set fullScreenNativeAdId(String value) => _fullScreenNativeAdId = value;
+
+  String get languageNativeAdId =>
+      _languageNativeAdId ?? defaultLanguageNativeAdId;
+  set languageNativeAdId(String value) => _languageNativeAdId = value;
+
+  String get onboardingNativeAdId =>
+      _onboardingNativeAdId ?? defaultOnboardingNativeAdId;
+  set onboardingNativeAdId(String value) => _onboardingNativeAdId = value;
 
   String get appOpenAd => _appOpenAd ?? 'on';
   set appOpenAd(String value) => _appOpenAd = value;
 
   String get appOpenAdId => _appOpenAdId ?? defaultAppOpenAdId;
   set appOpenAdId(String value) => _appOpenAdId = value;
+
+  String get splashInterAd => _splashInterAd ?? 'on';
+  set splashInterAd(String value) => _splashInterAd = value;
+
+  String get splashInterAdId => _splashInterAdId ?? defaultSplashInterAdId;
+  set splashInterAdId(String value) => _splashInterAdId = value;
+
+  String get paywallCrossInterAd => _paywallCrossInterAd ?? 'on';
+  set paywallCrossInterAd(String value) => _paywallCrossInterAd = value;
+
+  String get paywallCrossInterAdId =>
+      _paywallCrossInterAdId ?? defaultPaywallCrossInterAdId;
+  set paywallCrossInterAdId(String value) => _paywallCrossInterAdId = value;
+
+  String get calculatorInterAd => _calculatorInterAd ?? 'on';
+  set calculatorInterAd(String value) => _calculatorInterAd = value;
+
+  String get calculatorInterAdId =>
+      _calculatorInterAdId ?? defaultCalculatorInterAdId;
+  set calculatorInterAdId(String value) => _calculatorInterAdId = value;
 
   String get localNotification => _localNotification ?? 'on';
   set localNotification(String value) => _localNotification = value;
@@ -77,12 +124,22 @@ class RemoteModel {
     this._crossDelay,
     this._weeklyProductId,
     this._yearlyProductId,
-    this._nativeAdId,
+    this._homeNativeAdId,
     this._fullScreenNativeAd,
-    this._nativeAd,
+    this._homeNativeAd,
+    this._languageNativeAd,
+    this._onboardingNativeAd,
     this._fullScreenNativeAdId,
+    this._languageNativeAdId,
+    this._onboardingNativeAdId,
     this._appOpenAd,
     this._appOpenAdId,
+    this._splashInterAd,
+    this._splashInterAdId,
+    this._paywallCrossInterAd,
+    this._paywallCrossInterAdId,
+    this._calculatorInterAd,
+    this._calculatorInterAdId,
     this._localNotification,
     this._notificationFrequency,
   });
@@ -99,7 +156,13 @@ class RemoteModel {
 
   /// App open ad shown when returning to the app from the background.
   bool get isAppOpenAdEnabled => _isOn(appOpenAd);
-  bool get isNativeAdEnabled => _isOn(nativeAd);
+  bool get isHomeNativeAdEnabled => _isOn(homeNativeAd);
+  bool get isLanguageNativeAdEnabled => _isOn(languageNativeAd);
+  bool get isOnboardingNativeAdEnabled => _isOn(onboardingNativeAd);
+
+  bool get isSplashInterAdEnabled => _isOn(splashInterAd);
+  bool get isPaywallCrossInterAdEnabled => _isOn(paywallCrossInterAd);
+  bool get isCalculatorInterAdEnabled => _isOn(calculatorInterAd);
 
   bool get isLocalNotificationEnabled => _isOn(localNotification);
 
@@ -130,13 +193,6 @@ class RemoteModel {
 
   factory RemoteModel.fromRemoteConfig(Map<String, dynamic> remoteConfig) {
     try {
-      final String nativeAdId = _parseString(
-        remoteConfig['native_ad_id'] ??
-            remoteConfig['ad_id'] ??
-            remoteConfig['native_ad_unit_id'] ??
-            remoteConfig['nativeAdId'],
-        defaultNativeAdId,
-      );
       return RemoteModel(
         firstTimeOnboarding: _parseString(
           remoteConfig['first_time_onboarding'] ??
@@ -181,7 +237,24 @@ class RemoteModel {
               remoteConfig['yearlyProductId'],
           'com.yearly.bmi.calculator.app',
         ),
-        nativeAdId: nativeAdId,
+        homeNativeAd: _parseString(
+          remoteConfig['home_native_ad'] ?? remoteConfig['homeNativeAd'],
+          'on',
+        ),
+        homeNativeAdId: _parseString(
+          remoteConfig['home_native_ad_id'] ?? remoteConfig['homeNativeAdId'],
+          defaultHomeNativeAdId,
+        ),
+        languageNativeAd: _parseString(
+          remoteConfig['language_native_ad'] ??
+              remoteConfig['languageNativeAd'],
+          'on',
+        ),
+        onboardingNativeAd: _parseString(
+          remoteConfig['onboarding_native_ad'] ??
+              remoteConfig['onboardingNativeAd'],
+          'on',
+        ),
         fullScreenNativeAd: _parseString(
           remoteConfig['full_screen_native_ad'] ??
               remoteConfig['fullscreen_native_ad'] ??
@@ -189,17 +262,21 @@ class RemoteModel {
               remoteConfig['fullScreenNativeAd'],
           'on',
         ),
-        nativeAd: _parseString(
-          remoteConfig['native_ad'] ??
-              remoteConfig['native_ads'] ??
-              remoteConfig['nativeAd'],
-          'on',
-        ),
         fullScreenNativeAdId: _parseString(
           remoteConfig['full_screen_native_ad_id'] ??
               remoteConfig['fullscreen_native_ad_id'] ??
               remoteConfig['fullScreenNativeAdId'],
-          nativeAdId,
+          defaultFullScreenNativeAdId,
+        ),
+        languageNativeAdId: _parseString(
+          remoteConfig['language_native_ad_id'] ??
+              remoteConfig['languageNativeAdId'],
+          defaultLanguageNativeAdId,
+        ),
+        onboardingNativeAdId: _parseString(
+          remoteConfig['onboarding_native_ad_id'] ??
+              remoteConfig['onboardingNativeAdId'],
+          defaultOnboardingNativeAdId,
         ),
         appOpenAd: _parseString(
           remoteConfig['app_open_ad'] ?? remoteConfig['appOpenAd'],
@@ -208,6 +285,34 @@ class RemoteModel {
         appOpenAdId: _parseString(
           remoteConfig['app_open_ad_id'] ?? remoteConfig['appOpenAdId'],
           defaultAppOpenAdId,
+        ),
+        splashInterAd: _parseString(
+          remoteConfig['splash_inter_ad'] ?? remoteConfig['splashInterAd'],
+          'on',
+        ),
+        splashInterAdId: _parseString(
+          remoteConfig['splash_inter_ad_id'] ?? remoteConfig['splashInterAdId'],
+          defaultSplashInterAdId,
+        ),
+        paywallCrossInterAd: _parseString(
+          remoteConfig['paywall_cross_inter_ad'] ??
+              remoteConfig['paywallCrossInterAd'],
+          'on',
+        ),
+        paywallCrossInterAdId: _parseString(
+          remoteConfig['paywall_cross_inter_ad_id'] ??
+              remoteConfig['paywallCrossInterAdId'],
+          defaultPaywallCrossInterAdId,
+        ),
+        calculatorInterAd: _parseString(
+          remoteConfig['calculator_inter_ad'] ??
+              remoteConfig['calculatorInterAd'],
+          'on',
+        ),
+        calculatorInterAdId: _parseString(
+          remoteConfig['calculator_inter_ad_id'] ??
+              remoteConfig['calculatorInterAdId'],
+          defaultCalculatorInterAdId,
         ),
         localNotification: _parseString(
           remoteConfig['local_notification'] ??
@@ -240,12 +345,22 @@ class RemoteModel {
       crossDelay: 3,
       weeklyProductId: 'com.weekly.bmi.calculator.app',
       yearlyProductId: 'com.yearly.bmi.calculator.app',
-      nativeAdId: defaultNativeAdId,
+      homeNativeAd: 'on',
+      homeNativeAdId: defaultHomeNativeAdId,
+      languageNativeAd: 'on',
+      onboardingNativeAd: 'on',
       fullScreenNativeAd: 'on',
-      nativeAd: 'on',
-      fullScreenNativeAdId: defaultNativeAdId,
+      fullScreenNativeAdId: defaultFullScreenNativeAdId,
+      languageNativeAdId: defaultLanguageNativeAdId,
+      onboardingNativeAdId: defaultOnboardingNativeAdId,
       appOpenAd: 'on',
       appOpenAdId: defaultAppOpenAdId,
+      splashInterAd: 'on',
+      splashInterAdId: defaultSplashInterAdId,
+      paywallCrossInterAd: 'on',
+      paywallCrossInterAdId: defaultPaywallCrossInterAdId,
+      calculatorInterAd: 'on',
+      calculatorInterAdId: defaultCalculatorInterAdId,
       localNotification: 'on',
       notificationFrequency: 'd',
     );
@@ -259,12 +374,22 @@ class RemoteModel {
       'cross_delay': crossDelay,
       'weekly_product_id': weeklyProductId,
       'yearly_product_id': yearlyProductId,
-      'native_ad_id': nativeAdId,
+      'home_native_ad': homeNativeAd,
+      'home_native_ad_id': homeNativeAdId,
+      'language_native_ad': languageNativeAd,
+      'onboarding_native_ad': onboardingNativeAd,
       'full_screen_native_ad': fullScreenNativeAd,
-      'native_ad': nativeAd,
       'full_screen_native_ad_id': fullScreenNativeAdId,
+      'language_native_ad_id': languageNativeAdId,
+      'onboarding_native_ad_id': onboardingNativeAdId,
       'app_open_ad': appOpenAd,
       'app_open_ad_id': appOpenAdId,
+      'splash_inter_ad': splashInterAd,
+      'splash_inter_ad_id': splashInterAdId,
+      'paywall_cross_inter_ad': paywallCrossInterAd,
+      'paywall_cross_inter_ad_id': paywallCrossInterAdId,
+      'calculator_inter_ad': calculatorInterAd,
+      'calculator_inter_ad_id': calculatorInterAdId,
       'local_notification': localNotification,
       'show_notification_frequency': notificationFrequency,
     };

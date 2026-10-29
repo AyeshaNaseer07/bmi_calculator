@@ -17,7 +17,6 @@ import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
-import '../widgets/ads/ad_preloader.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
@@ -939,7 +938,7 @@ class _HomeNativeAdStripState extends State<_HomeNativeAdStrip> {
         color: AppPalette.surfaceMuted,
         padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
         child: NativeAdCard(
-          slot: AdSlots.home,
+          placement: NativeAdPlacement.home,
           height: widget.height,
           backgroundColor: Colors.transparent,
           onAdAvailabilityChanged: (available) {

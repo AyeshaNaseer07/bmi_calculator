@@ -9,7 +9,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
-import '../widgets/ads/ad_preloader.dart';
+import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/app_background.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,12 +28,14 @@ class _SplashScreenState extends State<SplashScreen>
   /// Splash screen wait — was 10s, trimmed down so the app feels snappier.
   static const int _splashSeconds = 3;
 
+  /// Extra time the splash interstitial gets to load once the splash is done.
+  static const Duration _splashAdWait = Duration(seconds: 4);
+
   @override
   void initState() {
     super.initState();
 
-    // Load every native ad now, while the splash is showing.
-    AdPreloader.instance.preloadAll();
+    InterstitialAdManager.instance.load(InterstitialPlacement.splash);
 
     _progressController = AnimationController(
       vsync: this,
@@ -61,7 +63,11 @@ class _SplashScreenState extends State<SplashScreen>
         Get.offAllNamed(AppRoutes.home);
         return;
       }
-      Get.offAllNamed(AppRoutes.languageSelection);
+      await InterstitialAdManager.instance.show(
+        InterstitialPlacement.splash,
+        waitFor: _splashAdWait,
+        onDone: () => Get.offAllNamed(AppRoutes.languageSelection),
+      );
     });
   }
 

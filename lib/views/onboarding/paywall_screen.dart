@@ -10,6 +10,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
+import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
 
 class PaywallScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
     _initCrossDelay();
     _loadPrices();
+    InterstitialAdManager.instance.load(InterstitialPlacement.paywallCross);
   }
 
   Future<void> _loadPrices() async {
@@ -69,6 +71,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   void _onClose() {
+    InterstitialAdManager.instance.show(
+      InterstitialPlacement.paywallCross,
+      onDone: _leavePaywall,
+    );
+  }
+
+  void _leavePaywall() {
     if (_fromOnboarding) {
       _appController.completeOnboarding();
       Get.offAllNamed(AppRoutes.home);
