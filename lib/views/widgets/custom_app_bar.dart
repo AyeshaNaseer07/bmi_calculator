@@ -39,9 +39,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: GestureDetector(
                   onTap: onBackPressed ?? () => Get.back(),
                   child: Image.asset(
-                    AppAssets.bmiCalBackIcon,
-                    height: 34.h,
-                    width: 34.w,
+                    AppAssets.insightBackIcon,
+                    height: 36.h,
+                    width: 36.w,
                   ),
                 ),
               ),

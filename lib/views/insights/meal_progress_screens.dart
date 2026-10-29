@@ -83,7 +83,9 @@ class MealCompletedScreen extends StatelessWidget {
       bottom: GradientActionButton(
         text: 'View Your Progress',
         trailing: Icons.arrow_forward_rounded,
-        onTap: () => Get.to(() => const MealProgressScreen()),
+        // Replaces this screen, so Back on Your Progress goes straight to
+        // the 1 Week Meal Plan.
+        onTap: () => Get.off(() => const MealProgressScreen()),
       ),
       body: Column(
         children: [

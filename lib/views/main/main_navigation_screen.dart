@@ -7,7 +7,6 @@ import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
 import '../weight_tracking/weight_tracking_screen.dart';
 import '../widgets/main_bottom_nav_bar.dart';
-import 'main_tab.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -17,31 +16,27 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  @override
-  void initState() {
-    super.initState();
-    mainTabIndex.value = 0;
-  }
+  // Per screen, not global: `Get.offAllNamed(home)` mounts a new copy while
+  // the old one is still alive, and a shared value reset during that build
+  // would rebuild the old copy mid-frame.
+  int _currentIndex = 0;
 
   static const _tabs = [
     HomeScreen(),
-    ProfileScreen(),
-    WeightTrackingScreen(),
-    HistoryScreen(),
+    ProfileScreen(showBackButton: false),
+    WeightTrackingScreen(showBackButton: false),
+    HistoryScreen(showBackButton: false),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final currentIndex = mainTabIndex.value;
-      return Scaffold(
-        body: IndexedStack(index: currentIndex, children: _tabs),
-        bottomNavigationBar: MainBottomNavBar(
-          currentIndex: currentIndex,
-          onTap: (index) => mainTabIndex.value = index,
-          onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
-        ),
-      );
-    });
+    return Scaffold(
+      body: IndexedStack(index: _currentIndex, children: _tabs),
+      bottomNavigationBar: MainBottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
+      ),
+    );
   }
 }

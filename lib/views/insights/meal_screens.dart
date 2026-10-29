@@ -523,14 +523,22 @@ class MealDetailScreen extends StatelessWidget {
       title: meal.day == 1
           ? 'Today’s ${meal.slot}'
           : 'Day ${meal.day} ${meal.slot}',
-      bottom: GradientActionButton(
-        text: 'Mark as Eaten',
-        leading: Icons.check_circle_outline_rounded,
-        onTap: () {
-          MealPlanController.to.markEaten(meal.key);
-          Get.to(() => MealCompletedScreen(meal: meal));
-        },
-      ),
+      // Once a meal is eaten it can't be marked again.
+      bottom: Obx(() {
+        final eaten = MealPlanController.to.isEaten(meal.key);
+        return GradientActionButton(
+          text: eaten ? 'Marked' : 'Mark as Eaten',
+          leading: Icons.check_circle_outline_rounded,
+          onTap: eaten
+              ? null
+              : () {
+                  MealPlanController.to.markEaten(meal.key);
+                  // Replaces this screen: once eaten, Back skips the detail
+                  // and returns to the 1 Week Meal Plan.
+                  Get.off(() => MealCompletedScreen(meal: meal));
+                },
+        );
+      }),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -102,12 +102,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         SizedBox(height: 4.h),
                         _buildTopBar(),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 28.h),
                         Obx(() {
                           final hasData = bmiController.bmiHistory.isNotEmpty;
                           return _buildGreeting(hasData, profileController);
                         }),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 18.h),
                       ],
                     ),
                   ),
@@ -160,11 +160,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             // Main BMI Card
                             _buildActiveBmiCard(latest),
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 8.h),
 
                             // Quick Parameters Pills (Weight, Height, Age, Gender)
                             _buildParameterPills(latest, bmiController),
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 8.h),
 
                             // BMI Categories Row (scales down to fit if space is tight)
                             Expanded(
@@ -648,7 +648,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 10.h),
         Row(
           children: [
             Expanded(

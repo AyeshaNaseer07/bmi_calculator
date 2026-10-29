@@ -22,7 +22,10 @@ import 'dialogs/rate_us_dialog.dart';
 import '../../core/theme/app_palette.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  /// False when shown as a bottom-nav tab, which has nothing to go back to.
+  final bool showBackButton;
+
+  const ProfileScreen({super.key, this.showBackButton = true});
 
   void _openRateUsDialog(BuildContext context) {
     showDialog(context: context, builder: (_) => const RateUsDialog());
@@ -73,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'Profile'),
+        appBar: CustomAppBar(title: 'Profile', showBackButton: showBackButton),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),

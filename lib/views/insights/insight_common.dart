@@ -471,7 +471,9 @@ class GradientActionButton extends StatelessWidget {
   final String text;
   final IconData? leading;
   final IconData? trailing;
-  final VoidCallback onTap;
+
+  /// Null disables the button: faded, without its shadow.
+  final VoidCallback? onTap;
 
   const GradientActionButton({
     super.key,
@@ -483,23 +485,29 @@ class GradientActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final enabled = onTap != null;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 52.h,
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFF1BD19E).withValues(alpha: enabled ? 1 : 0.45),
+              const Color(0xFF0AA37D).withValues(alpha: enabled ? 1 : 0.45),
+            ],
           ),
           borderRadius: BorderRadius.circular(28.r),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x4D09B389),
-              blurRadius: 12,
-              offset: Offset(0, 4),
-            ),
-          ],
+          boxShadow: enabled
+              ? const [
+                  BoxShadow(
+                    color: Color(0x4D09B389),
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

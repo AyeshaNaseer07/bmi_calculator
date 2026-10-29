@@ -26,7 +26,10 @@ enum HistorySortOption {
 }
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  /// False when shown as a bottom-nav tab, which has nothing to go back to.
+  final bool showBackButton;
+
+  const HistoryScreen({super.key, this.showBackButton = true});
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -373,7 +376,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'History'),
+        appBar: CustomAppBar(
+          title: 'History',
+          showBackButton: widget.showBackButton,
+        ),
         body: SafeArea(
           child: Obx(() {
             final allRecords = bmiController.bmiHistory;

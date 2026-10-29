@@ -16,7 +16,10 @@ import '../widgets/custom_gradient_button.dart';
 import '../../core/theme/app_palette.dart';
 
 class WeightTrackingScreen extends StatelessWidget {
-  const WeightTrackingScreen({super.key});
+  /// False when shown as a bottom-nav tab, which has nothing to go back to.
+  final bool showBackButton;
+
+  const WeightTrackingScreen({super.key, this.showBackButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,10 @@ class WeightTrackingScreen extends StatelessWidget {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'Weight Tracking'),
+        appBar: CustomAppBar(
+          title: 'Weight Tracking',
+          showBackButton: showBackButton,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
