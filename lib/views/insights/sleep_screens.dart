@@ -7,9 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../controllers/meal_plan_controller.dart';
 import 'insight_common.dart';
 import 'personal_targets.dart';
+import '../../core/theme/app_palette.dart';
 
-const Color _kDeep = Color(0xFF006B4E);
-const Color _kLav = Color(0xFFE8EBFB);
+Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
+Color get _kLav => AppPalette.tint(const Color(0xFFE8EBFB));
 
 /// "Sleep Well, Live Better".
 class SleepWellScreen extends StatelessWidget {
@@ -20,12 +21,15 @@ class SleepWellScreen extends StatelessWidget {
     child: Container(
       padding: EdgeInsets.fromLTRB(8.w, 6.h, 12.w, 6.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(30.r),
-        border: Border.all(color: const Color(0xFFCFF1E5), width: 1.3),
-        boxShadow: const [
+        border: Border.all(
+          color: AppPalette.tintLine(const Color(0xFFCFF1E5)),
+          width: 1.3,
+        ),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x1A33D2AB),
+            color: AppPalette.shadow(const Color(0x1A33D2AB)),
             blurRadius: 6,
             offset: Offset(0, 2),
           ),
@@ -40,10 +44,7 @@ class SleepWellScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: headStyle(14.5, weight: FontWeight.w700)),
-                Text(
-                  sub,
-                  style: bodyStyle(12.5, color: const Color(0xFF4B5563)),
-                ),
+                Text(sub, style: bodyStyle(12.5, color: AppPalette.textBody)),
               ],
             ),
           ),
@@ -98,7 +99,7 @@ class SleepWellScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: bodyStyle(
                 15,
-                color: const Color(0xFF374151),
+                color: AppPalette.textBody,
                 weight: FontWeight.w500,
                 height: 1.35,
               ),
@@ -110,15 +111,21 @@ class SleepWellScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 12.h),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: const Color(0xFFCFF1E5), width: 1.3),
-              gradient: const LinearGradient(
+              border: Border.all(
+                color: AppPalette.tintLine(const Color(0xFFCFF1E5)),
+                width: 1.3,
+              ),
+              gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.white, Color(0xFFE2F9EF)],
+                colors: [
+                  AppPalette.surface,
+                  AppPalette.tint(const Color(0xFFE2F9EF)),
+                ],
               ),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Color(0x2633D2AB),
+                  color: AppPalette.shadow(const Color(0x2633D2AB)),
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),
@@ -154,7 +161,7 @@ class SleepWellScreen extends StatelessWidget {
                         vertical: 3.h,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC9F7E3),
+                        color: AppPalette.tint(const Color(0xFFC9F7E3)),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
@@ -188,7 +195,7 @@ class SleepWellScreen extends StatelessWidget {
                                   style: headStyle(
                                     21,
                                     weight: FontWeight.w500,
-                                    color: const Color(0xFF4B5563),
+                                    color: AppPalette.textBody,
                                   ),
                                 ),
                               ],
@@ -198,7 +205,7 @@ class SleepWellScreen extends StatelessWidget {
                             'Aim for consistent, quality sleep every night.',
                             style: bodyStyle(
                               13.5,
-                              color: const Color(0xFF374151),
+                              color: AppPalette.textBody,
                               height: 1.3,
                             ),
                           ),
@@ -281,7 +288,7 @@ class _SleepRing extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = stroke
-        ..color = const Color(0xFFD7E5F3),
+        ..color = AppPalette.tint(const Color(0xFFD7E5F3)),
     );
     canvas.drawArc(
       rect,

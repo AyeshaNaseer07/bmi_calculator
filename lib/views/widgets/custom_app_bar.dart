@@ -1,8 +1,8 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../../core/theme/app_palette.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -38,11 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   onTap: onBackPressed ?? () => Get.back(),
-                  child: Image.asset(
-                    AppAssets.insightBackIcon,
-                    height: 36.h,
-                    width: 36.w,
-                  ),
+                  child: const AppBackIcon(),
                 ),
               ),
             Text(
@@ -58,6 +54,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Align(alignment: Alignment.centerRight, child: trailing!),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Back button graphic: the round white button artwork in light mode, a plain
+/// white arrow in dark mode (the artwork's white circle glares on dark).
+class AppBackIcon extends StatelessWidget {
+  const AppBackIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!AppPalette.isDark) {
+      return Image.asset(AppAssets.insightBackIcon, height: 36.h, width: 36.w);
+    }
+    return SizedBox(
+      height: 36.h,
+      width: 36.w,
+      child: Icon(
+        Icons.arrow_back_ios_new_rounded,
+        color: Colors.white,
+        size: 22.sp,
       ),
     );
   }

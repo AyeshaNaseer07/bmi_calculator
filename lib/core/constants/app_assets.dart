@@ -1,5 +1,28 @@
+import '../theme/app_palette.dart';
+
 abstract class AppAssets {
   static const String _imagesBase = 'assets/images';
+
+  /// Images that have a dark-mode copy with the same file name in
+  /// `assets/images/dark/`. Add a name here when its dark copy is added.
+  static const Set<String> _darkVariants = {
+    'home_img.webp',
+    'home_img_1.webp',
+    'home_avatar.webp',
+    'normal_bmi.webp',
+    'below_bmi.webp',
+    'above_bmi.webp',
+    'obese_bmi.webp',
+    'active_stay.webp',
+  };
+
+  /// [path], or its `dark/` copy when dark mode is on and one exists.
+  static String themed(String path) {
+    if (!AppPalette.isDark) return path;
+    final name = path.split('/').last;
+    if (!_darkVariants.contains(name)) return path;
+    return '$_imagesBase/dark/$name';
+  }
 
   static const String _lottiesBase = 'assets/lotties';
 

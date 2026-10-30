@@ -571,12 +571,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         onPressed: () => controller.resetInputs(),
                       ),
                       SizedBox(height: 24.h),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     AppLovinMAX.showMediationDebugger();
-                      //   },
-                      //   child: Text("show debuger"),
-                      // ),
                     ],
                   );
                 }),

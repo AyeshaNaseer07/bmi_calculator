@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -83,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   return Image.asset(
-                    bgImage,
+                    AppAssets.themed(bgImage),
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.topRight,
                   );
@@ -1024,6 +1025,12 @@ class _RemoveAdsCard extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          AppLovinMAX.showMediationDebugger();
+                        },
+                        child: Text("show debuger"),
+                      ),
                       const _UpgradeButton(),
                     ],
                   ),

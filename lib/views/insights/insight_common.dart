@@ -4,35 +4,37 @@ import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../widgets/app_background.dart';
+import '../widgets/custom_app_bar.dart';
+import '../../core/theme/app_palette.dart';
 
-const Color kInk = Color(0xFF111B2E);
+Color get kInk => AppPalette.textPrimary;
 const Color kGreen = Color(0xFF09B389);
-const Color kGreenDark = Color(0xFF006B4E);
-const Color kMuted = Color(0xFF6B7280);
-const Color kMintBorder = Color(0xFFD5F2E8);
+Color get kGreenDark => AppPalette.ink(const Color(0xFF006B4E));
+Color get kMuted => AppPalette.textSecondary;
+Color get kMintBorder => AppPalette.tintLine(const Color(0xFFD5F2E8));
 const String kHeadFont = 'Plus Jakarta Sans';
 
 TextStyle headStyle(
   double size, {
-  Color color = kInk,
+  Color? color,
   FontWeight weight = FontWeight.w800,
 }) => TextStyle(
   fontSize: size.sp,
   fontFamily: kHeadFont,
   fontWeight: weight,
-  color: color,
+  color: color ?? kInk,
 );
 
 TextStyle bodyStyle(
   double size, {
-  Color color = kMuted,
+  Color? color,
   FontWeight weight = FontWeight.w400,
   double? height,
 }) => TextStyle(
   fontSize: size.sp,
   fontFamily: 'Inter',
   fontWeight: weight,
-  color: color,
+  color: color ?? kMuted,
   height: height,
 );
 
@@ -63,11 +65,11 @@ class InsightCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: ShapeDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         shadows: [
           BoxShadow(
-            color: Color(0x0A000000),
+            color: AppPalette.shadow(const Color(0x0A000000)),
             blurRadius: 12,
             offset: Offset(0, 4),
             spreadRadius: 0,
@@ -116,11 +118,14 @@ class AssetOrPlaceholder extends StatelessWidget {
         width: width,
         height: height,
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFEAF9F3), Color(0xFFCDEFE2)],
+            colors: [
+              AppPalette.tint(const Color(0xFFEAF9F3)),
+              AppPalette.tint(const Color(0xFFCDEFE2)),
+            ],
           ),
         ),
         child: Icon(
@@ -159,11 +164,7 @@ class InsightHeader extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => Get.back(),
-                child: Image.asset(
-                  AppAssets.insightBackIcon,
-                  height: 36.h,
-                  width: 36.w,
-                ),
+                child: const AppBackIcon(),
               ),
             ),
             Padding(
@@ -180,7 +181,7 @@ class InsightHeader extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: const Color(0xFF141B2B),
+                        color: AppPalette.textPrimary,
                         fontSize: 26,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w700,
@@ -270,7 +271,7 @@ class InfoRowCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool chevron;
   final bool circleIcon;
-  final Color tileColor;
+  final Color? tileColor;
   final Color iconColor;
   final Color? cardColor;
   final Color? borderColor;
@@ -288,7 +289,7 @@ class InfoRowCard extends StatelessWidget {
     this.onTap,
     this.chevron = false,
     this.circleIcon = false,
-    this.tileColor = const Color(0xFFE8F8F1),
+    this.tileColor,
     this.iconColor = kGreen,
     this.cardColor,
     this.borderColor,
@@ -322,7 +323,7 @@ class InfoRowCard extends StatelessWidget {
                         child: Text(
                           title,
                           style: TextStyle(
-                            color: const Color(0xFF111827),
+                            color: AppPalette.textPrimary,
                             fontSize: 15,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
@@ -340,7 +341,7 @@ class InfoRowCard extends StatelessWidget {
             if (chevron)
               Icon(
                 Icons.chevron_right_rounded,
-                color: chevronColor ?? const Color(0xFF9CA3AF),
+                color: chevronColor ?? AppPalette.textMuted,
                 size: 22.sp,
               ),
           ],
@@ -359,7 +360,7 @@ class PrecautionCard extends StatelessWidget {
 
   const PrecautionCard({super.key, required this.lead, required this.body});
 
-  static const Color _amber = Color(0xFFD97706);
+  static Color get _amber => AppPalette.ink(const Color(0xFFD97706));
 
   @override
   Widget build(BuildContext context) {
@@ -381,9 +382,11 @@ class PrecautionCard extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF8EB),
+                  color: AppPalette.tint(const Color(0xFFFFF8EB)),
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: const Color(0xFFFDE7C1)),
+                  border: Border.all(
+                    color: AppPalette.tintLine(const Color(0xFFFDE7C1)),
+                  ),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,7 +395,7 @@ class PrecautionCard extends StatelessWidget {
                       width: 30.w,
                       height: 30.w,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFEEBC8),
+                        color: AppPalette.tint(const Color(0xFFFEEBC8)),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -423,7 +426,7 @@ class PrecautionCard extends StatelessWidget {
               'PRECAUTION',
               style: bodyStyle(
                 12,
-                color: const Color(0xFFB45309),
+                color: AppPalette.ink(const Color(0xFFB45309)),
                 weight: FontWeight.w800,
               ).copyWith(letterSpacing: 0.3),
             ),
@@ -442,7 +445,7 @@ class PrecautionCard extends StatelessWidget {
               body,
               style: bodyStyle(
                 12,
-                color: const Color(0xFF6B7280),
+                color: AppPalette.textSecondary,
                 weight: FontWeight.w500,
                 height: 1.35,
               ),
@@ -462,7 +465,7 @@ class TipBanner extends StatelessWidget {
 
   const TipBanner({super.key, required this.text});
 
-  static const Color _ink = Color(0xFF065F46);
+  static Color get _ink => AppPalette.ink(const Color(0xFF065F46));
 
   /// Splits "Lead: rest" when the lead is short enough to be a label.
   (String?, String) get _parts {
@@ -501,9 +504,11 @@ class TipBanner extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE9FBF3),
+                  color: AppPalette.tint(const Color(0xFFE9FBF3)),
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: const Color(0xFFBFEBDA)),
+                  border: Border.all(
+                    color: AppPalette.tintLine(const Color(0xFFBFEBDA)),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -583,9 +588,9 @@ class GradientActionButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(28.r),
           boxShadow: enabled
-              ? const [
+              ? [
                   BoxShadow(
-                    color: Color(0x4D09B389),
+                    color: AppPalette.shadow(const Color(0x4D09B389)),
                     blurRadius: 12,
                     offset: Offset(0, 4),
                   ),

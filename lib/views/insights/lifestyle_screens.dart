@@ -7,11 +7,12 @@ import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import 'activity_plan_data.dart';
 import 'insight_common.dart';
+import '../../core/theme/app_palette.dart';
 
 export 'sleep_screens.dart';
 
-const Color _kDeep = Color(0xFF006B4E);
-const Color _kLav = Color(0xFFE8EBFB);
+Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
+Color get _kLav => AppPalette.tint(const Color(0xFFE8EBFB));
 const Color _kPill = Color(0xFF5CF2C0);
 
 /// "Stay Active".
@@ -33,11 +34,11 @@ class StayActiveScreen extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppPalette.surface,
             borderRadius: BorderRadius.circular(18.r),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Color(0x14000000),
+                color: AppPalette.shadow(const Color(0x14000000)),
                 blurRadius: 10,
                 offset: Offset(0, 3),
               ),
@@ -83,7 +84,7 @@ class StayActiveScreen extends StatelessWidget {
                       sub,
                       style: bodyStyle(
                         13,
-                        color: const Color(0xFF4B5563),
+                        color: AppPalette.textBody,
                         weight: FontWeight.w600,
                       ),
                     ),
@@ -133,7 +134,10 @@ class StayActiveScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Image.asset(AppAssets.activeHero, fit: BoxFit.fitWidth),
+                Image.asset(
+                  AppAssets.themed(AppAssets.activeHero),
+                  fit: BoxFit.fitWidth,
+                ),
               ],
             ),
           ),
@@ -151,7 +155,7 @@ class StayActiveScreen extends StatelessWidget {
                   Container(
                     width: 6.w,
                     height: 6.w,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: _kDeep,
                       shape: BoxShape.circle,
                     ),
@@ -173,7 +177,7 @@ class StayActiveScreen extends StatelessWidget {
           Center(
             child: Text(
               'Small movements, healthier habits.',
-              style: bodyStyle(13.5, color: const Color(0xFF4B5563)),
+              style: bodyStyle(13.5, color: AppPalette.textBody),
             ),
           ),
           SizedBox(height: 14.h),
@@ -238,7 +242,7 @@ class ActivityRoutineScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 3.w),
       margin: EdgeInsets.symmetric(horizontal: 3.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Column(
@@ -273,12 +277,14 @@ class ActivityRoutineScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppPalette.surface,
                   borderRadius: BorderRadius.circular(14.r),
-                  border: Border.all(color: const Color(0xFFDDF4EC)),
-                  boxShadow: const [
+                  border: Border.all(
+                    color: AppPalette.tintLine(const Color(0xFFDDF4EC)),
+                  ),
+                  boxShadow: [
                     BoxShadow(
-                      color: Color(0x1F33D2AB),
+                      color: AppPalette.shadow(const Color(0x1F33D2AB)),
                       blurRadius: 8,
                       offset: Offset(0, 2),
                     ),
@@ -289,8 +295,8 @@ class ActivityRoutineScreen extends StatelessWidget {
                     Container(
                       width: 34.w,
                       height: 34.w,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD3F8E9),
+                      decoration: BoxDecoration(
+                        color: AppPalette.tint(const Color(0xFFD3F8E9)),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(d.icon, size: 18.sp, color: _kDeep),
@@ -311,7 +317,7 @@ class ActivityRoutineScreen extends StatelessWidget {
                         d.title,
                         style: bodyStyle(
                           14,
-                          color: const Color(0xFF374151),
+                          color: AppPalette.textBody,
                           weight: FontWeight.w400,
                         ),
                       ),
@@ -346,10 +352,10 @@ class ActivityRoutineScreen extends StatelessWidget {
                             width: 22.w,
                             height: 22.w,
                             decoration: BoxDecoration(
-                              color: done ? _kPill : Colors.white,
+                              color: done ? _kPill : AppPalette.surface,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: done ? _kPill : const Color(0xFFD1D5DB),
+                                color: done ? _kPill : AppPalette.border,
                               ),
                             ),
                             child: done
@@ -372,7 +378,7 @@ class ActivityRoutineScreen extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 10.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFDDFBEF),
+              color: AppPalette.tint(const Color(0xFFDDFBEF)),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(

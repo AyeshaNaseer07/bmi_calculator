@@ -8,6 +8,7 @@ import '../onboarding/soft_paywall_screen.dart';
 import '../widgets/premium_feature_dialog.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
+import '../../core/theme/app_palette.dart';
 
 export 'meal_screens.dart';
 
@@ -52,11 +53,11 @@ class EatBalancedMealsScreen extends StatelessWidget {
               child: Container(
                 width: 140.w,
                 height: 140.w,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0x6633D2AB),
+                      color: AppPalette.shadow(const Color(0x6633D2AB)),
                       blurRadius: 36,
                       spreadRadius: 4,
                     ),
@@ -88,7 +89,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
                 Text(
                   'NUTRITION GUIDE',
                   style: TextStyle(
-                    color: const Color(0xFF00714D),
+                    color: AppPalette.ink(const Color(0xFF00714D)),
                     fontSize: 11,
                     fontFamily: 'Plus Jakarta Sans',
                     fontWeight: FontWeight.w700,
@@ -170,11 +171,11 @@ class _HubCard extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppPalette.surface,
             borderRadius: BorderRadius.circular(20.r),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Color(0x3333D2AB),
+                color: AppPalette.shadow(const Color(0x3333D2AB)),
                 blurRadius: 8,
                 offset: Offset.zero,
               ),
@@ -195,7 +196,7 @@ class _HubCard extends StatelessWidget {
                           child: Text(
                             title,
                             style: TextStyle(
-                              color: const Color(0xFF111827),
+                              color: AppPalette.textPrimary,
                               fontSize: 15.5,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
@@ -216,7 +217,7 @@ class _HubCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: const Color(0xFF6B7280),
+                        color: AppPalette.textSecondary,
                         fontSize: 12.5,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -229,7 +230,7 @@ class _HubCard extends StatelessWidget {
               SizedBox(width: 6.w),
               Icon(
                 Icons.chevron_right_rounded,
-                color: const Color(0xFF9CA3AF),
+                color: AppPalette.textMuted,
                 size: 26.sp,
               ),
             ],
@@ -244,22 +245,26 @@ class EatVegetablesScreen extends StatelessWidget {
   const EatVegetablesScreen({super.key});
 
   static BoxDecoration get _cardDeco => BoxDecoration(
-    color: Colors.white,
+    color: AppPalette.surface,
     borderRadius: BorderRadius.circular(20.r),
-    boxShadow: const [
-      BoxShadow(color: Color(0x3333D2AB), blurRadius: 8, offset: Offset.zero),
+    boxShadow: [
+      BoxShadow(
+        color: AppPalette.shadow(const Color(0x3333D2AB)),
+        blurRadius: 8,
+        offset: Offset.zero,
+      ),
     ],
   );
 
   static TextStyle _title(double size) => TextStyle(
-    color: const Color(0xFF111827),
+    color: AppPalette.textPrimary,
     fontSize: size,
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
   );
 
   static TextStyle get _sub => TextStyle(
-    color: const Color(0xFF6B7280),
+    color: AppPalette.textSecondary,
     fontSize: 13,
     fontFamily: 'Inter',
     fontWeight: FontWeight.w400,
@@ -267,7 +272,7 @@ class EatVegetablesScreen extends StatelessWidget {
   );
 
   static TextStyle get _section => TextStyle(
-    color: const Color(0xFF111827),
+    color: AppPalette.textPrimary,
     fontSize: 18,
     fontFamily: 'Plus Jakarta Sans',
     fontWeight: FontWeight.w700,
@@ -395,7 +400,7 @@ class EatVegetablesScreen extends StatelessWidget {
                   'Start by adding vegetables to one meal. You can build up to more over time.',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: _sub.copyWith(color: const Color(0xFF4B5563)),
+                  style: _sub.copyWith(color: AppPalette.textBody),
                 ),
               ],
             ),
@@ -413,7 +418,7 @@ class LeanProteinScreen extends StatelessWidget {
     width: double.infinity,
     padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 14.h),
     decoration: BoxDecoration(
-      color: const Color(0xFFD9F5EC),
+      color: AppPalette.tint(const Color(0xFFD9F5EC)),
       borderRadius: BorderRadius.circular(16.r),
       border: Border.all(color: const Color(0xFF2CC99E)),
     ),
@@ -426,7 +431,7 @@ class LeanProteinScreen extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            color: const Color(0xFF111827),
+            color: AppPalette.textPrimary,
             fontSize: 15,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
@@ -436,7 +441,7 @@ class LeanProteinScreen extends StatelessWidget {
         Text(
           subtitle,
           style: TextStyle(
-            color: const Color(0xFF6B7280),
+            color: AppPalette.textSecondary,
             fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
@@ -512,10 +517,14 @@ class PortionSizesScreen extends StatelessWidget {
     margin: EdgeInsets.only(bottom: 12.h),
     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppPalette.surface,
       borderRadius: BorderRadius.circular(18.r),
-      boxShadow: const [
-        BoxShadow(color: Color(0x3333D2AB), blurRadius: 8, offset: Offset.zero),
+      boxShadow: [
+        BoxShadow(
+          color: AppPalette.shadow(const Color(0x3333D2AB)),
+          blurRadius: 8,
+          offset: Offset.zero,
+        ),
       ],
     ),
     child: Row(
@@ -529,7 +538,7 @@ class PortionSizesScreen extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  color: const Color(0xFF111827),
+                  color: AppPalette.textPrimary,
                   fontSize: 16,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
@@ -539,7 +548,7 @@ class PortionSizesScreen extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
-                  color: const Color(0xFF6B7280),
+                  color: AppPalette.textSecondary,
                   fontSize: 13.5,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,

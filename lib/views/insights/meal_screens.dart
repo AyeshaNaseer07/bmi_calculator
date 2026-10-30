@@ -7,12 +7,14 @@ import '../../core/constants/app_assets.dart';
 import 'insight_common.dart';
 import 'meal_plan_data.dart';
 import 'meal_progress_screens.dart';
+import '../../core/theme/app_palette.dart';
 
 export 'meal_plan_data.dart';
 export 'meal_progress_screens.dart';
 
-const Color _kDeep = Color(0xFF006B4E);
-const Color _kLav = Color(0xFFEDEFFB);
+Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
+const Color _kDeepFill = Color(0xFF006B4E);
+Color get _kLav => AppPalette.tint(const Color(0xFFEDEFFB));
 
 /// "1 Week Meal Plan" — the Meal Planner list.
 class DailyMealPlanScreen extends StatelessWidget {
@@ -32,7 +34,7 @@ class DailyMealPlanScreen extends StatelessWidget {
           Text(
             'Meal Planner',
             style: TextStyle(
-              color: const Color(0xFF141B2B),
+              color: AppPalette.textPrimary,
               fontSize: 18,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w600,
@@ -74,7 +76,7 @@ class _TargetBanner extends StatelessWidget {
       child: Text(
         'Your daily target: ${c.targetKcal} kcal  •  ${c.goal}',
         style: TextStyle(
-          color: const Color(0xFF141B2B),
+          color: AppPalette.textPrimary,
           fontSize: 12.sp,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
@@ -120,12 +122,17 @@ class _DayMeals extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 2.w),
           padding: EdgeInsets.symmetric(vertical: 7.h),
           decoration: BoxDecoration(
+            // Selected stays deep green in both themes (white text on it).
             color: selected
-                ? _kDeep
-                : (done ? const Color(0xFFC9F7E3) : Colors.white),
+                ? _kDeepFill
+                : (done
+                      ? AppPalette.tint(const Color(0xFFC9F7E3))
+                      : AppPalette.surface),
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: selected ? _kDeep : const Color(0xFFD5F2E8),
+              color: selected
+                  ? _kDeepFill
+                  : AppPalette.tintLine(const Color(0xFFD5F2E8)),
               width: 1.2,
             ),
           ),
@@ -135,7 +142,7 @@ class _DayMeals extends StatelessWidget {
                 'DAY',
                 style: bodyStyle(
                   8.5,
-                  color: selected ? Colors.white70 : const Color(0xFF6B7280),
+                  color: selected ? Colors.white70 : AppPalette.textSecondary,
                   weight: FontWeight.w700,
                 ),
               ),
@@ -187,12 +194,14 @@ class _MealCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.fromLTRB(14.w, 14.h, 12.w, 12.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: const Color(0xFFDDF4EC)),
-          boxShadow: const [
+          border: Border.all(
+            color: AppPalette.tintLine(const Color(0xFFDDF4EC)),
+          ),
+          boxShadow: [
             BoxShadow(
-              color: Color(0x1F33D2AB),
+              color: AppPalette.shadow(const Color(0x1F33D2AB)),
               blurRadius: 10,
               offset: Offset(0, 3),
             ),
@@ -229,7 +238,7 @@ class _MealCard extends StatelessWidget {
                       Text(
                         meal.slot.toUpperCase(),
                         style: TextStyle(
-                          color: const Color(0xFF006948),
+                          color: AppPalette.ink(const Color(0xFF006948)),
                           fontSize: 11,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w700,
@@ -243,7 +252,7 @@ class _MealCard extends StatelessWidget {
                           vertical: 3.h,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFDDF8EC),
+                          color: AppPalette.tint(const Color(0xFFDDF8EC)),
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: Row(
@@ -275,7 +284,7 @@ class _MealCard extends StatelessWidget {
                     child: Text(
                       meal.name,
                       style: TextStyle(
-                        color: const Color(0xFF141B2B),
+                        color: AppPalette.textPrimary,
                         fontSize: 18,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w600,
@@ -290,7 +299,7 @@ class _MealCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: const Color(0xFF3D4A42),
+                      color: AppPalette.textBody,
                       fontSize: 13,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w400,
@@ -313,7 +322,7 @@ class _MealCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: const Color(0xFF3D4A42),
+                            color: AppPalette.textBody,
                             fontSize: 11,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w700,
@@ -334,11 +343,13 @@ class _MealCard extends StatelessWidget {
                               vertical: 7.h,
                             ),
                             decoration: BoxDecoration(
-                              color: done ? kGreen : _kDeep,
+                              color: done ? kGreen : _kDeepFill,
                               borderRadius: BorderRadius.circular(20.r),
-                              boxShadow: const [
+                              boxShadow: [
                                 BoxShadow(
-                                  color: Color(0x33006B4E),
+                                  color: AppPalette.shadow(
+                                    const Color(0x33006B4E),
+                                  ),
                                   blurRadius: 6,
                                   offset: Offset(0, 3),
                                 ),
@@ -416,7 +427,9 @@ class MealDetailScreen extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 3.w),
         padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
-          color: hi ? const Color(0xFF8FF0CD).withValues(alpha: 0.6) : _kLav,
+          color: hi
+              ? AppPalette.tint(const Color(0xFF8FF0CD)).withValues(alpha: 0.6)
+              : _kLav,
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Stack(
@@ -431,7 +444,7 @@ class MealDetailScreen extends StatelessWidget {
                     label,
                     style: bodyStyle(
                       11,
-                      color: hi ? _kDeep : const Color(0xFF4B5563),
+                      color: hi ? _kDeep : AppPalette.textBody,
                       weight: FontWeight.w600,
                     ).copyWith(letterSpacing: 0.4),
                   ),
@@ -442,7 +455,7 @@ class MealDetailScreen extends StatelessWidget {
                     sub,
                     style: bodyStyle(
                       12,
-                      color: hi ? _kDeep : const Color(0xFF6B7280),
+                      color: hi ? _kDeep : AppPalette.textSecondary,
                       weight: FontWeight.w500,
                     ),
                   ),
@@ -456,7 +469,7 @@ class MealDetailScreen extends StatelessWidget {
                 child: Container(
                   width: 7.w,
                   height: 7.w,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: _kDeep,
                     shape: BoxShape.circle,
                   ),
@@ -481,7 +494,7 @@ class MealDetailScreen extends StatelessWidget {
         t,
         style: bodyStyle(
           12.5,
-          color: const Color(0xFF1F3A34),
+          color: AppPalette.textPrimary,
           weight: FontWeight.w600,
         ),
       ),
@@ -571,7 +584,7 @@ class MealDetailScreen extends StatelessWidget {
                           Container(
                             width: 8.w,
                             height: 8.w,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: _kDeep,
                               shape: BoxShape.circle,
                             ),
@@ -673,7 +686,9 @@ class MealDetailScreen extends StatelessWidget {
                     vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: i == 0 ? const Color(0xFFC5F6E3) : _kLav,
+                    color: i == 0
+                        ? AppPalette.tint(const Color(0xFFC5F6E3))
+                        : _kLav,
                     borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Text(
@@ -694,12 +709,12 @@ class MealDetailScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.fromLTRB(12.w, 14.h, 12.w, 6.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppPalette.surface,
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(color: kMintBorder, width: 1.4),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Color(0x1F33D2AB),
+                  color: AppPalette.shadow(const Color(0x1F33D2AB)),
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),
@@ -722,7 +737,7 @@ class MealDetailScreen extends StatelessWidget {
                     const Spacer(),
                     Text(
                       'Target: ${meal.target}% of daily plan',
-                      style: bodyStyle(12, color: const Color(0xFF4B5563)),
+                      style: bodyStyle(12, color: AppPalette.textBody),
                     ),
                   ],
                 ),
@@ -757,7 +772,7 @@ class MealDetailScreen extends StatelessWidget {
                         ),
                         Expanded(
                           flex: meal.fatPct,
-                          child: Container(color: const Color(0xFFC3CFCB)),
+                          child: Container(color: AppPalette.border),
                         ),
                       ],
                     ),
@@ -769,7 +784,7 @@ class MealDetailScreen extends StatelessWidget {
                   children: [
                     _dot(_kDeep, 'Protein'),
                     _dot(const Color(0xFF3EE0A8), 'Carbs'),
-                    _dot(const Color(0xFFB9C5C1), 'Healthy Fats'),
+                    _dot(AppPalette.textMuted, 'Healthy Fats'),
                   ],
                 ),
                 SizedBox(height: 6.h),
@@ -783,7 +798,7 @@ class MealDetailScreen extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppPalette.surface,
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(color: kMintBorder, width: 1.4),
               ),
@@ -830,7 +845,7 @@ class IngredientsScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.fromLTRB(6.w, 10.h, 6.w, 10.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppPalette.surface,
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: kMintBorder, width: 1.4),
             ),
@@ -852,7 +867,7 @@ class IngredientsScreen extends StatelessWidget {
                         Text(
                           '${meal.ingredients.length} items',
                           style: TextStyle(
-                            color: const Color(0xFF006948),
+                            color: AppPalette.ink(const Color(0xFF006948)),
                             fontSize: 14,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w600,
@@ -871,7 +886,7 @@ class IngredientsScreen extends StatelessWidget {
                       '${meal.portionLabel} — quantities are adjusted to your '
                       'daily calorie target.',
                       style: TextStyle(
-                        color: const Color(0xFF6B7280),
+                        color: AppPalette.textSecondary,
                         fontSize: 11.sp,
                         fontFamily: 'Inter',
                       ),
@@ -885,7 +900,7 @@ class IngredientsScreen extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEBFAF4),
+                      color: AppPalette.tint(const Color(0xFFEBFAF4)),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Row(
@@ -893,8 +908,8 @@ class IngredientsScreen extends StatelessWidget {
                         Container(
                           width: 36.w,
                           height: 36.w,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: AppPalette.surface,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -918,7 +933,7 @@ class IngredientsScreen extends StatelessWidget {
                           ing[1],
                           style: bodyStyle(
                             13,
-                            color: const Color(0xFF374151),
+                            color: AppPalette.textBody,
                             weight: FontWeight.w500,
                           ),
                         ),

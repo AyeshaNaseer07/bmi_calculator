@@ -50,6 +50,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/dark/
     - assets/images/meals/
     - assets/images/badges/
     - assets/lotties/

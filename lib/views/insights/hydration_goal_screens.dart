@@ -5,9 +5,10 @@ import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import 'insight_common.dart';
 import 'personal_targets.dart';
+import '../../core/theme/app_palette.dart';
 
-const Color _kDeep = Color(0xFF006B4E);
-const Color _kSub = Color(0xFF6B7280);
+Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
+Color get _kSub => AppPalette.textSecondary;
 
 /// "Your Daily Goal" with a tappable glass tracker sized to the user.
 class DailyGoalScreen extends StatefulWidget {
@@ -37,12 +38,16 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
           margin: EdgeInsets.symmetric(horizontal: 3.w),
           padding: EdgeInsets.symmetric(vertical: 6.h),
           decoration: BoxDecoration(
-            color: on ? const Color(0xFFE9FBF3) : const Color(0xFFF4F6F9),
+            color: on
+                ? AppPalette.tint(const Color(0xFFE9FBF3))
+                : AppPalette.surfaceMuted,
             borderRadius: BorderRadius.circular(10.r),
             border: Border.all(
               color: on
-                  ? (current ? kGreen : const Color(0xFFA8EBD0))
-                  : const Color(0xFFE3E8EE),
+                  ? (current
+                        ? kGreen
+                        : AppPalette.tint(const Color(0xFFA8EBD0)))
+                  : AppPalette.border,
               width: current ? 1.8 : 1.1,
             ),
           ),
@@ -60,7 +65,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 '$n',
                 style: bodyStyle(
                   11.5,
-                  color: on ? _kDeep : const Color(0xFF9CA3AF),
+                  color: on ? _kDeep : AppPalette.textMuted,
                   weight: FontWeight.w600,
                 ),
               ),
@@ -88,7 +93,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                   text: text,
                   style: bodyStyle(
                     12,
-                    color: const Color(0xFF4B5563),
+                    color: AppPalette.textBody,
                     weight: FontWeight.w500,
                   ),
                 ),
@@ -110,9 +115,9 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.r),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Color(0x1F33D2AB),
+                  color: AppPalette.shadow(const Color(0x1F33D2AB)),
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),
@@ -131,12 +136,14 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
           Container(
             padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppPalette.surface,
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: const Color(0xFFDDF4EC)),
-              boxShadow: const [
+              border: Border.all(
+                color: AppPalette.tintLine(const Color(0xFFDDF4EC)),
+              ),
+              boxShadow: [
                 BoxShadow(
-                  color: Color(0x1A33D2AB),
+                  color: AppPalette.shadow(const Color(0x1A33D2AB)),
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),
@@ -162,11 +169,11 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                         vertical: 2,
                       ),
                       decoration: ShapeDecoration(
-                        color: const Color(0xFFF0FDFA),
+                        color: AppPalette.tint(const Color(0xFFF0FDFA)),
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
                             width: 1,
-                            color: const Color(0xFFCCFBF1),
+                            color: AppPalette.tintLine(const Color(0xFFCCFBF1)),
                           ),
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -174,7 +181,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                       child: Text(
                         'RECOMMENDED',
                         style: TextStyle(
-                          color: const Color(0xFF0F766E),
+                          color: AppPalette.ink(const Color(0xFF0F766E)),
                           fontSize: 10,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w600,
@@ -188,7 +195,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                       '$_glasses / $_goal\nGlasses',
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: const Color(0xFF059669),
+                        color: AppPalette.ink(const Color(0xFF059669)),
                         fontSize: 12,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w800,
@@ -223,7 +230,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFD3F3E8),
+              color: AppPalette.tint(const Color(0xFFD3F3E8)),
               borderRadius: BorderRadius.circular(14.r),
             ),
             child: Row(
@@ -275,14 +282,14 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
             width: double.infinity,
             padding: EdgeInsets.all(14.w),
             decoration: ShapeDecoration(
-              color: Colors.white,
+              color: AppPalette.surface,
               shape: RoundedRectangleBorder(
                 side: BorderSide(width: 1, color: const Color(0xCCE2E8F0)),
                 borderRadius: BorderRadius.circular(16),
               ),
               shadows: [
                 BoxShadow(
-                  color: Color(0x5109B389),
+                  color: AppPalette.shadow(const Color(0x5109B389)),
                   blurRadius: 4,
                   offset: Offset(0, 0),
                   spreadRadius: 0,
@@ -296,7 +303,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                   'EASY WAYS TO STAY HYDRATED',
                   style: bodyStyle(
                     12,
-                    color: const Color(0xFF8A94A6),
+                    color: AppPalette.textSecondary,
                     weight: FontWeight.w700,
                   ).copyWith(letterSpacing: 1.0),
                 ),

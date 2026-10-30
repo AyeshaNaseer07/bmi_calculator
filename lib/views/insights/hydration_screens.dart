@@ -5,10 +5,11 @@ import 'package:get/get.dart';
 import '../../core/constants/app_assets.dart';
 import 'hydration_goal_screens.dart';
 import 'insight_common.dart';
+import '../../core/theme/app_palette.dart';
 
 export 'hydration_goal_screens.dart';
 
-const Color _kSub = Color(0xFF6B7280);
+Color get _kSub => AppPalette.textSecondary;
 
 class _Benefit extends StatelessWidget {
   final String icon;
@@ -44,9 +45,9 @@ class _Benefit extends StatelessWidget {
               side: BorderSide(width: 1, color: border),
               borderRadius: BorderRadius.circular(20.r),
             ),
-            shadows: const [
+            shadows: [
               BoxShadow(
-                color: Color(0x0A000000),
+                color: AppPalette.shadow(const Color(0x0A000000)),
                 blurRadius: 12,
                 offset: Offset(0, 4),
                 spreadRadius: 0,
@@ -66,7 +67,7 @@ class _Benefit extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: const Color(0xFF111827),
+                        color: AppPalette.textPrimary,
                         fontSize: 16,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
@@ -77,7 +78,7 @@ class _Benefit extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: const Color(0xFF6B7280),
+                        color: AppPalette.textSecondary,
                         fontSize: 13,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -120,7 +121,7 @@ class StayHydratedScreen extends StatelessWidget {
             child: Text(
               'Drink enough water daily.',
               style: TextStyle(
-                color: const Color(0xFF6B7280),
+                color: AppPalette.textSecondary,
                 fontSize: 14,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
@@ -131,7 +132,7 @@ class StayHydratedScreen extends StatelessWidget {
           Text(
             'Benefits',
             style: TextStyle(
-              color: const Color(0xFF111827),
+              color: AppPalette.textPrimary,
               fontSize: 18,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
@@ -142,8 +143,8 @@ class StayHydratedScreen extends StatelessWidget {
             icon: AppAssets.waterBoostIcon,
             title: 'Boosts Your Energy',
             subtitle: 'Water helps your body and mind work better.',
-            bg: const Color(0xFFEAFBF3),
-            border: const Color(0xFFC8F0DE),
+            bg: AppPalette.tint(const Color(0xFFEAFBF3)),
+            border: AppPalette.tintLine(const Color(0xFFC8F0DE)),
             chevron: const Color(0xFF10B981),
             onTap: () => Get.to(() => const BoostsEnergyScreen()),
           ),
@@ -151,8 +152,8 @@ class StayHydratedScreen extends StatelessWidget {
             icon: AppAssets.waterSupportIcon,
             title: 'Supports Digestion',
             subtitle: 'Helps your digestive system work smoothly.',
-            bg: const Color(0xFFEBF3FE),
-            border: const Color(0xFFD3E4FB),
+            bg: AppPalette.tint(const Color(0xFFEBF3FE)),
+            border: AppPalette.tintLine(const Color(0xFFD3E4FB)),
             chevron: const Color(0xFF3B82F6),
             onTap: () => Get.to(() => const SupportsDigestionScreen()),
           ),
@@ -160,8 +161,8 @@ class StayHydratedScreen extends StatelessWidget {
             icon: AppAssets.waterGoodIcon,
             title: 'Good for Your Skin',
             subtitle: 'Staying hydrated helps maintain healthy skin.',
-            bg: const Color(0xFFF3EEFE),
-            border: const Color(0xFFE2D6FB),
+            bg: AppPalette.tint(const Color(0xFFF3EEFE)),
+            border: AppPalette.tintLine(const Color(0xFFE2D6FB)),
             chevron: const Color(0xFF8B5CF6),
             onTap: () => Get.to(() => const GoodForSkinScreen()),
           ),
@@ -169,9 +170,9 @@ class StayHydratedScreen extends StatelessWidget {
             icon: AppAssets.waterDailyIcon,
             title: 'Your Daily Goal',
             subtitle: 'Find out how much water you may need each day.',
-            bg: const Color(0xFFF8F9FB),
-            border: const Color(0xFFD7F0E6),
-            chevron: const Color(0xFF4B5563),
+            bg: AppPalette.surfaceMuted,
+            border: AppPalette.tintLine(const Color(0xFFD7F0E6)),
+            chevron: AppPalette.textBody,
             onTap: () => Get.to(() => const DailyGoalScreen()),
           ),
         ],
@@ -198,7 +199,7 @@ class _MintRow extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(12.w, 14.h, 14.w, 14.h),
         decoration: BoxDecoration(
-          color: const Color(0xFFDFF7EF),
+          color: AppPalette.tint(const Color(0xFFDFF7EF)),
           borderRadius: BorderRadius.circular(18.r),
         ),
         child: Row(
@@ -212,7 +213,7 @@ class _MintRow extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: const Color(0xFF111827),
+                      color: AppPalette.textPrimary,
                       fontSize: 16,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
@@ -222,7 +223,7 @@ class _MintRow extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: const Color(0xFF6B7280),
+                      color: AppPalette.textSecondary,
                       fontSize: 13.5,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
@@ -268,7 +269,7 @@ class BoostsEnergyScreen extends StatelessWidget {
             child: Text(
               'Stay hydrated to help your body feel its best.',
               style: TextStyle(
-                color: const Color(0xFF6B7280),
+                color: AppPalette.textSecondary,
                 fontSize: 13,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
@@ -279,7 +280,7 @@ class BoostsEnergyScreen extends StatelessWidget {
           Text(
             'How Water Helps',
             style: TextStyle(
-              color: const Color(0xFF111827),
+              color: AppPalette.textPrimary,
               fontSize: 17,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
@@ -325,11 +326,11 @@ class SupportsDigestionScreen extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
       // Soft mint glow all round (no border), like the nutrition cards.
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(18.r),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x3333D2AB),
+            color: AppPalette.shadow(const Color(0x3333D2AB)),
             blurRadius: 8,
             offset: Offset.zero,
           ),
@@ -346,7 +347,7 @@ class SupportsDigestionScreen extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    color: const Color(0xFF111827),
+                    color: AppPalette.textPrimary,
                     fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
@@ -356,7 +357,7 @@ class SupportsDigestionScreen extends StatelessWidget {
                 Text(
                   sub,
                   style: TextStyle(
-                    color: const Color(0xFF6B7280),
+                    color: AppPalette.textSecondary,
                     fontSize: 13,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
@@ -382,7 +383,7 @@ class SupportsDigestionScreen extends StatelessWidget {
             child: Text(
               'Water plays an important role in healthy digestion.',
               style: TextStyle(
-                color: const Color(0xFF6B7280),
+                color: AppPalette.textSecondary,
                 fontSize: 11,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
@@ -394,7 +395,7 @@ class SupportsDigestionScreen extends StatelessWidget {
           Text(
             'Why Water Matters',
             style: TextStyle(
-              color: const Color(0xFF111827),
+              color: AppPalette.textPrimary,
               fontSize: 17,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
@@ -439,12 +440,12 @@ class GoodForSkinScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFD5F2E8)),
-        boxShadow: const [
+        border: Border.all(color: AppPalette.tintLine(const Color(0xFFD5F2E8))),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x1A33D2AB),
+            color: AppPalette.shadow(const Color(0x1A33D2AB)),
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -501,19 +502,19 @@ class GoodForSkinScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           _card(
             _asset(AppAssets.skinHealthIcon, size: 36),
-            const Color(0xFFEAF3FE),
+            AppPalette.tint(const Color(0xFFEAF3FE)),
             'Supports Skin Health',
             'Water helps your body maintain normal skin function.',
           ),
           _card(
             _asset(AppAssets.regularityIcon, size: 36),
-            const Color(0xFFE6F8F1),
+            AppPalette.tint(const Color(0xFFE6F8F1)),
             'Maintains Fluid Balance',
             'Drinking enough water helps maintain your body’s fluid balance.',
           ),
           _card(
             _asset(AppAssets.healthyHabitsIcon, size: 36),
-            const Color(0xFFF1ECFD),
+            AppPalette.tint(const Color(0xFFF1ECFD)),
             'Build Healthy Habits',
             'Regular hydration is one part of caring for your skin.',
           ),
