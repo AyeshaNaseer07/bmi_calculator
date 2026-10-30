@@ -715,8 +715,8 @@ class _TipCard extends StatelessWidget {
                 children: [
                   Image.asset(
                     icon,
-                    width: 44.w,
-                    height: 44.w,
+                    width: 54.w,
+                    height: 54.w,
                     fit: BoxFit.contain,
                   ),
                   SizedBox(height: 10.h),
@@ -726,7 +726,7 @@ class _TipCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: const Color(0xFF1E293B),
-                      fontSize: 14,
+                      fontSize: 14.50,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w700,
                       height: 1.38,
@@ -740,7 +740,13 @@ class _TipCard extends StatelessWidget {
                         subtitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: subStyle,
+                        style: TextStyle(
+                          color: const Color(0xFF94A3B8),
+                          fontSize: 12,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w500,
+                          height: 1.37,
+                        ),
                       ),
                     ],
                   ),

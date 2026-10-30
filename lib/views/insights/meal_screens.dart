@@ -45,39 +45,10 @@ class DailyMealPlanScreen extends StatelessWidget {
           SizedBox(height: 12.h),
           const _DayMeals(),
           SizedBox(height: 4.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEAFBF3),
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: const Color(0xFFB7EBD2)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Remember',
-                  style: TextStyle(
-                    color: const Color(0xFF166534),
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  'Choose portions that suit your needs and enjoy a variety '
-                  'of foods.',
-                  style: TextStyle(
-                    color: const Color(0xFF166534),
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
+          const TipBanner(
+            text:
+                'Remember: Choose portions that suit your needs and enjoy a '
+                'variety of foods.',
           ),
         ],
       ),
@@ -958,38 +929,7 @@ class IngredientsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18.h),
-          Container(
-            padding: EdgeInsets.fromLTRB(10.w, 12.h, 18.w, 12.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE5F5F0),
-              borderRadius: BorderRadius.circular(30.r),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 38.w,
-                  height: 38.w,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFC1F0E0),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.eco_outlined, size: 18.sp, color: _kDeep),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Text(
-                    meal.note,
-                    style: bodyStyle(
-                      13,
-                      color: const Color(0xFF1F3A34),
-                      weight: FontWeight.w500,
-                      height: 1.35,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          TipBanner(text: meal.note),
         ],
       ),
     );

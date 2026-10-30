@@ -192,51 +192,8 @@ class StayActiveScreen extends StatelessWidget {
             true,
           ),
           SizedBox(height: 6.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEEF9F4),
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 30.w,
-                  height: 30.w,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFC9F0DF),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.eco_outlined, size: 16.sp, color: _kDeep),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'YOUR DAILY TIP',
-                        style: bodyStyle(
-                          12,
-                          color: _kDeep,
-                          weight: FontWeight.w800,
-                        ).copyWith(letterSpacing: 0.3),
-                      ),
-                      Text(
-                        ActivityPlanData.tipFor(mc.category),
-                        style: bodyStyle(
-                          13,
-                          color: kInk,
-                          weight: FontWeight.w500,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          TipBanner(
+            text: 'Your Daily Tip: ${ActivityPlanData.tipFor(mc.category)}',
           ),
           SizedBox(height: 10.h),
           const _SafetyNote(),
@@ -266,7 +223,7 @@ class ActivityRoutineScreen extends StatelessWidget {
 
   Widget _pill(IconData i, String t) => Expanded(
     child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 3.w),
       margin: EdgeInsets.symmetric(horizontal: 3.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -274,13 +231,7 @@ class ActivityRoutineScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Moon faces the same way as on the Sleep screen.
-          i == Icons.nightlight_outlined
-              ? Transform.flip(
-                  flipX: true,
-                  child: Icon(i, size: 16.sp, color: _kDeep),
-                )
-              : Icon(i, size: 16.sp, color: _kDeep),
+          Icon(i, size: 16.sp, color: _kDeep),
           SizedBox(height: 2.h),
           FittedBox(
             fit: BoxFit.scaleDown,

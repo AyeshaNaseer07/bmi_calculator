@@ -36,10 +36,24 @@ enum BMICategory {
     }
   }
 
+  /// Light-mode pastel fill for the health feedback banner.
+  Color get feedbackBackground {
+    switch (this) {
+      case BMICategory.underweight:
+        return const Color(0xFFCCEBF8);
+      case BMICategory.normal:
+        return const Color(0xFFE8F9F7);
+      case BMICategory.overweight:
+        return const Color(0xFFFDDBB2);
+      case BMICategory.obese:
+        return const Color(0xFFFEB4B4);
+    }
+  }
+
   String get feedbackMessage {
     switch (this) {
       case BMICategory.underweight:
-        return ' Your BMI is in the underweight range. Nourish your body with healthy foods.';
+        return 'Your BMI is in the underweight range. Nourish your body with healthy foods.';
       case BMICategory.normal:
         return 'Great job! Your BMI is in the normal range. Keep maintaining a healthy lifestyle.';
       case BMICategory.overweight:

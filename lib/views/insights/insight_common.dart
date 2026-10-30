@@ -350,118 +350,201 @@ class InfoRowCard extends StatelessWidget {
   }
 }
 
+/// The one precaution design used app-wide: amber panel, shield icon,
+/// PRECAUTION label, bold [lead] and softer [body]. Only the text changes. Like
+/// [TipBanner] it eases in, here with the shield giving a single amber pulse.
 class PrecautionCard extends StatelessWidget {
   final String lead;
   final String body;
 
   const PrecautionCard({super.key, required this.lead, required this.body});
 
+  static const Color _amber = Color(0xFFD97706);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8EB),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFFDE7C1)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 30.w,
-            height: 30.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFFFEEBC8),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.health_and_safety_outlined,
-              size: 17.sp,
-              color: const Color(0xFFD97706),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'PRECAUTION',
-                  style: bodyStyle(
-                    12,
-                    color: const Color(0xFFB45309),
-                    weight: FontWeight.w800,
-                  ).copyWith(letterSpacing: 0.3),
+    final still = MediaQuery.disableAnimationsOf(context);
+    return Semantics(
+      label: 'Precaution',
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: still ? 1 : 0, end: 1),
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutCubic,
+        builder: (context, t, child) {
+          // Shield ring peaks mid-way, then settles back to none.
+          final pulse = (1 - (2 * t - 1).abs()).clamp(0.0, 1.0);
+          return Opacity(
+            opacity: t,
+            child: Transform.translate(
+              offset: Offset(0, 8.h * (1 - t)),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8EB),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: const Color(0xFFFDE7C1)),
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  lead,
-                  style: bodyStyle(
-                    12.5,
-                    color: kInk,
-                    weight: FontWeight.w600,
-                    height: 1.35,
-                  ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 30.w,
+                      height: 30.w,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFEEBC8),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: _amber.withValues(alpha: 0.35 * pulse),
+                            blurRadius: 12 * pulse,
+                            spreadRadius: 2 * pulse,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.health_and_safety_outlined,
+                        size: 17.sp,
+                        color: _amber,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(child: child!),
+                  ],
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  body,
-                  style: bodyStyle(
-                    12,
-                    color: const Color(0xFF6B7280),
-                    weight: FontWeight.w500,
-                    height: 1.35,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'PRECAUTION',
+              style: bodyStyle(
+                12,
+                color: const Color(0xFFB45309),
+                weight: FontWeight.w800,
+              ).copyWith(letterSpacing: 0.3),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              lead,
+              style: bodyStyle(
+                12.5,
+                color: kInk,
+                weight: FontWeight.w600,
+                height: 1.35,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              body,
+              style: bodyStyle(
+                12,
+                color: const Color(0xFF6B7280),
+                weight: FontWeight.w500,
+                height: 1.35,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
+/// The one tip design used app-wide: mint panel, round green bulb, dark-green
+/// text. Only [text] changes. A short lead-in such as "Simple Tip:" is shown
+/// in bold, and the banner eases in with the bulb briefly lighting up.
 class TipBanner extends StatelessWidget {
   final String text;
-  final String iconAsset;
-  final bool bold;
 
-  const TipBanner({
-    super.key,
-    required this.text,
-    this.iconAsset = AppAssets.tipBulbIcon,
-    this.bold = false,
-  });
+  const TipBanner({super.key, required this.text});
+
+  static const Color _ink = Color(0xFF065F46);
+
+  /// Splits "Lead: rest" when the lead is short enough to be a label.
+  (String?, String) get _parts {
+    final i = text.indexOf(': ');
+    if (i > 0 && i <= 24) {
+      return (text.substring(0, i + 1), text.substring(i + 2));
+    }
+    return (null, text);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE9FBF3),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFBFEBDA)),
-      ),
-      child: Row(
-        children: [
-          Image.asset(iconAsset, width: 30.w, height: 30.w),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Text(
-              text,
-              style: bodyStyle(
-                13,
-                color: kGreenDark,
-                weight: bold ? FontWeight.w600 : FontWeight.w500,
-                height: 1.35,
+    final (lead, body) = _parts;
+    final style = bodyStyle(
+      13,
+      color: _ink,
+      weight: FontWeight.w500,
+      height: 1.35,
+    );
+    final still = MediaQuery.disableAnimationsOf(context);
+
+    return Semantics(
+      label: 'Tip',
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: still ? 1 : 0, end: 1),
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutCubic,
+        builder: (context, t, child) {
+          // Bulb glow peaks mid-way, then settles back to none.
+          final glow = (1 - (2 * t - 1).abs()).clamp(0.0, 1.0);
+          return Opacity(
+            opacity: t,
+            child: Transform.translate(
+              offset: Offset(0, 8.h * (1 - t)),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE9FBF3),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: const Color(0xFFBFEBDA)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: kGreen.withValues(alpha: 0.45 * glow),
+                            blurRadius: 14 * glow,
+                            spreadRadius: 2 * glow,
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        AppAssets.tipBulbIcon,
+                        width: 30.w,
+                        height: 30.w,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(child: child!),
+                  ],
+                ),
               ),
             ),
+          );
+        },
+        child: Text.rich(
+          TextSpan(
+            children: [
+              if (lead != null)
+                TextSpan(
+                  text: '$lead ',
+                  style: style.copyWith(fontWeight: FontWeight.w700),
+                ),
+              TextSpan(text: body),
+            ],
           ),
-        ],
+          style: style,
+        ),
       ),
     );
   }

@@ -123,7 +123,7 @@ abstract class AppAssets {
   static const String insightObese = '$_imagesBase/obese_bmi.webp';
   static const String insightRise = '$_imagesBase/rise_bmi.webp';
   static const String tipMeals = '$_imagesBase/balance_meal.webp';
-  static const String tipHydrated = '$_imagesBase/hydrated.webp';
+  static const String tipHydrated = '$_imagesBase/water.png';
   static const String tipActive = '$_imagesBase/active.webp';
   static const String tipSleep = '$_imagesBase/sleep.webp';
   static const String mealIcon = '$_imagesBase/meal.webp';

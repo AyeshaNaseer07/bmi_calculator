@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           final hasData = bmiController.bmiHistory.isNotEmpty;
                           return _buildGreeting(hasData, profileController);
                         }),
-                        SizedBox(height: 18.h),
+                        SizedBox(height: 20.h),
                       ],
                     ),
                   ),
@@ -506,7 +506,10 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             constraints: BoxConstraints(minHeight: 48.h),
             decoration: BoxDecoration(
-              color: record.category.color.withValues(alpha: 0.10),
+              // Pastel fills are light-only; dark mode tints with the category colour.
+              color: AppPalette.isDark
+                  ? record.category.color.withValues(alpha: 0.10)
+                  : record.category.feedbackBackground,
               borderRadius: BorderRadius.circular(16.r),
               boxShadow: AppColors.cardShadow,
             ),

@@ -306,7 +306,7 @@ class BoostsEnergyScreen extends StatelessWidget {
                 'activities.',
           ),
           SizedBox(height: 24.h),
-          const _TipStrip(
+          const TipBanner(
             text: 'Simple Tip: Keep a glass of water nearby and sip regularly.',
           ),
         ],
@@ -315,43 +315,6 @@ class BoostsEnergyScreen extends StatelessWidget {
   }
 }
 
-class _TipStrip extends StatelessWidget {
-  final String text;
-  final Widget? icon;
-  const _TipStrip({required this.text, this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(14.w, 14.h, 16.w, 14.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAFBF3),
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Row(
-        children: [
-          icon ?? Image.asset(AppAssets.tipBulbIcon, width: 32.w, height: 32.w),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: const Color(0xFF065F46),
-                fontSize: 14,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// "Supports Digestion".
 class SupportsDigestionScreen extends StatelessWidget {
   const SupportsDigestionScreen({super.key});
 
@@ -455,12 +418,7 @@ class SupportsDigestionScreen extends StatelessWidget {
                 'nutrients.',
           ),
           SizedBox(height: 4.h),
-          _TipStrip(
-            icon: Image.asset(
-              AppAssets.glassTipIcon,
-              width: 36.w,
-              height: 36.w,
-            ),
+          const TipBanner(
             text:
                 'Drink water regularly throughout the day, especially with '
                 'meals.',

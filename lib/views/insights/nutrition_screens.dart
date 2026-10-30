@@ -585,7 +585,6 @@ class PortionSizesScreen extends StatelessWidget {
           ),
           SizedBox(height: 4.h),
           const TipBanner(
-            iconAsset: AppAssets.portionHeart,
             text: 'A Simple Habit: Eat slowly and pause to notice when you feel comfortably full.',
           ),
         ],
