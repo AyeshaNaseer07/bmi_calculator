@@ -282,7 +282,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                 ),
                                 _buildUnitToggle(
                                   leftLabel: 'cm',
-                                  rightLabel: 'ft',
+                                  rightLabel: 'ft/in',
                                   isLeftSelected: isCm,
                                   onToggle: (val) =>
                                       controller.toggleHeightUnit(val),
@@ -314,6 +314,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                         min: 3,
                                         max: 7,
                                         width: 44,
+                                        hint: '0',
                                         onCommitted: (f) =>
                                             controller.setHeightFromInput(
                                               BMIService.inchesToCm(

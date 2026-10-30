@@ -107,22 +107,32 @@ class StayActiveScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Container(
-              width: 280.w,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(color: const Color(0xFFDDF4EC)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x1F33D2AB),
-                    blurRadius: 10,
-                    offset: Offset(0, 3),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Soft mint glow peeking out from behind the top-left corner.
+                Positioned(
+                  left: -24.w,
+                  top: -24.h,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 200.w,
+                      height: 150.h,
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          center: Alignment.topLeft,
+                          radius: 1.1,
+                          colors: [
+                            const Color(0xFF33D2AB).withValues(alpha: 0.28),
+                            const Color(0xFF33D2AB).withValues(alpha: 0),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ],
-              ),
-              child: Image.asset(AppAssets.activeHero, fit: BoxFit.fitWidth),
+                ),
+                Image.asset(AppAssets.activeHero, fit: BoxFit.fitWidth),
+              ],
             ),
           ),
           SizedBox(height: 6.h),
@@ -231,7 +241,7 @@ class ActivityRoutineScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(i, size: 16.sp, color: _kDeep),
+          Icon(i, size: 16.sp, color: kGreen),
           SizedBox(height: 2.h),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -250,30 +260,19 @@ class ActivityRoutineScreen extends StatelessWidget {
     final mc = MealPlanController.to;
     final ac = ActivityPlanController.to;
     final week = ActivityPlanData.weekFor(mc.category, mc.activity);
-    final total = ActivityPlanData.weeklyMinutes(mc.category, mc.activity);
     return InsightScaffold(
       title: 'Your Activity Routine',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.h),
-            child: Obx(
-              () => Text(
-                '${ac.doneCount(week.map((d) => d.key))} of 7 days done  •  '
-                '$total min this week',
-                style: bodyStyle(13, color: _kDeep, weight: FontWeight.w700),
-              ),
-            ),
-          ),
           for (final d in week)
             Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
+              padding: EdgeInsets.only(bottom: 9.h),
               child: Container(
-                padding: EdgeInsets.fromLTRB(10.w, 8.h, 12.w, 8.h),
+                padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(18.r),
+                  borderRadius: BorderRadius.circular(14.r),
                   border: Border.all(color: const Color(0xFFDDF4EC)),
                   boxShadow: const [
                     BoxShadow(
@@ -286,18 +285,22 @@ class ActivityRoutineScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      width: 38.w,
-                      height: 38.w,
+                      width: 34.w,
+                      height: 34.w,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFC8F7E4),
+                        color: Color(0xFFD3F8E9),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(d.icon, size: 20.sp, color: _kDeep),
+                      child: Icon(d.icon, size: 18.sp, color: _kDeep),
                     ),
                     SizedBox(width: 10.w),
                     Text(
                       d.dayLabel,
-                      style: headStyle(15, weight: FontWeight.w800),
+                      style: bodyStyle(
+                        13,
+                        color: kInk,
+                        weight: FontWeight.w700,
+                      ),
                     ),
                     SizedBox(width: 6.w),
                     Expanded(
@@ -305,27 +308,27 @@ class ActivityRoutineScreen extends StatelessWidget {
                       child: Text(
                         d.title,
                         style: bodyStyle(
-                          15,
-                          color: kInk,
+                          14,
+                          color: const Color(0xFF374151),
                           weight: FontWeight.w400,
                         ),
                       ),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 3.h,
+                        horizontal: 8.w,
+                        vertical: 2.h,
                       ),
                       decoration: BoxDecoration(
                         color: _kLav,
-                        borderRadius: BorderRadius.circular(10.r),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
                         d.chip,
                         style: bodyStyle(
                           12,
                           color: _kDeep,
-                          weight: FontWeight.w800,
+                          weight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -365,19 +368,19 @@ class ActivityRoutineScreen extends StatelessWidget {
           SizedBox(height: 14.h),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.fromLTRB(10.w, 12.h, 10.w, 12.h),
+            padding: EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 10.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFD9FBEC),
-              borderRadius: BorderRadius.circular(20.r),
+              color: const Color(0xFFDDFBEF),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 2.w),
+                  padding: EdgeInsets.only(left: 4.w),
                   child: Row(
                     children: [
-                      Icon(Icons.eco_rounded, size: 18.sp, color: _kDeep),
+                      Icon(Icons.eco_rounded, size: 18.sp, color: kGreen),
                       SizedBox(width: 6.w),
                       Text(
                         'Stay Consistent',
@@ -391,7 +394,7 @@ class ActivityRoutineScreen extends StatelessWidget {
                   children: [
                     _pill(Icons.directions_walk_rounded, 'Walking breaks'),
                     _pill(Icons.water_drop_outlined, 'Drink water'),
-                    _pill(Icons.nightlight_outlined, 'Enough sleep'),
+                    _pill(Icons.dark_mode_outlined, 'Enough sleep'),
                   ],
                 ),
               ],

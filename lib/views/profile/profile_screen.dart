@@ -459,12 +459,15 @@ class ProfileScreen extends StatelessWidget {
                             onTap: () =>
                                 Get.toNamed(AppRoutes.languagesSettings),
                           ),
+                          Divider(height: 1, color: AppPalette.surfaceMuted),
+
                           // Notifications Switch
                           Expanded(
                             child: Obx(() {
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 4.h),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
                                       width: 38.w,
@@ -484,6 +487,9 @@ class ProfileScreen extends StatelessWidget {
                                     SizedBox(width: 12.w),
                                     Expanded(
                                       child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
