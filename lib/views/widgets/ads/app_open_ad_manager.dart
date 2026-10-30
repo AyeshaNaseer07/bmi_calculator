@@ -16,14 +16,18 @@ import 'interstitial_ad_manager.dart';
 /// the background. Never on a cold start, never for premium users.
 ///
 /// The ad is loaded ahead of time (at startup and after each show) so it can
-/// appear the moment the app returns; if none is ready, one is loaded for
-/// next time instead of showing late.
+/// appear the moment the app returns. If it is still loading at that moment
+/// it gets a short grace period; after that it is kept for next time rather
+/// than popping up late.
 class AppOpenAdManager with WidgetsBindingObserver {
   AppOpenAdManager._();
   static final AppOpenAdManager instance = AppOpenAdManager._();
 
   /// How long a [skipNextResume] request stays valid.
   static const Duration _skipWindow = Duration(minutes: 10);
+
+  /// How long a return waits for an ad that is still loading.
+  static const Duration _lateShowWindow = Duration(seconds: 3);
 
   /// Screens where an ad on return would get in the way.
   static const Set<String> _blockedRoutes = {
@@ -36,6 +40,15 @@ class AppOpenAdManager with WidgetsBindingObserver {
   bool _isShowing = false;
   bool _wentToBackground = false;
   DateTime? _skipRequestedAt;
+
+  /// Completed with the result of the load in progress, so a return can
+  /// wait briefly for it.
+  Completer<bool>? _pendingLoad;
+  DateTime? _loadStartedAt;
+
+  String get _loadTime => _loadStartedAt == null
+      ? ''
+      : ' after ${DateTime.now().difference(_loadStartedAt!).inMilliseconds}ms';
 
   bool get _isEnabled {
     if (Get.isRegistered<AppController>() &&
@@ -64,27 +77,34 @@ class AppOpenAdManager with WidgetsBindingObserver {
     AppLovinMAX.setAppOpenAdListener(
       AppOpenAdListener(
         onAdLoadedCallback: (_) {
-          debugPrint('[AppOpenAd] loaded');
-          _isLoading = false;
+          debugPrint('[AppOpenAd] loaded$_loadTime');
+          _finishLoad(true);
         },
         onAdLoadFailedCallback: (_, error) {
           debugPrint(
-            '[AppOpenAd] failed to load: ${error.code} ${error.message}',
+            '[AppOpenAd] failed to load$_loadTime: '
+            '${error.code} ${error.message}',
           );
-          _isLoading = false;
+          _finishLoad(false);
         },
-        onAdDisplayedCallback: (_) => _isShowing = true,
+        onAdDisplayedCallback: (_) {
+          debugPrint('[AppOpenAd] displayed');
+          _isShowing = true;
+        },
         onAdDisplayFailedCallback: (_, error) {
           debugPrint(
             '[AppOpenAd] failed to show: ${error.code} ${error.message}',
           );
           _isShowing = false;
-          _load();
+          _load(fresh: true);
         },
         onAdClickedCallback: (_) => skipNextResume(),
+        // The shown ad is used up; always fetch a new one, even if MAX still
+        // briefly reports one as ready.
         onAdHiddenCallback: (_) {
+          debugPrint('[AppOpenAd] hidden, loading the next one');
           _isShowing = false;
-          _load();
+          _load(fresh: true);
         },
         onAdRevenuePaidCallback: (ad) =>
             logMaxAdRevenue(ad, adType: 'AppOpenAd'),
@@ -100,6 +120,14 @@ class AppOpenAdManager with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.resumed) {
+      debugPrint(
+        '[AppOpenAd] lifecycle ${state.name} (adShowing: $_isShowing, '
+        'interShowing: ${InterstitialAdManager.instance.isShowing}, '
+        'wasInBackground: $_wentToBackground, loading: $_isLoading)',
+      );
+    }
     // Only a real trip to the background counts. System dialogs just make the
     // app "inactive", and on Android our own full-screen ads pause it, so a
     // pause while one of those is up is ignored.
@@ -116,38 +144,84 @@ class AppOpenAdManager with WidgetsBindingObserver {
     final skipAt = _skipRequestedAt;
     _skipRequestedAt = null;
     if (skipAt != null && DateTime.now().difference(skipAt) < _skipWindow) {
+      debugPrint('[AppOpenAd] skipped: user left the app on purpose');
       return;
     }
-    if (!_isEnabled || _isShowing) return;
-    if (_blockedRoutes.contains(Get.currentRoute)) return;
+    if (!_canShowNow()) return;
 
-    final adUnitId = _adUnitId;
-    try {
-      if (await AppLovinMAX.isAppOpenAdReady(adUnitId) == true) {
-        _isShowing = true;
-        AppLovinMAX.showAppOpenAd(adUnitId);
+    final readyNow = await _isReady();
+    debugPrint(
+      '[AppOpenAd] back in app, ready: $readyNow, loading: $_isLoading',
+    );
+    if (!readyNow) {
+      // Still loading (e.g. the user came straight back after the last ad):
+      // give it a moment rather than missing this return altogether.
+      _load();
+      final ok = await (_pendingLoad?.future ?? Future.value(false)).timeout(
+        _lateShowWindow,
+        onTimeout: () => false,
+      );
+      if (!ok || !_canShowNow() || !await _isReady()) {
+        debugPrint('[AppOpenAd] skipped: no ad ready in time');
         return;
       }
-    } catch (e) {
-      debugPrint('[AppOpenAd] ready check error: $e');
     }
-    _load();
+    debugPrint('[AppOpenAd] showing');
+    _isShowing = true;
+    AppLovinMAX.showAppOpenAd(_adUnitId);
   }
 
-  Future<void> _load() async {
+  /// Whether an ad may appear right now; logs the reason when not.
+  bool _canShowNow() {
+    String? reason;
+    if (!_isEnabled) {
+      reason = 'disabled or premium';
+    } else if (_isShowing || InterstitialAdManager.instance.isShowing) {
+      reason = 'another ad is showing';
+    } else if (_blockedRoutes.contains(Get.currentRoute)) {
+      reason = 'on ${Get.currentRoute}';
+    } else if (WidgetsBinding.instance.lifecycleState !=
+        AppLifecycleState.resumed) {
+      reason = 'app not in the foreground';
+    }
+    if (reason != null) debugPrint('[AppOpenAd] skipped: $reason');
+    return reason == null;
+  }
+
+  Future<bool> _isReady() async {
+    try {
+      return await AppLovinMAX.isAppOpenAdReady(_adUnitId) == true;
+    } catch (e) {
+      debugPrint('[AppOpenAd] ready check error: $e');
+      return false;
+    }
+  }
+
+  void _finishLoad(bool loaded) {
+    _isLoading = false;
+    final pending = _pendingLoad;
+    _pendingLoad = null;
+    if (pending != null && !pending.isCompleted) pending.complete(loaded);
+  }
+
+  /// Starts loading unless a load is already running. With [fresh] it loads
+  /// even when MAX reports an ad as ready (right after one was shown).
+  Future<void> _load({bool fresh = false}) async {
     if (_isLoading || !_isEnabled) return;
     _isLoading = true;
+    _pendingLoad = Completer<bool>();
+    _loadStartedAt = DateTime.now();
+    debugPrint('[AppOpenAd] loading${fresh ? ' (fresh)' : ''}');
     try {
       if (!await AppLovinSdk.ready) throw StateError('SDK not ready');
-      final adUnitId = _adUnitId;
-      if (await AppLovinMAX.isAppOpenAdReady(adUnitId) == true) {
-        _isLoading = false;
+      if (!fresh && await _isReady()) {
+        _finishLoad(true);
         return;
       }
-      AppLovinMAX.loadAppOpenAd(adUnitId);
+      AppLovinMAX.loadAppOpenAd(_adUnitId);
     } catch (e) {
       debugPrint('[AppOpenAd] load error: $e');
-      _isLoading = false;
+      _finishLoad(false);
     }
   }
 }

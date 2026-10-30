@@ -896,147 +896,147 @@ class _RemoveAdsCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: 'Remove annoying ads. Upgrade to Premium',
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => Get.toNamed(AppRoutes.paywall),
-        child: Container(
-          width: double.infinity,
-          height: 200.h,
-          decoration: BoxDecoration(
-            borderRadius: radius,
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF06302B), Color(0xFF0B5A52), Color(0xFF0F766E)],
+      // child: GestureDetector(
+      //   behavior: HitTestBehavior.opaque,
+      //   onTap: () => Get.toNamed(AppRoutes.paywall),
+      //   child: Container(
+      child: Container(
+        width: double.infinity,
+        height: 200.h,
+        decoration: BoxDecoration(
+          borderRadius: radius,
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF06302B), Color(0xFF0B5A52), Color(0xFF0F766E)],
+          ),
+          border: Border.all(color: _gold.withValues(alpha: 0.55)),
+          boxShadow: [
+            BoxShadow(
+              color: AppPalette.shadow(
+                const Color(0xFF06302B).withValues(alpha: 0.35),
+              ),
+              blurRadius: 18.r,
+              offset: Offset(0, 8.h),
             ),
-            border: Border.all(color: _gold.withValues(alpha: 0.55)),
-            boxShadow: [
-              BoxShadow(
-                color: AppPalette.shadow(
-                  const Color(0xFF06302B).withValues(alpha: 0.35),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: radius,
+          child: Stack(
+            children: [
+              Positioned(
+                left: -40.w,
+                top: -40.w,
+                child: _glow(150.w, _gold.withValues(alpha: 0.20)),
+              ),
+              Positioned(
+                right: -30.w,
+                bottom: -50.w,
+                child: _glow(150.w, Colors.white.withValues(alpha: 0.07)),
+              ),
+              // Large faded crown watermark.
+              Positioned(
+                right: -14.w,
+                top: -6.h,
+                child: Transform.rotate(
+                  angle: 0.25,
+                  child: Opacity(
+                    opacity: 0.16,
+                    child: Image.asset(AppAssets.crown, width: 110.w),
+                  ),
                 ),
-                blurRadius: 18.r,
-                offset: Offset(0, 8.h),
+              ),
+              Positioned(
+                right: 110.w,
+                top: 18.h,
+                child: Icon(
+                  Icons.auto_awesome,
+                  size: 14.sp,
+                  color: _gold.withValues(alpha: 0.7),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 46.w,
+                          height: 46.w,
+                          padding: EdgeInsets.all(9.w),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withValues(alpha: 0.10),
+                            border: Border.all(
+                              color: _gold.withValues(alpha: 0.6),
+                              width: 1.2,
+                            ),
+                          ),
+                          child: Image.asset(AppAssets.crown),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'PREMIUM',
+                                style: TextStyle(
+                                  color: _gold,
+                                  fontSize: 10.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.4,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              // Scales down rather than truncating.
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Remove Annoying Ads',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 19.sp,
+                                    fontFamily: 'Instrument Sans',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      'Enjoy a faster, distraction-free experience. Track your BMI and weight with no interruptions, plus detailed reports and smart insights.',
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.82),
+                        fontSize: 12.sp,
+                        fontFamily: 'Instrument Sans',
+                        height: 1.35,
+                      ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        AppLovinMAX.showMediationDebugger();
+                      },
+                      child: Text("show debuger"),
+                    ),
+                    const _UpgradeButton(),
+                  ],
+                ),
               ),
             ],
-          ),
-          child: ClipRRect(
-            borderRadius: radius,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: -40.w,
-                  top: -40.w,
-                  child: _glow(150.w, _gold.withValues(alpha: 0.20)),
-                ),
-                Positioned(
-                  right: -30.w,
-                  bottom: -50.w,
-                  child: _glow(150.w, Colors.white.withValues(alpha: 0.07)),
-                ),
-                // Large faded crown watermark.
-                Positioned(
-                  right: -14.w,
-                  top: -6.h,
-                  child: Transform.rotate(
-                    angle: 0.25,
-                    child: Opacity(
-                      opacity: 0.16,
-                      child: Image.asset(AppAssets.crown, width: 110.w),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 110.w,
-                  top: 18.h,
-                  child: Icon(
-                    Icons.auto_awesome,
-                    size: 14.sp,
-                    color: _gold.withValues(alpha: 0.7),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 46.w,
-                            height: 46.w,
-                            padding: EdgeInsets.all(9.w),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white.withValues(alpha: 0.10),
-                              border: Border.all(
-                                color: _gold.withValues(alpha: 0.6),
-                                width: 1.2,
-                              ),
-                            ),
-                            child: Image.asset(AppAssets.crown),
-                          ),
-                          SizedBox(width: 12.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'PREMIUM',
-                                  style: TextStyle(
-                                    color: _gold,
-                                    fontSize: 10.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 1.4,
-                                  ),
-                                ),
-                                SizedBox(height: 2.h),
-                                // Scales down rather than truncating.
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Remove Annoying Ads',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 19.sp,
-                                      fontFamily: 'Instrument Sans',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        'Enjoy a faster, distraction-free experience. Track your BMI and weight with no interruptions, plus detailed reports and smart insights.',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.82),
-                          fontSize: 12.sp,
-                          fontFamily: 'Instrument Sans',
-                          height: 1.35,
-                        ),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          AppLovinMAX.showMediationDebugger();
-                        },
-                        child: Text("show debuger"),
-                      ),
-                      const _UpgradeButton(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

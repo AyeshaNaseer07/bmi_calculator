@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -19,82 +21,91 @@ const Color _kPill = Color(0xFF5CF2C0);
 class StayActiveScreen extends StatelessWidget {
   const StayActiveScreen({super.key});
 
+  /// Activity row. Without [onTap] it is display-only: a flat, dimmed card.
+  /// With [onTap] it is the one live card, raised and gently animated.
   Widget _row(
     String iconAsset,
     String title,
     String sub,
     String chip,
-    bool all,
-  ) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => Get.to(() => const ActivityRoutineScreen()),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
-          decoration: BoxDecoration(
-            color: AppPalette.surface,
-            borderRadius: BorderRadius.circular(18.r),
-            boxShadow: [
-              BoxShadow(
-                color: AppPalette.shadow(const Color(0x14000000)),
-                blurRadius: 10,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Row(
+    bool all, {
+    VoidCallback? onTap,
+  }) {
+    final content = Row(
+      children: [
+        Image.asset(iconAsset, fit: BoxFit.contain, width: 38.w),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(iconAsset, fit: BoxFit.contain, width: 38.w),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          title,
-                          style: headStyle(16, weight: FontWeight.w600),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.w,
-                            vertical: 3.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: all ? _kLav : _kPill,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Text(
-                            chip,
-                            style: bodyStyle(
-                              11.5,
-                              color: _kDeep,
-                              weight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(title, style: headStyle(16, weight: FontWeight.w600)),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 3.h,
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      sub,
+                    decoration: BoxDecoration(
+                      color: all ? _kLav : _kPill,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      chip,
                       style: bodyStyle(
-                        13,
-                        color: AppPalette.textBody,
-                        weight: FontWeight.w600,
+                        11.5,
+                        color: _kDeep,
+                        weight: FontWeight.w500,
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                sub,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: bodyStyle(
+                  13,
+                  color: AppPalette.textBody,
+                  weight: FontWeight.w600,
                 ),
               ),
             ],
           ),
         ),
-      ),
+      ],
+    );
+    final padding = EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h);
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: onTap == null
+          ? Container(
+              padding: padding,
+              decoration: BoxDecoration(
+                // White card with a soft shadow on every side (an even glow
+                // plus a slight lift), no border and no tap.
+                color: AppPalette.surface,
+                borderRadius: BorderRadius.circular(20.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppPalette.shadow(const Color(0x0D000000)),
+                    blurRadius: 12,
+                  ),
+                  BoxShadow(
+                    color: AppPalette.shadow(const Color(0x0A000000)),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: content,
+            )
+          : _LiveActivityCard(onTap: onTap, padding: padding, child: content),
     );
   }
 
@@ -186,6 +197,7 @@ class StayActiveScreen extends StatelessWidget {
             style: headStyle(15, weight: FontWeight.w800),
           ),
           SizedBox(height: 10.h),
+          // Display only.
           _row(
             AppAssets.easyWalkIcon,
             today.title,
@@ -206,6 +218,7 @@ class StayActiveScreen extends StatelessWidget {
             'Stay active throughout the day. Take breaks.',
             'All-day',
             true,
+            onTap: () => Get.to(() => const ActivityRoutineScreen()),
           ),
           SizedBox(height: 6.h),
           TipBanner(
@@ -214,6 +227,141 @@ class StayActiveScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           const _SafetyNote(),
         ],
+      ),
+    );
+  }
+}
+
+/// The tappable "Daily Movement" card: raised with a mint border, a shine
+/// sweeping across it and a breathing glow, so it reads as the one to tap.
+/// Still under the system "reduce motion" setting.
+class _LiveActivityCard extends StatefulWidget {
+  final VoidCallback onTap;
+  final EdgeInsetsGeometry padding;
+  final Widget child;
+
+  const _LiveActivityCard({
+    required this.onTap,
+    required this.padding,
+    required this.child,
+  });
+
+  @override
+  State<_LiveActivityCard> createState() => _LiveActivityCardState();
+}
+
+class _LiveActivityCardState extends State<_LiveActivityCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _loop = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2600),
+  );
+  bool _pressed = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _loop.stop();
+      _loop.value = 0;
+    } else if (!_loop.isAnimating) {
+      _loop.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _loop.dispose();
+    super.dispose();
+  }
+
+  void _setPressed(bool v) {
+    if (_pressed != v) setState(() => _pressed = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(18.r);
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => _setPressed(true),
+      onTapUp: (_) => _setPressed(false),
+      onTapCancel: () => _setPressed(false),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _pressed ? 0.98 : 1,
+        duration: const Duration(milliseconds: 120),
+        child: AnimatedBuilder(
+          animation: _loop,
+          builder: (context, child) {
+            final t = _loop.value;
+            // 0 → 1 → 0 once per cycle.
+            final pulse = 0.5 - 0.5 * math.cos(t * 2 * math.pi);
+            // Shine crosses during the first half, then rests.
+            final shine = (t / 0.5).clamp(0.0, 1.0);
+            return Container(
+              decoration: BoxDecoration(
+                color: AppPalette.surface,
+                borderRadius: radius,
+                border: Border.all(
+                  color: kGreen.withValues(alpha: 0.18 + 0.27 * pulse),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppPalette.shadow(const Color(0x1F000000)),
+                    blurRadius: 14,
+                    offset: const Offset(0, 5),
+                  ),
+                  BoxShadow(
+                    color: kGreen.withValues(alpha: 0.10 + 0.18 * pulse),
+                    blurRadius: 10 + 10 * pulse,
+                    spreadRadius: 1 * pulse,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: radius,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final width = constraints.maxWidth;
+                    final band = width * 0.3;
+                    return Stack(
+                      children: [
+                        if (shine < 1)
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            width: band,
+                            left: -band + (width + band) * shine,
+                            child: IgnorePointer(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: const Alignment(-1, -0.4),
+                                    end: const Alignment(1, 0.4),
+                                    colors: [
+                                      kGreen.withValues(alpha: 0),
+                                      kGreen.withValues(
+                                        alpha: AppPalette.isDark ? 0.18 : 0.12,
+                                      ),
+                                      kGreen.withValues(alpha: 0),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        Padding(padding: widget.padding, child: child),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+          child: widget.child,
+        ),
       ),
     );
   }
