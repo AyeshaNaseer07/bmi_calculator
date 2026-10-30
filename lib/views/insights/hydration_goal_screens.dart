@@ -135,7 +135,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.r),
               child: Image.asset(
-                AppAssets.waterGoalBanner,
+                AppAssets.themed(AppAssets.waterGoalBanner),
                 width: double.infinity,
                 fit: BoxFit.fitWidth,
               ),

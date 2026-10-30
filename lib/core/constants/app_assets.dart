@@ -14,6 +14,7 @@ abstract class AppAssets {
     'above_bmi.webp',
     'obese_bmi.webp',
     'active_stay.webp',
+    'daily_goal.webp',
   };
 
   /// [path], or its `dark/` copy when dark mode is on and one exists.
