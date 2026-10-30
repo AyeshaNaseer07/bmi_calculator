@@ -30,6 +30,19 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
 
+  pod 'AppLovinMediationBigoAdsAdapter'
+  pod 'AppLovinMediationByteDanceAdapter' # Pangle
+  pod 'AppLovinMediationMintegralAdapter'
+  pod 'AppLovinMediationFyberAdapter' # DT Exchange
+  pod 'AppLovinMediationFacebookAdapter' # Meta
+  pod 'AppLovinMediationGoogleAdapter' # AdMob
+  pod 'AppLovinMediationVungleAdapter' # Liftoff
+  pod 'AppLovinMediationChartboostAdapter'
+  pod 'AppLovinMediationInMobiAdapter'
+  pod 'AppLovinMediationYandexAdapter'
+  pod 'AppLovinMediationUnityAdsAdapter'
+
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   pod 'GoogleAdsOnDeviceConversion'
   target 'RunnerTests' do

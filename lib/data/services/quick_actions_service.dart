@@ -72,8 +72,8 @@ class QuickActionsService {
       case 'track_progress':
         targetRoute = AppRoutes.weightTracking;
         break;
-      case 'insights':
-        targetRoute = AppRoutes.healthInsights;
+      case 'history':
+        targetRoute = AppRoutes.history;
         break;
       default:
         return;

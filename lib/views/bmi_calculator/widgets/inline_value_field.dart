@@ -213,6 +213,7 @@ class _InlineValueFieldState extends State<InlineValueField> {
             onTapOutside: (_) => _focus.unfocus(),
             decoration: InputDecoration(
               isDense: true,
+              hintText: '00',
               hintStyle: style.copyWith(color: const Color(0xFFB8E8DA)),
               contentPadding: EdgeInsets.only(bottom: 2.h),
               enabledBorder: const UnderlineInputBorder(

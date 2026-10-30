@@ -1,8 +1,130 @@
 PODS:
+  - Ads-Global (8.3.0.9):
+    - Ads-Global/BUAdSDK (= 8.3.0.9)
+  - Ads-Global/BUAdSDK (8.3.0.9):
+    - Ads-Global/PangleSDK
+    - Ads-Global/TikTokBusinessSDK
+  - Ads-Global/PangleSDK (8.3.0.9)
+  - Ads-Global/TikTokBusinessSDK (8.3.0.9)
   - applovin_max (4.6.4):
     - AppLovinSDK (= 13.6.3)
     - Flutter
+  - AppLovinMediationBigoAdsAdapter (6.1.0.1):
+    - AppLovinSDK (>= 12.4.1)
+    - BigoADS (= 6.1.0)
+  - AppLovinMediationByteDanceAdapter (8.3.0.9.0):
+    - Ads-Global (= 8.3.0.9)
+    - AppLovinSDK (>= 13.0.0)
+  - AppLovinMediationChartboostAdapter (9.14.2.0):
+    - AppLovinSDK (>= 13.0.0)
+    - ChartboostSDK (= 9.14.2)
+  - AppLovinMediationFacebookAdapter (6.22.0.4):
+    - AppLovinSDK (>= 13.0.0)
+    - FBAudienceNetwork (= 6.22.0)
+  - AppLovinMediationFyberAdapter (8.5.1.0):
+    - AppLovinSDK (>= 13.0.0)
+    - Fyber_Marketplace_SDK (= 8.5.1)
+  - AppLovinMediationGoogleAdapter (13.8.0.0):
+    - AppLovinSDK (>= 13.0.0)
+    - Google-Mobile-Ads-SDK (= 13.8.0)
+  - AppLovinMediationInMobiAdapter (11.5.0.0):
+    - AppLovinSDK (>= 13.0.0)
+    - InMobiSDK (= 11.5.0)
+  - AppLovinMediationMintegralAdapter (8.1.7.0.1):
+    - AppLovinSDK (>= 13.0.0)
+    - MintegralAdSDK (= 8.1.7)
+    - MintegralAdSDK/BidSplashAd (= 8.1.7)
+  - AppLovinMediationUnityAdsAdapter (4.21.0.1):
+    - AppLovinSDK (>= 13.0.0)
+    - UnityAds (= 4.21.0)
+  - AppLovinMediationVungleAdapter (7.7.8.0):
+    - AppLovinSDK (>= 13.0.0)
+    - VungleAds (= 7.7.8)
+  - AppLovinMediationYandexAdapter (8.6.0.0):
+    - AppLovinSDK (>= 11.4.0)
+    - YandexMobileAds (= 8.6.0)
   - AppLovinSDK (13.6.3)
+  - AppMetricaAdSupport (6.7.0):
+    - AppMetricaCore (= 6.7.0)
+    - AppMetricaCoreExtension (= 6.7.0)
+  - AppMetricaCore (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaEncodingUtils (= 6.7.0)
+    - AppMetricaFMDB (= 6.7.0)
+    - AppMetricaHostState (= 6.7.0)
+    - AppMetricaIdentifiers (= 6.7.0)
+    - AppMetricaKeychain (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+    - AppMetricaNetwork (= 6.7.0)
+    - AppMetricaPlatform (= 6.7.0)
+    - AppMetricaProtobuf (= 6.7.0)
+    - AppMetricaProtobufUtils (= 6.7.0)
+    - AppMetricaStorageUtils (= 6.7.0)
+    - AppMetricaSynchronization (= 6.7.0)
+  - AppMetricaCoreExtension (6.7.0):
+    - AppMetricaCore (= 6.7.0)
+    - AppMetricaStorageUtils (= 6.7.0)
+  - AppMetricaCoreUtils (6.7.0):
+    - AppMetricaLog (= 6.7.0)
+  - AppMetricaCrashes (6.7.0):
+    - AppMetricaCore (= 6.7.0)
+    - AppMetricaCoreExtension (= 6.7.0)
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaEncodingUtils (= 6.7.0)
+    - AppMetricaHostState (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+    - AppMetricaPlatform (= 6.7.0)
+    - AppMetricaProtobuf (= 6.7.0)
+    - AppMetricaProtobufUtils (= 6.7.0)
+    - AppMetricaStorageUtils (= 6.7.0)
+    - KSCrash/Recording (< 2.6.0, >= 2.5.1)
+  - AppMetricaEncodingUtils (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+    - AppMetricaPlatform (= 6.7.0)
+  - AppMetricaFMDB (6.7.0)
+  - AppMetricaHostState (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+  - AppMetricaIdentifiers (6.7.0):
+    - AppMetricaKeychain (= 6.7.0)
+    - AppMetricaLogSwift (= 6.7.0)
+    - AppMetricaPlatform (= 6.7.0)
+    - AppMetricaStorageUtils (= 6.7.0)
+    - AppMetricaSynchronization (= 6.7.0)
+  - AppMetricaIDSync (6.7.0):
+    - AppMetricaCore (= 6.7.0)
+    - AppMetricaCoreExtension (= 6.7.0)
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+    - AppMetricaNetwork (= 6.7.0)
+    - AppMetricaPlatform (= 6.7.0)
+    - AppMetricaStorageUtils (= 6.7.0)
+  - AppMetricaKeychain (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+    - AppMetricaStorageUtils (= 6.7.0)
+  - AppMetricaLibraryAdapter (6.7.0):
+    - AppMetricaCore (= 6.7.0)
+    - AppMetricaCoreExtension (= 6.7.0)
+  - AppMetricaLog (6.7.0)
+  - AppMetricaLogSwift (6.7.0):
+    - AppMetricaLog (= 6.7.0)
+  - AppMetricaNetwork (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+    - AppMetricaPlatform (= 6.7.0)
+  - AppMetricaPlatform (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+  - AppMetricaProtobuf (6.7.0)
+  - AppMetricaProtobufUtils (6.7.0):
+    - AppMetricaProtobuf (= 6.7.0)
+  - AppMetricaStorageUtils (6.7.0):
+    - AppMetricaCoreUtils (= 6.7.0)
+    - AppMetricaLog (= 6.7.0)
+  - AppMetricaSynchronization (6.7.0):
+    - AppMetricaLogSwift (= 6.7.0)
   - appsflyer_sdk (6.17.7):
     - appsflyer_sdk/Core (= 6.17.7)
   - appsflyer_sdk/Core (6.17.7):
@@ -11,6 +133,9 @@ PODS:
   - AppsFlyerFramework (6.17.7):
     - AppsFlyerFramework/Main (= 6.17.7)
   - AppsFlyerFramework/Main (6.17.7)
+  - BigoADS (6.1.0)
+  - ChartboostSDK (9.14.2)
+  - FBAudienceNetwork (6.22.0)
   - Firebase/CoreOnly (12.19.0):
     - FirebaseCore (~> 12.19.0)
   - Firebase/Crashlytics (12.19.0):
@@ -116,6 +241,7 @@ PODS:
     - Flutter
   - flutter_timezone (0.0.1):
     - Flutter
+  - Fyber_Marketplace_SDK (8.5.1)
   - Google-Mobile-Ads-SDK (13.8.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - google_mobile_ads (9.1.0):
@@ -182,6 +308,52 @@ PODS:
     - GoogleUtilities/Privacy
   - image_picker_ios (0.0.1):
     - Flutter
+  - InMobiSDK (11.5.0)
+  - KSCrash/Core (2.5.1)
+  - KSCrash/Recording (2.5.1):
+    - KSCrash/RecordingCore
+  - KSCrash/RecordingCore (2.5.1):
+    - KSCrash/Core
+  - MintegralAdSDK (8.1.7):
+    - MintegralAdSDK/BannerAd (= 8.1.7)
+    - MintegralAdSDK/BidBannerAd (= 8.1.7)
+    - MintegralAdSDK/BidInterstitialVideoAd (= 8.1.7)
+    - MintegralAdSDK/BidNativeAd (= 8.1.7)
+    - MintegralAdSDK/BidNewInterstitialAd (= 8.1.7)
+    - MintegralAdSDK/BidRewardVideoAd (= 8.1.7)
+    - MintegralAdSDK/InterstitialVideoAd (= 8.1.7)
+    - MintegralAdSDK/NativeAd (= 8.1.7)
+    - MintegralAdSDK/NewInterstitialAd (= 8.1.7)
+    - MintegralAdSDK/RewardVideoAd (= 8.1.7)
+  - MintegralAdSDK/BannerAd (8.1.7):
+    - MintegralAdSDK/NativeAd
+  - MintegralAdSDK/BidBannerAd (8.1.7):
+    - MintegralAdSDK/BannerAd
+    - MintegralAdSDK/BidNativeAd
+  - MintegralAdSDK/BidInterstitialVideoAd (8.1.7):
+    - MintegralAdSDK/BidNativeAd
+    - MintegralAdSDK/InterstitialVideoAd
+  - MintegralAdSDK/BidNativeAd (8.1.7):
+    - MintegralAdSDK/NativeAd
+  - MintegralAdSDK/BidNewInterstitialAd (8.1.7):
+    - MintegralAdSDK/BidNativeAd
+    - MintegralAdSDK/NewInterstitialAd
+  - MintegralAdSDK/BidRewardVideoAd (8.1.7):
+    - MintegralAdSDK/BidNativeAd
+    - MintegralAdSDK/RewardVideoAd
+  - MintegralAdSDK/BidSplashAd (8.1.7):
+    - MintegralAdSDK/BidNativeAd
+    - MintegralAdSDK/SplashAd
+  - MintegralAdSDK/InterstitialVideoAd (8.1.7):
+    - MintegralAdSDK/NativeAd
+  - MintegralAdSDK/NativeAd (8.1.7)
+  - MintegralAdSDK/NewInterstitialAd (8.1.7):
+    - MintegralAdSDK/InterstitialVideoAd
+    - MintegralAdSDK/NativeAd
+  - MintegralAdSDK/RewardVideoAd (8.1.7):
+    - MintegralAdSDK/NativeAd
+  - MintegralAdSDK/SplashAd (8.1.7):
+    - MintegralAdSDK/NativeAd
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
@@ -203,14 +375,35 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - UnityAds (4.21.0):
+    - UnityCoherenceLib (~> 0.2.0)
+  - UnityCoherenceLib (0.2.0)
   - url_launcher_ios (0.0.1):
     - Flutter
+  - VungleAds (7.7.8)
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
+  - YandexMobileAds (8.6.0):
+    - AppMetricaAdSupport (>= 6.7.0, ~> 6.7)
+    - AppMetricaCore (>= 6.7.0, ~> 6.7)
+    - AppMetricaCrashes (>= 6.7.0, ~> 6.7)
+    - AppMetricaIDSync (>= 6.7.0, ~> 6.7)
+    - AppMetricaLibraryAdapter (>= 6.7.0, ~> 6.7)
 
 DEPENDENCIES:
   - applovin_max (from `.symlinks/plugins/applovin_max/ios`)
+  - AppLovinMediationBigoAdsAdapter
+  - AppLovinMediationByteDanceAdapter
+  - AppLovinMediationChartboostAdapter
+  - AppLovinMediationFacebookAdapter
+  - AppLovinMediationFyberAdapter
+  - AppLovinMediationGoogleAdapter
+  - AppLovinMediationInMobiAdapter
+  - AppLovinMediationMintegralAdapter
+  - AppLovinMediationUnityAdsAdapter
+  - AppLovinMediationVungleAdapter
+  - AppLovinMediationYandexAdapter
   - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -232,8 +425,43 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Ads-Global
+    - AppLovinMediationBigoAdsAdapter
+    - AppLovinMediationByteDanceAdapter
+    - AppLovinMediationChartboostAdapter
+    - AppLovinMediationFacebookAdapter
+    - AppLovinMediationFyberAdapter
+    - AppLovinMediationGoogleAdapter
+    - AppLovinMediationInMobiAdapter
+    - AppLovinMediationMintegralAdapter
+    - AppLovinMediationUnityAdsAdapter
+    - AppLovinMediationVungleAdapter
+    - AppLovinMediationYandexAdapter
     - AppLovinSDK
+    - AppMetricaAdSupport
+    - AppMetricaCore
+    - AppMetricaCoreExtension
+    - AppMetricaCoreUtils
+    - AppMetricaCrashes
+    - AppMetricaEncodingUtils
+    - AppMetricaFMDB
+    - AppMetricaHostState
+    - AppMetricaIdentifiers
+    - AppMetricaIDSync
+    - AppMetricaKeychain
+    - AppMetricaLibraryAdapter
+    - AppMetricaLog
+    - AppMetricaLogSwift
+    - AppMetricaNetwork
+    - AppMetricaPlatform
+    - AppMetricaProtobuf
+    - AppMetricaProtobufUtils
+    - AppMetricaStorageUtils
+    - AppMetricaSynchronization
     - AppsFlyerFramework
+    - BigoADS
+    - ChartboostSDK
+    - FBAudienceNetwork
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -247,17 +475,25 @@ SPEC REPOS:
     - FirebaseRemoteConfigInterop
     - FirebaseSessions
     - FirebaseSharedSwift
+    - Fyber_Marketplace_SDK
     - Google-Mobile-Ads-SDK
     - GoogleAdsOnDeviceConversion
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUserMessagingPlatform
     - GoogleUtilities
+    - InMobiSDK
+    - KSCrash
+    - MintegralAdSDK
     - nanopb
     - PromisesObjC
     - PromisesSwift
     - PurchasesHybridCommon
     - RevenueCat
+    - UnityAds
+    - UnityCoherenceLib
+    - VungleAds
+    - YandexMobileAds
 
 EXTERNAL SOURCES:
   applovin_max:
@@ -298,10 +534,45 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
+  Ads-Global: 4d99872117c52015b26f8953e76ab5b1bdcc9659
   applovin_max: 90f1b944d5772b882ff8714d2c312901209c1289
+  AppLovinMediationBigoAdsAdapter: 7793a30618d203944649cbe2be1aeffd72c58590
+  AppLovinMediationByteDanceAdapter: 2f875786e0b682757ea20d6cf620d64383a466c8
+  AppLovinMediationChartboostAdapter: 15f0f4eae43e4d19ce6564994ea31d31fcb4997c
+  AppLovinMediationFacebookAdapter: 4955ca0a79005b48d88f088a78a9e80e44b391f8
+  AppLovinMediationFyberAdapter: c05cbfbdd3aee91981ef1a608f802b73ae08f61b
+  AppLovinMediationGoogleAdapter: 2d1d0ba1fd030443067e1e7e451dd016331e2eff
+  AppLovinMediationInMobiAdapter: c04726d52afa485c4cf93e628ef69b8d4cb42d38
+  AppLovinMediationMintegralAdapter: 3ff0ee391046ad5cea3d254a73daa365c1a13317
+  AppLovinMediationUnityAdsAdapter: d975497ad4fe97123e0a65d9f4c71386aaa70613
+  AppLovinMediationVungleAdapter: 97d2772f4a6607c232216b92c91ad1086cd1bda5
+  AppLovinMediationYandexAdapter: 33e7aca984d4d58e7a5926b4c388291ccb9654ce
   AppLovinSDK: f3da9503e8193d8c4badc1a9965d73a0779812fa
+  AppMetricaAdSupport: ae102d50ef327694fc3dfd037e99cc3001f69514
+  AppMetricaCore: 9fdc4092715cc146ef4431c36e9f05244155de34
+  AppMetricaCoreExtension: 8d7ef25283904df7d69ce8b758219ee264ccadaa
+  AppMetricaCoreUtils: 4d82b9b252d206cf50dbe4cf78252dbe1644f199
+  AppMetricaCrashes: 9edb55cf62f85220b018b934825e4c1abe01ac29
+  AppMetricaEncodingUtils: 41a89c75e828fbf531d64e573be43934714e39e6
+  AppMetricaFMDB: da309b1511f6235768019538a2ad3bf74f71b24f
+  AppMetricaHostState: 3e376324f5b8d9475d90e213894620009e990350
+  AppMetricaIdentifiers: a6989640208acb1b4074e9cb13c91365fbbf2730
+  AppMetricaIDSync: dae939b1c8bedf0f9f1e2e8ce8d8f791505ae52f
+  AppMetricaKeychain: 9901fe665108f443c0f95f4817effa5c222d39c5
+  AppMetricaLibraryAdapter: 8b1621880744960efee25dd5e4499af054351717
+  AppMetricaLog: 0df09f49e49dd8080653a4804d0d847d1a0ded48
+  AppMetricaLogSwift: d0ec6209e0fc3dbe3e28b7ded6c6029d31b29860
+  AppMetricaNetwork: 89c68d39d00b60884779513d4dca416bdc333a84
+  AppMetricaPlatform: 14492fec367cb64e72fa454f20f864d8cf6a4785
+  AppMetricaProtobuf: 66dea6ea38643767fa2ff8f325759d00f048b5fc
+  AppMetricaProtobufUtils: 07b4b3a8fb46893c5802ff77a48d74b71cb27b55
+  AppMetricaStorageUtils: c1148b73b0376dceaa2519817283e01523d488a2
+  AppMetricaSynchronization: 95008c50199fe81d3cb3ea989a1c32f3588dcfef
   appsflyer_sdk: 01d0cd834fe2fffd7f2372ab38690f7483587720
   AppsFlyerFramework: ae7caf1688348f2d7a742037bd4fc6966d39d362
+  BigoADS: 77e52c0881e33b1edd4893c40c7c0d118f06d88c
+  ChartboostSDK: a0a62eeaf756b7315ed53608eb21dcb41c6dcd36
+  FBAudienceNetwork: b05c65487114aa3bf3a68e865c60937a9fb03b69
   Firebase: 7ca191e43724142f79fae653547b3382c45413cc
   firebase_analytics: 99133ddb6f6cf89c0b49cafae131070607abbfa5
   firebase_core: 55de508663ceda7d1dc369a32b327a5655019ae2
@@ -323,6 +594,7 @@ SPEC CHECKSUMS:
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   flutter_local_notifications: 643a3eda1ce1c0599413ca31672536d423dee214
   flutter_timezone: 7c838e17ffd4645d261e87037e5bebf6d38fe544
+  Fyber_Marketplace_SDK: 94fcbc9e2e19c74f94f7178750353661e4f556f8
   Google-Mobile-Ads-SDK: 9818000c50be41d5289dff425c7e3338cfbf323d
   google_mobile_ads: 6b1c16497394528f4a59e76e2fc947cb32b101e2
   GoogleAdsOnDeviceConversion: 41f168313b305040f4af27093d3c0af5ba46a9a3
@@ -331,6 +603,9 @@ SPEC CHECKSUMS:
   GoogleUserMessagingPlatform: befe603da6501006420c206222acd449bba45a9c
   GoogleUtilities: 4e0c2ad9fa0d0d18b5c4df8bf57b461cba35b0bb
   image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
+  InMobiSDK: ee7350ea87b96ace338bf4443a0fcb8f9b7b0af3
+  KSCrash: 8c4464fd5da7de520f2ce4a00fdf63f169a80f18
+  MintegralAdSDK: 611e5c22c00dcb8305481ea3319e7d42ff3a37b7
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
@@ -340,9 +615,13 @@ SPEC CHECKSUMS:
   RevenueCat: 96e12da1f3de201c65f337ff661506ac28ee1514
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
+  UnityAds: caaccd3367f77a9a64b061404c5cc8eb2df20103
+  UnityCoherenceLib: 9f7a49d0b53897b6627ad2ecf3b8369d015c66f4
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
+  VungleAds: b35408054cb252a1c1df22cedbd0275ed116d79e
   webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
+  YandexMobileAds: c1fc595860945630cc0ed0ebed1fa23ab6c5ce17
 
-PODFILE CHECKSUM: 076216c883b43f3951575b5113e5ed12c50904b5
+PODFILE CHECKSUM: 737ca304a4e5e3a6c1317634c0ea0c9f36c92df7
 
 COCOAPODS: 1.17.0
