@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/theme/app_palette.dart';
-import 'number_keypad.dart';
+import '../../widgets/number_keypad.dart';
 
 class InlineValueField extends StatefulWidget {
   final double? value;
@@ -45,14 +44,7 @@ class _InlineValueFieldState extends State<InlineValueField> {
 
   static const Color _green = Color(0xFF08B289);
 
-  bool get _useKeypad => defaultTargetPlatform == TargetPlatform.iOS;
-
-  late final NumberKeypadTarget _keypadTarget = NumberKeypadTarget(
-    allowDecimal: widget.decimals > 0,
-    onKey: _insert,
-    onBackspace: _backspace,
-    onOk: _focus.unfocus,
-  );
+  late final NumberKeypadBinding _keypad;
 
   String _format(double? v) =>
       v == null ? '' : v.toStringAsFixed(widget.decimals);
@@ -64,6 +56,13 @@ class _InlineValueFieldState extends State<InlineValueField> {
     _ownsFocus = widget.focusNode == null;
     _focus = widget.focusNode ?? FocusNode();
     _focus.addListener(_onFocusChange);
+    _keypad = NumberKeypadBinding(
+      controller: _text,
+      focus: _focus,
+      allowDecimal: widget.decimals > 0,
+      maxLength: widget.decimals > 0 ? 5 : 3,
+      onChanged: _onTextChanged,
+    );
   }
 
   @override
@@ -78,68 +77,7 @@ class _InlineValueFieldState extends State<InlineValueField> {
   }
 
   void _onFocusChange() {
-    if (_focus.hasFocus) {
-      _showKeypad();
-    } else {
-      _hideKeypad();
-      _commit();
-    }
-  }
-
-  void _showKeypad() {
-    if (!_useKeypad) return;
-    numberKeypadTarget.value = _keypadTarget;
-    // Once the keypad has taken its space, bring the field into view.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_focus.hasFocus) return;
-      Scrollable.ensureVisible(
-        context,
-        duration: const Duration(milliseconds: 200),
-        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
-      );
-    });
-  }
-
-  void _hideKeypad() {
-    if (numberKeypadTarget.value == _keypadTarget) {
-      numberKeypadTarget.value = null;
-    }
-  }
-
-  int get _maxLength => widget.decimals > 0 ? 5 : 3;
-
-  bool _isValidText(String s) =>
-      s.length <= _maxLength &&
-      RegExp(widget.decimals > 0 ? r'^\d*\.?\d*$' : r'^\d*$').hasMatch(s);
-
-  /// Keypad key: types at the cursor (replacing any selection).
-  void _insert(String key) {
-    final value = _text.value;
-    final sel = value.selection.isValid
-        ? value.selection
-        : TextSelection.collapsed(offset: value.text.length);
-    final next = value.text.replaceRange(sel.start, sel.end, key);
-    if (!_isValidText(next)) return;
-    _text.value = TextEditingValue(
-      text: next,
-      selection: TextSelection.collapsed(offset: sel.start + key.length),
-    );
-    _onTextChanged(next);
-  }
-
-  void _backspace() {
-    final value = _text.value;
-    final sel = value.selection.isValid
-        ? value.selection
-        : TextSelection.collapsed(offset: value.text.length);
-    if (sel.isCollapsed && sel.start == 0) return;
-    final start = sel.isCollapsed ? sel.start - 1 : sel.start;
-    final next = value.text.replaceRange(start, sel.end, '');
-    _text.value = TextEditingValue(
-      text: next,
-      selection: TextSelection.collapsed(offset: start),
-    );
-    _onTextChanged(next);
+    if (!_focus.hasFocus) _commit();
   }
 
   void _commit() {
@@ -168,8 +106,7 @@ class _InlineValueFieldState extends State<InlineValueField> {
 
   @override
   void dispose() {
-    // Deferred: listeners can't rebuild while the tree is being torn down.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _hideKeypad());
+    _keypad.dispose();
     _focus.removeListener(_onFocusChange);
     if (_ownsFocus) _focus.dispose();
     _text.dispose();
@@ -200,9 +137,7 @@ class _InlineValueFieldState extends State<InlineValueField> {
             cursorColor: _green,
             showCursor: true,
             // On iOS the app keypad types instead of the system keyboard.
-            keyboardType: _useKeypad
-                ? TextInputType.none
-                : TextInputType.numberWithOptions(decimal: widget.decimals > 0),
+            keyboardType: _keypad.keyboardType,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegExp(widget.decimals > 0 ? r'[0-9.]' : r'[0-9]'),

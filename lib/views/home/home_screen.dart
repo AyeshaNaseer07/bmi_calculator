@@ -499,44 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(height: 12.h),
 
         // Health Feedback Banner
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => Get.to(() => BmiInsightScreen(record: record)),
-          child: Container(
-            width: double.infinity,
-            constraints: BoxConstraints(minHeight: 48.h),
-            decoration: BoxDecoration(
-              // Pastel fills are light-only; dark mode tints with the category colour.
-              color: AppPalette.isDark
-                  ? record.category.color.withValues(alpha: 0.10)
-                  : record.category.feedbackBackground,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: AppColors.cardShadow,
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                record.category.buildFeedbackIcon(size: 24.w),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Text(
-                    record.category.feedbackMessage,
-                    style: TextStyle(
-                      color: AppPalette.textPrimary,
-                      fontSize: 12,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 1.40,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 6.w),
-                Image.asset(AppAssets.ageForward, height: 16.h, width: 16.w),
-              ],
-            ),
-          ),
-        ),
+        _FeedbackBanner(record: record),
       ],
     );
   }
@@ -725,6 +688,193 @@ class _HomeScreenState extends State<HomeScreen> {
           fontFamily: 'Outfit',
           fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
           color: isCurrent ? Colors.white : AppPalette.textPrimary,
+        ),
+      ),
+    );
+  }
+}
+
+/// Category feedback banner that opens the BMI insight screen. Eases in, then
+/// breathes a soft category-coloured glow while its arrow nudges forward.
+class _FeedbackBanner extends StatefulWidget {
+  final BMIRecord record;
+
+  const _FeedbackBanner({required this.record});
+
+  @override
+  State<_FeedbackBanner> createState() => _FeedbackBannerState();
+}
+
+class _FeedbackBannerState extends State<_FeedbackBanner>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2400),
+  );
+  bool _pressed = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Honour the system "reduce motion" setting.
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.stop();
+      _controller.value = 0;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _setPressed(bool v) {
+    if (_pressed != v) setState(() => _pressed = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final category = widget.record.category;
+    final still = MediaQuery.disableAnimationsOf(context);
+
+    final message = Text(
+      category.feedbackMessage,
+      style: TextStyle(
+        color: AppPalette.textPrimary,
+        fontSize: 12,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        height: 1.40,
+      ),
+    );
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: still ? 1 : 0, end: 1),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+      builder: (context, t, child) => Opacity(
+        opacity: t,
+        child: Transform.translate(
+          offset: Offset(0, 10.h * (1 - t)),
+          child: child,
+        ),
+      ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => _setPressed(true),
+        onTapUp: (_) => _setPressed(false),
+        onTapCancel: () => _setPressed(false),
+        onTap: () => Get.to(() => BmiInsightScreen(record: widget.record)),
+        child: AnimatedScale(
+          scale: _pressed ? 0.97 : 1,
+          duration: const Duration(milliseconds: 120),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, _) {
+              final t = _controller.value;
+              // 0 → 1 → 0 once per cycle.
+              final pulse = 0.5 - 0.5 * math.cos(t * 2 * math.pi);
+              // Shine crosses during the first half, then rests.
+              final shine = (t / 0.5).clamp(0.0, 1.0);
+              final radius = BorderRadius.circular(16.r);
+
+              return Transform.scale(
+                scale: 1 + 0.015 * pulse,
+                child: Container(
+                  width: double.infinity,
+                  constraints: BoxConstraints(minHeight: 48.h),
+                  decoration: BoxDecoration(
+                    // Pastel fills are light-only; dark mode tints with the category colour.
+                    color: AppPalette.isDark
+                        ? category.color.withValues(alpha: 0.10)
+                        : category.feedbackBackground,
+                    borderRadius: radius,
+                    border: Border.all(
+                      color: category.color.withValues(
+                        alpha: 0.15 + 0.45 * pulse,
+                      ),
+                      width: 1.2,
+                    ),
+                    boxShadow: [
+                      ...AppColors.cardShadow,
+                      BoxShadow(
+                        color: category.color.withValues(alpha: 0.45 * pulse),
+                        blurRadius: (8 + 14 * pulse).r,
+                        spreadRadius: 1.5 * pulse,
+                        offset: Offset(0, 3.h),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: radius,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final width = constraints.maxWidth;
+                        final bandWidth = width * 0.3;
+                        return Stack(
+                          children: [
+                            if (shine < 1)
+                              Positioned(
+                                top: 0,
+                                bottom: 0,
+                                width: bandWidth,
+                                left: -bandWidth + (width + bandWidth) * shine,
+                                child: IgnorePointer(
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: const Alignment(-1, -0.4),
+                                        end: const Alignment(1, 0.4),
+                                        colors: [
+                                          Colors.white.withValues(alpha: 0),
+                                          Colors.white.withValues(
+                                            alpha: AppPalette.isDark
+                                                ? 0.18
+                                                : 0.7,
+                                          ),
+                                          Colors.white.withValues(alpha: 0),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 14.w,
+                                vertical: 10.h,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  category.buildFeedbackIcon(size: 24.w),
+                                  SizedBox(width: 10.w),
+                                  Expanded(child: message),
+                                  SizedBox(width: 6.w),
+                                  // Arrow nudges forward with the pulse.
+                                  Transform.translate(
+                                    offset: Offset(7.w * pulse, 0),
+                                    child: Image.asset(
+                                      AppAssets.ageForward,
+                                      height: 16.h,
+                                      width: 16.w,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

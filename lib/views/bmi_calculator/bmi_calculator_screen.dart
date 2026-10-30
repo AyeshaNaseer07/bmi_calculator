@@ -16,7 +16,7 @@ import '../widgets/custom_gradient_button.dart';
 import '../widgets/mandatory_label.dart';
 import 'dialogs/calculating_dialog.dart';
 import 'widgets/inline_value_field.dart';
-import 'widgets/number_keypad.dart';
+import '../widgets/number_keypad.dart';
 import '../../core/theme/app_palette.dart';
 
 class BMICalculatorScreen extends StatefulWidget {

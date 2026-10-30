@@ -14,6 +14,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/gender_popup_menu.dart';
 import '../widgets/mandatory_label.dart';
+import '../widgets/number_keypad.dart';
 import '../../core/theme/app_palette.dart';
 
 class AddWeightScreen extends StatefulWidget {
@@ -36,6 +37,10 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   final FocusNode _goalWeightFocusNode = FocusNode();
   final FocusNode _heightFocusNode = FocusNode();
 
+  late final NumberKeypadBinding _currentWeightKeypad;
+  late final NumberKeypadBinding _goalWeightKeypad;
+  late final NumberKeypadBinding _heightKeypad;
+
   int? _selectedAge;
   bool _isAgeMenuOpen = false;
   Gender? _selectedGender;
@@ -44,10 +49,49 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   @override
   void initState() {
     super.initState();
-    // Do not prefill values by default; only hint texts will be shown
+    _prefillFromLastEntry();
     _currentWeightController.addListener(_onFieldChanged);
     _goalWeightController.addListener(_onFieldChanged);
     _heightController.addListener(_onFieldChanged);
+    _currentWeightKeypad = NumberKeypadBinding(
+      controller: _currentWeightController,
+      focus: _currentWeightFocusNode,
+      allowDecimal: true,
+      maxLength: 5,
+      onOk: _goalWeightFocusNode.requestFocus,
+    );
+    _goalWeightKeypad = NumberKeypadBinding(
+      controller: _goalWeightController,
+      focus: _goalWeightFocusNode,
+      allowDecimal: true,
+      maxLength: 5,
+      onOk: _heightFocusNode.requestFocus,
+    );
+    _heightKeypad = NumberKeypadBinding(
+      controller: _heightController,
+      focus: _heightFocusNode,
+      allowDecimal: true,
+      maxLength: 5,
+    );
+  }
+
+  /// First time the form is empty (hints only); after a save it opens with
+  /// the values the user saved last, which they can still edit.
+  void _prefillFromLastEntry() {
+    final last = Get.find<StorageService>().getLastWeightEntry();
+    if (last == null) return;
+    String fmt(Object? v) {
+      if (v is! num || v <= 0) return '';
+      return v == v.roundToDouble() ? v.toInt().toString() : v.toString();
+    }
+
+    _currentWeightController.text = fmt(last['weightKg']);
+    _goalWeightController.text = fmt(last['goalWeightKg']);
+    _heightController.text = fmt(last['heightCm']);
+    final age = last['age'];
+    if (age is int && age > 0) _selectedAge = age;
+    final gender = last['gender'];
+    _selectedGender = Gender.values.where((g) => g.name == gender).firstOrNull;
   }
 
   void _onFieldChanged() {
@@ -111,6 +155,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     // Update profile age, height, gender if entered
     try {
       final storage = Get.find<StorageService>();
+      // Prefills the form next time.
+      await storage.setLastWeightEntry({
+        'weightKg': current,
+        'goalWeightKg': goal,
+        'age': ageVal,
+        'heightCm': heightVal,
+        if (genderVal != null) 'gender': genderVal.name,
+      });
       final profile = storage.getUserProfile();
       storage.saveUserProfile(
         profile.copyWith(
@@ -136,6 +188,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
   @override
   void dispose() {
+    _currentWeightKeypad.dispose();
+    _goalWeightKeypad.dispose();
+    _heightKeypad.dispose();
     _currentWeightFocusNode.dispose();
     _goalWeightFocusNode.dispose();
     _heightFocusNode.dispose();
@@ -165,6 +220,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: const CustomAppBar(title: 'Add Weight'),
+          bottomNavigationBar: const NumberKeypadHost(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -215,9 +271,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                         focusNode: _currentWeightFocusNode,
                         hint: 'Enter Weight (65.7 kg)',
                         isError: _isCurrentWeightExceeded,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
+                        keyboardType: _currentWeightKeypad.keyboardType,
                         textInputAction: TextInputAction.next,
                         onSubmitted: (_) => _goalWeightFocusNode.requestFocus(),
                       ),
@@ -256,9 +310,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                         focusNode: _goalWeightFocusNode,
                         hint: 'Enter goal weight (60.0 kg)',
                         isError: _isGoalWeightExceeded,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
+                        keyboardType: _goalWeightKeypad.keyboardType,
                         textInputAction: TextInputAction.next,
                         onSubmitted: (_) => _heightFocusNode.requestFocus(),
                       ),
@@ -323,10 +375,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                                   controller: _heightController,
                                   focusNode: _heightFocusNode,
                                   hint: 'Enter height (152 cm)',
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
+                                  keyboardType: _heightKeypad.keyboardType,
                                   textInputAction: TextInputAction.done,
                                   onSubmitted: (_) =>
                                       _heightFocusNode.unfocus(),
@@ -393,10 +442,10 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
         color: isError
-                ? (AppPalette.isDark
-                      ? const Color(0x33EF4444)
-                      : const Color(0xFFFEF2F2))
-                : AppPalette.surface,
+            ? (AppPalette.isDark
+                  ? const Color(0x33EF4444)
+                  : const Color(0xFFFEF2F2))
+            : AppPalette.surface,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
           color: isError ? const Color(0xFFEF4444) : AppPalette.mintBorder,

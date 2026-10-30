@@ -18,6 +18,7 @@ class StorageService {
   static const String _keyWeightHistory = 'weight_history';
   static const String _keyProfileImagePath = 'profile_image_path';
   static const String _keyRemoteButtonText = 'rc_button_text';
+  static const String _keyLastWeightEntry = 'last_weight_entry';
 
   late SharedPreferences _prefs;
 
@@ -67,6 +68,21 @@ class StorageService {
   String? getProfileImagePath() => _prefs.getString(_keyProfileImagePath);
   Future<void> setProfileImagePath(String path) =>
       _prefs.setString(_keyProfileImagePath, path);
+
+  // ── Add Weight form: values from the user's last save ──
+  /// Null until the form has been saved once.
+  Map<String, dynamic>? getLastWeightEntry() {
+    final raw = _prefs.getString(_keyLastWeightEntry);
+    if (raw == null) return null;
+    try {
+      return jsonDecode(raw) as Map<String, dynamic>;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setLastWeightEntry(Map<String, dynamic> entry) =>
+      _prefs.setString(_keyLastWeightEntry, jsonEncode(entry));
 
   // ── User Profile ──
   bool hasUserProfile() => _prefs.getString(_keyUserProfile) != null;

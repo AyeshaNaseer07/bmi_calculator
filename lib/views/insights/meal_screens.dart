@@ -799,12 +799,13 @@ class MealDetailScreen extends StatelessWidget {
                   Text(
                     '${meal.ingredients.length} items',
                     style: bodyStyle(
-                      12.5,
+                      14,
                       color: _kDeep,
                       weight: FontWeight.w700,
                     ),
                   ),
                   SizedBox(width: 10.w),
+                  Icon(Icons.arrow_forward_ios, size: 15.sp),
                 ],
               ),
             ),

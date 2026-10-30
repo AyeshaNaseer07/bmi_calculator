@@ -14,6 +14,7 @@ import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/gender_popup_menu.dart';
 import '../widgets/mandatory_label.dart';
+import '../widgets/number_keypad.dart';
 
 class AddHealthDataScreen extends StatefulWidget {
   const AddHealthDataScreen({super.key});
@@ -32,6 +33,10 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
   final FocusNode _heightFocusNode = FocusNode();
   final FocusNode _weightFocusNode = FocusNode();
 
+  late final NumberKeypadBinding _ageKeypad;
+  late final NumberKeypadBinding _heightKeypad;
+  late final NumberKeypadBinding _weightKeypad;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +44,24 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     _controller.ageController.addListener(_onTextChanged);
     _controller.heightController.addListener(_onTextChanged);
     _controller.weightController.addListener(_onTextChanged);
+    _ageKeypad = NumberKeypadBinding(
+      controller: _controller.ageController,
+      focus: _ageFocusNode,
+      maxLength: 3,
+      onOk: _heightFocusNode.requestFocus,
+    );
+    _heightKeypad = NumberKeypadBinding(
+      controller: _controller.heightController,
+      focus: _heightFocusNode,
+      maxLength: 3,
+      onOk: _weightFocusNode.requestFocus,
+    );
+    _weightKeypad = NumberKeypadBinding(
+      controller: _controller.weightController,
+      focus: _weightFocusNode,
+      allowDecimal: true,
+      maxLength: 5,
+    );
   }
 
   void _onTextChanged() {
@@ -47,6 +70,9 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
 
   @override
   void dispose() {
+    _ageKeypad.dispose();
+    _heightKeypad.dispose();
+    _weightKeypad.dispose();
     _nameFocusNode.dispose();
     _ageFocusNode.dispose();
     _heightFocusNode.dispose();
@@ -104,6 +130,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(title: 'Add My Data'),
+        bottomNavigationBar: const NumberKeypadHost(),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -192,7 +219,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                     controller: _controller.ageController,
                     focusNode: _ageFocusNode,
                     hint: 'Enter age',
-                    keyboardType: TextInputType.number,
+                    keyboardType: _ageKeypad.keyboardType,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (_) => _heightFocusNode.requestFocus(),
                   ),
@@ -306,7 +333,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                               controller: _controller.heightController,
                               focusNode: _heightFocusNode,
                               hint: 'Enter height (152 cm)',
-                              keyboardType: TextInputType.number,
+                              keyboardType: _heightKeypad.keyboardType,
                               textInputAction: TextInputAction.next,
                               onSubmitted: (_) =>
                                   _weightFocusNode.requestFocus(),
@@ -325,9 +352,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                     focusNode: _weightFocusNode,
                     hint: 'Enter Weight (65.7 kg)',
                     isError: _isWeightExceeded,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
+                    keyboardType: _weightKeypad.keyboardType,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _weightFocusNode.unfocus(),
                   ),

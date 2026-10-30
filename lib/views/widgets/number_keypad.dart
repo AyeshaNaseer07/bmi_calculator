@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/theme/app_palette.dart';
+import '../../core/theme/app_palette.dart';
 
 /// What the keypad types into: the field currently being edited.
 class NumberKeypadTarget {
@@ -22,6 +23,116 @@ class NumberKeypadTarget {
 final ValueNotifier<NumberKeypadTarget?> numberKeypadTarget = ValueNotifier(
   null,
 );
+
+/// Hooks a numeric text field up to the app keypad: shows it while [focus]
+/// has focus and types into [controller]. iOS only; elsewhere the field keeps
+/// the system number keyboard via [keyboardType]. Call [dispose] with the
+/// field's state.
+class NumberKeypadBinding {
+  final TextEditingController controller;
+  final FocusNode focus;
+  final bool allowDecimal;
+  final int? maxLength;
+
+  /// Keypad OK; defaults to ending editing.
+  final VoidCallback? onOk;
+
+  /// Called after each keypad edit (keypad edits don't fire
+  /// `TextField.onChanged`).
+  final ValueChanged<String>? onChanged;
+
+  NumberKeypadBinding({
+    required this.controller,
+    required this.focus,
+    this.allowDecimal = false,
+    this.maxLength,
+    this.onOk,
+    this.onChanged,
+  }) {
+    focus.addListener(_onFocusChange);
+  }
+
+  static bool get isEnabled => defaultTargetPlatform == TargetPlatform.iOS;
+
+  /// For the field's `keyboardType`: none while the app keypad types instead.
+  TextInputType get keyboardType => isEnabled
+      ? TextInputType.none
+      : TextInputType.numberWithOptions(decimal: allowDecimal);
+
+  late final NumberKeypadTarget _target = NumberKeypadTarget(
+    allowDecimal: allowDecimal,
+    onKey: _insert,
+    onBackspace: _backspace,
+    onOk: onOk ?? focus.unfocus,
+  );
+
+  void _onFocusChange() {
+    if (!isEnabled) return;
+    if (focus.hasFocus) {
+      _show();
+    } else {
+      _hide();
+    }
+  }
+
+  void _show() {
+    numberKeypadTarget.value = _target;
+    // Once the keypad has taken its space, bring the field into view.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = focus.context;
+      if (context == null || !context.mounted || !focus.hasFocus) return;
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 200),
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
+  }
+
+  void _hide() {
+    if (numberKeypadTarget.value == _target) numberKeypadTarget.value = null;
+  }
+
+  bool _isValid(String s) =>
+      (maxLength == null || s.length <= maxLength!) &&
+      RegExp(allowDecimal ? r'^\d*\.?\d*$' : r'^\d*$').hasMatch(s);
+
+  TextSelection _selection(TextEditingValue value) => value.selection.isValid
+      ? value.selection
+      : TextSelection.collapsed(offset: value.text.length);
+
+  /// Keypad key: types at the cursor (replacing any selection).
+  void _insert(String key) {
+    final value = controller.value;
+    final sel = _selection(value);
+    final next = value.text.replaceRange(sel.start, sel.end, key);
+    if (!_isValid(next)) return;
+    controller.value = TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(offset: sel.start + key.length),
+    );
+    onChanged?.call(next);
+  }
+
+  void _backspace() {
+    final value = controller.value;
+    final sel = _selection(value);
+    if (sel.isCollapsed && sel.start == 0) return;
+    final start = sel.isCollapsed ? sel.start - 1 : sel.start;
+    final next = value.text.replaceRange(start, sel.end, '');
+    controller.value = TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(offset: start),
+    );
+    onChanged?.call(next);
+  }
+
+  void dispose() {
+    focus.removeListener(_onFocusChange);
+    // Deferred: listeners can't rebuild while the tree is being torn down.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _hide());
+  }
+}
 
 /// Put in the screen's `bottomNavigationBar`, so the page shrinks (and can
 /// scroll the field into view) while the keypad is up.
@@ -129,11 +240,8 @@ class _NumberKeypad extends StatelessWidget {
                     children: [
                       Expanded(flex: 2, child: _digit('0')),
                       const SizedBox(width: _gap),
-                      Expanded(
-                        child: target.allowDecimal
-                            ? _digit('.')
-                            : _key(onTap: null, child: const SizedBox()),
-                      ),
+                      // Whole-number fields reject it when typed.
+                      Expanded(child: _digit('.')),
                     ],
                   ),
                 ],

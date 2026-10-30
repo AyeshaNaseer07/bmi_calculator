@@ -110,20 +110,22 @@ class StayActiveScreen extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // Soft mint glow peeking out from behind the top-left corner.
+                // Soft mint glow behind the upper-left side. It fades out
+                // before the box's top edge, which the scroll view would
+                // otherwise clip into a hard line.
                 Positioned(
-                  left: -24.w,
-                  top: -24.h,
+                  left: -120.w,
+                  top: 0,
                   child: IgnorePointer(
                     child: Container(
-                      width: 200.w,
-                      height: 150.h,
+                      width: 240.w,
+                      height: 240.w,
                       decoration: BoxDecoration(
                         gradient: RadialGradient(
-                          center: Alignment.topLeft,
-                          radius: 1.1,
+                          center: const Alignment(0, -0.4),
+                          radius: 0.3,
                           colors: [
-                            const Color(0xFF33D2AB).withValues(alpha: 0.28),
+                            const Color(0xFF33D2AB).withValues(alpha: 0.1),
                             const Color(0xFF33D2AB).withValues(alpha: 0),
                           ],
                         ),
