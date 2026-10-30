@@ -16,9 +16,7 @@ import '../widgets/custom_gradient_button.dart';
 import '../../core/theme/app_palette.dart';
 
 class WeightTrackingScreen extends StatelessWidget {
-  /// False when shown as a bottom-nav tab, which has nothing to go back to.
   final bool showBackButton;
-
   const WeightTrackingScreen({super.key, this.showBackButton = true});
 
   @override
@@ -72,9 +70,6 @@ class WeightTrackingScreen extends StatelessWidget {
               final totalStr = pTotal == 0.0
                   ? '-0.0kg'
                   : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
-
-              // Fixed Y-axis scale: 0, 20, 40, 60, 80, 100, 120 — interval 20
-              // Headroom up to 140.0 ensures the 120.0 weight badge and icon are not cut off
               const double calculatedMinY = 0.0;
               const double calculatedMaxY = 140.0;
               const double calculatedInterval = 20.0;
@@ -466,7 +461,10 @@ class WeightTrackingScreen extends StatelessWidget {
                                         LineChartBarData(
                                           spots: goalSpots,
                                           isCurved: false,
-                                          color: const Color(0xFFF97316),
+                                          // Softened so it doesn't compete
+                                          // with the weight line.
+                                          color: const Color(0xFFF97316)
+                                              .withValues(alpha: 0.25),
                                           barWidth: 1.8.w,
                                           isStrokeCapRound: false,
                                           dashArray: [6, 4],

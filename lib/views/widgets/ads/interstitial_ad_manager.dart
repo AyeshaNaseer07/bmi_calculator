@@ -13,7 +13,16 @@ import 'applovin_sdk.dart';
 
 /// Places in the app that show an interstitial ad, each switched on/off and
 /// given its ad unit ID from Remote Config.
-enum InterstitialPlacement { splash, paywallCross, calculator }
+enum InterstitialPlacement {
+  splash,
+
+  /// Cross on the paywall shown after onboarding.
+  onbPremiumCross,
+
+  /// Cross on paywalls opened inside the app.
+  innerPremiumCross,
+  calculator,
+}
 
 /// AppLovin MAX interstitials: loaded ahead of time for each placement and
 /// shown right before the screen moves on. Never for premium users.
@@ -40,8 +49,10 @@ class InterstitialAdManager {
     }
     return switch (placement) {
       InterstitialPlacement.splash => _config.isSplashInterAdEnabled,
-      InterstitialPlacement.paywallCross =>
-        _config.isPaywallCrossInterAdEnabled,
+      InterstitialPlacement.onbPremiumCross =>
+        _config.isOnbPremiumInterAdEnabled,
+      InterstitialPlacement.innerPremiumCross =>
+        _config.isInnerPremiumInterAdEnabled,
       InterstitialPlacement.calculator => _config.isCalculatorInterAdEnabled,
     };
   }
@@ -52,9 +63,13 @@ class InterstitialAdManager {
         _config.splashInterAdId,
         RemoteModel.defaultSplashInterAdId,
       ),
-      InterstitialPlacement.paywallCross => (
-        _config.paywallCrossInterAdId,
-        RemoteModel.defaultPaywallCrossInterAdId,
+      InterstitialPlacement.onbPremiumCross => (
+        _config.onbPremiumAd,
+        RemoteModel.defaultPremiumCrossInterAdId,
+      ),
+      InterstitialPlacement.innerPremiumCross => (
+        _config.innerPremiumAd,
+        RemoteModel.defaultPremiumCrossInterAdId,
       ),
       InterstitialPlacement.calculator => (
         _config.calculatorInterAdId,

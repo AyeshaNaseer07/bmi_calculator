@@ -27,22 +27,35 @@ final RouteObserver<ModalRoute<void>> appRouteObserver =
 
 class AppPages {
   static const initial = AppRoutes.splash;
+  static const _rootTransition = Transition.fadeIn;
+  static const _rootDuration = Duration(milliseconds: 350);
 
   static final routes = [
     GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
-    GetPage(name: AppRoutes.onboarding, page: () => const OnboardingScreen()),
+    GetPage(
+      name: AppRoutes.onboarding,
+      page: () => const OnboardingScreen(),
+      transition: _rootTransition,
+      transitionDuration: _rootDuration,
+    ),
     GetPage(
       name: AppRoutes.paywall,
       page: () => const PaywallScreen(),
       popGesture: false,
+      transition: Transition.downToUp,
+      curve: Curves.easeOutCubic,
     ),
     GetPage(
       name: AppRoutes.languageSelection,
       page: () => const LanguageSelectionScreen(),
+      transition: _rootTransition,
+      transitionDuration: _rootDuration,
     ),
     GetPage(
       name: AppRoutes.home,
       page: () => const MainNavigationScreen(),
+      transition: _rootTransition,
+      transitionDuration: _rootDuration,
       binding: BindingsBuilder(() {
         if (!Get.isRegistered<BMIController>()) {
           Get.put(BMIController(), permanent: true);

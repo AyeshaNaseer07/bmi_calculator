@@ -92,15 +92,25 @@ class RemoteConfigService extends GetxService {
 
   String get splashInterAdId => model.value.splashInterAdId;
 
-  bool get isPaywallCrossInterAdEnabled {
+  bool get isOnbPremiumInterAdEnabled {
     try {
-      return model.value.isPaywallCrossInterAdEnabled;
+      return model.value.isOnbPremiumInterAdEnabled;
     } catch (_) {
       return true;
     }
   }
 
-  String get paywallCrossInterAdId => model.value.paywallCrossInterAdId;
+  String get onbPremiumAd => model.value.onbPremiumAd;
+
+  bool get isInnerPremiumInterAdEnabled {
+    try {
+      return model.value.isInnerPremiumInterAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  String get innerPremiumAd => model.value.innerPremiumAd;
 
   bool get isCalculatorInterAdEnabled {
     try {

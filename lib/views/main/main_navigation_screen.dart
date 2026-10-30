@@ -15,11 +15,18 @@ class MainNavigationScreen extends StatefulWidget {
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  // Per screen, not global: `Get.offAllNamed(home)` mounts a new copy while
-  // the old one is still alive, and a shared value reset during that build
-  // would rebuild the old copy mid-frame.
+class _MainNavigationScreenState extends State<MainNavigationScreen>
+    with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
+  late final AnimationController _tabFade = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 220),
+    value: 1,
+  );
+  late final Animation<double> _tabOpacity = CurvedAnimation(
+    parent: _tabFade,
+    curve: Curves.easeOut,
+  );
 
   static const _tabs = [
     HomeScreen(),
@@ -28,13 +35,28 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     HistoryScreen(showBackButton: false),
   ];
 
+  void _selectTab(int index) {
+    if (index == _currentIndex) return;
+    setState(() => _currentIndex = index);
+    _tabFade.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _tabFade.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _tabs),
+      body: FadeTransition(
+        opacity: _tabOpacity,
+        child: IndexedStack(index: _currentIndex, children: _tabs),
+      ),
       bottomNavigationBar: MainBottomNavBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: _selectTab,
         onAddTap: () => Get.toNamed(AppRoutes.bmiCalculator),
       ),
     );

@@ -17,8 +17,10 @@ class RemoteModel {
   String? _appOpenAdId;
   String? _splashInterAd;
   String? _splashInterAdId;
-  String? _paywallCrossInterAd;
-  String? _paywallCrossInterAdId;
+  String? _onbPremiumEnable;
+  String? _onbPremiumAd;
+  String? _innerPremiumEnable;
+  String? _innerPremiumAd;
   String? _calculatorInterAd;
   String? _calculatorInterAdId;
   String? _localNotification;
@@ -28,7 +30,8 @@ class RemoteModel {
   // AppLovin MAX ad units; Remote Config overrides each one.
   static const String defaultAppOpenAdId = '8912e79bed7e47df';
   static const String defaultSplashInterAdId = '85b22c87e3ca84c2';
-  static const String defaultPaywallCrossInterAdId = 'ff833ded57dafd9a';
+  // Onboarding and inner paywalls share this ad unit until set separately.
+  static const String defaultPremiumCrossInterAdId = 'ff833ded57dafd9a';
   static const String defaultCalculatorInterAdId = '0a4481fa2371003a';
   static const String defaultFullScreenNativeAdId = '2854da2e9e4a2bc5';
   static const String defaultLanguageNativeAdId = '18189ba9818ddf0a';
@@ -87,12 +90,19 @@ class RemoteModel {
   String get splashInterAdId => _splashInterAdId ?? defaultSplashInterAdId;
   set splashInterAdId(String value) => _splashInterAdId = value;
 
-  String get paywallCrossInterAd => _paywallCrossInterAd ?? 'on';
-  set paywallCrossInterAd(String value) => _paywallCrossInterAd = value;
+  /// Interstitial on the onboarding paywall's cross.
+  String get onbPremiumEnable => _onbPremiumEnable ?? 'on';
+  set onbPremiumEnable(String value) => _onbPremiumEnable = value;
 
-  String get paywallCrossInterAdId =>
-      _paywallCrossInterAdId ?? defaultPaywallCrossInterAdId;
-  set paywallCrossInterAdId(String value) => _paywallCrossInterAdId = value;
+  String get onbPremiumAd => _onbPremiumAd ?? defaultPremiumCrossInterAdId;
+  set onbPremiumAd(String value) => _onbPremiumAd = value;
+
+  /// Interstitial on the cross of paywalls opened inside the app.
+  String get innerPremiumEnable => _innerPremiumEnable ?? 'on';
+  set innerPremiumEnable(String value) => _innerPremiumEnable = value;
+
+  String get innerPremiumAd => _innerPremiumAd ?? defaultPremiumCrossInterAdId;
+  set innerPremiumAd(String value) => _innerPremiumAd = value;
 
   String get calculatorInterAd => _calculatorInterAd ?? 'on';
   set calculatorInterAd(String value) => _calculatorInterAd = value;
@@ -127,8 +137,10 @@ class RemoteModel {
     this._appOpenAdId,
     this._splashInterAd,
     this._splashInterAdId,
-    this._paywallCrossInterAd,
-    this._paywallCrossInterAdId,
+    this._onbPremiumEnable,
+    this._onbPremiumAd,
+    this._innerPremiumEnable,
+    this._innerPremiumAd,
     this._calculatorInterAd,
     this._calculatorInterAdId,
     this._localNotification,
@@ -152,7 +164,8 @@ class RemoteModel {
   bool get isOnboardingNativeAdEnabled => _isOn(onboardingNativeAd);
 
   bool get isSplashInterAdEnabled => _isOn(splashInterAd);
-  bool get isPaywallCrossInterAdEnabled => _isOn(paywallCrossInterAd);
+  bool get isOnbPremiumInterAdEnabled => _isOn(onbPremiumEnable);
+  bool get isInnerPremiumInterAdEnabled => _isOn(innerPremiumEnable);
   bool get isCalculatorInterAdEnabled => _isOn(calculatorInterAd);
 
   bool get isLocalNotificationEnabled => _isOn(localNotification);
@@ -280,15 +293,21 @@ class RemoteModel {
           remoteConfig['splash_inter_ad_id'] ?? remoteConfig['splashInterAdId'],
           defaultSplashInterAdId,
         ),
-        paywallCrossInterAd: _parseString(
-          remoteConfig['paywall_cross_inter_ad'] ??
-              remoteConfig['paywallCrossInterAd'],
+        onbPremiumEnable: _parseString(
+          remoteConfig['onb_premium_enable'],
           'on',
         ),
-        paywallCrossInterAdId: _parseString(
-          remoteConfig['paywall_cross_inter_ad_id'] ??
-              remoteConfig['paywallCrossInterAdId'],
-          defaultPaywallCrossInterAdId,
+        onbPremiumAd: _parseString(
+          remoteConfig['onb_premium_ad'],
+          defaultPremiumCrossInterAdId,
+        ),
+        innerPremiumEnable: _parseString(
+          remoteConfig['inner_premium_enable'],
+          'on',
+        ),
+        innerPremiumAd: _parseString(
+          remoteConfig['inner_premium_ad'],
+          defaultPremiumCrossInterAdId,
         ),
         calculatorInterAd: _parseString(
           remoteConfig['calculator_inter_ad'] ??
@@ -346,8 +365,10 @@ class RemoteModel {
       appOpenAdId: defaultAppOpenAdId,
       splashInterAd: 'on',
       splashInterAdId: defaultSplashInterAdId,
-      paywallCrossInterAd: 'on',
-      paywallCrossInterAdId: defaultPaywallCrossInterAdId,
+      onbPremiumEnable: 'on',
+      onbPremiumAd: defaultPremiumCrossInterAdId,
+      innerPremiumEnable: 'on',
+      innerPremiumAd: defaultPremiumCrossInterAdId,
       calculatorInterAd: 'on',
       calculatorInterAdId: defaultCalculatorInterAdId,
       localNotification: 'on',
@@ -374,8 +395,10 @@ class RemoteModel {
       'app_open_ad_id': appOpenAdId,
       'splash_inter_ad': splashInterAd,
       'splash_inter_ad_id': splashInterAdId,
-      'paywall_cross_inter_ad': paywallCrossInterAd,
-      'paywall_cross_inter_ad_id': paywallCrossInterAdId,
+      'onb_premium_enable': onbPremiumEnable,
+      'onb_premium_ad': onbPremiumAd,
+      'inner_premium_enable': innerPremiumEnable,
+      'inner_premium_ad': innerPremiumAd,
       'calculator_inter_ad': calculatorInterAd,
       'calculator_inter_ad_id': calculatorInterAdId,
       'local_notification': localNotification,

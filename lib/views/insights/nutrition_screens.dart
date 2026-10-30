@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../onboarding/soft_paywall_screen.dart';
+import '../widgets/premium_feature_dialog.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
 
@@ -12,6 +13,31 @@ export 'meal_screens.dart';
 
 class EatBalancedMealsScreen extends StatelessWidget {
   const EatBalancedMealsScreen({super.key});
+
+  static void _openMealPlan() {
+    if (Get.find<AppController>().isPremium.value) {
+      Get.to(() => const DailyMealPlanScreen());
+      return;
+    }
+    Get.to(
+      () => SoftPaywallScreen(
+        onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
+        onDismissed: () {
+          Future.delayed(const Duration(milliseconds: 300), () {
+            PremiumFeatureDialog.show(
+              message:
+                  'Your 1 Week Meal Plan is a Premium feature. Upgrade to '
+                  'unlock a personalized breakfast, lunch and dinner for every '
+                  'day, with no ads.',
+              onUnlock: _openMealPlan,
+            );
+          });
+        },
+      ),
+      transition: Transition.downToUp,
+      curve: Curves.easeOutCubic,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,19 +135,8 @@ class EatBalancedMealsScreen extends StatelessWidget {
             iconAsset: AppAssets.tipDailyMealPlan,
             title: '1 Week Meal Plan',
             subtitle: 'Explore simple ideas for balanced meals.',
-            // Always marked as a Pro feature, premium or not.
             pro: true,
-            onTap: () {
-              if (Get.find<AppController>().isPremium.value) {
-                Get.to(() => const DailyMealPlanScreen());
-              } else {
-                Get.to(
-                  () => SoftPaywallScreen(
-                    onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
-                  ),
-                );
-              }
-            },
+            onTap: _openMealPlan,
           ),
         ],
       ),

@@ -13,6 +13,7 @@ class StorageService {
   static const String _keyNotifications = 'notifications_enabled';
   static const String _keyDarkMode = 'dark_mode';
   static const String _keyIsPremium = 'is_premium';
+  static const String _keyPremiumInstallId = 'premium_install_id';
   static const String _keyUserProfile = 'user_profile';
   static const String _keyBmiHistory = 'bmi_history';
   static const String _keyWeightHistory = 'weight_history';
@@ -64,13 +65,17 @@ class StorageService {
   Future<void> setIsPremium(bool premium) =>
       _prefs.setBool(_keyIsPremium, premium);
 
+  /// The install a purchase or restore was made on; see SubscriptionService.
+  String? getPremiumInstallId() => _prefs.getString(_keyPremiumInstallId);
+  Future<void> setPremiumInstallId(String? id) => id == null
+      ? _prefs.remove(_keyPremiumInstallId)
+      : _prefs.setString(_keyPremiumInstallId, id);
+
   // ── Profile Image ──
   String? getProfileImagePath() => _prefs.getString(_keyProfileImagePath);
   Future<void> setProfileImagePath(String path) =>
       _prefs.setString(_keyProfileImagePath, path);
 
-  // ── Add Weight form: values from the user's last save ──
-  /// Null until the form has been saved once.
   Map<String, dynamic>? getLastWeightEntry() {
     final raw = _prefs.getString(_keyLastWeightEntry);
     if (raw == null) return null;

@@ -6,14 +6,19 @@ import 'package:get/get.dart';
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/theme/app_palette.dart';
 import '../../core/utils/open_url.dart';
 import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
+import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
+import '../widgets/app_background.dart';
 
 class SoftPaywallScreen extends StatefulWidget {
   final VoidCallback? onUnlocked;
-  const SoftPaywallScreen({super.key, this.onUnlocked});
+  final VoidCallback? onDismissed;
+
+  const SoftPaywallScreen({super.key, this.onUnlocked, this.onDismissed});
 
   @override
   State<SoftPaywallScreen> createState() => _SoftPaywallScreenState();
@@ -29,6 +34,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   @override
   void initState() {
     super.initState();
+    InterstitialAdManager.instance.load(
+      InterstitialPlacement.innerPremiumCross,
+    );
     PriceService.load(_app.remoteConfigService).then((p) {
       if (!mounted) return;
       setState(() {
@@ -39,7 +47,12 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   }
 
   static const Color _green = Color(0xFF0AA37D);
-  static const Color _navy = Color(0xFF0F1F4B);
+
+  bool get _dark => AppPalette.isDark;
+  Color get _navy => _dark ? AppPalette.textPrimary : const Color(0xFF0F1F4B);
+  Color get _ringBorder =>
+      _dark ? AppPalette.mintBorder : const Color(0xFFB4E4D7);
+  Color get _lineColor => _dark ? AppPalette.border : const Color(0xFFD1D5DB);
 
   static const _features = <(String, String)>[
     (
@@ -81,13 +94,18 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     }
   }
 
-  /// Cross icon: `soft_paywall_access` decides whether the feature still
-  /// opens or the user just goes back.
   void _close() {
-    Get.back();
-    if (_app.remoteConfigService.isSoftPaywallAccessEnabled) {
-      widget.onUnlocked?.call();
-    }
+    InterstitialAdManager.instance.show(
+      InterstitialPlacement.innerPremiumCross,
+      onDone: () {
+        Get.back();
+        if (_app.remoteConfigService.isSoftPaywallAccessEnabled) {
+          widget.onUnlocked?.call();
+        } else {
+          widget.onDismissed?.call();
+        }
+      },
+    );
   }
 
   Future<void> _restore() async {
@@ -95,12 +113,16 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     setState(() => _loading = true);
     bool restored = false;
     try {
-      restored = await _app.subscriptionService.restorePurchases();
+      restored = await _app.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
     if (!mounted) return;
     setState(() => _loading = false);
+    if (restored) {
+      Get.back();
+      widget.onUnlocked?.call();
+    }
     Get.snackbar(
       'Restore',
       restored
@@ -122,11 +144,16 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     final right = _offer(SubscriptionPlan.yearly);
     final leftIsBest = left.type.rank > right.type.rank;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: _dark ? AppPalette.background : Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(AppAssets.softBg, fit: BoxFit.cover),
+          if (_dark)
+            const DecoratedBox(
+              decoration: BoxDecoration(gradient: AppBackground.darkGradient),
+            )
+          else
+            Image.asset(AppAssets.softBg, fit: BoxFit.cover),
           SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 6.h),
@@ -140,12 +167,14 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         width: 28.w,
                         height: 28.w,
                         alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
+                        decoration: BoxDecoration(
+                          color: _dark
+                              ? AppPalette.surfaceMintDeep
+                              : Colors.white,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0x22000000),
+                              color: AppPalette.shadow(const Color(0x22000000)),
                               blurRadius: 6,
                               offset: Offset(0, 2),
                             ),
@@ -178,7 +207,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   Text(
                     'Better Meals  •  Healthier You',
                     style: TextStyle(
-                      color: const Color(0xFF4B5563),
+                      color: AppPalette.textBody,
                       fontSize: 11.sp,
                       fontFamily: 'Inter',
                     ),
@@ -204,17 +233,14 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           height: 24.w,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppPalette.surface,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xFFB4E4D7),
-                              width: 1,
-                            ),
+                            border: Border.all(color: _ringBorder, width: 1),
                           ),
                           child: Text(
                             'OR',
                             style: TextStyle(
-                              color: const Color(0xFF6B7280),
+                              color: AppPalette.textSecondary,
                               fontSize: 8.sp,
                               fontWeight: FontWeight.w700,
                             ),
@@ -284,19 +310,19 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   SizedBox(height: 8.h),
                   Row(
                     children: [
-                      const Expanded(child: Divider(color: Color(0xFFD1D5DB))),
+                      Expanded(child: Divider(color: _lineColor)),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: Text(
                           '7 Days Free  •  Cancel Anytime',
                           style: TextStyle(
-                            color: const Color(0xFF6B7280),
+                            color: AppPalette.textSecondary,
                             fontSize: 11.sp,
                             fontFamily: 'Inter',
                           ),
                         ),
                       ),
-                      const Expanded(child: Divider(color: Color(0xFFD1D5DB))),
+                      Expanded(child: Divider(color: _lineColor)),
                     ],
                   ),
                   SizedBox(height: 4.h),
@@ -375,7 +401,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: const Color(0x666CF8BB),
+        color: _dark ? const Color(0x336CF8BB) : const Color(0x666CF8BB),
         borderRadius: BorderRadius.circular(999),
         boxShadow: const [
           BoxShadow(
@@ -393,7 +419,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
           Text(
             '7-DAY HEALTHY MEAL PLAN',
             style: TextStyle(
-              color: const Color(0xFF00714D),
+              color: _dark ? const Color(0xFF6CF8BB) : const Color(0xFF00714D),
               fontSize: 11.sp,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w700,
@@ -410,7 +436,11 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     for (var i = 0; i < _features.length; i++) {
       if (i > 0) {
         rows.add(
-          const Divider(height: 1, thickness: 0.8, color: Color(0xFFE5E7EB)),
+          Divider(
+            height: 1,
+            thickness: 0.8,
+            color: _dark ? AppPalette.divider : const Color(0xFFE5E7EB),
+          ),
         );
       }
       rows.add(Expanded(child: _featureRow(i)));
@@ -419,11 +449,11 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppPalette.surface,
         borderRadius: BorderRadius.circular(22.r),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x3333D2AB),
+            color: AppPalette.shadow(const Color(0x3333D2AB)),
             blurRadius: 16,
             offset: Offset(0, 4),
           ),
@@ -486,7 +516,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: const Color(0xFF6B7280),
+            color: AppPalette.textSecondary,
             fontSize: 10.sp,
             fontFamily: 'Inter',
             height: 1.25,
@@ -509,15 +539,19 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
       child: Container(
         padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppPalette.surface,
           borderRadius: BorderRadius.circular(18.r),
           border: Border.all(
-            color: sel ? _green : const Color(0xFFD7EFE8),
+            color: sel
+                ? _green
+                : (_dark ? AppPalette.mintBorder : const Color(0xFFD7EFE8)),
             width: sel ? 1.6 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: sel ? const Color(0x3333D2AB) : const Color(0x1A33D2AB),
+              color: AppPalette.shadow(
+                sel ? const Color(0x3333D2AB) : const Color(0x1A33D2AB),
+              ),
               blurRadius: 12,
               offset: const Offset(0, 3),
             ),
@@ -534,13 +568,10 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   height: 18.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: sel ? _green : Colors.white,
+                    color: sel ? _green : AppPalette.surface,
                     border: sel
                         ? null
-                        : Border.all(
-                            color: const Color(0xFFB4E4D7),
-                            width: 1.4,
-                          ),
+                        : Border.all(color: _ringBorder, width: 1.4),
                   ),
                   child: sel
                       ? Icon(Icons.check, size: 12.sp, color: Colors.white)
@@ -582,14 +613,12 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
             Text(
               title,
               style: TextStyle(
-                color: const Color(0xFF374151),
+                color: _dark ? AppPalette.textPrimary : const Color(0xFF374151),
                 fontSize: 13.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
               ),
             ),
-            // Fixed-height slot: the loader and the fetched price take the
-            // same space, so the card never resizes when prices arrive.
             SizedBox(
               height: 32.sp,
               width: double.infinity,
@@ -638,7 +667,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
       t,
       style: TextStyle(
         fontSize: 10.sp,
-        color: const Color(0xFF6B7280),
+        color: AppPalette.textSecondary,
         fontFamily: 'Inter',
       ),
     ),
@@ -648,7 +677,10 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     padding: EdgeInsets.symmetric(horizontal: 10.w),
     child: Text(
       '|',
-      style: TextStyle(fontSize: 10.sp, color: const Color(0xFFCBD5E1)),
+      style: TextStyle(
+        fontSize: 10.sp,
+        color: _dark ? AppPalette.border : const Color(0xFFCBD5E1),
+      ),
     ),
   );
 }

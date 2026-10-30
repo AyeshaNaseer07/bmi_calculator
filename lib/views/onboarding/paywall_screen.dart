@@ -10,11 +10,13 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/theme/app_palette.dart';
 import '../../core/utils/open_url.dart';
 import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
+import '../widgets/app_background.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -35,6 +37,15 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   static const Color _green = Color(0xFF0AA37D);
 
+  bool get _dark => AppPalette.isDark;
+  Color get _ringBorder =>
+      _dark ? AppPalette.mintBorder : const Color(0xFFB4E4D7);
+  Color get _lineColor => _dark ? AppPalette.border : const Color(0xFFD1D5DB);
+  Color get _badgeFill =>
+      _dark ? const Color(0x336CF8BB) : const Color(0x666CF8BB);
+  Color get _badgeText =>
+      _dark ? const Color(0xFF6CF8BB) : const Color(0xFF00714D);
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +55,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
     _initCrossDelay();
     _loadPrices();
-    InterstitialAdManager.instance.load(InterstitialPlacement.paywallCross);
+    InterstitialAdManager.instance.load(_crossAdPlacement);
   }
 
   Future<void> _loadPrices() async {
@@ -73,9 +84,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
     super.dispose();
   }
 
+  InterstitialPlacement get _crossAdPlacement => _fromOnboarding
+      ? InterstitialPlacement.onbPremiumCross
+      : InterstitialPlacement.innerPremiumCross;
+
   void _onClose() {
     InterstitialAdManager.instance.show(
-      InterstitialPlacement.paywallCross,
+      _crossAdPlacement,
       onDone: _leavePaywall,
     );
   }
@@ -126,7 +141,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         child: Container(
           padding: EdgeInsets.fromLTRB(24.w, 28.h, 24.w, 24.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppPalette.surface,
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: Column(
@@ -140,7 +155,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w800,
-                  color: Colors.black,
+                  color: _dark ? AppPalette.textPrimary : Colors.black,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -150,7 +165,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w400,
-                  color: const Color(0xFF6B7280),
+                  color: AppPalette.textSecondary,
                   height: 1.4,
                 ),
               ),
@@ -187,14 +202,21 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Future<void> _onRestore() async {
     if (_isLoading) return;
     setState(() => _isLoading = true);
+    bool restored = false;
     try {
-      await _appController.subscriptionService.restorePurchases();
+      restored = await _appController.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
     if (!mounted) return;
     setState(() => _isLoading = false);
-    Get.snackbar('Restore', 'Purchase restored successfully (demo).');
+    if (restored) _leavePaywall();
+    Get.snackbar(
+      'Restore',
+      restored
+          ? 'Purchase restored successfully.'
+          : 'No previous purchase found.',
+    );
   }
 
   PlanOffer _offer(SubscriptionPlan slot) =>
@@ -203,7 +225,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   String _breakdown(PlanOffer o) => switch (o.type) {
     PlanType.yearly => '${o.price.perMonth(o.type)} / month',
     PlanType.monthly => '${o.price.perWeek(o.type)} / week',
-    PlanType.weekly => 'Billed weekly',
+    PlanType.weekly => '${o.price.perDay(o.type)} / day',
     PlanType.lifetime => 'One-time payment',
   };
 
@@ -216,11 +238,18 @@ class _PaywallScreenState extends State<PaywallScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF7FCF9),
+        backgroundColor: _dark
+            ? AppPalette.background
+            : const Color(0xFFF7FCF9),
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
+            if (_dark)
+              const DecoratedBox(
+                decoration: BoxDecoration(gradient: AppBackground.darkGradient),
+              )
+            else
+              Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
             SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -262,7 +291,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   TextSpan(
                                     text: 'Unlock ',
                                     style: TextStyle(
-                                      color: const Color(0xFF111827),
+                                      color: AppPalette.textPrimary,
                                       fontSize: 32.sp,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.w800,
@@ -302,7 +331,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         vertical: 7.h,
                       ),
                       decoration: ShapeDecoration(
-                        color: const Color(0x666CF8BB),
+                        color: _badgeFill,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(9999),
                         ),
@@ -326,7 +355,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           Text(
                             'PREMIUM HEALTH PASS',
                             style: TextStyle(
-                              color: const Color(0xFF00714D),
+                              color: _badgeText,
                               fontSize: 12.sp,
                               fontFamily: 'Plus Jakarta Sans',
                               fontWeight: FontWeight.w700,
@@ -339,21 +368,19 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     ),
                     SizedBox(height: 18.h),
 
-                    // Feature List Card: takes whatever space is left,
-                    // rows share it equally so nothing overflows.
                     Expanded(
                       flex: 8,
                       child: Container(
                         width: double.infinity,
                         constraints: BoxConstraints(minHeight: 150.h),
                         decoration: ShapeDecoration(
-                          color: Colors.white,
+                          color: AppPalette.surface,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.r),
                           ),
-                          shadows: const [
+                          shadows: [
                             BoxShadow(
-                              color: Color(0x3F33D2AB),
+                              color: AppPalette.shadow(const Color(0x3F33D2AB)),
                               blurRadius: 13.9,
                               spreadRadius: 2,
                             ),
@@ -419,15 +446,17 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             width: 28.w,
                             height: 28.w,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppPalette.surface,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: const Color(0xFFB4E4D7),
+                                color: _ringBorder,
                                 width: 1.2,
                               ),
-                              boxShadow: const [
+                              boxShadow: [
                                 BoxShadow(
-                                  color: Color(0x1A33D2AB),
+                                  color: AppPalette.shadow(
+                                    const Color(0x1A33D2AB),
+                                  ),
                                   blurRadius: 6,
                                   offset: Offset(0, 2),
                                 ),
@@ -514,24 +543,27 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     SizedBox(height: 10.h),
 
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Expanded(
-                          child: Divider(height: 1, color: Color(0xFFD1D5DB)),
+                        SizedBox(
+                          width: 32.w,
+                          child: Divider(height: 1, color: _lineColor),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Text(
                             '7 Days Free • Cancel Anytime',
                             style: TextStyle(
-                              color: const Color(0xFF6B7280),
+                              color: AppPalette.textSecondary,
                               fontSize: 12.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
-                        const Expanded(
-                          child: Divider(height: 1, color: Color(0xFFD1D5DB)),
+                        SizedBox(
+                          width: 32.w,
+                          child: Divider(height: 1, color: _lineColor),
                         ),
                       ],
                     ),
@@ -579,8 +611,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       child: Container(
                         width: 36.w,
                         height: 36.w,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFBFEFDF),
+                        decoration: BoxDecoration(
+                          color: _dark
+                              ? AppPalette.surfaceMintDeep
+                              : const Color(0xFFBFEFDF),
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -618,19 +652,23 @@ class _PaywallScreenState extends State<PaywallScreen> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Color(0xFFEFFAF6)],
+            colors: _dark
+                ? [AppPalette.surface, AppPalette.surfaceMint]
+                : const [Colors.white, Color(0xFFEFFAF6)],
           ),
           borderRadius: BorderRadius.circular(18.r),
           border: Border.all(
-            color: selected ? _green : const Color(0xFFE2F4EE),
+            color: selected
+                ? _green
+                : (_dark ? AppPalette.mintBorder : const Color(0xFFE2F4EE)),
             width: selected ? 1.5 : 1.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: shadowColor,
+              color: AppPalette.shadow(shadowColor),
               blurRadius: shadowBlur,
               offset: shadowOffset,
             ),
@@ -699,7 +737,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        color: const Color(0xFF0F1F4B),
+                        color: _dark
+                            ? AppPalette.textPrimary
+                            : const Color(0xFF0F1F4B),
                         fontSize: 14.sp,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w700,
@@ -707,8 +747,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     ),
                   ),
                   SizedBox(height: 4.h),
-                  // Fixed-height slots: the loader and the fetched price
-                  // take the same space, so the card never resizes.
                   _priceSlot(
                     height: 30.sp,
                     loading: price.isEmpty,
@@ -733,7 +771,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       width: 56.w,
                       height: 8.sp,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE5EAF0),
+                        color: _dark
+                            ? AppPalette.surfaceMuted
+                            : const Color(0xFFE5EAF0),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                     ),
@@ -793,14 +833,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
       height: 18.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFFB4E4D7), width: 1.5),
-        color: Colors.white,
+        border: Border.all(color: _ringBorder, width: 1.5),
+        color: AppPalette.surface,
       ),
     );
   }
 
   Widget _buildFeatureDivider() {
-    return const Divider(height: 1, thickness: 0.8, color: Color(0xFFF1F5F9));
+    return Divider(height: 1, thickness: 0.8, color: AppPalette.divider);
   }
 
   Widget _buildFeatureRow({required String imagePath, required String title}) {
@@ -822,7 +862,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: const Color(0xFF0F1F2E),
+                  color: _dark
+                      ? AppPalette.textPrimary
+                      : const Color(0xFF0F1F2E),
                   fontSize: 15.sp,
                   fontFamily: 'Plus Jakarta Sans',
                   fontWeight: FontWeight.w700,
@@ -843,7 +885,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         title,
         style: TextStyle(
           fontSize: 11.sp,
-          color: const Color(0xFF94A3B8),
+          color: AppPalette.textMuted,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w400,
         ),
@@ -856,7 +898,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Text(
         '|',
-        style: TextStyle(fontSize: 11.sp, color: const Color(0xFFCBD5E1)),
+        style: TextStyle(
+          fontSize: 11.sp,
+          color: _dark ? AppPalette.border : const Color(0xFFCBD5E1),
+        ),
       ),
     );
   }

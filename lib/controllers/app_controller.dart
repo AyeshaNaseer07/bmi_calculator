@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart' show ThemeMode;
+import 'package:flutter/material.dart' show AppLifecycleListener, ThemeMode;
 import 'package:get/get.dart';
 
 import 'package:permission_handler/permission_handler.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../core/theme/app_palette.dart';
 import '../data/models/user_profile_model.dart';
@@ -34,6 +33,7 @@ class AppController extends GetxController {
   final RxBool onboardingSeen = false.obs;
 
   late final Future<void> subscriptionVerified;
+  AppLifecycleListener? _lifecycle;
 
   @override
   void onInit() {
@@ -50,8 +50,13 @@ class AppController extends GetxController {
     isPremium.value = _storage.getIsPremium();
     onboardingSeen.value = _storage.getOnboardingSeen();
 
-    subscriptionVerified = _verifySubscription();
-    Purchases.addCustomerInfoUpdateListener(_onCustomerInfoUpdated);
+    subscriptionService.onChanged = (premium) => isPremium.value = premium;
+    subscriptionService.start();
+    subscriptionVerified = subscriptionService.verifyWithStore();
+    // Catches refunds made while the app was in the background.
+    _lifecycle = AppLifecycleListener(
+      onResume: () => subscriptionService.verifyWithStore(),
+    );
 
     if (isRemoteNotificationEnabled) {
       _checkLocalNotificationPermission();
@@ -60,17 +65,9 @@ class AppController extends GetxController {
 
   @override
   void onClose() {
-    Purchases.removeCustomerInfoUpdateListener(_onCustomerInfoUpdated);
+    _lifecycle?.dispose();
+    subscriptionService.dispose();
     super.onClose();
-  }
-
-  Future<void> _verifySubscription() async {
-    final active = await subscriptionService.verifyWithStore();
-    if (active != null) isPremium.value = active;
-  }
-
-  Future<void> _onCustomerInfoUpdated(CustomerInfo info) async {
-    isPremium.value = await subscriptionService.applyCustomerInfo(info);
   }
 
   Future<void> _checkLocalNotificationPermission() async {
@@ -110,15 +107,10 @@ class AppController extends GetxController {
 
   Future<bool> upgradeToPremium(SubscriptionPlan plan) async {
     final remoteProductId = remoteConfigService.getProductId(plan);
-    final success = await subscriptionService.purchase(
-      plan,
-      productId: remoteProductId,
-    );
-    if (success) {
-      isPremium.value = true;
-    }
-    return success;
+    return subscriptionService.purchase(plan, productId: remoteProductId);
   }
+
+  Future<bool> restorePurchases() => subscriptionService.restorePurchases();
 
   void completeOnboarding() {
     onboardingSeen.value = true;

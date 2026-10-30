@@ -17,7 +17,6 @@ import 'logger_service.dart';
 import 'purchase_connector.dart';
 import 'quick_actions_service.dart';
 import 'remote_config_service.dart';
-import 'revenue_cat_service.dart';
 import 'storage_service.dart';
 
 /// Everything the app needs before leaving the splash screen: Firebase +
@@ -62,12 +61,6 @@ class AppStartup {
         .catchError((error) {
           log("Error initializing PurchaseManager: $error");
         });
-    try {
-      await RevenueCat.configStore();
-    } catch (e) {
-      AppLogger.e('RevenueCat initialization failed: $e');
-    }
-
     try {
       await NotificationService.instance.initialize();
     } catch (e) {
