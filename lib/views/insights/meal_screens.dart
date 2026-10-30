@@ -28,9 +28,6 @@ class DailyMealPlanScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 2.h),
-          // Shown first so it's read before the plan itself.
-          const _PlanDisclaimer(),
-          SizedBox(height: 14.h),
           Text(
             'Meal Planner',
             style: TextStyle(
@@ -47,6 +44,8 @@ class DailyMealPlanScreen extends StatelessWidget {
           SizedBox(height: 12.h),
           const _DayMeals(),
           SizedBox(height: 4.h),
+          const _PlanDisclaimer(),
+          SizedBox(height: 10.h),
           const TipBanner(
             text:
                 'Remember: Choose portions that suit your needs and enjoy a '
@@ -99,10 +98,8 @@ class _PlanDisclaimer extends StatelessWidget {
                 'dietitian instead of this one.'
           : 'This plan is general guidance, not medical advice.',
       body:
-          'It is based on your BMI, age, height, weight and activity level. '
-          'Check with a doctor or dietitian before changing your diet, '
-          'especially if you are pregnant, have a medical condition or a '
-          'history of disordered eating.',
+          'Based on your BMI, age, height, weight and activity level. '
+          'Consult a doctor or dietitian before changing your diet.',
     );
   }
 }

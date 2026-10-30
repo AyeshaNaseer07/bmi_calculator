@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../../data/services/storage_service.dart';
 import 'insight_common.dart';
 import 'personal_targets.dart';
 import '../../core/theme/app_palette.dart';
@@ -19,7 +21,11 @@ class DailyGoalScreen extends StatefulWidget {
 }
 
 class _DailyGoalScreenState extends State<DailyGoalScreen> {
-  int _glasses = 0;
+  final StorageService _storage = Get.find<StorageService>();
+
+  /// Today's ticked glasses, kept when the screen is left and reopened;
+  /// starts again from 0 the next day.
+  late int _glasses = _storage.getWaterGlasses(DateTime.now()).clamp(0, _goal);
 
   late final int _ml = PersonalTargets.waterMl(
     MealPlanController.to.weightKg,
@@ -33,7 +39,10 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => setState(() => _glasses = n == _glasses ? n - 1 : n),
+        onTap: () {
+          setState(() => _glasses = n == _glasses ? n - 1 : n);
+          _storage.setWaterGlasses(DateTime.now(), _glasses);
+        },
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 3.w),
           padding: EdgeInsets.symmetric(vertical: 6.h),

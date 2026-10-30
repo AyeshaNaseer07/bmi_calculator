@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bmi_calculator/core/constants/app_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -449,134 +450,22 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(8.0.r),
-                      child: Column(
-                        children: [
-                          // Language
-                          _buildAccountRow(
-                            icon: CupertinoIcons.globe,
-                            title: 'Language',
-                            subtitle: 'Select your app language',
-                            onTap: () =>
-                                Get.toNamed(AppRoutes.languagesSettings),
-                          ),
-                          Divider(height: 1, color: AppPalette.surfaceMuted),
-
-                          // Notifications Switch
-                          Expanded(
-                            child: Obx(() {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 38.w,
-                                      height: 38.w,
-                                      alignment: Alignment.center,
-                                      decoration: ShapeDecoration(
-                                        color: const Color(0xFF33D2AB)
-                                            .withValues(alpha: 0.15),
-                                        shape: OvalBorder(),
-                                      ),
-                                      child: Icon(
-                                        CupertinoIcons.moon,
-                                        color: const Color(0xFF33D2AB),
-                                        size: 18.sp,
-                                      ),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Dark Mode',
-                                            style: TextStyle(
-                                              color: AppPalette.textPrimary,
-                                              fontSize: 12.sp,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          SizedBox(height: 1.h),
-                                          Text(
-                                            'Switch between light and dark theme',
-                                            style: TextStyle(
-                                              color: AppPalette.textPrimary
-                                                  .withValues(alpha: 0.82),
-                                              fontSize: 11.sp,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    CupertinoSwitch(
-                                      value: appController.isDarkMode.value,
-                                      activeTrackColor: const Color(0xFF2FD1A6),
-                                      onChanged: appController.setDarkMode,
-                                    ),
-                                  ],
+                      // Rows stretch to fill the card when there's room; on
+                      // short screens (or with the premium card shown) they
+                      // keep their natural height and the list scrolls.
+                      child: LayoutBuilder(
+                        builder: (context, constraints) =>
+                            SingleChildScrollView(
+                              physics: const ClampingScrollPhysics(),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: constraints.maxHeight,
                                 ),
-                              );
-                            }),
-                          ),
-                          Divider(height: 1, color: AppPalette.surfaceMuted),
-                          // Rate Us
-                          _buildAccountRow(
-                            icon: Icons.star_outline_rounded,
-                            title: 'Rate Us',
-                            subtitle: 'Rate your experience with us',
-                            onTap: () => _openRateUsDialog(context),
-                          ),
-                          Divider(height: 1, color: AppPalette.surfaceMuted),
-
-                          // Privacy Policy
-                          _buildAccountRow(
-                            icon: Icons.shield_outlined,
-                            title: 'Privacy Policy',
-                            subtitle: 'Read our privacy policy',
-                            onTap: () => openUrl(AppStrings.privacyPolicyUrl),
-                          ),
-                          Divider(height: 1, color: AppPalette.surfaceMuted),
-
-                          // Terms of Use
-                          _buildAccountRow(
-                            icon: Icons.description_outlined,
-                            title: 'Terms of Use',
-                            subtitle: 'Read our terms and conditions',
-                            onTap: () => openUrl(AppStrings.termsUrl),
-                          ),
-                          Divider(height: 1, color: AppPalette.surfaceMuted),
-
-                          // Feedback
-                          _buildAccountRow(
-                            icon: Icons.chat_bubble_outline_rounded,
-                            title: 'Feedback',
-                            subtitle: 'Send us your suggestions & ideas',
-                            onTap: () => sendFeedback(),
-                          ),
-                          Divider(height: 1, color: AppPalette.surfaceMuted),
-
-                          // Share App
-                          _buildAccountRow(
-                            icon: CupertinoIcons.share,
-                            title: 'Share App',
-                            subtitle: 'Share this app with friends & family',
-                            onTap: () {
-                              SharePlus.instance.share(
-                                ShareParams(
-                                  text: 'Check out this BMI Calculator app! Track your health and stay fit. Download it now!',
+                                child: IntrinsicHeight(
+                                  child: _accountRows(context),
                                 ),
-                              );
-                            },
-                          ),
-                        ],
+                              ),
+                            ),
                       ),
                     ),
                   ),
@@ -586,6 +475,136 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _accountRows(BuildContext context) {
+    final AppController appController = Get.find<AppController>();
+    return Column(
+      children: [
+        // Language
+        _buildAccountRow(
+          icon: CupertinoIcons.globe,
+          title: 'Language',
+          subtitle: 'Select your app language',
+          onTap: () => Get.toNamed(AppRoutes.languagesSettings),
+        ),
+        Divider(height: 1, color: AppPalette.surfaceMuted),
+
+        // Notifications Switch
+        Expanded(
+          child: Obx(() {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 38.w,
+                    height: 38.w,
+                    alignment: Alignment.center,
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
+                      shape: OvalBorder(),
+                    ),
+                    child: Icon(
+                      CupertinoIcons.moon,
+                      color: const Color(0xFF33D2AB),
+                      size: 18.sp,
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Dark Mode',
+                          style: TextStyle(
+                            color: AppPalette.textPrimary,
+                            fontSize: 12.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 1.h),
+                        Text(
+                          'Switch between light and dark theme',
+                          style: TextStyle(
+                            color: AppPalette.textPrimary.withValues(
+                              alpha: 0.82,
+                            ),
+                            fontSize: 11.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  CupertinoSwitch(
+                    value: appController.isDarkMode.value,
+                    activeTrackColor: const Color(0xFF2FD1A6),
+                    onChanged: appController.setDarkMode,
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
+        Divider(height: 1, color: AppPalette.surfaceMuted),
+        // Rate Us
+        _buildAccountRow(
+          icon: Icons.star_outline_rounded,
+          title: 'Rate Us',
+          subtitle: 'Rate your experience with us',
+          onTap: () => _openRateUsDialog(context),
+        ),
+        Divider(height: 1, color: AppPalette.surfaceMuted),
+
+        // Privacy Policy
+        _buildAccountRow(
+          icon: Icons.shield_outlined,
+          title: 'Privacy Policy',
+          subtitle: 'Read our privacy policy',
+          onTap: () => openUrl(AppStrings.privacyPolicyUrl),
+        ),
+        Divider(height: 1, color: AppPalette.surfaceMuted),
+
+        // Terms of Use
+        _buildAccountRow(
+          icon: Icons.description_outlined,
+          title: 'Terms of Use',
+          subtitle: 'Read our terms and conditions',
+          onTap: () => openUrl(AppStrings.termsUrl),
+        ),
+        Divider(height: 1, color: AppPalette.surfaceMuted),
+
+        // Feedback
+        _buildAccountRow(
+          icon: Icons.chat_bubble_outline_rounded,
+          title: 'Feedback',
+          subtitle: 'Send us your suggestions & ideas',
+          onTap: () => sendFeedback(),
+        ),
+        Divider(height: 1, color: AppPalette.surfaceMuted),
+
+        // Share App
+        _buildAccountRow(
+          icon: CupertinoIcons.share,
+          title: 'Share App',
+          subtitle: 'Share this app with friends & family',
+          onTap: () {
+            SharePlus.instance.share(
+              ShareParams(
+                text: 'Check out this BMI Calculator app! Track your health and stay fit. Download it now!',
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -777,6 +796,9 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                     focusNode: _focusNode,
                     autofocus: true,
                     textCapitalization: TextCapitalization.words,
+                    // Max 10 characters (letters, spaces, numbers, symbols);
+                    // no counter, so the layout is unchanged.
+                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     textInputAction: TextInputAction.done,
                     onTapOutside: (_) => _focusNode.unfocus(),
                     onSubmitted: (_) => _saveName(),

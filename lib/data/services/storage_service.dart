@@ -20,6 +20,8 @@ class StorageService {
   static const String _keyProfileImagePath = 'profile_image_path';
   static const String _keyRemoteButtonText = 'rc_button_text';
   static const String _keyLastWeightEntry = 'last_weight_entry';
+  static const String _keyWaterGlasses = 'water_glasses';
+  static const String _keyWaterGlassesDay = 'water_glasses_day';
 
   late SharedPreferences _prefs;
 
@@ -88,6 +90,20 @@ class StorageService {
 
   Future<void> setLastWeightEntry(Map<String, dynamic> entry) =>
       _prefs.setString(_keyLastWeightEntry, jsonEncode(entry));
+
+  // ── Daily water goal: glasses ticked today ──
+  static String _dayKey(DateTime d) => '${d.year}-${d.month}-${d.day}';
+
+  /// Glasses ticked on [day]; 0 when the saved count is from another day.
+  int getWaterGlasses(DateTime day) {
+    if (_prefs.getString(_keyWaterGlassesDay) != _dayKey(day)) return 0;
+    return _prefs.getInt(_keyWaterGlasses) ?? 0;
+  }
+
+  Future<void> setWaterGlasses(DateTime day, int glasses) async {
+    await _prefs.setString(_keyWaterGlassesDay, _dayKey(day));
+    await _prefs.setInt(_keyWaterGlasses, glasses);
+  }
 
   // ── User Profile ──
   bool hasUserProfile() => _prefs.getString(_keyUserProfile) != null;

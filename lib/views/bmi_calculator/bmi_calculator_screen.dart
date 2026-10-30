@@ -7,6 +7,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/bmi_service.dart';
+import '../main/main_navigation_screen.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/app_background.dart';
 import '../widgets/bordered_slider_thumb_shape.dart';
@@ -42,7 +43,15 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     Get.back(); // close dialog
     InterstitialAdManager.instance.show(
       InterstitialPlacement.calculator,
-      onDone: () => Get.offAllNamed(AppRoutes.home),
+      // No transition: Home is simply there when the ad goes away. A fade
+      // here made this (Cupertino) route slide aside under it, which showed
+      // as a sliding glitch right after the ad.
+      onDone: () => Get.offAll(
+        () => const MainNavigationScreen(),
+        routeName: AppRoutes.home,
+        transition: Transition.noTransition,
+        duration: Duration.zero,
+      ),
     );
   }
 

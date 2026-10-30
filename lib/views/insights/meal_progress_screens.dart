@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../controllers/meal_plan_controller.dart';
+import '../widgets/animated_cta_button.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
 import '../../core/theme/app_palette.dart';
@@ -85,12 +86,30 @@ class MealCompletedScreen extends StatelessWidget {
     final c = MealPlanController.to;
     return InsightScaffold(
       title: '${meal.slot} Completed!',
-      bottom: GradientActionButton(
+      // Same look as GradientActionButton, plus the app's CTA animation
+      // (breathing pulse, shine sweep, arrow nudge).
+      bottom: AnimatedCtaButton(
         text: 'View Your Progress',
-        trailing: Icons.arrow_forward_rounded,
+        height: 52.h,
+        borderRadius: BorderRadius.circular(28.r),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
+        ),
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 16.sp,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
+        ),
+        alignTrailingToEnd: false,
+        trailingIcon: Icon(
+          Icons.arrow_forward_rounded,
+          color: Colors.white,
+          size: 20.sp,
+        ),
         // Replaces this screen, so Back on Your Progress goes straight to
         // the 1 Week Meal Plan.
-        onTap: () => Get.off(() => const MealProgressScreen()),
+        onPressed: () => Get.off(() => const MealProgressScreen()),
       ),
       body: Column(
         children: [

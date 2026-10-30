@@ -388,70 +388,71 @@ class PrecautionCard extends StatelessWidget {
                     color: AppPalette.tintLine(const Color(0xFFFDE7C1)),
                   ),
                 ),
-                child: Row(
+                child: Column(
+                  // Left-aligned: a one-line lead would otherwise be centred
+                  // and look indented next to the wrapping body text.
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 30.w,
-                      height: 30.w,
-                      decoration: BoxDecoration(
-                        color: AppPalette.tint(const Color(0xFFFEEBC8)),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: _amber.withValues(alpha: 0.35 * pulse),
-                            blurRadius: 12 * pulse,
-                            spreadRadius: 2 * pulse,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 30.w,
+                          height: 30.w,
+                          decoration: BoxDecoration(
+                            color: AppPalette.tint(const Color(0xFFFEEBC8)),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: _amber.withValues(alpha: 0.35 * pulse),
+                                blurRadius: 12 * pulse,
+                                spreadRadius: 2 * pulse,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.health_and_safety_outlined,
-                        size: 17.sp,
-                        color: _amber,
+                          child: Icon(
+                            Icons.health_and_safety_outlined,
+                            size: 20.sp,
+                            color: _amber,
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Text(
+                          'PRECAUTION',
+                          style: bodyStyle(
+                            16,
+                            color: AppPalette.ink(const Color(0xFFB45309)),
+                            weight: FontWeight.w800,
+                          ).copyWith(letterSpacing: 0.3),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5.h),
+                    Text(
+                      lead,
+                      style: bodyStyle(
+                        12.5,
+                        color: kInk,
+                        weight: FontWeight.w600,
+                        height: 1.35,
                       ),
                     ),
-                    SizedBox(width: 10.w),
-                    Expanded(child: child!),
+                    SizedBox(height: 2.h),
+                    Text(
+                      body,
+                      style: bodyStyle(
+                        12,
+                        color: AppPalette.textSecondary,
+                        weight: FontWeight.w500,
+                        height: 1.35,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           );
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'PRECAUTION',
-              style: bodyStyle(
-                12,
-                color: AppPalette.ink(const Color(0xFFB45309)),
-                weight: FontWeight.w800,
-              ).copyWith(letterSpacing: 0.3),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              lead,
-              style: bodyStyle(
-                12.5,
-                color: kInk,
-                weight: FontWeight.w600,
-                height: 1.35,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              body,
-              style: bodyStyle(
-                12,
-                color: AppPalette.textSecondary,
-                weight: FontWeight.w500,
-                height: 1.35,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
