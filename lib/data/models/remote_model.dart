@@ -26,6 +26,7 @@ class RemoteModel {
   String? _localNotification;
   String? _notificationFrequency;
   String? _softPaywallAccess;
+  String? _showAdsDebugger;
 
   // AppLovin MAX ad units; Remote Config overrides each one.
   static const String defaultAppOpenAdId = '8912e79bed7e47df';
@@ -121,6 +122,9 @@ class RemoteModel {
   String get softPaywallAccess => _softPaywallAccess ?? 'true';
   set softPaywallAccess(String value) => _softPaywallAccess = value;
 
+  String get showAdsDebugger => _showAdsDebugger ?? 'off';
+  set showAdsDebugger(String value) => _showAdsDebugger = value;
+
   RemoteModel({
     this._firstTimeOnboarding,
     this._secondTimeOnboarding,
@@ -147,6 +151,7 @@ class RemoteModel {
     this._localNotification,
     this._notificationFrequency,
     this._softPaywallAccess,
+    this._showAdsDebugger,
   });
 
   bool get isFirstTimeOnboarding => _isOn(firstTimeOnboarding);
@@ -176,6 +181,7 @@ class RemoteModel {
 
   /// Closing the 1 Week Meal Plan soft paywall still opens the plan.
   bool get isSoftPaywallAccessEnabled => _isOn(softPaywallAccess);
+  bool get isAdsDebuggerEnabled => _isOn(showAdsDebugger);
 
   // Compatibility aliases
   String get splashYearlyProductId => yearlyProductId;
@@ -341,6 +347,10 @@ class RemoteModel {
               remoteConfig['softPaywallAccess'],
           'true',
         ),
+        showAdsDebugger: _parseString(
+          remoteConfig['show_ads_debugger'] ?? remoteConfig['showAdsDebugger'],
+          'off',
+        ),
       );
     } catch (e, stackTrace) {
       if (kDebugMode || kProfileMode) {
@@ -378,6 +388,7 @@ class RemoteModel {
       localNotification: 'on',
       notificationFrequency: 'd',
       softPaywallAccess: 'true',
+      showAdsDebugger: 'off',
     );
   }
 
@@ -408,6 +419,7 @@ class RemoteModel {
       'local_notification': localNotification,
       'show_notification_frequency': notificationFrequency,
       'soft_paywall_access': softPaywallAccess,
+      'show_ads_debugger': showAdsDebugger,
     };
   }
 }

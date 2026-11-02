@@ -1,5 +1,8 @@
+import '../../data/services/remote_config_service.dart';
+
 import 'dart:io';
 
+import 'package:applovin_max/applovin_max.dart';
 import 'package:bmi_calculator/core/constants/app_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -552,6 +555,18 @@ class ProfileScreen extends StatelessWidget {
           subtitle: 'share_this_app_with_friends_family'.tr,
           onTap: () => shareApp(context),
         ),
+
+        Obx(() {
+          if (!RemoteConfigService.to.model.value.isAdsDebuggerEnabled) {
+            return const SizedBox.shrink();
+          }
+          return _buildAccountRow(
+            icon: CupertinoIcons.info,
+            title: 'Show Debuger'.tr,
+            subtitle: 'App Lovin Ads Debuger'.tr,
+            onTap: () => AppLovinMAX.showMediationDebugger(),
+          );
+        }),
       ],
     );
   }

@@ -58,10 +58,9 @@ class SceneDelegate: FlutterSceneDelegate {
         }
       }
 
-      if let pending = SceneDelegate.pendingShortcutType {
-        SceneDelegate.pendingShortcutType = nil
-        channel.invokeMethod("onShortcut", arguments: pending)
-      }
+      // Do not push the cold-start shortcut here: Dart's handler is not
+      // registered yet, so the call would be dropped. Dart pulls it via
+      // "getInitialShortcut" once it is ready.
     }
   }
 

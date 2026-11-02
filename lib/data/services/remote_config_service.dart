@@ -52,6 +52,14 @@ class RemoteConfigService extends GetxService {
     }
   }
 
+  bool get isAdsDebuggerEnabled {
+    try {
+      return model.value.isAdsDebuggerEnabled;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get isFullScreenNativeAdEnabled {
     try {
       return model.value.isFullScreenNativeAdEnabled;
@@ -203,6 +211,7 @@ class RemoteConfigService extends GetxService {
       'second_time_onboarding=${m.secondTimeOnboarding}, '
       'paywall_btn_text="${m.paywallBtnText}", cross_delay=${m.crossDelay}, '
       'soft_paywall_access=${m.softPaywallAccess}, '
+      'show_ads_debugger=${m.showAdsDebugger}, '
       'splash_inter_ad=${m.splashInterAd}, '
       'onb_paywall_enable=${m.onbPaywallEnable}, '
       'week_paywall_enable=${m.weekPaywallEnable}, '

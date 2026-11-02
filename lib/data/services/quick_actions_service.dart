@@ -35,12 +35,22 @@ class QuickActionsService {
   }
 
   Future<void> _checkInitialShortcut() async {
-    try {
-      final initial = await _channel.invokeMethod<String>('getInitialShortcut');
-      if (initial != null && initial.isNotEmpty) {
-        handleShortcut(initial);
+    // The native channel may not be registered yet on cold start; retry.
+    for (var i = 0; i < 20; i++) {
+      try {
+        final initial = await _channel.invokeMethod<String>(
+          'getInitialShortcut',
+        );
+        if (initial != null && initial.isNotEmpty) {
+          handleShortcut(initial);
+        }
+        return;
+      } on MissingPluginException {
+        await Future.delayed(const Duration(milliseconds: 250));
+      } catch (_) {
+        return;
       }
-    } catch (_) {}
+    }
   }
 
   void handleShortcut(String type) {

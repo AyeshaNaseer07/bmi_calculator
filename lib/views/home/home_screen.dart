@@ -213,8 +213,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ClipOval(
                   child: Image.file(
                     File(imgPath),
-                    width: 38.w,
-                    height: 38.w,
+                    width: 34.w,
+                    height: 34.w,
                     fit: BoxFit.cover,
                   ),
                 );
