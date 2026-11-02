@@ -21,17 +21,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  // ATT first, then the CMP consent form whatever the user chose. Both are
-  // answered over the launch screen, before the splash screen shows.
   await _waitUntilAppActive();
   final PermissionStatus status = await Permission.appTrackingTransparency
       .request();
   debugPrint('ATT status: $status');
   await showCMP();
 
-  // Only what the first frame needs. Firebase, the SDKs and the ads are
-  // started from the splash screen (see AppStartup).
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
   AppPalette.isDark = storageService.getDarkMode();
@@ -44,8 +39,6 @@ void main() async {
   runApp(BMIApp(initialLocale: currentLocale));
 }
 
-/// iOS only shows the ATT prompt while the app is active; asked any earlier
-/// it returns "not determined" without showing anything.
 Future<void> _waitUntilAppActive() async {
   if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
     return;
@@ -72,22 +65,36 @@ String getDeviceCountry() {
 }
 
 /// Sends an AppLovin MAX impression's revenue (in USD) to AppsFlyer.
-void logMaxAdRevenue(MaxAd ad, {required String adType}) {
+void logMaxAdRevenue(MaxAd ad, {required String adType}) => logAdRevenue(
+  networkName: ad.networkName,
+  revenue: ad.revenue,
+  adUnitId: ad.adUnitId,
+  adType: adType,
+);
+
+/// Same as [logMaxAdRevenue], for ads that don't come as a [MaxAd] (the
+/// natively rendered native ads).
+void logAdRevenue({
+  required String networkName,
+  required double revenue,
+  required String adUnitId,
+  required String adType,
+}) {
   try {
     appsflyerSdk?.logAdRevenue(
       AdRevenueData(
-        monetizationNetwork: ad.networkName,
+        monetizationNetwork: networkName,
         mediationNetwork: AFMediationNetwork.applovinMax.value,
         currencyIso4217Code: 'USD',
-        revenue: ad.revenue,
+        revenue: revenue,
         additionalParameters: {
           "country": getDeviceCountry(),
-          "adUnit": ad.adUnitId,
+          "adUnit": adUnitId,
           "adType": adType,
         },
       ),
     );
-    debugPrint("✅ logMaxAdRevenue: $adType ${ad.revenue} USD");
+    debugPrint("✅ logMaxAdRevenue: $adType $revenue USD");
   } catch (e, stackTrace) {
     debugPrint("❌ logMaxAdRevenue failed: $e");
     debugPrint("📌 Stack trace: $stackTrace");

@@ -1,10 +1,10 @@
-import 'package:applovin_max/applovin_max.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../controllers/app_controller.dart';
-import '../../../core/theme/app_palette.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
 import '../../../main.dart';
@@ -12,15 +12,100 @@ import 'ad_logger.dart';
 import 'ad_shimmer.dart';
 import 'app_open_ad_manager.dart';
 import 'applovin_sdk.dart';
+import 'max_native_ad.dart';
 
 const double _kDefaultNativeAdHeight = 350;
 
-/// Screens with a native ad card, each switched on/off and given its ad unit
-/// ID from Remote Config.
-enum NativeAdPlacement { language, onboarding }
+enum NativeAdPlacement { language, onboarding, fullScreen }
 
-/// AppLovin MAX native ad with media: icon, headline, AD badge + body, media
-/// and a CTA button. Shows a shimmer while loading and nothing on failure.
+class NativeAds {
+  NativeAds._();
+
+  static final Map<NativeAdPlacement, MaxNativeAd> _ads = {
+    for (final placement in NativeAdPlacement.values)
+      placement: MaxNativeAd(switch (placement) {
+        NativeAdPlacement.language => 'language_native',
+        NativeAdPlacement.onboarding => 'onboarding_native',
+        NativeAdPlacement.fullScreen => 'full_screen_native',
+      }),
+  };
+
+  static bool _callbacksSet = false;
+
+  static MaxNativeAd of(NativeAdPlacement placement) => _ads[placement]!;
+
+  static RemoteModel get _config => Get.isRegistered<RemoteConfigService>()
+      ? RemoteConfigService.to.current
+      : remoteModel;
+
+  static bool isEnabled(NativeAdPlacement placement) {
+    if (!Platform.isIOS) return false;
+    try {
+      if (Get.isRegistered<AppController>()) {
+        if (Get.find<AppController>().isPremium.value) return false;
+      }
+      return switch (placement) {
+        NativeAdPlacement.language => _config.isLanguageNativeAdEnabled,
+        NativeAdPlacement.onboarding => _config.isOnboardingNativeAdEnabled,
+        NativeAdPlacement.fullScreen => _config.isFullScreenNativeAdEnabled,
+      };
+    } catch (_) {
+      return true;
+    }
+  }
+
+  static String adUnitIdFor(NativeAdPlacement placement) {
+    final (id, fallback) = switch (placement) {
+      NativeAdPlacement.language => (
+        _config.languageNativeAdId,
+        RemoteModel.defaultLanguageNativeAdId,
+      ),
+      NativeAdPlacement.onboarding => (
+        _config.onboardingNativeAdId,
+        RemoteModel.defaultOnboardingNativeAdId,
+      ),
+      NativeAdPlacement.fullScreen => (
+        _config.fullScreenNativeAdId,
+        RemoteModel.defaultFullScreenNativeAdId,
+      ),
+    };
+    return id.isNotEmpty ? id : fallback;
+  }
+
+  static Future<bool> preload(
+    NativeAdPlacement placement, {
+    String? adUnitId,
+  }) async {
+    if (!isEnabled(placement)) return false;
+    if (!await AppLovinSdk.ready) return false;
+    _setCallbacks();
+
+    final ad = of(placement);
+    final id = (adUnitId != null && adUnitId.isNotEmpty)
+        ? adUnitId
+        : adUnitIdFor(placement);
+    if (!ad.isLoadingOrLoaded) {
+      AdLogHelper.logRequest(tag: 'NativeAd(${placement.name})', adUnitId: id);
+    }
+    ad.preload(id);
+    return true;
+  }
+
+  static void _setCallbacks() {
+    if (_callbacksSet) return;
+    _callbacksSet = true;
+    MaxNativeAd.onAdClicked = (_) => AppOpenAdManager.instance.skipNextResume();
+    MaxNativeAd.onRevenuePaid = (ad, networkName, revenue) => logAdRevenue(
+      networkName: networkName,
+      revenue: revenue,
+      adUnitId: ad.adUnitId ?? '',
+      adType: ad == of(NativeAdPlacement.fullScreen)
+          ? 'FullScreenNativeAd'
+          : 'MediumNativeAd',
+    );
+  }
+}
+
 class NativeAdCard extends StatefulWidget {
   final NativeAdPlacement placement;
   final EdgeInsetsGeometry? margin;
@@ -42,65 +127,46 @@ class NativeAdCard extends StatefulWidget {
 }
 
 class _NativeAdCardState extends State<NativeAdCard> {
-  static const double _defaultMediaAspectRatio = 16 / 9;
-
-  bool _sdkReady = false;
-  bool _isLoaded = false;
+  late final MaxNativeAd _ad = NativeAds.of(widget.placement);
   bool _isFailed = false;
-  double _mediaAspectRatio = _defaultMediaAspectRatio;
-
-  RemoteModel get _config => Get.isRegistered<RemoteConfigService>()
-      ? RemoteConfigService.to.current
-      : remoteModel;
-
-  bool get _isAdsEnabled {
-    try {
-      if (Get.isRegistered<AppController>()) {
-        if (Get.find<AppController>().isPremium.value) return false;
-      }
-      return switch (widget.placement) {
-        NativeAdPlacement.language => _config.isLanguageNativeAdEnabled,
-        NativeAdPlacement.onboarding => _config.isOnboardingNativeAdEnabled,
-      };
-    } catch (_) {
-      return true;
-    }
-  }
-
-  String get _effectiveAdUnitId {
-    final (id, fallback) = switch (widget.placement) {
-      NativeAdPlacement.language => (
-        _config.languageNativeAdId,
-        RemoteModel.defaultLanguageNativeAdId,
-      ),
-      NativeAdPlacement.onboarding => (
-        _config.onboardingNativeAdId,
-        RemoteModel.defaultOnboardingNativeAdId,
-      ),
-    };
-    return id.isNotEmpty ? id : fallback;
-  }
 
   @override
   void initState() {
     super.initState();
-    if (!_isAdsEnabled) {
+    if (!NativeAds.isEnabled(widget.placement)) {
       _isFailed = true;
-      // Deferred: we're inside initState, and the parent usually calls
-      // setState in response, which isn't allowed mid-build.
       _notifyAvailability(false);
       return;
     }
-    AppLovinSdk.ready.then((ready) {
+    _ad.state.addListener(_onAdStateChanged);
+    NativeAds.preload(widget.placement).then((started) {
       if (!mounted) return;
-      if (!ready) {
-        setState(() => _isFailed = true);
-        _notifyAvailability(false);
-        return;
+      if (!started) {
+        _fail();
+      } else if (_ad.state.value == MaxNativeAdState.loaded) {
+        _notifyAvailability(true);
       }
-      AdLogHelper.logRequest(tag: 'NativeAdCard', adUnitId: _effectiveAdUnitId);
-      setState(() => _sdkReady = true);
     });
+  }
+
+  void _onAdStateChanged() {
+    if (!mounted) return;
+    switch (_ad.state.value) {
+      case MaxNativeAdState.loaded:
+        _notifyAvailability(true);
+        setState(() {});
+      case MaxNativeAdState.failed:
+        _fail();
+      case MaxNativeAdState.idle:
+      case MaxNativeAdState.loading:
+        setState(() {});
+    }
+  }
+
+  void _fail() {
+    if (_isFailed) return;
+    setState(() => _isFailed = true);
+    _notifyAvailability(false);
   }
 
   void _notifyAvailability(bool available) {
@@ -110,191 +176,32 @@ class _NativeAdCardState extends State<NativeAdCard> {
   }
 
   @override
+  void dispose() {
+    _ad.state.removeListener(_onAdStateChanged);
+    if (!_isFailed) _ad.destroy();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (!_isAdsEnabled || _isFailed) {
+    if (_isFailed || !NativeAds.isEnabled(widget.placement)) {
       return const SizedBox.shrink();
     }
     final effectiveHeight = widget.height ?? _kDefaultNativeAdHeight.h;
     final content = SizedBox(
       width: double.infinity,
       height: effectiveHeight,
-      child: Stack(
-        children: [
-          if (_sdkReady)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: widget.backgroundColor ?? const Color(0xFFF7F7F7),
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: MaxNativeAdView(
-                  adUnitId: _effectiveAdUnitId,
-                  placement: '${widget.placement.name}_native',
-                  listener: NativeAdListener(
-                    onAdLoadedCallback: (ad) {
-                      AdLogHelper.logLoaded(tag: 'NativeAdCard', ad: ad);
-                      if (!mounted) return;
-                      final ratio = ad.nativeAd?.mediaContentAspectRatio;
-                      setState(() {
-                        _isLoaded = true;
-                        if (ratio != null && ratio > 0) {
-                          _mediaAspectRatio = ratio;
-                        }
-                      });
-                      _notifyAvailability(true);
-                    },
-                    onAdLoadFailedCallback: (adUnitId, error) {
-                      AdLogHelper.logFailed(
-                        tag: 'NativeAdCard',
-                        adUnitId: adUnitId,
-                        error: error,
-                      );
-                      if (!mounted) return;
-                      setState(() => _isFailed = true);
-                      _notifyAvailability(false);
-                    },
-                    onAdClickedCallback: (_) {
-                      debugPrint('👆 [NativeAdCard] onAdClicked');
-                      AppOpenAdManager.instance.skipNextResume();
-                    },
-                    onAdRevenuePaidCallback: (ad) =>
-                        logMaxAdRevenue(ad, adType: 'MediumNativeAd'),
-                  ),
-                  child: _buildAssetViews(),
-                ),
-              ),
+      child: _ad.state.value == MaxNativeAdState.loaded
+          ? MaxNativeAdView(ad: _ad)
+          : MediumNativeAdShimmer(
+              height: effectiveHeight,
+              backgroundColor: widget.backgroundColor,
             ),
-          // Covers the ad view until it has something to show.
-          if (!_isLoaded)
-            Positioned.fill(
-              child: MediumNativeAdShimmer(
-                height: effectiveHeight,
-                backgroundColor: widget.backgroundColor,
-              ),
-            ),
-        ],
-      ),
     );
 
     if (widget.margin != null) {
       return Padding(padding: widget.margin!, child: content);
     }
     return content;
-  }
-
-  Widget _buildAssetViews() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 50.w,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF2F2F2),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: MaxNativeAdIconView(width: 50.w, height: 50.w),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MaxNativeAdTitleView(
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppPalette.textPrimary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 3.h),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const _AdBadge(),
-                        SizedBox(width: 6.w),
-                        Expanded(
-                          child: MaxNativeAdBodyView(
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: AppPalette.textSecondary,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 6.w),
-              // AdChoices / privacy icon, inset from the rounded corner.
-              const MaxNativeAdOptionsView(width: 16, height: 16),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: _mediaAspectRatio,
-                child: const MaxNativeAdMediaView(),
-              ),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            height: 48.h,
-            child: MaxNativeAdCallToActionView(
-              style: ButtonStyle(
-                backgroundColor: const WidgetStatePropertyAll(
-                  Color(0xFF1B92D6),
-                ),
-                foregroundColor: const WidgetStatePropertyAll(Colors.white),
-                elevation: const WidgetStatePropertyAll(0),
-                shape: const WidgetStatePropertyAll(StadiumBorder()),
-                textStyle: WidgetStatePropertyAll(
-                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AdBadge extends StatelessWidget {
-  const _AdBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 24.w,
-      height: 15.h,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFBFBFBF)),
-        borderRadius: BorderRadius.circular(3.5.r),
-      ),
-      child: Text(
-        'AD',
-        style: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.w600,
-          color: const Color(0xFF808080),
-        ),
-      ),
-    );
   }
 }

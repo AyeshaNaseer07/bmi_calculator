@@ -71,252 +71,120 @@ class MediumNativeAdShimmer extends StatelessWidget {
 
   const MediumNativeAdShimmer({super.key, this.height, this.backgroundColor});
 
+  static const Color _bone = Color(0xFFE0E5E5);
+
   @override
   Widget build(BuildContext context) {
     return ShimmerLoading(
       child: Container(
         width: double.infinity,
         height: height ?? 350.h,
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: backgroundColor ?? const Color(0xFFF7F7F7),
-          borderRadius: BorderRadius.circular(16.r),
+          color: backgroundColor ?? const Color(0xFFF2F2F7),
+          borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Icon skeleton
-                Container(
-                  width: 50.w,
-                  height: 50.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0E5E5),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
+            // Media skeleton
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: _bone,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
                 ),
-                SizedBox(width: 10.w),
-
-                // Text Stack skeleton
-                Expanded(
-                  child: Column(
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Icon skeleton
                       Container(
-                        width: 130.w,
-                        height: 14.h,
+                        width: 56,
+                        height: 56,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE0E5E5),
-                          borderRadius: BorderRadius.circular(4.r),
+                          color: _bone,
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      SizedBox(height: 6.h),
-                      // Body row: [AD] badge outline + 2-line body skeleton
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 24.w,
-                            height: 14.h,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFFCFD6D6),
-                                width: 1,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 140,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                color: _bone,
+                                borderRadius: BorderRadius.circular(4),
                               ),
-                              borderRadius: BorderRadius.circular(3.r),
                             ),
-                          ),
-                          SizedBox(width: 6.w),
-                          Expanded(
-                            child: Column(
+                            const SizedBox(height: 8),
+                            // Body row: Ad badge + 2-line body skeleton
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: double.infinity,
-                                  height: 9.h,
+                                  width: 22,
+                                  height: 14,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFE0E5E5),
-                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: const Color(0xFFD5DDDD),
+                                    borderRadius: BorderRadius.circular(3),
                                   ),
                                 ),
-                                SizedBox(height: 4.h),
-                                Container(
-                                  width: 100.w,
-                                  height: 9.h,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE0E5E5),
-                                    borderRadius: BorderRadius.circular(4.r),
+                                const SizedBox(width: 5),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          color: _bone,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Container(
+                                        width: 100,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          color: _bone,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-
-            // Media View skeleton
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE0E5E5),
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-
-            // CTA Button skeleton matching btn.webp
-            Container(
-              width: double.infinity,
-              height: 46.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFD5DDDD),
-                borderRadius: BorderRadius.circular(23.r),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Full Screen Native Ad Shimmer Skeleton matching the full-screen native ad layout
-class FullScreenNativeAdShimmer extends StatelessWidget {
-  const FullScreenNativeAdShimmer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ShimmerLoading(
-      child: Container(
-        color: Colors.white,
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          children: [
-            // Top Media Area (~68% screen height)
-            Expanded(
-              flex: 68,
-              child: Container(
-                width: double.infinity,
-                color: const Color(0xFFE0E5E5),
-                child: Stack(
-                  children: [
-                    // AD Badge placeholder top right
-                    Positioned(
-                      top: 48.h,
-                      right: 16.w,
-                      child: Container(
-                        width: 32.w,
-                        height: 18.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC7F3EA),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                      ),
+                  const SizedBox(height: 12),
+                  // CTA skeleton
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD5DDDD),
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    // Centered media icon skeleton
-                    Center(
-                      child: Container(
-                        width: 72.w,
-                        height: 72.w,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD3DADA),
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Bottom Card Area (~32% screen height)
-            Expanded(
-              flex: 32,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Icon + Info row
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 48.w,
-                          height: 48.w,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE0E5E5),
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 140.w,
-                                height: 16.h,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE0E5E5),
-                                  borderRadius: BorderRadius.circular(4.r),
-                                ),
-                              ),
-                              SizedBox(height: 6.h),
-                              // ADDED: Stars skeleton
-                              Row(
-                                children: List.generate(
-                                  5,
-                                  (index) => Container(
-                                    width: 13.w,
-                                    height: 13.w,
-                                    margin: EdgeInsets.only(right: 2.w),
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFE0E5E5),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 6.h),
-                              Container(
-                                width: double.infinity,
-                                height: 10.h,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE0E5E5),
-                                  borderRadius: BorderRadius.circular(4.r),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-
-                    // CTA Button Pill
-                    Container(
-                      width: double.infinity,
-                      height: 48.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE0E5E5),
-                        borderRadius: BorderRadius.circular(24.r),
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

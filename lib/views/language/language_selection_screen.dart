@@ -74,6 +74,12 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
         curve: const Interval(0.75, 1.0, curve: Curves.easeOut),
       ),
     );
+
+    // Onboarding comes next: get its native ads loading now.
+    if (!widget.fromProfile && _isOnboardingEnabled) {
+      NativeAds.preload(NativeAdPlacement.onboarding);
+      NativeAds.preload(NativeAdPlacement.fullScreen);
+    }
   }
 
   @override

@@ -13,26 +13,19 @@ import '../../notifications/notification_service.dart';
 import '../../views/widgets/ads/app_open_ad_manager.dart';
 import '../../views/widgets/ads/applovin_sdk.dart';
 import '../../views/widgets/ads/interstitial_ad_manager.dart';
+import '../../views/widgets/ads/native_ad_card.dart';
 import 'logger_service.dart';
 import 'purchase_connector.dart';
 import 'quick_actions_service.dart';
 import 'remote_config_service.dart';
 import 'storage_service.dart';
 
-/// Everything the app needs before leaving the splash screen: Firebase +
-/// Remote Config, SDKs, the global controller, and every ad that can be
-/// loaded ahead of time. ATT and consent are already answered (see main).
 class AppStartup {
   AppStartup._();
 
   static Future<void>? _run;
-
-  /// Runs once; later calls return the same future.
   static Future<void> run() => _run ??= _start();
-
   static Future<void> _start() async {
-    // Consent was settled before the splash, so AppLovin can start
-    // alongside Firebase.
     AppLovinSdk.initialize();
 
     await _initializeFirebase();
@@ -83,9 +76,8 @@ class AppStartup {
     };
 
     final storageService = Get.find<StorageService>();
-    final remoteConfigService = await RemoteConfigService(
-      storageService,
-    ).init();
+    final remoteConfigService = await RemoteConfigService(storageService)
+        .init();
     Get.put<RemoteConfigService>(remoteConfigService, permanent: true);
 
     Get.put<AppController>(AppController(), permanent: true);
@@ -100,15 +92,13 @@ class AppStartup {
   }
 
   /// Needs Remote Config (switches + ad unit IDs) and AppController (premium).
-  /// Native ads can't be loaded ahead of time with AppLovin; each card loads
-  /// its own when it appears.
   static void _loadAds() {
+    // The language screen comes straight after the splash.
+    NativeAds.preload(NativeAdPlacement.language);
     InterstitialAdManager.instance.initialize();
     for (final placement in InterstitialPlacement.values) {
       InterstitialAdManager.instance.load(placement);
     }
-    // Loads the app open ad and shows it when the app returns from the
-    // background.
     AppOpenAdManager.instance.start();
   }
 
