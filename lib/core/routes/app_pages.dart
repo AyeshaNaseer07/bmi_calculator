@@ -74,6 +74,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.bmiCalculator,
       page: () => const BMICalculatorScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<BMIController>()) {
+          Get.put(BMIController(), permanent: true);
+        }
+      }),
     ),
     GetPage(name: AppRoutes.bmiResult, page: () => const BMIResultScreen()),
     GetPage(

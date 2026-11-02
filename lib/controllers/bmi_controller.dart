@@ -40,13 +40,34 @@ class BMIController extends GetxController {
     final list = _storage.getBmiHistory();
     bmiHistory.assignAll(list);
     if (list.isNotEmpty) {
-      latestRecord.value = list.first;
-      activity.value = list.first.activity;
-      final g = list.first.gender.trim().toLowerCase();
-      if (g == 'female') {
+      final latest = list.first;
+      latestRecord.value = latest;
+      activity.value = latest.activity;
+      final g = latest.gender.trim().toLowerCase();
+      if (g == 'female' || g == 'female'.tr.toLowerCase()) {
         selectedGender.value = Gender.female;
-      } else if (g == 'male') {
+      } else if (g == 'male' || g == 'male'.tr.toLowerCase()) {
         selectedGender.value = Gender.male;
+      }
+      age.value = latest.age;
+      heightCm.value = latest.heightCm;
+      weightKg.value = latest.weightKg;
+      isCm.value = latest.isCm;
+      isKg.value = latest.isKg;
+    } else if (_storage.hasUserProfile()) {
+      final profile = _storage.getUserProfile();
+      selectedGender.value = profile.gender;
+      if (profile.activityLevel != null) {
+        activity.value = profile.activityLevel!;
+      }
+      if (profile.age > 0) {
+        age.value = profile.age;
+      }
+      if (profile.heightCm > 0) {
+        heightCm.value = profile.heightCm;
+      }
+      if (profile.weightKg > 0) {
+        weightKg.value = profile.weightKg;
       }
     }
   }
@@ -117,7 +138,7 @@ class BMIController extends GetxController {
       weightKg: weightKg.value,
       heightCm: heightCm.value,
       age: age.value,
-      gender: selectedGender.value.displayName,
+      gender: selectedGender.value.name,
       category: category,
       date: DateTime.now(),
       isCm: isCm.value,
@@ -129,17 +150,16 @@ class BMIController extends GetxController {
     bmiHistory.insert(0, record);
     latestRecord.value = record;
 
+    final profile = _storage.getUserProfile();
+    final updatedProfile = profile.copyWith(
+      gender: selectedGender.value,
+      age: age.value,
+      heightCm: heightCm.value,
+      weightKg: weightKg.value,
+    );
+    await _storage.saveUserProfile(updatedProfile);
     if (Get.isRegistered<ProfileController>()) {
-      final profileController = Get.find<ProfileController>();
-      final profile = profileController.userProfile.value;
-      await profileController.updateProfile(
-        profile.copyWith(
-          gender: selectedGender.value,
-          age: age.value,
-          heightCm: heightCm.value,
-          weightKg: weightKg.value,
-        ),
-      );
+      Get.find<ProfileController>().userProfile.value = updatedProfile;
     }
 
     return record;

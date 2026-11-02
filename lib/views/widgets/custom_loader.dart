@@ -145,7 +145,7 @@ class LoaderOverlay extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomLoader(size: 64.w),
+                CupertinoActivityIndicator(radius: 16.r),
                 SizedBox(height: 14.h),
                 Text(
                   message ?? 'uploading_photo'.tr,

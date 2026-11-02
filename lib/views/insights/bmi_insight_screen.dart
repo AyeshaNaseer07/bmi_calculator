@@ -651,23 +651,39 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                   ),
                   if (_whyOpen) ...[
                     SizedBox(height: 8.h),
-                    for (final b in v.whyBullets)
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('•  ', style: bodyStyle(16, color: kInk)),
-                          Expanded(
-                            child: Text(
-                              b,
+                    for (int i = 0; i < v.whyBullets.length; i++)
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: i == v.whyBullets.length - 1 ? 0 : 6.h,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '•',
                               style: TextStyle(
                                 color: AppPalette.textPrimary,
-                                fontSize: 12,
+                                fontSize: 13.sp,
                                 fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w700,
+                                height: 1.4,
                               ),
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: Text(
+                                v.whyBullets[i],
+                                style: TextStyle(
+                                  color: AppPalette.textPrimary,
+                                  fontSize: 13.sp,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                   ],
                 ],

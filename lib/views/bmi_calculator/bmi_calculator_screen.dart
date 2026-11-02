@@ -231,7 +231,10 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                               ),
                               child: Slider(
                                 value: controller.hasAge
-                                    ? age.toDouble()
+                                    ? age.toDouble().clamp(
+                                        BMIController.minAge.toDouble(),
+                                        BMIController.maxAge.toDouble(),
+                                      )
                                     : BMIController.minAge.toDouble(),
                                 min: BMIController.minAge.toDouble(),
                                 max: BMIController.maxAge.toDouble(),

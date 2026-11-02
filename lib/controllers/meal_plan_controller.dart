@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 import '../data/models/user_profile_model.dart' show ActivityLevel;
 import '../data/models/bmi_record_model.dart';
 import '../data/services/calorie_service.dart';
+import '../data/services/storage_service.dart';
 
 class MealPlanController extends GetxController {
   static MealPlanController get to => Get.isRegistered<MealPlanController>()
       ? Get.find<MealPlanController>()
       : Get.put(MealPlanController(), permanent: true);
+
+  final StorageService _storage = Get.find<StorageService>();
 
   final RxSet<String> eaten = <String>{}.obs;
 
@@ -19,6 +22,14 @@ class MealPlanController extends GetxController {
   ActivityLevel activity = ActivityLevel.lightlyActive;
   int age = 25;
   double weightKg = 70;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Restore persisted meal progress.
+    final saved = _storage.getEatenMeals();
+    if (saved.isNotEmpty) eaten.addAll(saved);
+  }
 
   void useRecord(BMIRecord r) {
     category = r.category;
@@ -35,7 +46,11 @@ class MealPlanController extends GetxController {
 
   bool isEaten(String key) => eaten.contains(key);
 
-  void markEaten(String key) => eaten.add(key);
+  void markEaten(String key) {
+    eaten.add(key);
+    // Persist immediately so progress survives app restarts.
+    _storage.saveEatenMeals(eaten.toSet());
+  }
 
   int eatenOnDay(int day) =>
       eaten.where((k) => k.startsWith('${category.name}_d${day}_')).length;

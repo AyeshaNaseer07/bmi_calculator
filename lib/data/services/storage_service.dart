@@ -21,6 +21,8 @@ class StorageService {
   static const String _keyLastWeightEntry = 'last_weight_entry';
   static const String _keyWaterGlasses = 'water_glasses';
   static const String _keyWaterGlassesDay = 'water_glasses_day';
+  static const String _keyEatenMeals = 'eaten_meals';
+  static const String _keyDoneActivities = 'done_activities';
 
   late SharedPreferences _prefs;
 
@@ -171,4 +173,28 @@ class StorageService {
   String? getRemoteButtonText() => _prefs.getString(_keyRemoteButtonText);
   Future<void> setRemoteButtonText(String text) =>
       _prefs.setString(_keyRemoteButtonText, text);
+
+  // ── Meal Plan Progress ──
+
+  /// Returns the persisted set of eaten meal keys.
+  Set<String> getEatenMeals() {
+    final raw = _prefs.getStringList(_keyEatenMeals);
+    return raw?.toSet() ?? {};
+  }
+
+  /// Persists the full set of eaten meal keys.
+  Future<void> saveEatenMeals(Set<String> keys) =>
+      _prefs.setStringList(_keyEatenMeals, keys.toList());
+
+  // ── Activity Plan Progress ──
+
+  /// Returns the persisted set of completed activity keys.
+  Set<String> getDoneActivities() {
+    final raw = _prefs.getStringList(_keyDoneActivities);
+    return raw?.toSet() ?? {};
+  }
+
+  /// Persists the full set of completed activity keys.
+  Future<void> saveDoneActivities(Set<String> keys) =>
+      _prefs.setStringList(_keyDoneActivities, keys.toList());
 }

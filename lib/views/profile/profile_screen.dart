@@ -138,17 +138,16 @@ class ProfileScreen extends StatelessWidget {
                                 if (uploading)
                                   Positioned.fill(
                                     child: Container(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.3,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.black.withValues(
+                                          alpha: 0.35,
+                                        ),
                                       ),
                                       child: Center(
-                                        child: SizedBox(
-                                          width: 24.w,
-                                          height: 24.w,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: Colors.white,
-                                          ),
+                                        child: CupertinoActivityIndicator(
+                                          color: Colors.white,
+                                          radius: 10.r,
                                         ),
                                       ),
                                     ),
