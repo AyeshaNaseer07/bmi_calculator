@@ -34,9 +34,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   @override
   void initState() {
     super.initState();
-    InterstitialAdManager.instance.load(
-      InterstitialPlacement.innerPremiumCross,
-    );
+    InterstitialAdManager.instance.load(InterstitialPlacement.weekPaywallCross);
     PriceService.load(_app.remoteConfigService).then((p) {
       if (!mounted) return;
       setState(() {
@@ -96,7 +94,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
 
   void _close() {
     InterstitialAdManager.instance.show(
-      InterstitialPlacement.innerPremiumCross,
+      InterstitialPlacement.weekPaywallCross,
       onDone: () {
         Get.back();
         if (_app.remoteConfigService.isSoftPaywallAccessEnabled) {
@@ -309,12 +307,16 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   ),
                   SizedBox(height: 8.h),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(child: Divider(color: _lineColor)),
+                      SizedBox(
+                        width: 32.w,
+                        child: Divider(height: 1, color: _lineColor),
+                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: Text(
-                          '7 Days Free  •  Cancel Anytime',
+                          'Cancel Anytime',
                           style: TextStyle(
                             color: AppPalette.textSecondary,
                             fontSize: 11.sp,
@@ -322,10 +324,13 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           ),
                         ),
                       ),
-                      Expanded(child: Divider(color: _lineColor)),
+                      SizedBox(
+                        width: 32.w,
+                        child: Divider(height: 1, color: _lineColor),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 12.h),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Row(

@@ -125,9 +125,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         currentText.isNotEmpty && current > 0 && current <= 120.0;
     final isGoalValid = goalText.isNotEmpty && goal > 0 && goal <= 120.0;
     final isAgeValid = _selectedAge != null && _selectedAge! > 0;
+    final isGenderValid = _selectedGender != null;
     final isHeightValid = heightText.isNotEmpty && height > 0;
 
-    return isCurrentValid && isGoalValid && isAgeValid && isHeightValid;
+    return isCurrentValid &&
+        isGoalValid &&
+        isAgeValid &&
+        isGenderValid &&
+        isHeightValid;
   }
 
   void _onSave() async {
@@ -147,6 +152,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         goal > 120.0 ||
         ageVal == null ||
         ageVal <= 0 ||
+        genderVal == null ||
         heightVal == null ||
         heightVal <= 0) {
       return;
@@ -161,14 +167,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         'goalWeightKg': goal,
         'age': ageVal,
         'heightCm': heightVal,
-        if (genderVal != null) 'gender': genderVal.name,
+        'gender': genderVal.name,
       });
       final profile = storage.getUserProfile();
       storage.saveUserProfile(
         profile.copyWith(
           age: ageVal,
           heightCm: heightVal,
-          gender: genderVal ?? profile.gender,
+          gender: genderVal,
           weightKg: current,
           goalWeightKg: goal,
         ),
@@ -353,7 +359,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildFieldLabel('Gender', isMandatory: false),
+                                _buildFieldLabel('Gender', isMandatory: true),
                                 _buildGenderDropdown(context),
                               ],
                             ),

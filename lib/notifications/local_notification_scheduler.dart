@@ -158,25 +158,9 @@ class LocalNotificationScheduler {
         break;
     }
 
-    // Fixed morning reminder time (default: 9:00 AM local time for weigh-in)
-    int targetHour = 9;
-    int targetMinute = 0;
-    try {
-      final hourStr = RemoteConfig.getString('notification_hour').trim();
-      if (hourStr.isNotEmpty) {
-        final parsed = int.tryParse(hourStr);
-        if (parsed != null && parsed >= 0 && parsed <= 23) {
-          targetHour = parsed;
-        }
-      }
-      final minStr = RemoteConfig.getString('notification_minute').trim();
-      if (minStr.isNotEmpty) {
-        final parsed = int.tryParse(minStr);
-        if (parsed != null && parsed >= 0 && parsed <= 59) {
-          targetMinute = parsed;
-        }
-      }
-    } catch (_) {}
+    // Fixed reminder time: 9:00 AM local time (morning weigh-in).
+    const targetHour = 9;
+    const targetMinute = 0;
 
     final now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime firstDate = tz.TZDateTime(

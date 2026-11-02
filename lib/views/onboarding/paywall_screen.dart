@@ -84,9 +84,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
     super.dispose();
   }
 
-  InterstitialPlacement get _crossAdPlacement => _fromOnboarding
-      ? InterstitialPlacement.onbPremiumCross
-      : InterstitialPlacement.innerPremiumCross;
+  /// `onb_paywall_*` in Remote Config, wherever this paywall is opened from.
+  static const InterstitialPlacement _crossAdPlacement =
+      InterstitialPlacement.onbPaywallCross;
 
   void _onClose() {
     InterstitialAdManager.instance.show(
@@ -552,7 +552,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Text(
-                            '7 Days Free • Cancel Anytime',
+                            'Cancel Anytime',
                             style: TextStyle(
                               color: AppPalette.textSecondary,
                               fontSize: 12.sp,
@@ -885,7 +885,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
         title,
         style: TextStyle(
           fontSize: 11.sp,
-          color: AppPalette.textMuted,
+          // Same as the meal plan paywall's links.
+          color: AppPalette.textSecondary,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w400,
         ),

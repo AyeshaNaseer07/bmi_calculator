@@ -16,11 +16,11 @@ import 'applovin_sdk.dart';
 enum InterstitialPlacement {
   splash,
 
-  /// Cross on the paywall shown after onboarding.
-  onbPremiumCross,
+  /// Cross on the main paywall (after onboarding and inside the app).
+  onbPaywallCross,
 
-  /// Cross on paywalls opened inside the app.
-  innerPremiumCross,
+  /// Cross on the 1 Week Meal Plan paywall.
+  weekPaywallCross,
   calculator,
 }
 
@@ -49,10 +49,10 @@ class InterstitialAdManager {
     }
     return switch (placement) {
       InterstitialPlacement.splash => _config.isSplashInterAdEnabled,
-      InterstitialPlacement.onbPremiumCross =>
-        _config.isOnbPremiumInterAdEnabled,
-      InterstitialPlacement.innerPremiumCross =>
-        _config.isInnerPremiumInterAdEnabled,
+      InterstitialPlacement.onbPaywallCross =>
+        _config.isOnbPaywallInterAdEnabled,
+      InterstitialPlacement.weekPaywallCross =>
+        _config.isWeekPaywallInterAdEnabled,
       InterstitialPlacement.calculator => _config.isCalculatorInterAdEnabled,
     };
   }
@@ -63,13 +63,13 @@ class InterstitialAdManager {
         _config.splashInterAdId,
         RemoteModel.defaultSplashInterAdId,
       ),
-      InterstitialPlacement.onbPremiumCross => (
-        _config.onbPremiumAd,
-        RemoteModel.defaultPremiumCrossInterAdId,
+      InterstitialPlacement.onbPaywallCross => (
+        _config.onbPaywallId,
+        RemoteModel.defaultPaywallCrossInterAdId,
       ),
-      InterstitialPlacement.innerPremiumCross => (
-        _config.innerPremiumAd,
-        RemoteModel.defaultPremiumCrossInterAdId,
+      InterstitialPlacement.weekPaywallCross => (
+        _config.weekPaywallId,
+        RemoteModel.defaultPaywallCrossInterAdId,
       ),
       InterstitialPlacement.calculator => (
         _config.calculatorInterAdId,

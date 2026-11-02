@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../models/remote_model.dart';
@@ -29,6 +30,13 @@ class RemoteConfigService extends GetxService {
   }
 
   String get secondTimeOnboarding => model.value.secondTimeOnboarding;
+  bool get isSecondTimeOnboardingEnabled {
+    try {
+      return model.value.isSecondTimeOnboarding;
+    } catch (_) {
+      return false;
+    }
+  }
 
   String get paywallBtnText => model.value.paywallBtnText;
   String get buttonText => model.value.paywallBtnText;
@@ -92,25 +100,25 @@ class RemoteConfigService extends GetxService {
 
   String get splashInterAdId => model.value.splashInterAdId;
 
-  bool get isOnbPremiumInterAdEnabled {
+  bool get isOnbPaywallInterAdEnabled {
     try {
-      return model.value.isOnbPremiumInterAdEnabled;
+      return model.value.isOnbPaywallInterAdEnabled;
     } catch (_) {
       return true;
     }
   }
 
-  String get onbPremiumAd => model.value.onbPremiumAd;
+  String get onbPaywallId => model.value.onbPaywallId;
 
-  bool get isInnerPremiumInterAdEnabled {
+  bool get isWeekPaywallInterAdEnabled {
     try {
-      return model.value.isInnerPremiumInterAdEnabled;
+      return model.value.isWeekPaywallInterAdEnabled;
     } catch (_) {
       return true;
     }
   }
 
-  String get innerPremiumAd => model.value.innerPremiumAd;
+  String get weekPaywallId => model.value.weekPaywallId;
 
   bool get isCalculatorInterAdEnabled {
     try {
@@ -132,10 +140,23 @@ class RemoteConfigService extends GetxService {
 
   String get notificationFrequency => model.value.notificationFrequency;
 
+  AppLifecycleListener? _lifecycle;
+
   Future<RemoteConfigService> init() async {
     loadCachedConfig();
     await fetchRemoteConfig();
+    RemoteConfig.listenForUpdates();
+    // The startup fetch timed out or failed: try again in the background
+    // instead of running the whole session on cached or default values.
+    if (!RemoteConfig.lastFetchSucceeded) RemoteConfig.refresh();
+    _lifecycle = AppLifecycleListener(onResume: RemoteConfig.refresh);
     return this;
+  }
+
+  @override
+  void onClose() {
+    _lifecycle?.dispose();
+    super.onClose();
   }
 
   void loadCachedConfig() {
@@ -151,36 +172,48 @@ class RemoteConfigService extends GetxService {
         } catch (_) {}
       }
     } catch (e) {
-      log('Error loading cached remote config: $e');
+      debugPrint('[RemoteConfig] loading cached values failed: $e');
     }
   }
 
-  Future<void> fetchRemoteConfig({int attempts = 2}) async {
-    log('Fetching RemoteConfig values...');
-    for (int i = 0; i < attempts; i++) {
-      try {
-        final map = RemoteConfig.getAllValuesAsMap();
-        if (map.isNotEmpty) {
-          updateWithMap(map);
-        }
-        log(
-          'RemoteConfig fetched successfully: firstTimeOnboarding=${model.value.firstTimeOnboarding}, secondTimeOnboarding=${model.value.secondTimeOnboarding}, paywallBtnText="${model.value.paywallBtnText}", crossDelay=${model.value.crossDelay}, weeklyId="${model.value.weeklyProductId}", yearlyId="${model.value.yearlyProductId}", fullScreenNativeAd=${model.value.fullScreenNativeAd}, languageNativeAd=${model.value.languageNativeAd}, onboardingNativeAd=${model.value.onboardingNativeAd}, localNotification=${model.value.localNotification}',
-        );
-        return;
-      } catch (e) {
-        log('fetch attempt ${i + 1} failed: $e');
-        if (i < attempts - 1) {
-          await Future.delayed(const Duration(seconds: 2));
-        }
-      }
+  /// Applies the values Firebase has activated (fetched this launch, or kept
+  /// from an earlier one). Keeps the cached/default values if there are none.
+  Future<void> fetchRemoteConfig() async {
+    final map = RemoteConfig.getAllValuesAsMap();
+    if (map.isNotEmpty) {
+      updateWithMap(map);
+      logValues('activated');
+      return;
     }
-    log('Remote config fetch failed; ensuring default values are active');
+    debugPrint('[RemoteConfig] no activated values yet; using cached/defaults');
     if (model.value.weeklyProductId.isEmpty ||
         model.value.yearlyProductId.isEmpty) {
       final defaults = RemoteModel.defaults();
       model.value = defaults;
       remoteModel = defaults;
     }
+    logValues('cached/defaults');
+  }
+
+  void logValues(String source) {
+    final m = model.value;
+    debugPrint(
+      '[RemoteConfig] values ($source): '
+      'first_time_onboarding=${m.firstTimeOnboarding}, '
+      'second_time_onboarding=${m.secondTimeOnboarding}, '
+      'paywall_btn_text="${m.paywallBtnText}", cross_delay=${m.crossDelay}, '
+      'soft_paywall_access=${m.softPaywallAccess}, '
+      'splash_inter_ad=${m.splashInterAd}, '
+      'onb_paywall_enable=${m.onbPaywallEnable}, '
+      'week_paywall_enable=${m.weekPaywallEnable}, '
+      'calculator_inter_ad=${m.calculatorInterAd}, '
+      'language_native_ad=${m.languageNativeAd}, '
+      'onboarding_native_ad=${m.onboardingNativeAd}, '
+      'full_screen_native_ad=${m.fullScreenNativeAd}, '
+      'app_open_ad=${m.appOpenAd}, '
+      'local_notification=${m.localNotification}, '
+      'show_notification_frequency=${m.notificationFrequency}',
+    );
   }
 
   void updateWithMap(Map<String, dynamic> remoteConfigMap) {
@@ -207,6 +240,18 @@ class RemoteConfig {
 
   static const String _key = RemoteConfigService.keyRemoteConfig;
 
+  static StreamSubscription<RemoteConfigUpdate>? _updates;
+  static Future<bool>? _refreshing;
+  static DateTime? _lastRefreshAt;
+
+  /// Refetches on resume no more often than this.
+  static const Duration _refreshInterval = Duration(minutes: 1);
+
+  static bool get lastFetchSucceeded =>
+      remoteConfig.lastFetchStatus == RemoteConfigFetchStatus.success;
+
+  /// Fetches and activates the published values. Called during the splash,
+  /// before [RemoteConfigService] exists, which then reads what's activated.
   static Future<String> initialize() async {
     try {
       await remoteConfig.setConfigSettings(
@@ -216,20 +261,74 @@ class RemoteConfig {
         ),
       );
       final activated = await remoteConfig.fetchAndActivate();
-      log(
-        activated
-            ? 'RemoteConfig fetched & activated fresh values'
-            : 'RemoteConfig fetch succeeded, using activated values',
+      _lastRefreshAt = DateTime.now();
+      debugPrint(
+        '[RemoteConfig] fetch ${remoteConfig.lastFetchStatus.name}, '
+        '${activated ? 'activated new values' : 'values unchanged'} '
+        '(last fetch ${remoteConfig.lastFetchTime})',
       );
-      final configMap = getAllValuesAsMap();
-      if (configMap.isNotEmpty && Get.isRegistered<RemoteConfigService>()) {
-        RemoteConfigService.to.updateWithMap(configMap);
-      }
       return 'success';
     } catch (e) {
-      log('RemoteConfig.initialize failed: $e');
+      debugPrint(
+        '[RemoteConfig] fetch failed (${remoteConfig.lastFetchStatus.name}): '
+        '$e',
+      );
       return 'failed: $e';
     }
+  }
+
+  /// Fetches again and applies the result: when the startup fetch failed,
+  /// and each time the app comes back to the foreground.
+  static Future<bool> refresh() {
+    final last = _lastRefreshAt;
+    if (_refreshing != null ||
+        (lastFetchSucceeded &&
+            last != null &&
+            DateTime.now().difference(last) < _refreshInterval)) {
+      return _refreshing ?? Future.value(false);
+    }
+    _lastRefreshAt = DateTime.now();
+    return _refreshing = () async {
+      try {
+        final activated = await remoteConfig.fetchAndActivate();
+        debugPrint(
+          '[RemoteConfig] refresh ${remoteConfig.lastFetchStatus.name}'
+          '${activated ? ', activated new values' : ''}',
+        );
+        if (activated) _apply('refresh');
+        return activated;
+      } catch (e) {
+        debugPrint('[RemoteConfig] refresh failed: $e');
+        return false;
+      } finally {
+        _refreshing = null;
+      }
+    }();
+  }
+
+  /// Applies values published while the app is open, without a relaunch.
+  static void listenForUpdates() {
+    _updates ??= remoteConfig.onConfigUpdated.listen(
+      (update) async {
+        try {
+          await remoteConfig.activate();
+          _apply('realtime: ${update.updatedKeys.join(', ')}');
+        } catch (e) {
+          debugPrint('[RemoteConfig] realtime update failed: $e');
+        }
+      },
+      onError: (Object e) =>
+          debugPrint('[RemoteConfig] realtime listener error: $e'),
+    );
+  }
+
+  static void _apply(String source) {
+    if (!Get.isRegistered<RemoteConfigService>()) return;
+    final map = getAllValuesAsMap();
+    if (map.isEmpty) return;
+    RemoteConfigService.to
+      ..updateWithMap(map)
+      ..logValues(source);
   }
 
   static Map<String, dynamic> getAllValuesAsMap() {
@@ -243,7 +342,7 @@ class RemoteConfig {
           result.addAll(decoded);
         }
       } catch (e) {
-        log('RemoteConfig: failed to decode bundle JSON string: $e');
+        debugPrint('[RemoteConfig] $_key is not valid JSON: $e');
       }
     }
 

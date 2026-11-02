@@ -157,11 +157,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     }
   }
 
+  /// first_time_onboarding until onboarding has been completed once,
+  /// second_time_onboarding on every launch after that.
   bool get _isOnboardingEnabled {
+    final seen = _appController.onboardingSeen.value;
     if (Get.isRegistered<RemoteConfigService>()) {
-      return RemoteConfigService.to.isFirstTimeOnboardingEnabled;
+      final config = RemoteConfigService.to;
+      return seen
+          ? config.isSecondTimeOnboardingEnabled
+          : config.isFirstTimeOnboardingEnabled;
     }
-    return remoteModel.isFirstTimeOnboarding;
+    return seen
+        ? remoteModel.isSecondTimeOnboarding
+        : remoteModel.isFirstTimeOnboarding;
   }
 
   static const Color _kMint = Color(0xFFC9F2E5);
