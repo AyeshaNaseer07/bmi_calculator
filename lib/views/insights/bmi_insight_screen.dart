@@ -638,6 +638,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.14,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Icon(

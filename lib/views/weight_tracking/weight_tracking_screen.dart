@@ -217,13 +217,17 @@ class WeightTrackingScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'weight_progress'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textPrimary,
-                                fontSize: 15.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
+                            SizedBox(
+                              width: 120.w,
+                              child: Text(
+                                'weight_progress'.tr,
+                                style: TextStyle(
+                                  color: AppPalette.textPrimary,
+                                  fontSize: 15.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             Container(
@@ -266,15 +270,19 @@ class WeightTrackingScreen extends StatelessWidget {
                                                   ]
                                                 : null,
                                           ),
-                                          child: Text(
-                                            tab,
-                                            style: TextStyle(
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Inter',
-                                              color: isSelected
-                                                  ? const Color(0xFF33D2AB)
-                                                  : AppPalette.textSecondary,
+                                          child: SizedBox(
+                                            width: 37.w,
+                                            child: Text(
+                                              tab,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Inter',
+                                                color: isSelected
+                                                    ? const Color(0xFF33D2AB)
+                                                    : AppPalette.textSecondary,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),

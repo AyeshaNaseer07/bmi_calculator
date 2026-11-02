@@ -287,15 +287,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         SizedBox(height: 8.h),
-        Text(
-          hasData
-              ? 'lets_track_your_health_today'.tr
-              : 'welcome_lets_begin_your_health_journey'.tr,
-          style: TextStyle(
-            color: AppPalette.textSecondary,
-            fontSize: 12,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
+        SizedBox(
+          width: 240.w,
+          child: Text(
+            hasData
+                ? 'lets_track_your_health_today'.tr
+                : 'welcome_lets_begin_your_health_journey'.tr,
+            style: TextStyle(
+              color: AppPalette.textSecondary,
+              fontSize: 12,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
