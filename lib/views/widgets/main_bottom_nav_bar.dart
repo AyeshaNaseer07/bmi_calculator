@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/theme/app_palette.dart';
@@ -55,23 +56,23 @@ class MainBottomNavBar extends StatelessWidget {
                   children: [
                     _buildNavItem(
                       icon: AppAssets.navHome,
-                      label: 'Home',
+                      label: 'home'.tr,
                       index: 0,
                     ),
                     _buildNavItem(
                       icon: AppAssets.navWeight,
-                      label: 'Weight',
+                      label: 'weight'.tr,
                       index: 2,
                     ),
                     SizedBox(width: 56.w),
                     _buildNavItem(
                       icon: AppAssets.navProfile,
-                      label: 'Profile',
+                      label: 'profile'.tr,
                       index: 1,
                     ),
                     _buildNavItem(
                       icon: AppAssets.navHistory,
-                      label: 'History',
+                      label: 'history'.tr,
                       index: 3,
                     ),
                   ],

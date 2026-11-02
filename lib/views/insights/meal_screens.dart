@@ -23,13 +23,13 @@ class DailyMealPlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: '1 Week Meal Plan',
+      title: 'n_1_week_meal_plan'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 2.h),
           Text(
-            'Meal Planner',
+            'meal_planner'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
               fontSize: 18,
@@ -46,11 +46,7 @@ class DailyMealPlanScreen extends StatelessWidget {
           SizedBox(height: 4.h),
           const _PlanDisclaimer(),
           SizedBox(height: 10.h),
-          const TipBanner(
-            text:
-                'Remember: Choose portions that suit your needs and enjoy a '
-                'variety of foods.',
-          ),
+          TipBanner(text: 'remember_portions'.tr),
         ],
       ),
     );
@@ -73,7 +69,10 @@ class _TargetBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Text(
-        'Your daily target: ${c.targetKcal} kcal  •  ${c.goal}',
+        'daily_target_line'.trParams({
+          'kcal': '${c.targetKcal}',
+          'goal': c.goal,
+        }),
         style: TextStyle(
           color: AppPalette.textPrimary,
           fontSize: 12.sp,
@@ -94,12 +93,9 @@ class _PlanDisclaimer extends StatelessWidget {
     return PrecautionCard(
       // Under 18 the key message is to not follow this plan at all.
       lead: c.needsCare
-          ? 'You are under 18 — please follow a plan from a doctor or '
-                'dietitian instead of this one.'
-          : 'This plan is general guidance, not medical advice.',
-      body:
-          'Based on your BMI, age, height, weight and activity level. '
-          'Consult a doctor or dietitian before changing your diet.',
+          ? 'under_18_warning'.tr
+          : 'this_plan_is_general_guidance_not'.tr,
+      body: 'plan_based_on'.tr,
     );
   }
 }
@@ -132,7 +128,7 @@ class _DayMeals extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'DAY',
+                'day_caps'.tr,
                 style: bodyStyle(
                   8.5,
                   color: selected ? Colors.white70 : AppPalette.textSecondary,
@@ -345,7 +341,7 @@ class _MealCard extends StatelessWidget {
                               ],
                             ),
                             child: Text(
-                              'View',
+                              'view'.tr,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -492,13 +488,13 @@ class MealDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return InsightScaffold(
       title: meal.day == 1
-          ? 'Today’s ${meal.slot}'
-          : 'Day ${meal.day} ${meal.slot}',
+          ? 'todays_meal'.trParams({'meal': meal.slot})
+          : 'day_meal'.trParams({'day': '${meal.day}', 'meal': meal.slot}),
       // Once a meal is eaten it can't be marked again.
       bottom: Obx(() {
         final eaten = MealPlanController.to.isEaten(meal.key);
         return GradientActionButton(
-          text: eaten ? 'Marked' : 'Mark as Eaten',
+          text: eaten ? 'marked'.tr : 'mark_as_eaten'.tr,
           leading: Icons.check_circle_outline_rounded,
           onTap: eaten
               ? null
@@ -518,7 +514,10 @@ class MealDetailScreen extends StatelessWidget {
             children: [
               _TealPill(
                 icon: Icons.wb_sunny_outlined,
-                text: 'Day ${meal.day} • ${meal.slot}',
+                text: 'day_dot_meal'.trParams({
+                  'day': '${meal.day}',
+                  'meal': meal.slot,
+                }),
               ),
               _TealPill(icon: Icons.schedule_rounded, text: meal.time),
             ],
@@ -578,8 +577,10 @@ class MealDetailScreen extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           Text(
-                            'BALANCED ${meal.slot.toUpperCase()} • '
-                            '${meal.kcal} KCAL',
+                            'balanced_meal_kcal'.trParams({
+                              'meal': meal.slot.toUpperCase(),
+                              'kcal': '${meal.kcal}',
+                            }),
                             style: bodyStyle(
                               11.5,
                               color: _kDeep,
@@ -716,12 +717,12 @@ class MealDetailScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 4.w),
                     Text(
-                      'Nutrition Summary',
+                      'nutrition_summary'.tr,
                       style: headStyle(16, weight: FontWeight.w600),
                     ),
                     const Spacer(),
                     Text(
-                      'Target: ${meal.target}% of daily plan',
+                      'target_pct_daily'.trParams({'pct': '${meal.target}'}),
                       style: bodyStyle(12, color: AppPalette.textBody),
                     ),
                   ],
@@ -729,15 +730,19 @@ class MealDetailScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 Row(
                   children: [
-                    _macro('ENERGY', '${meal.kcal}', 'kcal'),
+                    _macro('energy_caps'.tr, '${meal.kcal}', 'kcal'),
                     _macro(
-                      'PROTEIN',
+                      'protein_caps'.tr,
                       '${meal.protein}g',
                       '${meal.proteinPct}%',
                       hi: true,
                     ),
-                    _macro('CARBS', '${meal.carbs}g', '${meal.carbsPct}%'),
-                    _macro('FAT', '${meal.fat}g', '${meal.fatPct}%'),
+                    _macro(
+                      'carbs_caps'.tr,
+                      '${meal.carbs}g',
+                      '${meal.carbsPct}%',
+                    ),
+                    _macro('fat_caps'.tr, '${meal.fat}g', '${meal.fatPct}%'),
                   ],
                 ),
                 SizedBox(height: 12.h),
@@ -767,9 +772,9 @@ class MealDetailScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _dot(_kDeep, 'Protein'),
-                    _dot(const Color(0xFF3EE0A8), 'Carbs'),
-                    _dot(AppPalette.textMuted, 'Healthy Fats'),
+                    _dot(_kDeep, 'protein'.tr),
+                    _dot(const Color(0xFF3EE0A8), 'carbs'.tr),
+                    _dot(AppPalette.textMuted, 'healthy_fats'.tr),
                   ],
                 ),
                 SizedBox(height: 6.h),
@@ -792,12 +797,14 @@ class MealDetailScreen extends StatelessWidget {
                   Image.asset(AppAssets.flowerIcon, width: 22.w, height: 24.h),
                   SizedBox(width: 8.w),
                   Text(
-                    'Ingredients',
+                    'ingredients'.tr,
                     style: headStyle(18, weight: FontWeight.w600),
                   ),
                   const Spacer(),
                   Text(
-                    '${meal.ingredients.length} items',
+                    'items_count'.trParams({
+                      'count': '${meal.ingredients.length}',
+                    }),
                     style: bodyStyle(
                       14,
                       color: _kDeep,
@@ -824,7 +831,7 @@ class IngredientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Ingredients',
+      title: 'ingredients'.tr,
       body: Column(
         children: [
           Container(
@@ -850,7 +857,9 @@ class IngredientsScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 6.w),
                         Text(
-                          '${meal.ingredients.length} items',
+                          'items_count'.trParams({
+                            'count': '${meal.ingredients.length}',
+                          }),
                           style: TextStyle(
                             color: const Color(0xFF006948),
                             fontSize: 14,
@@ -868,8 +877,9 @@ class IngredientsScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(bottom: 6.h),
                     child: Text(
-                      '${meal.portionLabel} — quantities are adjusted to your '
-                      'daily calorie target.',
+                      'portion_adjusted'.trParams({
+                        'portion': meal.portionLabel,
+                      }),
                       style: TextStyle(
                         color: AppPalette.textSecondary,
                         fontSize: 11.sp,

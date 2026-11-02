@@ -115,19 +115,19 @@ class WeightTrackerController extends GetxController {
     _recalculateProgress();
   }
 
-  static const List<String> _monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
+  static List<String> get _monthNames => [
+    'jan'.tr,
+    'feb'.tr,
+    'mar'.tr,
+    'apr'.tr,
+    'may'.tr,
+    'jun'.tr,
+    'jul'.tr,
+    'aug'.tr,
+    'sep'.tr,
+    'oct'.tr,
+    'nov'.tr,
+    'dec'.tr,
   ];
 
   List<FlSpot> getSpots() {
@@ -237,7 +237,15 @@ class WeightTrackerController extends GetxController {
 
     if (tf == 'week') {
       // Always return all 7 days so the chart spans Mon–Sun (maxX = 6)
-      return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      return [
+        'mon'.tr,
+        'tue'.tr,
+        'wed'.tr,
+        'thu'.tr,
+        'fri'.tr,
+        'sat'.tr,
+        'sun'.tr,
+      ];
     } else if (tf == 'month') {
       // Show 6 month names leading up to current month (e.g. Apr, May, Jun, Jul, Aug, Sep)
       final List<String> labels = [];

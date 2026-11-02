@@ -23,33 +23,33 @@ class YourGoalScreen extends StatelessWidget {
       (
         HealthGoal.loseWeight,
         AppAssets.loseWeightIcon,
-        'Lose Weight',
-        'I want to lose weight and improve my health.',
+        'lose_weight'.tr,
+        'i_want_to_lose_weight_and'.tr,
       ),
       (
         HealthGoal.buildMuscle,
         AppAssets.buildMuscleIcon,
-        'Build Muscle',
-        'I want to build muscle and gain strength.',
+        'build_muscle'.tr,
+        'i_want_to_build_muscle_and'.tr,
       ),
       (
         HealthGoal.maintainWeight,
         AppAssets.maintainWeightIcon,
-        'Maintain Weight',
-        'I want to maintain my current weight and stay healthy.',
+        'maintain_weight'.tr,
+        'i_want_to_maintain_my_current'.tr,
       ),
       (
         HealthGoal.improveHealth,
         AppAssets.improveHealthIcon,
-        'Improve Health',
-        'I want to improve my overall health and wellness.',
+        'improve_health'.tr,
+        'i_want_to_improve_my_overall'.tr,
       ),
     ];
 
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'Your Goal'),
+        appBar: CustomAppBar(title: 'your_goal'.tr),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -83,7 +83,7 @@ class YourGoalScreen extends StatelessWidget {
                         SizedBox(width: 14.w),
                         Expanded(
                           child: Text(
-                            'Choose your main goal so we can personalize your experience.',
+                            'choose_your_main_goal_so_we'.tr,
                             style: TextStyle(
                               color: const Color(0xFF4B5563),
                               fontSize: 14.sp,
@@ -189,7 +189,7 @@ class YourGoalScreen extends StatelessWidget {
 
                   // Continue Button
                   CustomGradientButton(
-                    text: 'Continue',
+                    text: 'continue_btn'.tr,
                     backgroundImage: AppAssets.btnRectangle,
                     onPressed: selected != null ? () => Get.back() : null,
                   ),

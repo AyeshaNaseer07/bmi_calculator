@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
@@ -13,13 +14,13 @@ enum BMICategory {
   String get label {
     switch (this) {
       case BMICategory.underweight:
-        return 'Underweight';
+        return 'underweight'.tr;
       case BMICategory.normal:
-        return 'Normal';
+        return 'normal'.tr;
       case BMICategory.overweight:
-        return 'Overweight';
+        return 'overweight'.tr;
       case BMICategory.obese:
-        return 'Obese';
+        return 'obese'.tr;
     }
   }
 
@@ -53,26 +54,26 @@ enum BMICategory {
   String get feedbackMessage {
     switch (this) {
       case BMICategory.underweight:
-        return 'Your BMI is in the underweight range. Nourish your body with healthy foods.';
+        return 'your_bmi_is_in_the_underweight'.tr;
       case BMICategory.normal:
-        return 'Great job! Your BMI is in the normal range. Keep maintaining a healthy lifestyle.';
+        return 'great_job_your_bmi_is_in'.tr;
       case BMICategory.overweight:
-        return 'Your BMI is in the overweight range. Stay active and eat balanced meals.';
+        return 'your_bmi_is_in_the_overweight'.tr;
       case BMICategory.obese:
-        return 'Your BMI is in the obese range. Start making healthier choices and work toward a healthier weight.';
+        return 'your_bmi_is_in_the_obese'.tr;
     }
   }
 
   String get bmiRangeDescription {
     switch (this) {
       case BMICategory.underweight:
-        return 'Your BMI is below the healthy range.';
+        return 'your_bmi_is_below_the_healthy'.tr;
       case BMICategory.normal:
-        return 'Your BMI is within the healthy range.';
+        return 'your_bmi_is_within_the_healthy'.tr;
       case BMICategory.overweight:
-        return 'Your BMI is above the healthy range.';
+        return 'your_bmi_is_above_the_healthy'.tr;
       case BMICategory.obese:
-        return 'Your BMI is in the obesity range.';
+        return 'your_bmi_is_in_the_obesity'.tr;
     }
   }
 

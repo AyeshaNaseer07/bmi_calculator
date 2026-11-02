@@ -111,7 +111,7 @@ class StayActiveScreen extends StatelessWidget {
     final mc = MealPlanController.to;
     final today = ActivityPlanData.today(mc.category, mc.activity);
     return InsightScaffold(
-      title: 'Stay Active',
+      title: 'stay_active'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -167,7 +167,7 @@ class StayActiveScreen extends StatelessWidget {
                   ),
                   SizedBox(width: 6.w),
                   Text(
-                    'STAY ACTIVE',
+                    'stay_active_2'.tr,
                     style: bodyStyle(
                       12,
                       color: _kDeep,
@@ -181,13 +181,13 @@ class StayActiveScreen extends StatelessWidget {
           SizedBox(height: 6.h),
           Center(
             child: Text(
-              'Small movements, healthier habits.',
+              'small_movements_healthier_habits'.tr,
               style: bodyStyle(13.5, color: AppPalette.textBody),
             ),
           ),
           SizedBox(height: 14.h),
           Text(
-            'TODAY’S ACTIVITY',
+            'todays_activity'.tr,
             style: headStyle(15, weight: FontWeight.w800),
           ),
           SizedBox(height: 10.h),
@@ -201,22 +201,24 @@ class StayActiveScreen extends StatelessWidget {
           ),
           _row(
             AppAssets.stretchBreakIcon,
-            'Stretch Break',
-            'Loosen up with a few gentle stretches.',
-            '10 min',
+            'stretch_break'.tr,
+            'loosen_up_with_a_few_gentle'.tr,
+            'n_10_min'.tr,
             false,
           ),
           _row(
             AppAssets.dailyMovementIcon,
-            'Daily Movement',
-            'Stay active throughout the day. Take breaks.',
-            'All-day',
+            'daily_movement'.tr,
+            'stay_active_throughout_the_day_take'.tr,
+            'all_day'.tr,
             true,
             onTap: () => Get.to(() => const ActivityRoutineScreen()),
           ),
           SizedBox(height: 6.h),
           TipBanner(
-            text: 'Your Daily Tip: ${ActivityPlanData.tipFor(mc.category)}',
+            text: 'your_daily_tip'.trParams({
+              'tip': ActivityPlanData.tipFor(mc.category),
+            }),
           ),
           SizedBox(height: 10.h),
           const _SafetyNote(),
@@ -364,12 +366,9 @@ class _SafetyNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PrecautionCard(
-      lead: 'Stop if you feel pain, dizziness or chest discomfort.',
-      body:
-          'Check with a doctor before starting if you have a heart or '
-          'joint condition, are pregnant, or have not exercised in a '
-          'long time.',
+    return PrecautionCard(
+      lead: 'stop_if_you_feel_pain_dizziness'.tr,
+      body: 'check_with_doctor'.tr,
     );
   }
 }
@@ -407,7 +406,7 @@ class ActivityRoutineScreen extends StatelessWidget {
     final ac = ActivityPlanController.to;
     final week = ActivityPlanData.weekFor(mc.category, mc.activity);
     return InsightScaffold(
-      title: 'Your Activity Routine',
+      title: 'your_activity_routine'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -529,7 +528,7 @@ class ActivityRoutineScreen extends StatelessWidget {
                       Icon(Icons.eco_rounded, size: 18.sp, color: kGreen),
                       SizedBox(width: 6.w),
                       Text(
-                        'Stay Consistent',
+                        'stay_consistent'.tr,
                         style: headStyle(19, weight: FontWeight.w600),
                       ),
                     ],
@@ -538,9 +537,9 @@ class ActivityRoutineScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 Row(
                   children: [
-                    _pill(Icons.directions_walk_rounded, 'Walking breaks'),
-                    _pill(Icons.water_drop_outlined, 'Drink water'),
-                    _pill(Icons.dark_mode_outlined, 'Enough sleep'),
+                    _pill(Icons.directions_walk_rounded, 'walking_breaks'.tr),
+                    _pill(Icons.water_drop_outlined, 'drink_water'.tr),
+                    _pill(Icons.dark_mode_outlined, 'enough_sleep'.tr),
                   ],
                 ),
               ],

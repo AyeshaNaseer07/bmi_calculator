@@ -11,6 +11,7 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/remote_model.dart';
 import '../../data/services/localization_service.dart';
 import '../../data/services/remote_config_service.dart';
+import '../../notifications/local_notification_scheduler.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../../core/theme/app_palette.dart';
@@ -146,6 +147,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     _appController.changeLanguage(_selectedLang);
 
     if (widget.fromProfile) {
+      // Reminders already scheduled keep the old language until rescheduled.
+      LocalNotificationScheduler.instance.scheduleNotifications();
       Get.back();
       return;
     }

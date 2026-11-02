@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_palette.dart';
@@ -117,9 +118,9 @@ class _ArcPainter extends CustomPainter {
 }
 
 class LoaderOverlay extends StatelessWidget {
-  const LoaderOverlay({super.key, this.message = 'Uploading photo...'});
+  const LoaderOverlay({super.key, this.message});
 
-  final String message;
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +148,7 @@ class LoaderOverlay extends StatelessWidget {
                 CustomLoader(size: 64.w),
                 SizedBox(height: 14.h),
                 Text(
-                  message,
+                  message ?? 'uploading_photo'.tr,
                   style: TextStyle(
                     color: AppColors.textDark,
                     fontSize: 13.sp,

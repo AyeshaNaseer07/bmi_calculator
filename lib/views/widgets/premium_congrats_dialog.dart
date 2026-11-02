@@ -73,7 +73,7 @@ class PremiumCongratsDialog extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               Text(
-                isRestore ? 'Purchases Restored!' : "You're Premium Now!",
+                isRestore ? 'purchases_restored'.tr : 'youre_premium_now'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppPalette.textPrimary,
@@ -86,10 +86,8 @@ class PremiumCongratsDialog extends StatelessWidget {
               SizedBox(height: 8.h),
               Text(
                 isRestore
-                    ? 'Your previous purchase has been restored.\n'
-                          'All premium features are unlocked again.'
-                    : 'Enjoy an ad-free experience and all\n'
-                          'premium health features.',
+                    ? 'purchase_restored_message'.tr
+                    : 'premium_now_message'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppPalette.textSecondary,
@@ -121,7 +119,7 @@ class PremiumCongratsDialog extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    'Continue',
+                    'continue_btn'.tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.sp,

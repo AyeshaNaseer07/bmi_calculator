@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
@@ -282,7 +283,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
         text: TextSpan(
           children: [
             TextSpan(text: '9.9\n', style: numStyle),
-            TextSpan(text: 'Low', style: subStyle),
+            TextSpan(text: 'low'.tr, style: subStyle),
           ],
         ),
         textAlign: TextAlign.center,
@@ -300,7 +301,7 @@ class _BMIGaugeNeedlePainter extends CustomPainter {
         text: TextSpan(
           children: [
             TextSpan(text: '34.9\n', style: numStyle),
-            TextSpan(text: 'High', style: subStyle),
+            TextSpan(text: 'high'.tr, style: subStyle),
           ],
         ),
         textAlign: TextAlign.center,

@@ -36,25 +36,22 @@ class MealCompletedScreen extends StatelessWidget {
   String get _milestone {
     switch (meal.slotKey) {
       case 'breakfast':
-        return 'MORNING MILESTONE';
+        return 'morning_milestone'.tr;
       case 'lunch':
-        return 'MIDDAY MILESTONE';
+        return 'midday_milestone'.tr;
       default:
-        return 'EVENING MILESTONE';
+        return 'evening_milestone'.tr;
     }
   }
 
   String get _message {
     switch (meal.slotKey) {
       case 'breakfast':
-        return 'Great start! You’ve completed today’s breakfast and '
-            'energized your morning.';
+        return 'milestone_breakfast'.tr;
       case 'lunch':
-        return 'Nicely done! You’ve completed today’s lunch and kept your '
-            'energy steady.';
+        return 'milestone_lunch'.tr;
       default:
-        return 'Well done! You’ve completed today’s dinner and wrapped up '
-            'a balanced day.';
+        return 'milestone_dinner'.tr;
     }
   }
 
@@ -85,11 +82,11 @@ class MealCompletedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = MealPlanController.to;
     return InsightScaffold(
-      title: '${meal.slot} Completed!',
+      title: 'meal_completed'.trParams({'meal': meal.slot}),
       // Same look as GradientActionButton, plus the app's CTA animation
       // (breathing pulse, shine sweep, arrow nudge).
       bottom: AnimatedCtaButton(
-        text: 'View Your Progress',
+        text: 'view_your_progress'.tr,
         height: 52.h,
         borderRadius: BorderRadius.circular(28.r),
         gradient: const LinearGradient(
@@ -184,7 +181,7 @@ class MealCompletedScreen extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           Text(
-                            'Day ${meal.day} of 7',
+                            'day_of_7'.trParams({'day': '${meal.day}'}),
                             style: bodyStyle(
                               14,
                               color: _kDeep,
@@ -203,7 +200,7 @@ class MealCompletedScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
-                          'Clean Eating Plan',
+                          'clean_eating_plan'.tr,
                           style: bodyStyle(
                             12,
                             color: _kDeep,
@@ -221,13 +218,18 @@ class MealCompletedScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '$done meal${done == 1 ? '' : 's'} completed',
+                              (done == 1
+                                      ? 'meals_completed_one'
+                                      : 'meals_completed_many')
+                                  .trParams({'count': '$done'}),
                               style: headStyle(22, weight: FontWeight.w600),
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              '${3 - done} nutritious meal'
-                              '${3 - done == 1 ? '' : 's'} remaining today',
+                              (3 - done == 1
+                                      ? 'meals_remaining_one'
+                                      : 'meals_remaining_many')
+                                  .trParams({'count': '${3 - done}'}),
                               style: bodyStyle(13, color: AppPalette.textBody),
                             ),
                           ],
@@ -253,7 +255,7 @@ class MealCompletedScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Daily Progress',
+                        'daily_progress'.tr,
                         style: bodyStyle(
                           13,
                           color: AppPalette.textBody,
@@ -353,19 +355,19 @@ class MealProgressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = MealPlanController.to;
     return InsightScaffold(
-      title: 'Your Progress',
+      title: 'your_progress'.tr,
       body: Obx(() {
         final pct = (c.eatenInPlan / 21 * 100).round();
         final cur = c.currentDay;
         final streak = c.streak;
-        const phases = [
-          'Fresh Start Phase',
-          'Building Rhythm Phase',
-          'Steady Energy Phase',
-          'Vibrant Energy Phase',
-          'Strong Habits Phase',
-          'Balanced Living Phase',
-          'Final Stretch Phase',
+        final phases = [
+          'fresh_start_phase'.tr,
+          'building_rhythm_phase'.tr,
+          'steady_energy_phase'.tr,
+          'vibrant_energy_phase'.tr,
+          'strong_habits_phase'.tr,
+          'balanced_living_phase'.tr,
+          'final_stretch_phase'.tr,
         ];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +377,7 @@ class MealProgressScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Consistent nourishment & balance',
+                    'consistent_nourishment_balance'.tr,
                     style: bodyStyle(13.5, color: AppPalette.textBody),
                   ),
                 ),
@@ -395,7 +397,7 @@ class MealProgressScreen extends StatelessWidget {
                       Icon(Icons.eco_rounded, size: 14.sp, color: _kDeep),
                       SizedBox(width: 4.w),
                       Text(
-                        '7-Day Living Plan',
+                        'n_7_day_living_plan'.tr,
                         style: bodyStyle(
                           12,
                           color: _kDeep,
@@ -461,7 +463,7 @@ class MealProgressScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'DAYS COMPLETED',
+                              'days_completed'.tr,
                               style: bodyStyle(
                                 12,
                                 color: AppPalette.textBody,
@@ -491,7 +493,7 @@ class MealProgressScreen extends StatelessWidget {
                                   ),
                                   SizedBox(width: 5.w),
                                   Text(
-                                    '$pct% Reached',
+                                    'pct_reached'.trParams({'pct': '$pct'}),
                                     style: bodyStyle(
                                       12,
                                       color: _kDeep,
@@ -513,7 +515,10 @@ class MealProgressScreen extends StatelessWidget {
                       Icon(Icons.verified_rounded, size: 18.sp, color: _kDeep),
                       SizedBox(width: 6.w),
                       Text(
-                        'Day $cur: ${phases[cur - 1]}',
+                        'day_phase'.trParams({
+                          'day': '$cur',
+                          'phase': phases[cur - 1],
+                        }),
                         style: bodyStyle(
                           13.5,
                           color: AppPalette.textPrimary,
@@ -535,14 +540,14 @@ class MealProgressScreen extends StatelessWidget {
                     tile: const Color(0xFFE8ECFB),
                     iconColor: _kDeep,
                     trailing: Text(
-                      'Target: 21',
+                      'target_21'.tr,
                       style: bodyStyle(
                         12.5,
                         color: kInk,
                         weight: FontWeight.w800,
                       ),
                     ),
-                    label: 'Meals Logged',
+                    label: 'meals_logged'.tr,
                     value: Text.rich(
                       TextSpan(
                         children: [
@@ -574,7 +579,7 @@ class MealProgressScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Text(
-                        'Active',
+                        'active'.tr,
                         style: bodyStyle(
                           12,
                           color: const Color(0xFFD62B1F),
@@ -582,9 +587,10 @@ class MealProgressScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    label: 'Current Streak',
+                    label: 'current_streak'.tr,
                     value: Text(
-                      '$streak Day${streak == 1 ? '' : 's'} 🔥',
+                      (streak == 1 ? 'streak_days_one' : 'streak_days_many')
+                          .trParams({'count': '$streak'}),
                       style: headStyle(22, weight: FontWeight.w600),
                     ),
                   ),
@@ -615,7 +621,7 @@ class MealProgressScreen extends StatelessWidget {
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(
-                          'Overall Plan Progress',
+                          'overall_plan_progress'.tr,
                           style: bodyStyle(
                             14,
                             color: kInk,
@@ -641,7 +647,7 @@ class MealProgressScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Day $cur of 7',
+                        'day_of_7'.trParams({'day': '$cur'}),
                         style: bodyStyle(
                           12.5,
                           color: AppPalette.textBody,
@@ -649,7 +655,10 @@ class MealProgressScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${7 - cur} Day${7 - cur == 1 ? '' : 's'} remaining',
+                        (7 - cur == 1
+                                ? 'days_remaining_one'
+                                : 'days_remaining_many')
+                            .trParams({'count': '${7 - cur}'}),
                         style: bodyStyle(
                           12.5,
                           color: AppPalette.textBody,
@@ -695,7 +704,7 @@ class MealProgressScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'DAILY WISDOM',
+                          'daily_wisdom'.tr,
                           style: TextStyle(
                             color: const Color(0xFF006948),
                             fontSize: 11,
@@ -707,7 +716,7 @@ class MealProgressScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         Text(
-                          'Keep going! Small daily choices build healthy habits.',
+                          'keep_going_small_daily_choices_build'.tr,
                           style: TextStyle(
                             color: AppPalette.textPrimary,
                             fontSize: 13,

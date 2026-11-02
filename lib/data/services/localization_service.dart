@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class LanguageModel {
   final String code;
@@ -122,8 +124,32 @@ class LocalizationService extends Translations {
 
   static final Map<String, Map<String, String>> _keys = {};
 
+  static List<Locale> get supportedLocales => [
+    for (final language in supportedLanguages)
+      getLocaleFromLanguage(language.code),
+  ];
+
+  /// Translates English text that comes from outside the app (e.g. Remote
+  /// Config) when it matches one of our English strings; otherwise returns it
+  /// unchanged.
+  static String trEnglish(String text) {
+    final wanted = text.trim().toLowerCase();
+    for (final entry in (_keys['en'] ?? const {}).entries) {
+      if (entry.value.trim().toLowerCase() == wanted) return entry.key.tr;
+    }
+    return text;
+  }
+
+  /// Makes `DateFormat` use [langCode] for month and day names. Digits stay
+  /// Western so dates match the rest of the app's numbers.
+  static void applyIntlLocale(String langCode) {
+    Intl.defaultLocale = langCode;
+    DateFormat.useNativeDigitsByDefaultFor(langCode, false);
+  }
+
   /// Loads JSON translation files asynchronously from assets/locales/
   static Future<void> init() async {
+    await initializeDateFormatting();
     for (final language in supportedLanguages) {
       try {
         final jsonString = await rootBundle.loadString(

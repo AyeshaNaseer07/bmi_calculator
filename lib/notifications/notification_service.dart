@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
 import 'local_notification_scheduler.dart';
 
@@ -131,7 +132,7 @@ class NotificationService {
     final notification = message.notification;
     if (notification != null) {
       showNotification(
-        title: notification.title ?? 'BMI Calculator',
+        title: notification.title ?? 'app_name'.tr,
         body: notification.body ?? '',
         payload: message.data.toString(),
       );
@@ -166,15 +167,15 @@ class NotificationService {
       presentSound: true,
     );
 
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'bmi_calculator_channel',
-      'BMI Calculator Notifications',
-      channelDescription: 'Important updates and health reminders',
+      'bmi_calculator_notifications'.tr,
+      channelDescription: 'important_updates_and_health_reminders'.tr,
       importance: Importance.max,
       priority: Priority.high,
     );
 
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       iOS: iosDetails,
       android: androidDetails,
     );

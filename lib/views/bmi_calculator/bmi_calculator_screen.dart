@@ -62,7 +62,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'BMI Calculator'),
+        appBar: CustomAppBar(title: 'app_name'.tr),
         // Number keypad for the value fields (iOS), shown while editing.
         bottomNavigationBar: const NumberKeypadHost(),
         body: Column(
@@ -96,7 +96,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         SizedBox(
                           width: 193,
                           child: Text(
-                            'Make sure to enter accurate details for precise BMI calculation.',
+                            'make_sure_to_enter_accurate_details'.tr,
                             style: TextStyle(
                               color: const Color(0xFF6F6F6F),
                               fontSize: 14,
@@ -162,7 +162,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                           Expanded(
                             child: _buildGenderCard(
                               asset: AppAssets.homeMale,
-                              label: 'Male',
+                              label: 'male'.tr,
                               isSelected: isMale,
                               onTap: () => controller.setGender(Gender.male),
                             ),
@@ -171,7 +171,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                           Expanded(
                             child: _buildGenderCard(
                               asset: AppAssets.homeFemale,
-                              label: 'Female',
+                              label: 'female'.tr,
                               isSelected: isFemale,
                               onTap: () => controller.setGender(Gender.female),
                             ),
@@ -189,7 +189,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: MandatoryLabel(
-                                text: 'Age',
+                                text: 'age'.tr,
                                 style: TextStyle(
                                   color: AppPalette.textPrimary,
                                   fontSize: 15.sp,
@@ -202,7 +202,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                             InlineValueField(
                               key: const ValueKey('age'),
                               value: controller.hasAge ? age.toDouble() : null,
-                              unit: 'Yr',
+                              unit: 'yr'.tr,
                               min: BMIController.minAge.toDouble(),
                               max: BMIController.maxAge.toDouble(),
                               width: 70,
@@ -246,7 +246,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '${BMIController.minAge} Yr',
+                                    'age_yr'.trParams({
+                                      'age': '${BMIController.minAge}',
+                                    }),
                                     style: TextStyle(
                                       color: AppPalette.textSecondary,
                                       fontSize: 12.sp,
@@ -255,7 +257,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '${BMIController.maxAge} Yr',
+                                    'age_yr'.trParams({
+                                      'age': '${BMIController.maxAge}',
+                                    }),
                                     style: TextStyle(
                                       color: AppPalette.textSecondary,
                                       fontSize: 12.sp,
@@ -281,7 +285,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 MandatoryLabel(
-                                  text: 'Height',
+                                  text: 'height'.tr,
                                   style: TextStyle(
                                     color: AppPalette.textPrimary,
                                     fontSize: 15.sp,
@@ -429,7 +433,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 MandatoryLabel(
-                                  text: 'Weight',
+                                  text: 'weight'.tr,
                                   style: TextStyle(
                                     color: AppPalette.textPrimary,
                                     fontSize: 15.sp,
@@ -537,7 +541,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       SizedBox(height: 16.h),
                       // Calculate BMI Button
                       CustomGradientButton(
-                        text: 'Calculate BMI',
+                        text: 'calculate_bmi'.tr,
                         leadingIcon: Image.asset(
                           AppAssets.calcilatorIcon,
                           width: 18.w,
@@ -560,7 +564,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
 
                       // Reset Button
                       CustomGradientButton(
-                        text: 'Reset',
+                        text: 'reset'.tr,
                         leadingIcon: Image.asset(
                           AppAssets.resetIcon,
                           width: 18.w,

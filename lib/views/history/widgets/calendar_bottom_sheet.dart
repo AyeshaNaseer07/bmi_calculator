@@ -2,6 +2,7 @@ import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_palette.dart';
@@ -25,19 +26,19 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   DateTime? _selectedDate;
   bool _isMonthYearPicker = false;
 
-  final List<String> _months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+  List<String> get _months => [
+    'january'.tr,
+    'february'.tr,
+    'march'.tr,
+    'april'.tr,
+    'may'.tr,
+    'june'.tr,
+    'july'.tr,
+    'august'.tr,
+    'september'.tr,
+    'october'.tr,
+    'november'.tr,
+    'december'.tr,
   ];
 
   @override
@@ -233,7 +234,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                     color: const Color(0xFFEF4444),
                   ),
                   label: Text(
-                    'Clear Filter',
+                    'clear_filter'.tr,
                     style: TextStyle(
                       color: const Color(0xFFEF4444),
                       fontSize: 13.sp,
@@ -250,7 +251,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 )
               else
                 Text(
-                  'Tap a date to filter',
+                  'tap_a_date_to_filter'.tr,
                   style: TextStyle(
                     color: AppPalette.textMuted,
                     fontSize: 12.sp,
@@ -275,7 +276,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                   ),
                 ),
                 child: Text(
-                  'Today',
+                  'today'.tr,
                   style: TextStyle(
                     color: const Color(0xFF09B389),
                     fontSize: 13.sp,
@@ -389,23 +390,24 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
         // Weekdays Row (Mo, Tu, We, Th, Fr, Sa, Su)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-              .map(
-                (day) => Expanded(
-                  child: Center(
-                    child: Text(
-                      day,
-                      style: TextStyle(
-                        color: AppPalette.textMuted,
-                        fontSize: 13.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+          children:
+              ['mo'.tr, 'tu'.tr, 'we'.tr, 'th'.tr, 'fr'.tr, 'sa'.tr, 'su'.tr]
+                  .map(
+                    (day) => Expanded(
+                      child: Center(
+                        child: Text(
+                          day,
+                          style: TextStyle(
+                            color: AppPalette.textMuted,
+                            fontSize: 13.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              )
-              .toList(),
+                  )
+                  .toList(),
         ),
         SizedBox(height: 12.h),
 

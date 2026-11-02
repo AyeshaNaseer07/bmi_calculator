@@ -113,7 +113,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Your Daily Goal',
+      title: 'your_daily_goal'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,7 +159,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Daily Water\nIntake',
+                      'daily_water_intake'.tr,
                       style: headStyle(
                         17,
                         weight: FontWeight.w700,
@@ -182,7 +182,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                         ),
                       ),
                       child: Text(
-                        'RECOMMENDED',
+                        'recommended_caps'.tr,
                         style: TextStyle(
                           color: const Color(0xFF0F766E),
                           fontSize: 10,
@@ -195,7 +195,10 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                     ),
                     SizedBox(width: 40.w),
                     Text(
-                      '$_glasses / $_goal\nGlasses',
+                      'glasses_progress'.trParams({
+                        'glasses': '$_glasses',
+                        'goal': '$_goal',
+                      }),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: const Color(0xFF059669),
@@ -210,7 +213,9 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  'Your water ${PersonalTargets.litres(_ml)} L a day needs depend on your activity, weather and health.',
+                  'your_water_needs'.trParams({
+                    'litres': PersonalTargets.litres(_ml),
+                  }),
                   style: bodyStyle(14, color: _kSub, height: 1.3),
                 ),
                 SizedBox(height: 12.h),
@@ -256,7 +261,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Daily Water Intake: ',
+                          text: 'daily_water_intake_2'.tr,
                           style: bodyStyle(
                             12.5,
                             color: kInk,
@@ -264,9 +269,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                           ),
                         ),
                         TextSpan(
-                          text:
-                              'Needs vary by activity, climate, and body '
-                              'composition.',
+                          text: 'needs_vary_by_activity'.tr,
                           style: bodyStyle(
                             12.5,
                             color: kInk,
@@ -303,7 +306,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'EASY WAYS TO STAY HYDRATED',
+                  'easy_ways_to_stay_hydrated'.tr,
                   style: bodyStyle(
                     12,
                     color: AppPalette.textSecondary,
@@ -313,20 +316,20 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 SizedBox(height: 12.h),
                 _tipRow(
                   AppAssets.waterMorningIcon,
-                  'Start Your Morning',
-                  'Drink a glass right after waking up.',
+                  'start_your_morning'.tr,
+                  'drink_a_glass_right_after_waking'.tr,
                 ),
                 SizedBox(height: 12.h),
                 _tipRow(
                   AppAssets.waterThroughDayIcon,
-                  'Drink Throughout the Day',
-                  'Sip regularly instead of all at once.',
+                  'drink_throughout_the_day'.tr,
+                  'sip_regularly_instead_of_all_at'.tr,
                 ),
                 SizedBox(height: 12.h),
                 _tipRow(
                   AppAssets.waterListenBodyIcon,
-                  'Listen to Your Body',
-                  'Drink when thirsty; adjust for activity.',
+                  'listen_to_your_body'.tr,
+                  'drink_when_thirsty_adjust_for_activity'.tr,
                 ),
               ],
             ),

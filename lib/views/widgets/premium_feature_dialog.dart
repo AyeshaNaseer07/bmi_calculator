@@ -62,7 +62,7 @@ class PremiumFeatureDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Premium Feature',
+                  'premium_feature'.tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppPalette.textPrimary,
@@ -101,7 +101,7 @@ class PremiumFeatureDialog extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Not Now',
+                    'not_now'.tr,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontFamily: 'Inter',
@@ -221,7 +221,7 @@ class _UnlockButtonState extends State<_UnlockButton>
     final radius = BorderRadius.circular(28.r);
     final label = Center(
       child: Text(
-        'Unlock Premium',
+        'unlock_premium'.tr,
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.white,

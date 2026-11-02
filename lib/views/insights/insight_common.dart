@@ -363,7 +363,7 @@ class PrecautionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final still = MediaQuery.disableAnimationsOf(context);
     return Semantics(
-      label: 'Precaution',
+      label: 'precaution'.tr,
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: still ? 1 : 0, end: 1),
         duration: const Duration(milliseconds: 700),
@@ -413,7 +413,7 @@ class PrecautionCard extends StatelessWidget {
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          'PRECAUTION',
+                          'precaution_caps'.tr,
                           style: bodyStyle(
                             16,
                             color: const Color(0xFFB45309),
@@ -484,7 +484,7 @@ class TipBanner extends StatelessWidget {
     final still = MediaQuery.disableAnimationsOf(context);
 
     return Semantics(
-      label: 'Tip',
+      label: 'tip'.tr,
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: still ? 1 : 0, end: 1),
         duration: const Duration(milliseconds: 700),

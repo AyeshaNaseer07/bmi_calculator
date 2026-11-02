@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
@@ -42,7 +43,7 @@ class CalculatingDialog extends StatelessWidget {
               ),
               SizedBox(height: 6.h),
               Text(
-                'Calculating...',
+                'calculating'.tr,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 11.sp,

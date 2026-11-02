@@ -16,13 +16,15 @@ import 'widgets/calendar_bottom_sheet.dart';
 import '../../core/theme/app_palette.dart';
 
 enum HistorySortOption {
-  newest('Newest First (Date)'),
-  oldest('Oldest First (Date)'),
-  bmiHighest('Highest BMI'),
-  bmiLowest('Lowest BMI');
+  newest('newest_first_date'),
+  oldest('oldest_first_date'),
+  bmiHighest('highest_bmi'),
+  bmiLowest('lowest_bmi');
 
-  final String label;
-  const HistorySortOption(this.label);
+  final String _labelKey;
+  const HistorySortOption(this._labelKey);
+
+  String get label => _labelKey.tr;
 }
 
 class HistoryScreen extends StatefulWidget {
@@ -68,7 +70,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         backgroundColor: AppPalette.surface,
         title: Text(
-          'Delete Record?',
+          'delete_record_2'.tr,
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w700,
@@ -77,7 +79,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ),
         content: Text(
-          'Are you sure you want to delete this BMI record from ${DateFormat('dd MMM yyyy').format(record.date)}?',
+          'delete_record_confirm'.trParams({
+            'date': DateFormat('dd MMM yyyy').format(record.date),
+          }),
           style: TextStyle(
             fontSize: 13.sp,
             color: AppPalette.textSecondary,
@@ -99,7 +103,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
-                    'Cancel',
+                    'cancel'.tr,
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -122,8 +126,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       }
                     });
                     Get.snackbar(
-                      'Deleted',
-                      'Record deleted successfully',
+                      'deleted'.tr,
+                      'record_deleted_successfully'.tr,
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: AppPalette.textPrimary,
                       colorText: Colors.white,
@@ -141,7 +145,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
-                    'Delete',
+                    'delete'.tr,
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w700,
@@ -169,7 +173,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         backgroundColor: AppPalette.surface,
         title: Text(
-          'Delete Records?',
+          'delete_records'.tr,
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w700,
@@ -178,7 +182,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ),
         content: Text(
-          'Are you sure you want to delete $count selected history record${count > 1 ? 's' : ''}? This action cannot be undone.',
+          (count > 1
+                  ? 'delete_records_confirm_many'
+                  : 'delete_records_confirm_one')
+              .trParams({'count': '$count'}),
           style: TextStyle(
             fontSize: 13.sp,
             color: AppPalette.textSecondary,
@@ -200,7 +207,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
-                    'Cancel',
+                    'cancel'.tr,
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -221,8 +228,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       _isSelectionMode = false;
                     });
                     Get.snackbar(
-                      'Deleted',
-                      '$count record${count > 1 ? 's' : ''} deleted successfully',
+                      'deleted'.tr,
+                      (count > 1
+                              ? 'records_deleted_many'
+                              : 'records_deleted_one')
+                          .trParams({'count': '$count'}),
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: AppPalette.textPrimary,
                       colorText: Colors.white,
@@ -240,7 +250,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
-                    'Delete',
+                    'delete'.tr,
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w700,
@@ -285,7 +295,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Sort BMI History',
+                  'sort_bmi_history'.tr,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
@@ -300,7 +310,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Navigator.pop(ctx);
                     },
                     child: Text(
-                      'Reset',
+                      'reset'.tr,
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
@@ -377,7 +387,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-          title: 'History',
+          title: 'history'.tr,
           showBackButton: widget.showBackButton,
         ),
         body: SafeArea(
@@ -483,7 +493,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Your Progress',
+                                          'your_progress'.tr,
                                           style: TextStyle(
                                             color: AppPalette.textPrimary,
                                             fontSize: 16.sp,
@@ -493,7 +503,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         ),
                                         SizedBox(height: 4.h),
                                         Text(
-                                          'Keep tracking to reach\nyour health goals.',
+                                          'keep_tracking_to_reach_your_health'
+                                              .tr,
                                           style: TextStyle(
                                             color: AppPalette.textPrimary
                                                 .withValues(alpha: 0.7),
@@ -544,15 +555,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 children: [
                                   Expanded(
                                     child: _buildSummaryItem(
-                                      label: 'Records',
+                                      label: 'records'.tr,
                                       value: '${allRecords.length}',
-                                      subtitle: 'Total',
+                                      subtitle: 'total'.tr,
                                     ),
                                   ),
                                   _buildDivider(),
                                   Expanded(
                                     child: _buildSummaryItem(
-                                      label: 'BMI',
+                                      label: 'bmi_label'.tr,
                                       value: allRecords.first.bmiValue
                                           .toStringAsFixed(1),
                                       subtitle: allRecords.first.category.label,
@@ -561,7 +572,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   _buildDivider(),
                                   Expanded(
                                     child: _buildSummaryItem(
-                                      label: 'Latest',
+                                      label: 'latest'.tr,
                                       value: allRecords.first.bmiValue
                                           .toStringAsFixed(1),
                                       subtitle: _getLatestSubtitle(
@@ -653,7 +664,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ),
                                   SizedBox(width: 8.w),
                                   Text(
-                                    'Select All',
+                                    'select_all'.tr,
                                     style: TextStyle(
                                       color: AppPalette.textPrimary,
                                       fontSize: 13.sp,
@@ -719,7 +730,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         ),
                                         SizedBox(width: 4.w),
                                         Text(
-                                          'Delete',
+                                          'delete'.tr,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12.sp,
@@ -752,7 +763,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       ),
                                     ),
                                     child: Text(
-                                      'Cancel',
+                                      'cancel'.tr,
                                       style: TextStyle(
                                         color: AppPalette.textSecondary,
                                         fontSize: 12.sp,
@@ -772,7 +783,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'BMI History',
+                            'bmi_history'.tr,
                             style: TextStyle(
                               color: AppPalette.textPrimary,
                               fontSize: 16.sp,
@@ -900,7 +911,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                             SizedBox(width: 6.w),
                             Text(
-                              'Date: ${DateFormat('dd MMM yyyy').format(_selectedDate!)}',
+                              'date_filter'.trParams({
+                                'date': DateFormat('dd MMM yyyy')
+                                    .format(_selectedDate!),
+                              }),
                               style: TextStyle(
                                 color: const Color(0xFF0F766E),
                                 fontSize: 12.sp,
@@ -967,7 +981,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           SizedBox(height: 10.h),
           Text(
-            'No records for this date',
+            'no_records_for_this_date'.tr,
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
@@ -996,7 +1010,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
-                'Show All Records',
+                'show_all_records'.tr,
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
@@ -1140,7 +1154,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('BMI', style: labelStyle),
+                  Text('bmi_label'.tr, style: labelStyle),
                   SizedBox(height: 4.h),
                   Text(
                     record.bmiValue.toStringAsFixed(1),
@@ -1161,7 +1175,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Weight', style: labelStyle),
+                  Text('weight'.tr, style: labelStyle),
                   SizedBox(height: 4.h),
                   FittedBox(
                     fit: BoxFit.scaleDown,
@@ -1244,7 +1258,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Icon(CupertinoIcons.trash, color: Colors.white, size: 20.sp),
             SizedBox(width: 6.w),
             Text(
-              'Delete',
+              'delete'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -1310,7 +1324,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day) {
-      return 'Today';
+      return 'today'.tr;
     }
     return DateFormat('MMM d').format(date);
   }
@@ -1370,7 +1384,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'No records yet',
+                              'no_records_yet'.tr,
                               style: TextStyle(
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w800,
@@ -1379,7 +1393,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              'Calculate your BMI to see\nyour history here.',
+                              'calculate_your_bmi_to_see_your'.tr,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: AppColors.textLight,
@@ -1407,7 +1421,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Calculate BMI',
+                                    'calculate_bmi'.tr,
                                     style: TextStyle(
                                       fontSize: 13.sp,
                                       fontWeight: FontWeight.w600,
@@ -1430,7 +1444,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         SizedBox(height: 12.h),
 
         // About History Section
-        Text('About History', style: _sectionTitleStyle),
+        Text('about_history'.tr, style: _sectionTitleStyle),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -1445,7 +1459,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               SizedBox(width: 14.w),
               Expanded(
                 child: Text(
-                  'Your BMI history helps you understand your health journey over time and stay on track with your goals.',
+                  'your_bmi_history_helps_you_understand'.tr,
                   style: TextStyle(
                     color: AppPalette.textSecondary,
                     fontSize: 11.5.sp,
@@ -1461,24 +1475,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
         SizedBox(height: 12.h),
 
         // What you'll see here Section
-        Text("What you'll see here", style: _sectionTitleStyle),
+        Text('what_youll_see_here'.tr, style: _sectionTitleStyle),
         SizedBox(height: 14.h),
         _buildFeatureItem(
           icon: Icons.trending_up,
-          title: 'BMI',
-          subtitle: 'See how your BMI changes over time.',
+          title: 'bmi_label'.tr,
+          subtitle: 'see_how_your_bmi_changes_over'.tr,
         ),
         SizedBox(height: 16.h),
         _buildFeatureItem(
           icon: Icons.shopping_bag_outlined,
-          title: 'Weight Records',
-          subtitle: 'Track your weight history.',
+          title: 'weight_records'.tr,
+          subtitle: 'track_your_weight_history'.tr,
         ),
         SizedBox(height: 16.h),
         _buildFeatureItem(
           icon: Icons.flag_outlined,
-          title: 'Goal Progress',
-          subtitle: 'Monitor your progress towards your goals.',
+          title: 'goal_progress'.tr,
+          subtitle: 'monitor_your_progress_towards_your_goals'.tr,
         ),
       ],
     );
@@ -1560,7 +1574,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Unlock Premium',
+                            'unlock_premium'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Inter',
@@ -1570,7 +1584,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ),
                           SizedBox(height: 3.h),
                           Text(
-                            'Get advanced insights, reports & more',
+                            'get_advanced_insights_reports_more'.tr,
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.88),
                               fontFamily: 'Inter',
@@ -1602,7 +1616,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Go Premium',
+                            'go_premium'.tr,
                             style: TextStyle(
                               color: const Color(0xFF00946F),
                               fontFamily: 'Inter',

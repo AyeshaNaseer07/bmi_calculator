@@ -34,7 +34,7 @@ class ProfileScreen extends StatelessWidget {
 
   void sendFeedback() {
     const String email = AppStrings.feedbackEmail;
-    const String subject = 'BMI Calculator Feedback';
+    final String subject = 'bmi_calculator_feedback'.tr;
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: email,
@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
         _buildPage(context),
         Obx(
           () => controller.isUploading.value
-              ? const LoaderOverlay(message: 'Uploading photo...')
+              ? LoaderOverlay(message: 'uploading_photo'.tr)
               : const SizedBox.shrink(),
         ),
       ],
@@ -77,7 +77,10 @@ class ProfileScreen extends StatelessWidget {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: CustomAppBar(title: 'Profile', showBackButton: showBackButton),
+        appBar: CustomAppBar(
+          title: 'profile'.tr,
+          showBackButton: showBackButton,
+        ),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
@@ -87,10 +90,10 @@ class ProfileScreen extends StatelessWidget {
                 // User Info Card
                 Obx(() {
                   final name = profileController.userProfile.value.displayName;
-                  final displayName = name.isNotEmpty ? name : 'Guest User';
+                  final displayName = name.isNotEmpty ? name : 'guest_user'.tr;
                   final tagline = name.isNotEmpty
-                      ? 'Manage your health profile'
-                      : 'Start your health journey\nby adding your details.';
+                      ? 'manage_your_health_profile'.tr
+                      : 'start_your_health_journey_by_adding'.tr;
 
                   return CustomCard(
                     borderRadius: 20.r,
@@ -343,7 +346,7 @@ class ProfileScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Unlock Premium',
+                                            'unlock_premium'.tr,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w800,
@@ -352,7 +355,8 @@ class ProfileScreen extends StatelessWidget {
                                           ),
                                           SizedBox(height: 3.h),
                                           Text(
-                                            'Get advanced insights, reports &\nmore',
+                                            'get_advanced_insights_reports_more_2'
+                                                .tr,
                                             style: TextStyle(
                                               color: Colors.white.withValues(
                                                 alpha: 0.88,
@@ -406,7 +410,7 @@ class ProfileScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          'Go Premium',
+                                          'go_premium'.tr,
                                           style: TextStyle(
                                             fontSize: 11.sp,
                                             fontWeight: FontWeight.w800,
@@ -484,8 +488,8 @@ class ProfileScreen extends StatelessWidget {
         // Language
         _buildAccountRow(
           icon: CupertinoIcons.globe,
-          title: 'Language',
-          subtitle: 'Select your app language',
+          title: 'language'.tr,
+          subtitle: 'select_your_app_language'.tr,
           onTap: () => Get.toNamed(AppRoutes.languagesSettings),
         ),
         Divider(height: 1, color: AppPalette.surfaceMuted),
@@ -493,8 +497,8 @@ class ProfileScreen extends StatelessWidget {
         // Rate Us
         _buildAccountRow(
           icon: Icons.star_outline_rounded,
-          title: 'Rate Us',
-          subtitle: 'Rate your experience with us',
+          title: 'rate_us'.tr,
+          subtitle: 'rate_your_experience_with_us'.tr,
           onTap: () => _openRateUsDialog(context),
         ),
         Divider(height: 1, color: AppPalette.surfaceMuted),
@@ -502,8 +506,8 @@ class ProfileScreen extends StatelessWidget {
         // Privacy Policy
         _buildAccountRow(
           icon: Icons.shield_outlined,
-          title: 'Privacy Policy',
-          subtitle: 'Read our privacy policy',
+          title: 'privacy_policy'.tr,
+          subtitle: 'read_our_privacy_policy'.tr,
           onTap: () => openUrl(AppStrings.privacyPolicyUrl),
         ),
         Divider(height: 1, color: AppPalette.surfaceMuted),
@@ -511,8 +515,8 @@ class ProfileScreen extends StatelessWidget {
         // Terms of Use
         _buildAccountRow(
           icon: Icons.description_outlined,
-          title: 'Terms of Use',
-          subtitle: 'Read our terms and conditions',
+          title: 'terms_of_use'.tr,
+          subtitle: 'read_our_terms_and_conditions'.tr,
           onTap: () => openUrl(AppStrings.termsUrl),
         ),
         Divider(height: 1, color: AppPalette.surfaceMuted),
@@ -520,8 +524,8 @@ class ProfileScreen extends StatelessWidget {
         // Feedback
         _buildAccountRow(
           icon: Icons.chat_bubble_outline_rounded,
-          title: 'Feedback',
-          subtitle: 'Send us your suggestions & ideas',
+          title: 'feedback'.tr,
+          subtitle: 'send_us_your_suggestions_ideas'.tr,
           onTap: () => sendFeedback(),
         ),
         Divider(height: 1, color: AppPalette.surfaceMuted),
@@ -529,13 +533,11 @@ class ProfileScreen extends StatelessWidget {
         // Share App
         _buildAccountRow(
           icon: CupertinoIcons.share,
-          title: 'Share App',
-          subtitle: 'Share this app with friends & family',
+          title: 'share_app'.tr,
+          subtitle: 'share_this_app_with_friends_family'.tr,
           onTap: () {
             SharePlus.instance.share(
-              ShareParams(
-                text: 'Check out this BMI Calculator app! Track your health and stay fit. Download it now!',
-              ),
+              ShareParams(text: 'check_out_this_bmi_calculator_app'.tr),
             );
           },
         ),
@@ -649,8 +651,8 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
     await widget.controller.updateName(newName);
     if (mounted) Navigator.pop(context);
     Get.snackbar(
-      'Success',
-      'Profile updated for $newName',
+      'success'.tr,
+      'profile_updated_for'.trParams({'name': newName}),
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: const Color(0xFF10B981),
       colorText: Colors.white,
@@ -692,7 +694,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
             ),
             SizedBox(height: 16.h),
             MandatoryLabel(
-              text: 'Edit Profile Name',
+              text: 'edit_profile_name'.tr,
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w700,
@@ -702,7 +704,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
             ),
             SizedBox(height: 4.h),
             Text(
-              'Enter your name to personalize your health journey.',
+              'enter_your_name_to_personalize_your'.tr,
               style: TextStyle(fontSize: 12.sp, color: AppColors.textLight),
             ),
             SizedBox(height: 16.h),
@@ -744,7 +746,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                       color: AppColors.textDark,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Enter your name',
+                      hintText: 'enter_your_name'.tr,
                       hintStyle: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -774,7 +776,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      'Cancel',
+                      'cancel'.tr,
                       style: TextStyle(
                         color: AppColors.textLight,
                         fontWeight: FontWeight.w600,
@@ -801,7 +803,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                     ),
                     onPressed: isNameValid ? _saveName : null,
                     child: Text(
-                      'Save',
+                      'save'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,

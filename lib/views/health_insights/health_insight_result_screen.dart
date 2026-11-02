@@ -28,7 +28,7 @@ class HealthInsightResultScreen extends StatelessWidget {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'Health Insight'),
+        appBar: CustomAppBar(title: 'health_insight'.tr),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -63,7 +63,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'Understand your health better every day.',
+                          'understand_your_health_better_every_day'.tr,
                           style: TextStyle(
                             color: const Color(0xFF111827)
                                 .withValues(alpha: 0.64),
@@ -81,7 +81,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Your BMI',
+                                    'your_bmi'.tr,
                                     style: TextStyle(
                                       color: Color(0xFF111827),
                                       fontSize: 14.sp,
@@ -139,7 +139,7 @@ class HealthInsightResultScreen extends StatelessWidget {
 
                 // Health Summary Section
                 Text(
-                  'Health Summary',
+                  'health_summary'.tr,
                   style: TextStyle(
                     color: Color(0xFF111827),
                     fontSize: 14.sp,
@@ -153,7 +153,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                     Expanded(
                       child: _buildSummaryCard(
                         imagePath: AppAssets.healthWeight,
-                        label: 'Weight',
+                        label: 'weight'.tr,
                         value: '${weight.toStringAsFixed(1)}kg',
                         valueColor: const Color(0xFF09B389),
                       ),
@@ -162,7 +162,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                     Expanded(
                       child: _buildSummaryCard(
                         imagePath: AppAssets.healthHeight,
-                        label: 'Height',
+                        label: 'height'.tr,
                         value: '${height.toStringAsFixed(0)}cm',
                         valueColor: const Color(0xFF09B389),
                       ),
@@ -171,8 +171,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                     Expanded(
                       child: _buildSummaryCard(
                         imagePath: AppAssets.lastUpdated,
-                        label: 'Last Updated',
-                        value: 'Today',
+                        label: 'last_updated'.tr,
+                        value: 'today'.tr,
                         valueColor: const Color(0xFF09B389),
                       ),
                     ),
@@ -182,7 +182,7 @@ class HealthInsightResultScreen extends StatelessWidget {
 
                 // What It Means Section
                 Text(
-                  'What It Means',
+                  'what_it_means'.tr,
                   style: TextStyle(
                     color: const Color(0xFF111827),
                     fontSize: 14.sp,
@@ -213,7 +213,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "You're doing great!",
+                              'youre_doing_great'.tr,
                               style: TextStyle(
                                 color: const Color(0xFF111827),
                                 fontSize: 11.sp,
@@ -241,7 +241,7 @@ class HealthInsightResultScreen extends StatelessWidget {
 
                 // Tips For You Section
                 Text(
-                  'Tips For You',
+                  'tips_for_you'.tr,
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w800,
@@ -251,20 +251,20 @@ class HealthInsightResultScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 _buildTipItem(
                   imagePath: AppAssets.veryActiveIcon,
-                  title: 'Stay Active',
-                  description: '30 minutes of exercise daily can improve your overall health.',
+                  title: 'stay_active'.tr,
+                  description: 'n_30_minutes_of_exercise_daily_can'.tr,
                 ),
                 SizedBox(height: 10.h),
                 _buildTipItem(
                   imagePath: AppAssets.eatHealthy,
-                  title: 'Eat Healthy',
-                  description: 'Choose balanced meals with more fruits, vegetables and whole grains.',
+                  title: 'eat_healthy'.tr,
+                  description: 'choose_balanced_meals_with_more_fruits'.tr,
                 ),
                 SizedBox(height: 10.h),
                 _buildTipItem(
                   imagePath: AppAssets.stayHydrated,
-                  title: 'Stay Hydrated',
-                  description: 'Drink enough water throughout the day to keep your body functioning well.',
+                  title: 'stay_hydrated'.tr,
+                  description: 'drink_enough_water_throughout_the_day'.tr,
                 ),
                 SizedBox(height: 24.h),
               ],

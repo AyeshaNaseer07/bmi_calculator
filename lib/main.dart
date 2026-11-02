@@ -7,6 +7,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -31,6 +32,7 @@ void main() async {
   Get.put<StorageService>(storageService, permanent: true);
 
   await LocalizationService.init();
+  LocalizationService.applyIntlLocale(storageService.getLanguage());
   final currentLocale = LocalizationService.getLocaleFromLanguage(
     storageService.getLanguage(),
   );
@@ -139,6 +141,12 @@ class BMIApp extends StatelessWidget {
           translations: LocalizationService(),
           locale: initialLocale,
           fallbackLocale: LocalizationService.fallbackLocale,
+          supportedLocales: LocalizationService.supportedLocales,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           initialRoute: AppPages.initial,
           getPages: AppPages.routes,
           navigatorObservers: [appRouteObserver],

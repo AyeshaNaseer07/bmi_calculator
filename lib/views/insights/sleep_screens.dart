@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/meal_plan_controller.dart';
 import 'insight_common.dart';
@@ -53,7 +54,7 @@ class SleepWellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Sleep Well, Live Better',
+      title: 'sleep_well_live_better'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -78,7 +79,7 @@ class SleepWellScreen extends StatelessWidget {
                   Icon(Icons.dark_mode, size: 14.sp, color: _kDeep),
                   SizedBox(width: 6.w),
                   Text(
-                    'RESTFUL SLEEP',
+                    'restful_sleep'.tr,
                     style: bodyStyle(
                       12,
                       color: _kDeep,
@@ -92,7 +93,7 @@ class SleepWellScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           Center(
             child: Text(
-              'Good sleep supports a healthy body and\nbalanced lifestyle.',
+              'good_sleep_supports_a_healthy_body'.tr,
               textAlign: TextAlign.center,
               style: bodyStyle(
                 15,
@@ -137,7 +138,7 @@ class SleepWellScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 6.w),
                         Text(
-                          'RECOMMENDED SLEEP',
+                          'recommended_sleep'.tr,
                           style: bodyStyle(
                             12,
                             color: _kDeep,
@@ -156,7 +157,7 @@ class SleepWellScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
-                        'Optimal Rest',
+                        'optimal_rest'.tr,
                         style: bodyStyle(
                           12,
                           color: _kDeep,
@@ -182,7 +183,7 @@ class SleepWellScreen extends StatelessWidget {
                                   style: headStyle(40, color: _kDeep),
                                 ),
                                 TextSpan(
-                                  text: 'Hours',
+                                  text: 'hours'.tr,
                                   style: headStyle(
                                     21,
                                     weight: FontWeight.w500,
@@ -193,7 +194,7 @@ class SleepWellScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Aim for consistent, quality sleep every night.',
+                            'aim_for_consistent_quality_sleep_every'.tr,
                             style: bodyStyle(
                               13.5,
                               color: AppPalette.textBody,
@@ -236,24 +237,24 @@ class SleepWellScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            'HEALTHY SLEEP ROUTINE',
+            'healthy_sleep_routine'.tr,
             style: headStyle(14.5, weight: FontWeight.w800),
           ),
           SizedBox(height: 10.h),
           _routine(
             AppAssets.regSchedule,
-            'Keep a Regular Schedule',
-            'Sleep and wake up around the same time.',
+            'keep_a_regular_schedule'.tr,
+            'sleep_and_wake_up_around_the'.tr,
           ),
           _routine(
             AppAssets.limitScreen,
-            'Limit Screen Time',
-            'Put your phone away before bedtime.',
+            'limit_screen_time'.tr,
+            'put_your_phone_away_before_bedtime'.tr,
           ),
           _routine(
             AppAssets.avoidCaffine,
-            'Avoid Late Caffeine',
-            'Choose caffeine-free drinks in the evening.',
+            'avoid_late_caffeine'.tr,
+            'choose_caffeine_free_drinks_in_the'.tr,
           ),
         ],
       ),

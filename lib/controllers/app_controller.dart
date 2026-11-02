@@ -78,6 +78,7 @@ class AppController extends GetxController {
   void changeLanguage(String code) {
     selectedLanguage.value = code;
     _storage.setLanguage(code);
+    LocalizationService.applyIntlLocale(code);
     final locale = LocalizationService.getLocaleFromLanguage(code);
     Get.updateLocale(locale);
   }

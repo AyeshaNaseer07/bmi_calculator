@@ -28,7 +28,7 @@ class WeightTrackingScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-          title: 'Weight Tracking',
+          title: 'weight_tracking'.tr,
           showBackButton: showBackButton,
         ),
         body: SafeArea(
@@ -89,7 +89,7 @@ class WeightTrackingScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Current weight',
+                              'current_weight_2'.tr,
                               style: TextStyle(
                                 color: AppPalette.textPrimary,
                                 fontSize: 14.sp,
@@ -168,7 +168,7 @@ class WeightTrackingScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              'Goal weight',
+                              'goal_weight_2'.tr,
                               style: TextStyle(
                                 color: AppPalette.textPrimary,
                                 fontSize: 14.sp,
@@ -195,7 +195,7 @@ class WeightTrackingScreen extends StatelessWidget {
 
                   // Add Weight CTA Button
                   CustomGradientButton(
-                    text: 'Add Weight',
+                    text: 'add_weight'.tr,
                     leadingIcon: Icon(
                       CupertinoIcons.plus_circle,
                       color: Colors.white,
@@ -218,7 +218,7 @@ class WeightTrackingScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Weight Progress',
+                              'weight_progress'.tr,
                               style: TextStyle(
                                 color: AppPalette.textPrimary,
                                 fontSize: 15.sp,
@@ -234,48 +234,53 @@ class WeightTrackingScreen extends StatelessWidget {
                               ),
 
                               child: Row(
-                                children: ['Week', 'Month', 'Year'].map((tab) {
-                                  final isSelected =
-                                      timeframe.toLowerCase() ==
-                                      tab.toLowerCase();
-                                  return GestureDetector(
-                                    onTap: () => controller.setTimeframe(tab),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w,
-                                        vertical: 4.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? AppPalette.surface
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(
-                                          8.r,
+                                children: ['week'.tr, 'month'.tr, 'year'.tr]
+                                    .map((tab) {
+                                      final isSelected =
+                                          timeframe.toLowerCase() ==
+                                          tab.toLowerCase();
+                                      return GestureDetector(
+                                        onTap: () =>
+                                            controller.setTimeframe(tab),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w,
+                                            vertical: 4.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? AppPalette.surface
+                                                : Colors.transparent,
+                                            borderRadius: BorderRadius.circular(
+                                              8.r,
+                                            ),
+                                            boxShadow: isSelected
+                                                ? [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withValues(
+                                                            alpha: 0.04,
+                                                          ),
+                                                      blurRadius: 4.r,
+                                                    ),
+                                                  ]
+                                                : null,
+                                          ),
+                                          child: Text(
+                                            tab,
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Inter',
+                                              color: isSelected
+                                                  ? const Color(0xFF33D2AB)
+                                                  : AppPalette.textSecondary,
+                                            ),
+                                          ),
                                         ),
-                                        boxShadow: isSelected
-                                            ? [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withValues(alpha: 0.04),
-                                                  blurRadius: 4.r,
-                                                ),
-                                              ]
-                                            : null,
-                                      ),
-                                      child: Text(
-                                        tab,
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Inter',
-                                          color: isSelected
-                                              ? const Color(0xFF33D2AB)
-                                              : AppPalette.textSecondary,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
+                                      );
+                                    })
+                                    .toList(),
                               ),
                             ),
                           ],
@@ -296,7 +301,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 5.w),
                             Text(
-                              'Current Weight',
+                              'current_weight'.tr,
                               style: TextStyle(
                                 color: AppPalette.textBody,
                                 fontSize: 11.sp,
@@ -316,7 +321,7 @@ class WeightTrackingScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 5.w),
                             Text(
-                              'Goal Weight',
+                              'goal_weight'.tr,
                               style: TextStyle(
                                 color: AppPalette.textBody,
                                 fontSize: 11.sp,
@@ -520,17 +525,17 @@ class WeightTrackingScreen extends StatelessWidget {
                             children: [
                               _buildProgressMetric(
                                 value: weekStr,
-                                label: 'This Week',
+                                label: 'this_week'.tr,
                               ),
                               _buildProgressDivider(),
                               _buildProgressMetric(
                                 value: monthStr,
-                                label: 'This Month',
+                                label: 'this_month'.tr,
                               ),
                               _buildProgressDivider(),
                               _buildProgressMetric(
                                 value: totalStr,
-                                label: 'Total Progress',
+                                label: 'total_progress'.tr,
                               ),
                             ],
                           ),
@@ -590,7 +595,7 @@ class WeightTrackingScreen extends StatelessWidget {
                   ),
                   SizedBox(width: 4.w),
                   Text(
-                    'Swipe to see the full graph',
+                    'swipe_to_see_the_full_graph'.tr,
                     style: TextStyle(
                       color: AppPalette.textSecondary,
                       fontSize: 10.sp,

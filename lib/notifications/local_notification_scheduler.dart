@@ -40,58 +40,58 @@ class LocalNotificationScheduler {
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
-  static final List<Map<String, String>> _messages = [
+  static List<Map<String, String>> get _messages => [
     {
-      'title': '⚖️ Time to log your weight!',
-      'body': 'Step on the scale and record your weight to keep your progress chart accurate.',
+      'title': 'time_to_log_your_weight'.tr,
+      'body': 'step_on_the_scale_and_record'.tr,
     },
     {
-      'title': '🎯 Check your BMI score today',
-      'body': 'Stay informed about your body mass index and see how close you are to your goal.',
+      'title': 'check_your_bmi_score_today'.tr,
+      'body': 'stay_informed_about_your_body_mass'.tr,
     },
     {
-      'title': '💧 Stay healthy & hydrated',
-      'body': 'Hydration fuels your metabolism. Drink a glass of water and check your BMI status.',
+      'title': 'stay_healthy_hydrated'.tr,
+      'body': 'hydration_fuels_your_metabolism_drink_a'.tr,
     },
     {
-      'title': '🔥 Consistency builds results!',
-      'body': 'Regular weigh-ins help you stay accountable and achieve long-term wellness.',
+      'title': 'consistency_builds_results'.tr,
+      'body': 'regular_weigh_ins_help_you_stay'.tr,
     },
     {
-      'title': '🍏 Daily health insight is ready',
-      'body': 'Discover wellness and nutrition tips tailored to support your health journey.',
+      'title': 'daily_health_insight_is_ready'.tr,
+      'body': 'discover_wellness_and_nutrition_tips_tailored'.tr,
     },
     {
-      'title': '📈 Track your progress & trends',
-      'body': 'View your history and charts to see how your body metrics are improving.',
+      'title': 'track_your_progress_trends'.tr,
+      'body': 'view_your_history_and_charts_to'.tr,
     },
     {
-      'title': '🏃 Time for a quick movement break!',
-      'body': 'A short walk or stretch boosts your energy and supports a healthy BMI.',
+      'title': 'time_for_a_quick_movement_break'.tr,
+      'body': 'a_short_walk_or_stretch_boosts'.tr,
     },
     {
-      'title': '💪 You are closer than you think!',
-      'body': 'Every healthy choice counts. Log your stats and keep your momentum going.',
+      'title': 'you_are_closer_than_you_think'.tr,
+      'body': 'every_healthy_choice_counts_log_your'.tr,
     },
     {
-      'title': '🥗 Fuel your body right',
-      'body': 'Nourish yourself with balanced meals to stay in your ideal health category.',
+      'title': 'fuel_your_body_right'.tr,
+      'body': 'nourish_yourself_with_balanced_meals_to'.tr,
     },
     {
-      'title': '☀️ Start your day with a check-in',
-      'body': 'A quick 5-second log this morning keeps your health journey on track.',
+      'title': 'start_your_day_with_a_check'.tr,
+      'body': 'a_quick_5_second_log_this'.tr,
     },
     {
-      'title': '🎯 Reach your ideal weight zone',
-      'body': 'Find out your recommended weight target and celebrate every milestone.',
+      'title': 'reach_your_ideal_weight_zone'.tr,
+      'body': 'find_out_your_recommended_weight_target'.tr,
     },
     {
-      'title': '🌙 Evening wellness reflection',
-      'body': 'Review your progress today and get ready for another healthy day tomorrow.',
+      'title': 'evening_wellness_reflection'.tr,
+      'body': 'review_your_progress_today_and_get'.tr,
     },
     {
-      'title': '✨ Small steps, big transformation',
-      'body': 'Consistency beats intensity. Open BMI Calculator to keep your streak alive.',
+      'title': 'small_steps_big_transformation'.tr,
+      'body': 'consistency_beats_intensity_open_bmi_calculator'.tr,
     },
   ];
 

@@ -9,6 +9,7 @@ import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_2_wrappers.dart';
 
+import 'localization_service.dart';
 import 'remote_config_service.dart';
 import 'subscription_service.dart';
 
@@ -287,9 +288,11 @@ class PriceService {
   }
 
   static String getCtaLabel(ProductDetails? selected) {
-    if (getEligibleTrialPeriod(selected) != null) return 'Start Free Trial';
+    if (getEligibleTrialPeriod(selected) != null) return 'start_free_trial'.tr;
     final text = RemoteConfigService.to.buttonText.trim();
-    if (text.isEmpty || text.toLowerCase().contains('trial')) return 'Continue';
-    return text;
+    if (text.isEmpty || text.toLowerCase().contains('trial')) {
+      return 'continue_btn'.tr;
+    }
+    return LocalizationService.trEnglish(text);
   }
 }

@@ -25,39 +25,39 @@ class ActivityLevelScreen extends StatelessWidget {
       (
         ActivityLevel.sedentary,
         AppAssets.sedentaryIcon,
-        'Sedentary',
-        'Little or no exercise. Desk job or spending most of the day sitting.',
+        'sedentary'.tr,
+        'little_or_no_exercise_desk_job'.tr,
       ),
       (
         ActivityLevel.lightlyActive,
         AppAssets.lightActiveIcon,
-        'Lightly Active',
-        'Light exercise or sports 1-3 days per week.',
+        'lightly_active'.tr,
+        'light_exercise_or_sports_1_3'.tr,
       ),
       (
         ActivityLevel.moderatelyActive,
         AppAssets.moderateActiveIcon,
-        'Moderately Active',
-        'Moderate exercise or sports 3-5 days per week.',
+        'moderately_active'.tr,
+        'moderate_exercise_or_sports_3_5'.tr,
       ),
       (
         ActivityLevel.veryActive,
         AppAssets.veryActiveIcon,
-        'Very Active',
-        'Hard exercise or sports 6-7 days per week.',
+        'very_active'.tr,
+        'hard_exercise_or_sports_6_7'.tr,
       ),
       (
         ActivityLevel.extraActive,
         AppAssets.extraActiveIcon,
-        'Extra Active',
-        'Very hard exercise, physical job or training twice a day',
+        'extra_active'.tr,
+        'very_hard_exercise_physical_job_or'.tr,
       ),
     ];
 
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'Activity Level'),
+        appBar: CustomAppBar(title: 'activity_level'.tr),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -91,7 +91,7 @@ class ActivityLevelScreen extends StatelessWidget {
                         SizedBox(width: 14.w),
                         Expanded(
                           child: Text(
-                            'Select your daily activity level\nto get better insights.',
+                            'select_your_daily_activity_level_to'.tr,
                             style: TextStyle(
                               color: const Color(0xFF4B5563),
                               fontSize: 14.sp,
@@ -197,7 +197,7 @@ class ActivityLevelScreen extends StatelessWidget {
 
                   // Continue Button
                   CustomGradientButton(
-                    text: 'Continue',
+                    text: 'continue_btn'.tr,
                     backgroundImage: AppAssets.btnRectangle,
                     onPressed: selected != null ? () => Get.back() : null,
                   ),

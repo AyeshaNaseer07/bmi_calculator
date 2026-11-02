@@ -109,9 +109,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 else
                   _buildContentSlide(
                     imagePath: AppAssets.onboarding1,
-                    titlePrefix: 'BMI ',
-                    titleHighlight: 'Calculator',
-                    subtitle: 'Track your BMI, monitor your progress,\nand stay healthy with personalized insights.',
+                    titlePrefix: 'bmi'.tr,
+                    titleHighlight: 'calculator'.tr,
+                    subtitle: 'track_your_bmi_monitor_your_progress'.tr,
                   ),
 
                 // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
@@ -120,17 +120,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 // Page 2: Weight Tracking (iPhone 13 mini - 65)
                 _buildContentSlide(
                   imagePath: AppAssets.onboarding2,
-                  titlePrefix: 'Weight ',
-                  titleHighlight: 'Tracking',
-                  subtitle: 'Monitor your daily, weekly and monthly\nweight journey effortlessly',
+                  titlePrefix: 'weight_2'.tr,
+                  titleHighlight: 'tracking'.tr,
+                  subtitle: 'monitor_your_daily_weekly_and_monthly'.tr,
                 ),
 
                 // Page 3: Health Insights (iPhone 13 mini - 63)
                 _buildContentSlide(
                   imagePath: AppAssets.onboarding3,
-                  titlePrefix: 'Health ',
-                  titleHighlight: 'Insights',
-                  subtitle: 'Get personalized insights to build\nhealthier habits every day.',
+                  titlePrefix: 'health'.tr,
+                  titleHighlight: 'insights'.tr,
+                  subtitle: 'get_personalized_insights_to_build_healthier'.tr,
                 ),
               ],
             ),
@@ -208,10 +208,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
               ),
-              children: const [
-                TextSpan(text: 'BMI '),
+              children: [
+                TextSpan(text: 'bmi'.tr),
                 TextSpan(
-                  text: 'Calculator',
+                  text: 'calculator'.tr,
                   style: TextStyle(color: Color(0xFF24CCA7)),
                 ),
               ],
@@ -223,7 +223,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Text(
-              'Track your BMI, monitor your progress,\nand stay healthy with personalized insights.',
+              'track_your_bmi_monitor_your_progress'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black.withValues(alpha: 0.85),
@@ -393,7 +393,7 @@ class _AnimatedGradientNextButtonState
   @override
   Widget build(BuildContext context) {
     return AnimatedCtaButton(
-      text: 'Next',
+      text: 'next'.tr,
       backgroundImage: AppAssets.btnRectangle,
       borderRadius: BorderRadius.circular(12.r),
       trailingIcon: Image.asset(

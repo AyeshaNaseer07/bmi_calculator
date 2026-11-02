@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 enum Gender {
   male,
   female,
@@ -6,11 +8,11 @@ enum Gender {
   String get displayName {
     switch (this) {
       case Gender.male:
-        return 'Male';
+        return 'male'.tr;
       case Gender.female:
-        return 'Female';
+        return 'female'.tr;
       case Gender.other:
-        return 'Other';
+        return 'other'.tr;
     }
   }
 }
@@ -25,30 +27,30 @@ enum ActivityLevel {
   String get title {
     switch (this) {
       case ActivityLevel.sedentary:
-        return 'Sedentary';
+        return 'sedentary'.tr;
       case ActivityLevel.lightlyActive:
-        return 'Lightly Active';
+        return 'lightly_active'.tr;
       case ActivityLevel.moderatelyActive:
-        return 'Moderately Active';
+        return 'moderately_active'.tr;
       case ActivityLevel.veryActive:
-        return 'Very Active';
+        return 'very_active'.tr;
       case ActivityLevel.extraActive:
-        return 'Extra Active';
+        return 'extra_active'.tr;
     }
   }
 
   String get description {
     switch (this) {
       case ActivityLevel.sedentary:
-        return 'Little or no exercise. Desk job or spending most of the day sitting.';
+        return 'little_or_no_exercise_desk_job'.tr;
       case ActivityLevel.lightlyActive:
-        return 'Light exercise or sports 1-3 days per week.';
+        return 'light_exercise_or_sports_1_3'.tr;
       case ActivityLevel.moderatelyActive:
-        return 'Moderate exercise or sports 3-5 days per week.';
+        return 'moderate_exercise_or_sports_3_5'.tr;
       case ActivityLevel.veryActive:
-        return 'Hard exercise or sports 6-7 days per week.';
+        return 'hard_exercise_or_sports_6_7'.tr;
       case ActivityLevel.extraActive:
-        return 'Very hard exercise, physical job or training twice a day';
+        return 'very_hard_exercise_physical_job_or'.tr;
     }
   }
 }
@@ -62,26 +64,26 @@ enum HealthGoal {
   String get title {
     switch (this) {
       case HealthGoal.loseWeight:
-        return 'Lose Weight';
+        return 'lose_weight'.tr;
       case HealthGoal.buildMuscle:
-        return 'Build Muscle';
+        return 'build_muscle'.tr;
       case HealthGoal.maintainWeight:
-        return 'Maintain Weight';
+        return 'maintain_weight'.tr;
       case HealthGoal.improveHealth:
-        return 'Improve Health';
+        return 'improve_health'.tr;
     }
   }
 
   String get description {
     switch (this) {
       case HealthGoal.loseWeight:
-        return 'I want to lose weight and improve my health.';
+        return 'i_want_to_lose_weight_and'.tr;
       case HealthGoal.buildMuscle:
-        return 'I want to build muscle and gain strength.';
+        return 'i_want_to_build_muscle_and'.tr;
       case HealthGoal.maintainWeight:
-        return 'I want to maintain my current weight and stay healthy.';
+        return 'i_want_to_maintain_my_current'.tr;
       case HealthGoal.improveHealth:
-        return 'I want to improve my overall health and wellness.';
+        return 'i_want_to_improve_my_overall'.tr;
     }
   }
 }
@@ -93,9 +95,9 @@ enum UnitSystem {
   String get title {
     switch (this) {
       case UnitSystem.metric:
-        return 'Metric (kg, cm)';
+        return 'metric_kg_cm'.tr;
       case UnitSystem.imperial:
-        return 'Imperial (lb, ft/in)';
+        return 'imperial_lb_ft_in'.tr;
     }
   }
 }

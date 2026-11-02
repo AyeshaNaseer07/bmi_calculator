@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 import '../models/bmi_record_model.dart';
 import '../models/user_profile_model.dart' show ActivityLevel;
 
@@ -52,19 +54,25 @@ class CalorieService {
     switch (r.category) {
       case BMICategory.underweight:
         adjust = isMinor ? 0 : 400;
-        goal = isMinor ? 'Support healthy growth' : 'Gain weight gradually';
+        goal = isMinor
+            ? 'support_healthy_growth'.tr
+            : 'gain_weight_gradually'.tr;
         break;
       case BMICategory.normal:
         adjust = 0;
-        goal = 'Maintain your weight';
+        goal = 'maintain_your_weight'.tr;
         break;
       case BMICategory.overweight:
         adjust = isMinor ? 0 : -400;
-        goal = isMinor ? 'Support healthy growth' : 'Lose weight gradually';
+        goal = isMinor
+            ? 'support_healthy_growth'.tr
+            : 'lose_weight_gradually'.tr;
         break;
       case BMICategory.obese:
         adjust = isMinor ? 0 : -500;
-        goal = isMinor ? 'Support healthy growth' : 'Lose weight gradually';
+        goal = isMinor
+            ? 'support_healthy_growth'.tr
+            : 'lose_weight_gradually'.tr;
         break;
     }
 

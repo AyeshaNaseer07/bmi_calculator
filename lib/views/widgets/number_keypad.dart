@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import '../../core/theme/app_palette.dart';
 
@@ -265,8 +266,8 @@ class _NumberKeypad extends StatelessWidget {
                     onTap: target.onOk,
                     color: _green,
                     height: _keyHeight * 3 + _gap * 2,
-                    child: const Text(
-                      'OK',
+                    child: Text(
+                      'ok'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

@@ -18,15 +18,15 @@ class _RateUsDialogState extends State<RateUsDialog> {
   String _getRatingDescription(int rating) {
     switch (rating) {
       case 1:
-        return 'Needs Work';
+        return 'needs_work'.tr;
       case 2:
-        return 'Could Be Better';
+        return 'could_be_better'.tr;
       case 3:
-        return 'Good';
+        return 'good'.tr;
       case 4:
-        return 'Great!';
+        return 'great'.tr;
       case 5:
-        return 'Loved It! ⭐';
+        return 'loved_it'.tr;
       default:
         return '';
     }
@@ -68,7 +68,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
             ),
             SizedBox(height: 14.h),
             Text(
-              'Rate Your Experience',
+              'rate_your_experience'.tr,
               style: TextStyle(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w700,
@@ -80,7 +80,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Text(
-                'Your rating helps us improve and deliver the best health experience for you!',
+                'your_rating_helps_us_improve_and'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12.sp,
@@ -135,7 +135,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
                     ),
                     onPressed: () => Get.back(),
                     child: Text(
-                      'Maybe Later',
+                      'maybe_later'.tr,
                       style: TextStyle(
                         color: AppColors.textLight,
                         fontWeight: FontWeight.w600,
@@ -158,8 +158,10 @@ class _RateUsDialogState extends State<RateUsDialog> {
                     onPressed: () {
                       Get.back();
                       Get.snackbar(
-                        'Thank You!',
-                        'We appreciate your $_selectedRating-star rating and support!',
+                        'thank_you'.tr,
+                        'rating_thanks'.trParams({
+                          'rating': '$_selectedRating',
+                        }),
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: const Color(0xFF10B981),
                         colorText: Colors.white,
@@ -169,7 +171,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
                       );
                     },
                     child: Text(
-                      'Submit',
+                      'submit'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,

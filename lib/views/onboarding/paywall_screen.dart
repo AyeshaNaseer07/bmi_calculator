@@ -143,7 +143,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       await PremiumCongratsDialog.show(isRestore: true);
       _leavePaywall();
     } else {
-      Get.snackbar('Restore', 'No previous purchase found.');
+      Get.snackbar('restore'.tr, 'no_previous_purchase_found'.tr);
     }
   }
 
@@ -151,10 +151,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
       PriceService.offerFor(slot, _appController.remoteConfigService, _prices);
 
   String _breakdown(PlanOffer o) => switch (o.type) {
-    PlanType.yearly => '${o.price.perMonth(o.type)} / month',
-    PlanType.monthly => '${o.price.perWeek(o.type)} / week',
-    PlanType.weekly => '${o.price.perDay(o.type)} / day',
-    PlanType.lifetime => 'One-time payment',
+    PlanType.yearly => 'price_per_month'.trParams({
+      'price': o.price.perMonth(o.type),
+    }),
+    PlanType.monthly => 'price_per_week'.trParams({
+      'price': o.price.perWeek(o.type),
+    }),
+    PlanType.weekly => 'price_per_day'.trParams({
+      'price': o.price.perDay(o.type),
+    }),
+    PlanType.lifetime => 'one_time_payment'.tr,
   };
 
   @override
@@ -210,7 +216,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Unlock ',
+                                    text: 'unlock'.tr,
                                     style: TextStyle(
                                       color: AppPalette.textPrimary,
                                       fontSize: 32.sp,
@@ -219,7 +225,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: 'Premium',
+                                    text: 'premium'.tr,
                                     style: TextStyle(
                                       color: _green,
                                       fontSize: 32.sp,
@@ -274,7 +280,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           ),
                           SizedBox(width: 6.w),
                           Text(
-                            'PREMIUM HEALTH PASS',
+                            'premium_health_pass'.tr,
                             style: TextStyle(
                               color: _badgeText,
                               fontSize: 12.sp,
@@ -316,27 +322,27 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             children: [
                               _buildFeatureRow(
                                 imagePath: AppAssets.preIcon1,
-                                title: 'Unlimited BMI History',
+                                title: 'unlimited_bmi_history'.tr,
                               ),
                               _buildFeatureDivider(),
                               _buildFeatureRow(
                                 imagePath: AppAssets.preIcon2,
-                                title: 'Personalized Meal Plan',
+                                title: 'personalized_meal_plan'.tr,
                               ),
                               _buildFeatureDivider(),
                               _buildFeatureRow(
                                 imagePath: AppAssets.preIcon3,
-                                title: 'Weight Progress Analytics',
+                                title: 'weight_progress_analytics'.tr,
                               ),
                               _buildFeatureDivider(),
                               _buildFeatureRow(
                                 imagePath: AppAssets.preIcon4,
-                                title: 'Your Healthy Weight Plan',
+                                title: 'your_healthy_weight_plan'.tr,
                               ),
                               _buildFeatureDivider(),
                               _buildFeatureRow(
                                 imagePath: AppAssets.preIcon5,
-                                title: 'Ad-Free Experience',
+                                title: 'ad_free_experience'.tr,
                               ),
                             ],
                           ),
@@ -352,7 +358,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         Expanded(
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.monthly,
-                            title: '${left.type.title} Plan',
+                            title: '${left.type.name}_plan'.tr,
                             price: _pricesLoading ? '' : left.price.priceString,
                             period: _pricesLoading ? '' : _breakdown(left),
                             showBestValue: leftIsBest,
@@ -383,7 +389,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                'OR',
+                                'or_caps'.tr,
                                 style: TextStyle(
                                   color: _green,
                                   fontSize: 9.sp,
@@ -397,7 +403,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         Expanded(
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.yearly,
-                            title: '${right.type.title} Plan',
+                            title: '${right.type.name}_plan'.tr,
                             price: _pricesLoading
                                 ? ''
                                 : right.price.priceString,
@@ -471,7 +477,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Text(
-                            'Cancel Anytime',
+                            'cancel_anytime'.tr,
                             style: TextStyle(
                               color: AppPalette.textSecondary,
                               fontSize: 12.sp,
@@ -495,14 +501,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _buildFooterLink(
-                            'Privacy Policy',
+                            'privacy_policy'.tr,
                             () => openUrl(AppStrings.privacyPolicyUrl),
                           ),
                           _buildFooterDivider(),
-                          _buildFooterLink('Restore Purchase', _onRestore),
+                          _buildFooterLink('restore_purchase'.tr, _onRestore),
                           _buildFooterDivider(),
                           _buildFooterLink(
-                            'Terms of Use',
+                            'terms_of_use'.tr,
                             () => openUrl(AppStrings.termsUrl),
                           ),
                         ],
@@ -629,7 +635,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ),
                                   SizedBox(width: 3.w),
                                   Text(
-                                    'BEST VALUE',
+                                    'best_value'.tr,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 7.5.sp,

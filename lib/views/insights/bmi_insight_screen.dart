@@ -74,13 +74,13 @@ _Variant _variantFor(BMICategory c) {
   switch (c) {
     case BMICategory.normal:
       return _Variant(
-        screenTitle: 'Maintain Your BMI',
-        planTitle: 'How to Maintain Your BMI',
-        chip: 'NORMAL',
+        screenTitle: 'maintain_your_bmi'.tr,
+        planTitle: 'how_to_maintain_your_bmi'.tr,
+        chip: 'normal'.tr.toUpperCase(),
         chipBg: const Color(0xFFE3F8F1),
         chipFg: Color(0xFF09B389),
         range: '18.5 – 24.9',
-        message: 'Keep up your healthy routine!',
+        message: 'keep_up_your_healthy_routine'.tr,
         messageColor: Color(0xFF09B389),
         image: AppAssets.insightNormal,
         art: _HeroArt(1065 / 456),
@@ -92,13 +92,13 @@ _Variant _variantFor(BMICategory c) {
       );
     case BMICategory.underweight:
       return _Variant(
-        screenTitle: 'Improve Your BMI',
-        planTitle: 'Your Healthy Weight Plan',
-        chip: 'UNDERWEIGHT',
+        screenTitle: 'improve_your_bmi'.tr,
+        planTitle: 'your_healthy_weight_plan'.tr,
+        chip: 'underweight'.tr.toUpperCase(),
         chipBg: const Color(0xFFE3F1FB),
         chipFg: const Color(0xFF0A8FD6),
-        range: 'Below 18.5',
-        message: 'Your BMI is below the healthy range.',
+        range: 'below_18_5'.tr,
+        message: 'your_bmi_is_below_the_healthy'.tr,
         messageColor: const Color(0xFF0A8FD6),
         image: AppAssets.insightUnder,
         art: _HeroArt(1065 / 507),
@@ -108,24 +108,24 @@ _Variant _variantFor(BMICategory c) {
         barText: const Color(0xFF0A6FB0),
         whyBorder: const Color(0xFFD3E8F8),
         gain: true,
-        whyTitle: 'Why You May Be Underweight?',
+        whyTitle: 'why_you_may_be_underweight'.tr,
         whyBullets: [
-          'Not getting enough calories or nutrients',
-          'Skipping meals or having a low appetite',
-          'High physical activity without enough food',
-          'Stress or lifestyle changes',
-          'Certain health conditions can also affect weight',
+          'not_getting_enough_calories_or_nutrients'.tr,
+          'skipping_meals_or_having_a_low'.tr,
+          'high_physical_activity_without_enough_food'.tr,
+          'stress_or_lifestyle_changes'.tr,
+          'certain_health_conditions_can_also_affect'.tr,
         ],
       );
     case BMICategory.overweight:
       return _Variant(
-        screenTitle: 'Improve Your BMI',
-        planTitle: 'How to Improve Your BMI',
-        chip: 'OVERWEIGHT',
+        screenTitle: 'improve_your_bmi'.tr,
+        planTitle: 'how_to_improve_your_bmi'.tr,
+        chip: 'overweight'.tr.toUpperCase(),
         chipBg: const Color(0xFFFFEFC2),
         chipFg: const Color(0xFFB45309),
         range: '25.0–29.9',
-        message: 'Your BMI is above the healthy range.',
+        message: 'your_bmi_is_above_the_healthy'.tr,
         messageColor: const Color(0xFF9A4A0C),
         image: AppAssets.insightOver,
         art: _HeroArt(1065 / 510),
@@ -134,24 +134,24 @@ _Variant _variantFor(BMICategory c) {
         barFill: const Color(0xFF8A3B0E),
         barText: const Color(0xFF7A3A0A),
         whyBorder: const Color(0xFFD3E8F8),
-        whyTitle: 'Why You May Be Overweight?',
+        whyTitle: 'why_you_may_be_overweight'.tr,
         whyBullets: [
-          'Eating more calories than your body needs.',
-          'Lack of regular physical activity.',
-          'Consuming too many sugary or processed foods.',
-          'Poor sleep and high stress.',
-          'Hormonal changes or certain medical conditions.',
+          'eating_more_calories_than_your_body'.tr,
+          'lack_of_regular_physical_activity'.tr,
+          'consuming_too_many_sugary_or_processed'.tr,
+          'poor_sleep_and_high_stress'.tr,
+          'hormonal_changes_or_certain_medical_conditions'.tr,
         ],
       );
     case BMICategory.obese:
       return _Variant(
-        screenTitle: 'Improve Your BMI',
-        planTitle: 'How to Improve Your BMI',
-        chip: 'OBESE',
+        screenTitle: 'improve_your_bmi'.tr,
+        planTitle: 'how_to_improve_your_bmi'.tr,
+        chip: 'obese'.tr.toUpperCase(),
         chipBg: const Color(0xFFFDE4E4),
         chipFg: const Color(0xFFC01818),
         range: '30.0-34.9',
-        message: 'Your BMI is above the healthy range.',
+        message: 'your_bmi_is_above_the_healthy'.tr,
         messageColor: const Color(0xFFC01818),
         image: AppAssets.insightObese,
         art: _HeroArt(1056 / 537),
@@ -160,11 +160,11 @@ _Variant _variantFor(BMICategory c) {
         barFill: const Color(0xFFB91C1C),
         barText: const Color(0xFFB91C1C),
         whyBorder: const Color(0xFFF8D4D4),
-        whyTitle: 'Why You’re in the Obese Range?',
+        whyTitle: 'why_youre_in_the_obese_range'.tr,
         whyBullets: [
-          'Weight is high compared to your height.',
-          'Low physical activity can contribute to weight gain.',
-          'Eating habits, sleep, genetics, and other factors may also play a role.',
+          'weight_is_high_compared_to_your'.tr,
+          'low_physical_activity_can_contribute_to'.tr,
+          'eating_habits_sleep_genetics_and_other'.tr,
         ],
       );
   }
@@ -221,7 +221,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                     children: [
                       _buildHero(v),
                       Text(
-                        'Your Weight Progress',
+                        'your_weight_progress'.tr,
                         style: TextStyle(
                           color: AppPalette.textPrimary,
                           fontSize: 16,
@@ -419,14 +419,14 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               weightCol(
-                'Current Weight',
+                'current_weight'.tr,
                 current,
                 v.weightColor,
                 CrossAxisAlignment.start,
               ),
               Image.asset(AppAssets.insightRise, width: 40.w, height: 40.w),
               weightCol(
-                isNormal ? 'Healthy Range' : 'Healthy Target',
+                isNormal ? 'healthy_range'.tr : 'healthy_target'.tr,
                 target,
                 const Color(0xFF09B389),
                 CrossAxisAlignment.end,
@@ -448,7 +448,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 ),
               ),
               child: Text(
-                'You’re in the healthy BMI range',
+                'youre_in_the_healthy_bmi_range'.tr,
                 style: TextStyle(
                   color: const Color(0xFF09B389),
                   fontSize: 12,
@@ -471,7 +471,10 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               child: Row(
                 children: [
                   Text(
-                    '${v.gain ? '+' : '−'} $diff kg to healthy',
+                    'kg_to_healthy'.trParams({
+                      'sign': v.gain ? '+' : '−',
+                      'diff': '$diff',
+                    }),
                     style: bodyStyle(
                       12,
                       color: v.barText,
@@ -517,8 +520,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 child: _TipCard(
                   icon: AppAssets.mealIcon,
                   tile: const Color(0xFFE6F8EE),
-                  title: 'Eat Balanced Meals',
-                  subtitle: 'Choose balanced, nutritious foods.',
+                  title: 'eat_balanced_meals'.tr,
+                  subtitle: 'choose_balanced_nutritious_foods'.tr,
                   onTap: () => Get.to(() => const EatBalancedMealsScreen()),
                 ),
               ),
@@ -527,8 +530,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 child: _TipCard(
                   icon: AppAssets.tipHydrated,
                   tile: const Color(0xFFEAF1FD),
-                  title: 'Stay Hydrated',
-                  subtitle: 'Drink enough water daily.',
+                  title: 'stay_hydrated'.tr,
+                  subtitle: 'drink_enough_water_daily'.tr,
                   onTap: () => Get.to(() => const StayHydratedScreen()),
                 ),
               ),
@@ -544,8 +547,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 child: _TipCard(
                   icon: AppAssets.tipActive,
                   tile: const Color(0xFFFFF7DC),
-                  title: 'Stay Active',
-                  subtitle: 'Move your body every day.',
+                  title: 'stay_active'.tr,
+                  subtitle: 'move_your_body_every_day'.tr,
                   onTap: () => Get.to(() => const StayActiveScreen()),
                 ),
               ),
@@ -554,9 +557,10 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 child: _TipCard(
                   icon: AppAssets.tipSleep,
                   tile: const Color(0xFFEBEEFD),
-                  title: 'Sleep Well',
-                  subtitle:
-                      'Aim for ${PersonalTargets.sleepText(widget.record.age)} hours nightly.',
+                  title: 'sleep_well'.tr,
+                  subtitle: 'aim_for_hours_nightly'.trParams({
+                    'hours': PersonalTargets.sleepText(widget.record.age),
+                  }),
                   onTap: () => Get.to(() => const SleepWellScreen()),
                 ),
               ),

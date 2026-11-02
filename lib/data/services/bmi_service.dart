@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 import 'dart:math';
 
 import '../models/bmi_record_model.dart';
@@ -8,7 +10,7 @@ class BMIService {
     required double heightCm,
   }) {
     if (heightCm <= 0 || weightKg <= 0) {
-      throw ArgumentError('Height and weight must be greater than zero.');
+      throw ArgumentError('height_and_weight_must_be_greater'.tr);
     }
     final heightMeters = heightCm / 100.0;
     final bmi = weightKg / pow(heightMeters, 2);

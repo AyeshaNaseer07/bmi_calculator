@@ -129,7 +129,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(title: 'Add My Data'),
+        appBar: CustomAppBar(title: 'add_my_data'.tr),
         bottomNavigationBar: const NumberKeypadHost(),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -173,7 +173,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Your Health Insights',
+                                'your_health_insights'.tr,
                                 style: TextStyle(
                                   color: const Color(0xFF111827),
                                   fontSize: 16.sp,
@@ -183,7 +183,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                               ),
                               SizedBox(height: 5.h),
                               Text(
-                                'Add accurate details to receive\nbetter insights and track your\nhealth journey.',
+                                'add_accurate_details_to_receive_better'.tr,
                                 style: TextStyle(
                                   color: const Color(0xFF4B5563),
                                   fontSize: 12.5.sp,
@@ -201,11 +201,11 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 16.h),
 
                   // Full Name
-                  _buildFieldLabel('Full Name'),
+                  _buildFieldLabel('full_name'.tr),
                   _buildTextInput(
                     controller: _controller.fullNameController,
                     focusNode: _nameFocusNode,
-                    hint: 'Enter your full name',
+                    hint: 'enter_your_full_name'.tr,
                     keyboardType: TextInputType.name,
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.next,
@@ -214,11 +214,11 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 12.h),
 
                   // Age
-                  _buildFieldLabel('Age'),
+                  _buildFieldLabel('age'.tr),
                   _buildTextInput(
                     controller: _controller.ageController,
                     focusNode: _ageFocusNode,
-                    hint: 'Enter age',
+                    hint: 'enter_age'.tr,
                     keyboardType: _ageKeypad.keyboardType,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (_) => _heightFocusNode.requestFocus(),
@@ -235,7 +235,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildFieldLabel('Gender'),
+                            _buildFieldLabel('gender'.tr),
                             Theme(
                               data: Theme.of(context).copyWith(
                                 popupMenuTheme: const PopupMenuThemeData(
@@ -294,7 +294,8 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        selectedGender?.displayName ?? 'Select',
+                                        selectedGender?.displayName ??
+                                            'select'.tr,
                                         style: TextStyle(
                                           fontSize: 13.sp,
                                           fontWeight: selectedGender != null
@@ -328,11 +329,11 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildFieldLabel('Height', unit: '(cm)'),
+                            _buildFieldLabel('height'.tr, unit: '(cm)'),
                             _buildTextInput(
                               controller: _controller.heightController,
                               focusNode: _heightFocusNode,
-                              hint: 'Enter height (152 cm)',
+                              hint: 'enter_height_152_cm'.tr,
                               keyboardType: _heightKeypad.keyboardType,
                               textInputAction: TextInputAction.next,
                               onSubmitted: (_) =>
@@ -346,11 +347,11 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 12.h),
 
                   // Weight
-                  _buildFieldLabel('Weight', unit: '(kg)'),
+                  _buildFieldLabel('weight'.tr, unit: '(kg)'),
                   _buildTextInput(
                     controller: _controller.weightController,
                     focusNode: _weightFocusNode,
-                    hint: 'Enter Weight (65.7 kg)',
+                    hint: 'enter_weight_65_7_kg'.tr,
                     isError: _isWeightExceeded,
                     keyboardType: _weightKeypad.keyboardType,
                     textInputAction: TextInputAction.done,
@@ -367,7 +368,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         ),
                         SizedBox(width: 5.w),
                         Text(
-                          'Weight cannot exceed 120 kg.',
+                          'weight_cannot_exceed_120_kg'.tr,
                           style: TextStyle(
                             color: const Color(0xFFEF4444),
                             fontSize: 12.sp,
@@ -381,7 +382,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 12.h),
 
                   // Activity Level Selector Button
-                  _buildFieldLabel('Activity Level'),
+                  _buildFieldLabel('activity_level'.tr),
                   GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.activityLevel),
                     child: Container(
@@ -398,7 +399,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         children: [
                           Text(
                             selectedActivity?.title ??
-                                'Select your activity level',
+                                'select_your_activity_level'.tr,
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: selectedActivity != null
@@ -421,7 +422,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 12.h),
 
                   // Goal Selector Button
-                  _buildFieldLabel('Goal'),
+                  _buildFieldLabel('goal'.tr),
                   GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.yourGoal),
                     child: Container(
@@ -437,7 +438,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            selectedGoal?.title ?? 'Select your goal',
+                            selectedGoal?.title ?? 'select_your_goal'.tr,
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: selectedGoal != null
@@ -462,8 +463,8 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   // Action Button ("Continue" if no records, "Save & Get Insights" if records exist)
                   CustomGradientButton(
                     text: _controller.hasRecords
-                        ? 'Save & Get Insights'
-                        : 'Continue',
+                        ? 'save_get_insights'.tr
+                        : 'continue_btn'.tr,
                     backgroundImage: AppAssets.btnRectangle,
                     onPressed: _isFormValid ? _onSave : null,
                   ),

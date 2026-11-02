@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../data/models/user_profile_model.dart' show ActivityLevel;
 import '../../data/models/bmi_record_model.dart';
@@ -23,7 +24,9 @@ class ActivityDay {
     required this.minutes,
   });
 
-  String get chip => minutes == 0 ? 'Recovery' : '$minutes min';
+  String get chip => minutes == 0
+      ? 'recovery'.tr
+      : 'minutes_short'.trParams({'min': '$minutes'});
 }
 
 class _Base {
@@ -246,9 +249,9 @@ class ActivityPlanData {
       for (int i = 0; i < 7; i++)
         ActivityDay(
           key: '${cat.name}_${_days[i].toLowerCase()}',
-          dayLabel: _days[i],
-          title: base[i].title,
-          blurb: base[i].blurb,
+          dayLabel: _days[i].toLowerCase().tr,
+          title: base[i].title.tr,
+          blurb: base[i].blurb.tr,
           icon: base[i].icon,
           minutes: base[i].minutes == 0
               ? 0
@@ -261,7 +264,7 @@ class ActivityPlanData {
   static ActivityDay today(BMICategory cat, ActivityLevel level) =>
       weekFor(cat, level)[DateTime.now().weekday - 1];
 
-  static String tipFor(BMICategory cat) => _tips[cat]!;
+  static String tipFor(BMICategory cat) => _tips[cat]!.tr;
 
   static int weeklyMinutes(BMICategory cat, ActivityLevel level) =>
       weekFor(cat, level).fold(0, (a, d) => a + d.minutes);

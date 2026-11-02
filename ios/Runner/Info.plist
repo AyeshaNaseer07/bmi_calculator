@@ -6,6 +6,25 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>es</string>
+		<string>pt</string>
+		<string>fr</string>
+		<string>de</string>
+		<string>it</string>
+		<string>nl</string>
+		<string>sv</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>zh</string>
+		<string>hi</string>
+		<string>ar</string>
+		<string>ur</string>
+		<string>tr</string>
+		<string>ru</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Bmi Calculator</string>
 	<key>CFBundleExecutable</key>

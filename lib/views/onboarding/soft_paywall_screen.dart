@@ -50,26 +50,17 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   Color get _ringBorder => const Color(0xFFB4E4D7);
   Color get _lineColor => const Color(0xFFD1D5DB);
 
-  static const _features = <(String, String)>[
+  static List<(String, String)> get _features => [
     (
-      '7-Day Personalized Meal Plan',
-      'Breakfast, lunch & dinner planned\nfor every day.',
+      'n_7_day_personalized_meal_plan'.tr,
+      'breakfast_lunch_dinner_planned_for_every'.tr,
     ),
+    ('meal_benefits_nutrition'.tr, 'see_the_benefits_and_nutrition_of'.tr),
+    ('ingredients_for_every_meal'.tr, 'get_a_clear_ingredient_list_for'.tr),
+    ('mark_meals_as_eaten'.tr, 'track_each_breakfast_lunch_dinner_as'.tr),
     (
-      'Meal Benefits & Nutrition',
-      'See the benefits and nutrition\nof every meal.',
-    ),
-    (
-      'Ingredients for Every Meal',
-      'Get a clear ingredient list for\neasy preparation.',
-    ),
-    (
-      'Mark Meals as Eaten',
-      'Track each breakfast, lunch & dinner\nas you complete it.',
-    ),
-    (
-      'Track Your Weekly Progress',
-      'See your progress based on\ncompleted meals.',
+      'track_your_weekly_progress'.tr,
+      'see_your_progress_based_on_completed'.tr,
     ),
   ];
 
@@ -123,15 +114,16 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
       Get.back();
       widget.onUnlocked?.call();
     } else {
-      Get.snackbar('Restore', 'No previous purchase found.');
+      Get.snackbar('restore'.tr, 'no_previous_purchase_found'.tr);
     }
   }
 
   PlanOffer _offer(SubscriptionPlan slot) =>
       PriceService.offerFor(slot, _app.remoteConfigService, _prices);
 
-  String _period(PlanOffer o) =>
-      o.type.periodWord == null ? 'One-time' : '1 / ${o.type.periodWord}';
+  String _period(PlanOffer o) => o.type.periodWord == null
+      ? 'one_time'.tr
+      : 'one_per_${o.type.periodWord}'.tr;
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +188,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                     _badge(),
                     SizedBox(height: 8.h),
                     Text(
-                      'Better Meals  •  Healthier You',
+                      'better_meals_healthier_you'.tr,
                       style: TextStyle(
                         color: AppPalette.textBody,
                         fontSize: 11.sp,
@@ -211,7 +203,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         Expanded(
                           child: _planCard(
                             SubscriptionPlan.monthly,
-                            '${left.type.title} Plan',
+                            '${left.type.name}_plan'.tr,
                             _pricesLoading ? '' : left.price.priceString,
                             _period(left),
                             best: leftIsBest,
@@ -241,7 +233,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         Expanded(
                           child: _planCard(
                             SubscriptionPlan.yearly,
-                            '${right.type.title} Plan',
+                            '${right.type.name}_plan'.tr,
                             _pricesLoading ? '' : right.price.priceString,
                             _period(right),
                             best: !leftIsBest,
@@ -309,7 +301,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Text(
-                            'Cancel Anytime',
+                            'cancel_anytime'.tr,
                             style: TextStyle(
                               color: AppPalette.textSecondary,
                               fontSize: 11.sp,
@@ -330,14 +322,14 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _link(
-                            'Privacy Policy',
+                            'privacy_policy'.tr,
                             () => openUrl(AppStrings.privacyPolicyUrl),
                           ),
                           _sep(),
-                          _link('Restore Purchase', _restore),
+                          _link('restore_purchase'.tr, _restore),
                           _sep(),
                           _link(
-                            'Terms of Use',
+                            'terms_of_use'.tr,
                             () => openUrl(AppStrings.termsUrl),
                           ),
                         ],
@@ -367,7 +359,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Unlock ',
+                    text: 'unlock'.tr,
                     style: TextStyle(
                       color: _navy,
                       fontSize: 30.sp,
@@ -376,7 +368,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Premium',
+                    text: 'premium'.tr,
                     style: TextStyle(
                       color: _green,
                       fontSize: 30.sp,
@@ -416,7 +408,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
           Image.asset(AppAssets.softBadge, width: 18.w, height: 18.w),
           SizedBox(width: 6.w),
           Text(
-            '7-DAY HEALTHY MEAL PLAN',
+            'n_7_day_healthy_meal_plan'.tr,
             style: TextStyle(
               color: const Color(0xFF00714D),
               fontSize: 11.sp,
@@ -588,7 +580,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         ),
                         SizedBox(width: 3.w),
                         Text(
-                          'BEST VALUE',
+                          'best_value'.tr,
                           style: TextStyle(
                             fontSize: 7.5.sp,
                             fontWeight: FontWeight.w700,

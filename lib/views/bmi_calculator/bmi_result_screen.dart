@@ -37,7 +37,7 @@ class BMIResultScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-          title: 'BMI Result',
+          title: 'bmi_result'.tr,
           trailing: Builder(
             builder: (btnContext) => GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -113,7 +113,7 @@ class BMIResultScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Your BMI',
+                            'your_bmi'.tr,
                             style: TextStyle(
                               color: Colors.black.withValues(alpha: 0.5),
                               fontSize: 12.sp,
@@ -200,7 +200,7 @@ class BMIResultScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Your Details',
+                        'your_details'.tr,
                         style: TextStyle(
                           color: AppPalette.textPrimary,
                           fontSize: 15.sp,
@@ -215,26 +215,26 @@ class BMIResultScreen extends StatelessWidget {
                           _buildDetailColumn(
                             imageAsset: AppAssets.weighticon,
                             value: record.weightDisplay,
-                            label: 'Weight',
+                            label: 'weight'.tr,
                             showUnderline: true,
                           ),
                           _buildDetailDivider(),
                           _buildDetailColumn(
                             imageAsset: AppAssets.heighticon,
                             value: record.heightDisplay,
-                            label: 'Height',
+                            label: 'height'.tr,
                           ),
                           _buildDetailDivider(),
                           _buildDetailColumn(
                             imageAsset: AppAssets.ageicon,
-                            value: '${record.age} Yrs',
-                            label: 'Age',
+                            value: 'age_yrs'.trParams({'age': '${record.age}'}),
+                            label: 'age'.tr,
                           ),
                           _buildDetailDivider(),
                           _buildDetailColumn(
                             imageAsset: AppAssets.gendericon,
-                            value: record.gender,
-                            label: 'Gender',
+                            value: record.gender.trim().toLowerCase().tr,
+                            label: 'gender'.tr,
                           ),
                         ],
                       ),
@@ -253,7 +253,7 @@ class BMIResultScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Health Advice',
+                        'health_advice'.tr,
                         style: TextStyle(
                           color: AppPalette.textPrimary,
                           fontSize: 15.sp,
@@ -270,19 +270,19 @@ class BMIResultScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildAdviceBullet(
-                                  'Eat a balanced diet rich in nutrients.',
+                                  'eat_a_balanced_diet_rich_in'.tr,
                                 ),
                                 SizedBox(height: 4.h),
                                 _buildAdviceBullet(
-                                  'Stay active for at least 30 minutes daily.',
+                                  'stay_active_for_at_least_30'.tr,
                                 ),
                                 SizedBox(height: 4.h),
                                 _buildAdviceBullet(
-                                  'Drink plenty of water and get enough sleep.',
+                                  'drink_plenty_of_water_and_get'.tr,
                                 ),
                                 SizedBox(height: 4.h),
                                 _buildAdviceBullet(
-                                  'Track your progress regularly.',
+                                  'track_your_progress_regularly'.tr,
                                 ),
                               ],
                             ),
@@ -301,7 +301,7 @@ class BMIResultScreen extends StatelessWidget {
 
                 // Recalculate Button
                 CustomGradientButton(
-                  text: 'Recalculate',
+                  text: 'recalculate'.tr,
                   height: 52.h,
                   leadingIcon: Image.asset(
                     AppAssets.calcilatorIcon,
@@ -329,13 +329,13 @@ class BMIResultScreen extends StatelessWidget {
   void _shareBMIResult(BuildContext context, BMIRecord record) async {
     final shareText =
         '''
-BMI Result
+${'bmi_result'.tr}
 ━━━━━━━━━━━━━━━━
-• BMI: ${record.bmiValue.toStringAsFixed(1)} (${record.category.label})
-• Weight: ${record.weightDisplay}
-• Height: ${record.heightDisplay}
-• Age: ${record.age} years
-• Gender: ${record.gender}
+• ${'bmi_label'.tr}: ${record.bmiValue.toStringAsFixed(1)} (${record.category.label})
+• ${'weight'.tr}: ${record.weightDisplay}
+• ${'height'.tr}: ${record.heightDisplay}
+• ${'age'.tr}: ${'age_years'.trParams({'age': '${record.age}'})}
+• ${'gender'.tr}: ${record.gender.trim().toLowerCase().tr}
 ━━━━━━━━━━━━━━━━
 ${record.category.feedbackMessage}
 ''';
@@ -360,7 +360,9 @@ ${record.category.feedbackMessage}
       await SharePlus.instance.share(
         ShareParams(
           text: shareText,
-          subject: 'My BMI Result - ${record.bmiValue.toStringAsFixed(1)}',
+          subject: 'my_bmi_result'.trParams({
+            'value': record.bmiValue.toStringAsFixed(1),
+          }),
           sharePositionOrigin: origin,
         ),
       );
@@ -368,8 +370,8 @@ ${record.category.feedbackMessage}
       debugPrint('SharePlus error: $e');
       {
         Get.snackbar(
-          'Share Error',
-          'Could not open share dialog: $e',
+          'share_error'.tr,
+          'could_not_open_share'.trParams({'error': '$e'}),
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.black87,
           colorText: Colors.white,

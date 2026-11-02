@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -260,7 +259,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildGreeting(bool hasData, ProfileController profileController) {
     final userName = profileController.userProfile.value.displayName;
-    final greeting = userName.isNotEmpty ? 'Hello, $userName' : 'Hello, Guest';
+    final greeting = userName.isNotEmpty
+        ? 'hello_name'.trParams({'name': userName})
+        : 'hello_guest'.tr;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,8 +289,8 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(height: 8.h),
         Text(
           hasData
-              ? "Let's track your health today."
-              : "Welcome! Let's begin your health journey.",
+              ? 'lets_track_your_health_today'.tr
+              : 'welcome_lets_begin_your_health_journey'.tr,
           style: TextStyle(
             color: AppPalette.textSecondary,
             fontSize: 12,
@@ -309,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           BMIGaugeWidget(bmiValue: 25.0, size: 200.w, showLabels: showLabels),
           Text(
-            'No BMI Record Yet',
+            'no_bmi_record_yet'.tr,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppPalette.textPrimary,
@@ -320,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 6.h),
           Text(
-            "You haven't calculated your BMI yet. Enter your\ndetails to discover your health status.",
+            'you_havent_calculated_your_bmi_yet'.tr,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: const Color(0xFF7A8B94),
@@ -332,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 18.h),
           CustomGradientButton(
-            text: 'Calculate Your BMI',
+            text: 'calculate_your_bmi'.tr,
             leadingIcon: Image.asset(
               AppAssets.calcilatorIcon,
               width: 18.w,
@@ -357,7 +358,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildActiveBmiCard(BMIRecord record) {
     final isToday = DateUtils.isSameDay(record.date, DateTime.now());
     final formattedTime = isToday
-        ? 'Today, ${DateFormat('h:mm a').format(record.date)}'
+        ? 'today_at'.trParams({
+            'time': DateFormat('h:mm a').format(record.date),
+          })
         : DateFormat('MMM d, h:mm a').format(record.date);
 
     return Column(
@@ -375,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Your BMI',
+                    'your_bmi'.tr,
                     style: TextStyle(
                       color: AppPalette.textPrimary,
                       fontSize: 18,
@@ -387,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'Last Updated',
+                        'last_updated'.tr,
                         style: TextStyle(
                           color: const Color(0xFF96ADB0),
                           fontSize: 10,
@@ -478,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            'View History',
+                            'view_history'.tr,
                             style: TextStyle(
                               color: AppPalette.textPrimary,
                               fontSize: 9,
@@ -518,28 +521,28 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildParamItem(
             imageAsset: AppAssets.weighticon,
             value: record.weightDisplay,
-            label: 'Weight',
+            label: 'weight'.tr,
             onTapUpdate: () => Get.toNamed(AppRoutes.addWeight),
           ),
           _buildDivider(),
           _buildParamItem(
             imageAsset: AppAssets.heighticon,
             value: record.heightDisplay,
-            label: 'Height',
+            label: 'height'.tr,
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
           _buildDivider(),
           _buildParamItem(
             imageAsset: AppAssets.ageicon,
-            value: '${record.age} Yrs',
-            label: 'Age',
+            value: 'age_yrs'.trParams({'age': '${record.age}'}),
+            label: 'age'.tr,
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
           _buildDivider(),
           _buildParamItem(
             imageAsset: AppAssets.gendericon,
-            value: record.gender,
-            label: 'Gender',
+            value: record.gender.trim().toLowerCase().tr,
+            label: 'gender'.tr,
             onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
           ),
         ],
@@ -593,7 +596,7 @@ class _HomeScreenState extends State<HomeScreen> {
           TextSpan(
             children: [
               TextSpan(
-                text: 'BMI ',
+                text: 'bmi'.tr,
                 style: TextStyle(
                   color: AppPalette.textPrimary,
                   fontSize: 20,
@@ -602,7 +605,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               TextSpan(
-                text: 'Categories',
+                text: 'categories'.tr,
                 style: TextStyle(
                   color: const Color(0xFF09B389),
                   fontSize: 20,
@@ -618,7 +621,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: _buildCategoryBadge(
-                'Underweight (<18.5)',
+                'underweight_18_5'.tr,
                 currentCategory == BMICategory.underweight,
                 inactiveBg: const Color(0xFFCDEBF8),
                 activeBg: AppColors.underweight,
@@ -627,7 +630,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
-                'Obese (30–34.9)',
+                'obese_30_34_9'.tr,
                 currentCategory == BMICategory.obese,
                 inactiveBg: const Color(0xFFFFB1B2),
                 activeBg: AppColors.obese,
@@ -640,7 +643,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: _buildCategoryBadge(
-                'Overweight (25–29.9)',
+                'overweight_25_29_9'.tr,
                 currentCategory == BMICategory.overweight,
                 inactiveBg: const Color(0xFFFEDFC1),
                 activeBg: AppColors.overweight,
@@ -649,7 +652,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
-                'Normal (18.5–24.9)',
+                'normal_18_5_24_9'.tr,
                 currentCategory == BMICategory.normal,
                 inactiveBg: const Color(0xFFC0ECE6),
                 activeBg: AppColors.normal,
@@ -881,7 +884,7 @@ class _RemoveAdsCard extends StatelessWidget {
     final radius = BorderRadius.circular(24.r);
     return Semantics(
       button: true,
-      label: 'Remove annoying ads. Upgrade to Premium',
+      label: 'remove_annoying_ads_upgrade_to_premium'.tr,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => Get.toNamed(AppRoutes.paywall),
@@ -966,7 +969,7 @@ class _RemoveAdsCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'PREMIUM',
+                                  'premium_caps'.tr,
                                   style: TextStyle(
                                     color: _gold,
                                     fontSize: 10.sp,
@@ -981,7 +984,7 @@ class _RemoveAdsCard extends StatelessWidget {
                                   fit: BoxFit.scaleDown,
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Remove Annoying Ads',
+                                    'remove_annoying_ads'.tr,
                                     maxLines: 1,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -998,7 +1001,7 @@ class _RemoveAdsCard extends StatelessWidget {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        'Enjoy a faster, distraction-free experience. Track your BMI and weight with no interruptions, plus detailed reports and smart insights.',
+                        'enjoy_a_faster_distraction_free_experience'.tr,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -1009,12 +1012,6 @@ class _RemoveAdsCard extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          AppLovinMAX.showMediationDebugger();
-                        },
-                        child: Text("show debuger"),
-                      ),
                       const _UpgradeButton(),
                     ],
                   ),
@@ -1080,7 +1077,7 @@ class _UpgradeButtonState extends State<_UpgradeButton>
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(22.r);
     final label = Text(
-      'Upgrade to Premium',
+      'upgrade_to_premium'.tr,
       style: TextStyle(
         color: _onGold,
         fontSize: 14.sp,

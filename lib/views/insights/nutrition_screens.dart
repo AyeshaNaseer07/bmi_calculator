@@ -26,10 +26,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
         onDismissed: () {
           Future.delayed(const Duration(milliseconds: 300), () {
             PremiumFeatureDialog.show(
-              message:
-                  'Your 1 Week Meal Plan is a Premium feature. Upgrade to '
-                  'unlock a personalized breakfast, lunch and dinner for every '
-                  'day, with no ads.',
+              message: 'meal_plan_premium_message'.tr,
               onUnlock: _openMealPlan,
             );
           });
@@ -43,7 +40,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Eat Balanced Meals',
+      title: 'eat_balanced_meals'.tr,
       body: Column(
         children: [
           SizedBox(height: 4.h),
@@ -87,7 +84,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
                 Image.asset(AppAssets.leafIcon, width: 12.w, height: 12.h),
                 SizedBox(width: 5.w),
                 Text(
-                  'NUTRITION GUIDE',
+                  'nutrition_guide'.tr,
                   style: TextStyle(
                     color: const Color(0xFF00714D),
                     fontSize: 11,
@@ -102,7 +99,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           Text(
-            'Build healthy eating habits, one meal at a time.',
+            'build_healthy_eating_habits_one_meal'.tr,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
@@ -116,26 +113,26 @@ class EatBalancedMealsScreen extends StatelessWidget {
           SizedBox(height: 16.h),
           _HubCard(
             iconAsset: AppAssets.tipMoreVeggies,
-            title: 'Eat More Vegetables',
-            subtitle: 'Add vegetables and fiber to your meals.',
+            title: 'eat_more_vegetables'.tr,
+            subtitle: 'add_vegetables_and_fiber_to_your'.tr,
             onTap: () => Get.to(() => const EatVegetablesScreen()),
           ),
           _HubCard(
             iconAsset: AppAssets.tipLeanProtein,
-            title: 'Choose Lean Protein',
-            subtitle: 'Include eggs, fish, beans or chicken.',
+            title: 'choose_lean_protein'.tr,
+            subtitle: 'include_eggs_fish_beans_or_chicken'.tr,
             onTap: () => Get.to(() => const LeanProteinScreen()),
           ),
           _HubCard(
             iconAsset: AppAssets.tipPortionControl,
-            title: 'Control Portion Sizes',
-            subtitle: 'Enjoy balanced portions at every meal.',
+            title: 'control_portion_sizes'.tr,
+            subtitle: 'enjoy_balanced_portions_at_every_meal'.tr,
             onTap: () => Get.to(() => const PortionSizesScreen()),
           ),
           _HubCard(
             iconAsset: AppAssets.tipDailyMealPlan,
-            title: '1 Week Meal Plan',
-            subtitle: 'Explore simple ideas for balanced meals.',
+            title: 'n_1_week_meal_plan'.tr,
+            subtitle: 'explore_simple_ideas_for_balanced_meals'.tr,
             pro: true,
             onTap: _openMealPlan,
           ),
@@ -309,7 +306,7 @@ class EatVegetablesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Eat More Vegetables',
+      title: 'eat_more_vegetables'.tr,
       scroll: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +325,7 @@ class EatVegetablesScreen extends StatelessWidget {
           SizedBox(height: 8.h),
           Center(
             child: Text(
-              'Add more color and fiber to your meals.',
+              'add_more_color_and_fiber_to'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
@@ -339,25 +336,25 @@ class EatVegetablesScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          Text('Why Vegetables Matter', style: _section),
+          Text('why_vegetables_matter'.tr, style: _section),
           SizedBox(height: 10.h),
           _why(
             AppAssets.tipRichInFiber,
-            'Rich in Fiber',
-            'Fiber helps you feel full and supports digestion.',
+            'rich_in_fiber'.tr,
+            'fiber_helps_you_feel_full_and'.tr,
           ),
           _why(
             AppAssets.tipFullOfNutrients,
-            'Full of Nutrients',
-            'Vegetables provide vitamins and minerals.',
+            'full_of_nutrients'.tr,
+            'vegetables_provide_vitamins_and_minerals'.tr,
           ),
           _why(
             AppAssets.tipAddMoreColor,
-            'Add More Color',
-            'Choose different vegetables for variety.',
+            'add_more_color'.tr,
+            'choose_different_vegetables_for_variety'.tr,
           ),
           SizedBox(height: 4.h),
-          Text('Try This Today', style: _section),
+          Text('try_this_today'.tr, style: _section),
           SizedBox(height: 10.h),
           Container(
             width: double.infinity,
@@ -382,10 +379,10 @@ class EatVegetablesScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Simple Meal', style: _title(16.5)),
+                          Text('simple_meal'.tr, style: _title(16.5)),
                           SizedBox(height: 3.h),
                           Text(
-                            'Half plate of vegetables, quarter protein, quarter grains.',
+                            'half_plate_of_vegetables_quarter_protein'.tr,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: _sub,
@@ -397,7 +394,7 @@ class EatVegetablesScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'Start by adding vegetables to one meal. You can build up to more over time.',
+                  'start_by_adding_vegetables_to_one'.tr,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: _sub.copyWith(color: AppPalette.textBody),
@@ -466,7 +463,7 @@ class LeanProteinScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Choose Lean Protein',
+      title: 'choose_lean_protein'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -477,30 +474,32 @@ class LeanProteinScreen extends StatelessWidget {
             radius: 20.r,
           ),
           SizedBox(height: 14.h),
-          const TipBanner(
-            text: 'Include a source of protein in your main meals.',
-          ),
+          TipBanner(text: 'include_a_source_of_protein_in'.tr),
           SizedBox(height: 14.h),
-          const SectionTitle('Healthy Protein Choices'),
+          SectionTitle('healthy_protein_choices'.tr),
           _choiceRow(
-            _choice(AppAssets.proteinEgg, 'Eggs', 'An easy source of protein.'),
+            _choice(
+              AppAssets.proteinEgg,
+              'eggs'.tr,
+              'an_easy_source_of_protein'.tr,
+            ),
             _choice(
               AppAssets.proteinFish,
-              'Fish',
-              'Provides protein and important nutrients.',
+              'fish'.tr,
+              'provides_protein_and_important_nutrients'.tr,
             ),
           ),
           SizedBox(height: 18.h),
           _choiceRow(
             _choice(
               AppAssets.proteinBeans,
-              'Beans & Lentils',
-              'Offer protein and fiber.',
+              'beans_lentils'.tr,
+              'offer_protein_and_fiber'.tr,
             ),
             _choice(
               AppAssets.proteinChicken,
-              'Chicken',
-              'A versatile source of lean protein.',
+              'chicken'.tr,
+              'a_versatile_source_of_lean_protein'.tr,
             ),
           ),
         ],
@@ -565,7 +564,7 @@ class PortionSizesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Control Portion Sizes',
+      title: 'control_portion_sizes'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -581,7 +580,7 @@ class PortionSizesScreen extends StatelessWidget {
           SizedBox(height: 14.h),
           Center(
             child: Text(
-              'Enjoy balanced portions without skipping meals.',
+              'enjoy_balanced_portions_without_skipping_meals'.tr,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14,
@@ -594,23 +593,21 @@ class PortionSizesScreen extends StatelessWidget {
           SizedBox(height: 14.h),
           _step(
             AppAssets.tipMoreVeggies,
-            'Half Your Plate',
-            'Fill half your plate with vegetables.',
+            'half_your_plate'.tr,
+            'fill_half_your_plate_with_vegetables'.tr,
           ),
           _step(
             AppAssets.portionAddProtein,
-            'Add Protein',
-            'Use one quarter of your plate for protein.',
+            'add_protein'.tr,
+            'use_one_quarter_of_your_plate'.tr,
           ),
           _step(
             AppAssets.portionWholeGrain,
-            'Include Whole Grains',
-            'Fill the remaining quarter with whole grains.',
+            'include_whole_grains'.tr,
+            'fill_the_remaining_quarter_with_whole'.tr,
           ),
           SizedBox(height: 4.h),
-          const TipBanner(
-            text: 'A Simple Habit: Eat slowly and pause to notice when you feel comfortably full.',
-          ),
+          TipBanner(text: 'a_simple_habit_eat_slowly_and'.tr),
         ],
       ),
     );

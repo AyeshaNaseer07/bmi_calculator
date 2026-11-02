@@ -27,22 +27,22 @@ class PhotoPermission {
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: Colors.white,
-        title: const Text(
-          'Photo access needed',
+        title: Text(
+          'photo_access_needed'.tr,
           style: TextStyle(
             color: AppColors.textDark,
             fontWeight: FontWeight.w600,
           ),
         ),
-        content: const Text(
-          'Allow access to your photos in Settings to set a profile picture.',
+        content: Text(
+          'allow_access_to_your_photos_in'.tr,
           style: TextStyle(color: AppColors.textBody),
         ),
         actions: [
           TextButton(
             onPressed: Get.back,
-            child: const Text(
-              'Cancel',
+            child: Text(
+              'cancel'.tr,
               style: TextStyle(color: AppColors.textMuted),
             ),
           ),
@@ -51,8 +51,8 @@ class PhotoPermission {
               Get.back();
               openAppSettings();
             },
-            child: const Text(
-              'Open Settings',
+            child: Text(
+              'open_settings'.tr,
               style: TextStyle(
                 color: AppColors.primaryTeal,
                 fontWeight: FontWeight.w600,

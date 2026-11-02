@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 import '../../data/models/user_profile_model.dart' show ActivityLevel;
 
 class PersonalTargets {
@@ -54,8 +56,8 @@ class PersonalTargets {
     if (bed < 0) bed += 1440;
     final h24 = bed ~/ 60;
     final m = bed % 60;
-    final period = h24 >= 12 ? 'PM' : 'AM';
+    final period = (h24 >= 12 ? 'pm' : 'am').tr;
     final h12 = h24 % 12 == 0 ? 12 : h24 % 12;
-    return '$h12:${m.toString().padLeft(2, '0')} $period — 7:00 AM';
+    return '$h12:${m.toString().padLeft(2, '0')} $period — 7:00 ${'am'.tr}';
   }
 }

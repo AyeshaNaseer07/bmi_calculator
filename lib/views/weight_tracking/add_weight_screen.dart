@@ -184,8 +184,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     await _controller.addWeight(current, DateTime.now(), goalWeight: goal);
     Get.back();
     Get.snackbar(
-      'Saved',
-      'Weight record saved successfully!',
+      'saved'.tr,
+      'weight_record_saved_successfully'.tr,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.primaryTeal,
       colorText: Colors.white,
@@ -225,7 +225,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         },
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: const CustomAppBar(title: 'Add Weight'),
+          appBar: CustomAppBar(title: 'add_weight'.tr),
           bottomNavigationBar: const NumberKeypadHost(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +238,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                   children: [
                     SizedBox(height: 8.h),
                     Text(
-                      'Track your weight journey by entering your details below.',
+                      'track_your_weight_journey_by_entering'.tr,
                       style: TextStyle(
                         color: AppPalette.textSecondary,
                         fontSize: 14.sp,
@@ -268,14 +268,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                     children: [
                       // Current Weight (Mandatory)
                       _buildFieldLabel(
-                        'Current Weight',
+                        'current_weight'.tr,
                         unit: '(kg)',
                         isMandatory: true,
                       ),
                       _buildTextInput(
                         controller: _currentWeightController,
                         focusNode: _currentWeightFocusNode,
-                        hint: 'Enter Weight (65.7 kg)',
+                        hint: 'enter_weight_65_7_kg'.tr,
                         isError: _isCurrentWeightExceeded,
                         keyboardType: _currentWeightKeypad.keyboardType,
                         textInputAction: TextInputAction.next,
@@ -292,7 +292,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                             ),
                             SizedBox(width: 5.w),
                             Text(
-                              'Weight cannot exceed 120 kg.',
+                              'weight_cannot_exceed_120_kg'.tr,
                               style: TextStyle(
                                 color: const Color(0xFFEF4444),
                                 fontSize: 12.sp,
@@ -307,14 +307,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
                       // Goal Weight (Mandatory)
                       _buildFieldLabel(
-                        'Goal Weight',
+                        'goal_weight'.tr,
                         unit: '(kg)',
                         isMandatory: true,
                       ),
                       _buildTextInput(
                         controller: _goalWeightController,
                         focusNode: _goalWeightFocusNode,
-                        hint: 'Enter goal weight (60.0 kg)',
+                        hint: 'enter_goal_weight_60_0_kg'.tr,
                         isError: _isGoalWeightExceeded,
                         keyboardType: _goalWeightKeypad.keyboardType,
                         textInputAction: TextInputAction.next,
@@ -331,7 +331,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                             ),
                             SizedBox(width: 5.w),
                             Text(
-                              'Goal weight cannot exceed 120 kg.',
+                              'goal_weight_cannot_exceed_120_kg'.tr,
                               style: TextStyle(
                                 color: const Color(0xFFEF4444),
                                 fontSize: 12.sp,
@@ -345,7 +345,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       SizedBox(height: 12.h),
 
                       // Age (Mandatory)
-                      _buildFieldLabel('Age', isMandatory: true),
+                      _buildFieldLabel('age'.tr, isMandatory: true),
                       _buildAgeDropdown(context),
                       SizedBox(height: 12.h),
 
@@ -359,7 +359,10 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildFieldLabel('Gender', isMandatory: true),
+                                _buildFieldLabel(
+                                  'gender'.tr,
+                                  isMandatory: true,
+                                ),
                                 _buildGenderDropdown(context),
                               ],
                             ),
@@ -373,14 +376,14 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildFieldLabel(
-                                  'Height',
+                                  'height'.tr,
                                   unit: '(cm)',
                                   isMandatory: true,
                                 ),
                                 _buildTextInput(
                                   controller: _heightController,
                                   focusNode: _heightFocusNode,
-                                  hint: 'Enter height (152 cm)',
+                                  hint: 'enter_height_152_cm'.tr,
                                   keyboardType: _heightKeypad.keyboardType,
                                   textInputAction: TextInputAction.done,
                                   onSubmitted: (_) =>
@@ -395,7 +398,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
                       // Save Button
                       CustomGradientButton(
-                        text: 'Save Weight',
+                        text: 'save_weight'.tr,
                         backgroundImage: AppAssets.btnRectangle,
                         onPressed: _isFormValid ? _onSave : null,
                       ),
@@ -534,7 +537,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _selectedAge != null ? '$_selectedAge' : 'Select',
+                _selectedAge != null ? '$_selectedAge' : 'select'.tr,
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: _selectedAge != null
@@ -611,7 +614,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _selectedGender?.displayName ?? 'Select',
+                _selectedGender?.displayName ?? 'select'.tr,
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: _selectedGender != null

@@ -110,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
                     SizedBox(height: 16.h),
                     Center(
                       child: Text(
-                        'Know Your Body. Live Healthier',
+                        'splash_tagline'.tr,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.sp,
@@ -159,7 +159,7 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            'Loading...',
+                            'loading'.tr,
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.textLight,
                               fontSize: 12.sp,

@@ -105,7 +105,7 @@ class StayHydratedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Stay Hydrated',
+      title: 'stay_hydrated'.tr,
       titleIcon: Icons.water_drop_outlined,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +119,7 @@ class StayHydratedScreen extends StatelessWidget {
           ),
           Center(
             child: Text(
-              'Drink enough water daily.',
+              'drink_enough_water_daily'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
                 fontSize: 14,
@@ -130,7 +130,7 @@ class StayHydratedScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           Text(
-            'Benefits',
+            'benefits'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
               fontSize: 18,
@@ -141,8 +141,8 @@ class StayHydratedScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           _Benefit(
             icon: AppAssets.waterBoostIcon,
-            title: 'Boosts Your Energy',
-            subtitle: 'Water helps your body and mind work better.',
+            title: 'boosts_your_energy'.tr,
+            subtitle: 'water_helps_your_body_and_mind'.tr,
             bg: const Color(0xFFEAFBF3),
             border: const Color(0xFFC8F0DE),
             chevron: const Color(0xFF10B981),
@@ -150,8 +150,8 @@ class StayHydratedScreen extends StatelessWidget {
           ),
           _Benefit(
             icon: AppAssets.waterSupportIcon,
-            title: 'Supports Digestion',
-            subtitle: 'Helps your digestive system work smoothly.',
+            title: 'supports_digestion'.tr,
+            subtitle: 'helps_your_digestive_system_work_smoothly'.tr,
             bg: const Color(0xFFEBF3FE),
             border: const Color(0xFFD3E4FB),
             chevron: const Color(0xFF3B82F6),
@@ -159,8 +159,8 @@ class StayHydratedScreen extends StatelessWidget {
           ),
           _Benefit(
             icon: AppAssets.waterGoodIcon,
-            title: 'Good for Your Skin',
-            subtitle: 'Staying hydrated helps maintain healthy skin.',
+            title: 'good_for_your_skin'.tr,
+            subtitle: 'staying_hydrated_helps_maintain_healthy_skin'.tr,
             bg: const Color(0xFFF3EEFE),
             border: const Color(0xFFE2D6FB),
             chevron: const Color(0xFF8B5CF6),
@@ -168,8 +168,8 @@ class StayHydratedScreen extends StatelessWidget {
           ),
           _Benefit(
             icon: AppAssets.waterDailyIcon,
-            title: 'Your Daily Goal',
-            subtitle: 'Find out how much water you may need each day.',
+            title: 'your_daily_goal'.tr,
+            subtitle: 'find_out_how_much_water_you'.tr,
             bg: AppPalette.surfaceMuted,
             border: const Color(0xFFD7F0E6),
             chevron: AppPalette.textBody,
@@ -250,7 +250,7 @@ class BoostsEnergyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Boosts Your Energy',
+      title: 'boosts_your_energy'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -267,7 +267,7 @@ class BoostsEnergyScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           Center(
             child: Text(
-              'Stay hydrated to help your body feel its best.',
+              'stay_hydrated_to_help_your_body'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
                 fontSize: 13,
@@ -278,7 +278,7 @@ class BoostsEnergyScreen extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            'How Water Helps',
+            'how_water_helps'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
               fontSize: 17,
@@ -289,27 +289,21 @@ class BoostsEnergyScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           _MintRow(
             icon: _asset(AppAssets.brainIcon, size: 40),
-            title: 'Supports Focus',
-            subtitle:
-                'Drinking enough water helps you stay focused '
-                'throughout the day.',
+            title: 'supports_focus'.tr,
+            subtitle: 'water_helps_focus'.tr,
           ),
           _MintRow(
             icon: _asset(AppAssets.moonIcon, size: 40),
-            title: 'Helps Reduce Tiredness',
-            subtitle: 'Dehydration can make you feel tired.',
+            title: 'helps_reduce_tiredness'.tr,
+            subtitle: 'dehydration_can_make_you_feel_tired'.tr,
           ),
           _MintRow(
             icon: _asset(AppAssets.pulseIcon, size: 40),
-            title: 'Supports Daily Activity',
-            subtitle:
-                'Water helps your body function during everyday '
-                'activities.',
+            title: 'supports_daily_activity'.tr,
+            subtitle: 'water_helps_everyday'.tr,
           ),
           SizedBox(height: 24.h),
-          const TipBanner(
-            text: 'Simple Tip: Keep a glass of water nearby and sip regularly.',
-          ),
+          TipBanner(text: 'simple_tip_keep_a_glass_of'.tr),
         ],
       ),
     );
@@ -375,13 +369,13 @@ class SupportsDigestionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Supports Digestion',
+      title: 'supports_digestion'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Text(
-              'Water plays an important role in healthy digestion.',
+              'water_plays_an_important_role_in'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
                 fontSize: 11,
@@ -393,7 +387,7 @@ class SupportsDigestionScreen extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            'Why Water Matters',
+            'why_water_matters'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
               fontSize: 17,
@@ -404,26 +398,21 @@ class SupportsDigestionScreen extends StatelessWidget {
           SizedBox(height: 8.h),
           _card(
             _asset(AppAssets.digestionIcon, size: 40),
-            'Helps Digestion',
-            'Water helps your body digest food.',
+            'helps_digestion'.tr,
+            'water_helps_your_body_digest_food'.tr,
           ),
           _card(
             _asset(AppAssets.regularityIcon, size: 40),
-            'Supports Regularity',
-            'Drinking enough water helps prevent constipation.',
+            'supports_regularity'.tr,
+            'drinking_enough_water_helps_prevent_constipation'.tr,
           ),
           _card(
             _asset(AppAssets.absorptionIcon, size: 40),
-            'Helps Nutrient Absorption',
-            'Water supports the normal processes your body uses to absorb '
-                'nutrients.',
+            'helps_nutrient_absorption'.tr,
+            'water_supports_absorption'.tr,
           ),
           SizedBox(height: 4.h),
-          const TipBanner(
-            text:
-                'Drink water regularly throughout the day, especially with '
-                'meals.',
-          ),
+          TipBanner(text: 'drink_water_with_meals'.tr),
         ],
       ),
     );
@@ -476,7 +465,7 @@ class GoodForSkinScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InsightScaffold(
-      title: 'Good for Your Skin',
+      title: 'good_for_your_skin'.tr,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -490,33 +479,33 @@ class GoodForSkinScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           Center(
             child: Text(
-              'Hydration is part of a healthy skincare routine.',
+              'hydration_is_part_of_a_healthy'.tr,
               style: bodyStyle(13, color: _kSub),
             ),
           ),
           SizedBox(height: 12.h),
           Text(
-            'How Hydration Helps',
+            'how_hydration_helps'.tr,
             style: headStyle(18, weight: FontWeight.w600),
           ),
           SizedBox(height: 10.h),
           _card(
             _asset(AppAssets.skinHealthIcon, size: 36),
             const Color(0xFFEAF3FE),
-            'Supports Skin Health',
-            'Water helps your body maintain normal skin function.',
+            'supports_skin_health'.tr,
+            'water_helps_your_body_maintain_normal'.tr,
           ),
           _card(
             _asset(AppAssets.regularityIcon, size: 36),
             const Color(0xFFE6F8F1),
-            'Maintains Fluid Balance',
-            'Drinking enough water helps maintain your body’s fluid balance.',
+            'maintains_fluid_balance'.tr,
+            'drinking_enough_water_helps_maintain_your'.tr,
           ),
           _card(
             _asset(AppAssets.healthyHabitsIcon, size: 36),
             const Color(0xFFF1ECFD),
-            'Build Healthy Habits',
-            'Regular hydration is one part of caring for your skin.',
+            'build_healthy_habits'.tr,
+            'regular_hydration_is_one_part_of'.tr,
           ),
         ],
       ),

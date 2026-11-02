@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../data/models/bmi_record_model.dart';
 import 'meal_plan_normal.dart';
@@ -132,15 +133,11 @@ String _badgeFor(String photo) {
 
 const _slots = ['breakfast', 'lunch', 'dinner'];
 const _slotTimes = {
-  'breakfast': '8:00 AM',
-  'lunch': '1:00 PM',
-  'dinner': '7:00 PM',
+  'breakfast': ('8:00', 'am'),
+  'lunch': ('1:00', 'pm'),
+  'dinner': ('7:00', 'pm'),
 };
-const _slotPrep = {
-  'breakfast': '10 min prep',
-  'lunch': '15 min prep',
-  'dinner': '25 min prep',
-};
+const _slotPrepMinutes = {'breakfast': 10, 'lunch': 15, 'dinner': 25};
 
 class MealInfo {
   final String key;
@@ -192,14 +189,14 @@ class MealInfo {
   /// e.g. `Portion ×1.3`, empty when the base portion is used.
   String get portionLabel => (portion - 1).abs() < 0.04
       ? ''
-      : 'Portion ×${portion.toStringAsFixed(1)}';
+      : 'portion_x'.trParams({'value': portion.toStringAsFixed(1)});
 
-  String get slot => slotKey[0].toUpperCase() + slotKey.substring(1);
+  String get slot => slotKey.tr;
 
   String get shortBlurb =>
       blurb.length > 30 ? '${blurb.substring(0, 29)}…' : blurb;
 
-  String get heroLine => '$blurb. Part of your Day $day plan.';
+  String get heroLine => 'hero_line'.trParams({'blurb': blurb, 'day': '$day'});
 
   double get _macroKcal => protein * 4.0 + carbs * 4.0 + fat * 9.0;
   int get proteinPct => (protein * 4 / _macroKcal * 100).round();
@@ -274,6 +271,13 @@ class MealPlanData {
   static int _scaled(int v, double scale, {int step = 1}) =>
       ((v * scale) / step).round() * step;
 
+  /// Translates the unit after the leading number, e.g. `1/2 cup`.
+  static String _trQty(String qty) {
+    final m = RegExp(r'^(\s*[\d/. ]*\d)(\s*)(.*)$').firstMatch(qty);
+    if (m == null) return qty.tr;
+    return '${m.group(1)}${m.group(2)}${m.group(3)!.tr}';
+  }
+
   /// Scales the leading number of a quantity like `150g`, `1/2 cup`, `2 large`.
   static String _scaleQty(String qty, double scale) {
     if ((scale - 1).abs() < 0.04) return qty;
@@ -309,6 +313,7 @@ class MealPlanData {
     double scale,
   ) {
     final key = '${cat.name}_d${day}_$slot';
+    final (clock, period) = _slotTimes[slot]!;
     final photo =
         kMealPhotoOverrides[key] ?? _mealPhotos[r.name] ?? _fallbackPhoto;
     return MealInfo(
@@ -316,26 +321,29 @@ class MealPlanData {
       category: cat,
       day: day,
       slotKey: slot,
-      name: r.name,
-      blurb: r.blurb,
+      name: r.name.tr,
+      blurb: r.blurb.tr,
       kcal: _scaled(r.kcal, scale, step: 5),
       photo: photo,
       badge: _badgeFor(photo),
-      tag: r.tag,
+      tag: r.tag.tr,
       tagIcon: info.tagIcon,
-      time: _slotTimes[slot]!,
-      prep: _slotPrep[slot]!,
-      chips: [r.tag, ...info.chips.where((c) => c != r.tag).take(2)],
+      time: '$clock ${period.tr}',
+      prep: 'min_prep'.trParams({'min': '${_slotPrepMinutes[slot]}'}),
+      chips: [
+        r.tag,
+        ...info.chips.where((c) => c != r.tag).take(2),
+      ].map((c) => c.tr).toList(),
       protein: _scaled(r.p, scale),
       carbs: _scaled(r.c, scale),
       fat: _scaled(r.f, scale),
       target: (r.kcal * 100 / dayTotal).round().clamp(1, 99),
       ingredients: [
         for (final part in r.ing.split(';'))
-          [part.split('|')[0], _scaleQty(part.split('|')[1], scale)],
+          [part.split('|')[0].tr, _trQty(_scaleQty(part.split('|')[1], scale))],
       ],
       portion: scale,
-      note: info.note,
+      note: info.note.tr,
     );
   }
 }
