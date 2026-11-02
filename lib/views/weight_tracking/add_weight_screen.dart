@@ -269,7 +269,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       // Current Weight (Mandatory)
                       _buildFieldLabel(
                         'current_weight'.tr,
-                        unit: '(kg)',
+                        unit: '(${'unit_kg'.tr})',
                         isMandatory: true,
                       ),
                       _buildTextInput(
@@ -308,7 +308,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                       // Goal Weight (Mandatory)
                       _buildFieldLabel(
                         'goal_weight'.tr,
-                        unit: '(kg)',
+                        unit: '(${'unit_kg'.tr})',
                         isMandatory: true,
                       ),
                       _buildTextInput(
@@ -377,7 +377,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                               children: [
                                 _buildFieldLabel(
                                   'height'.tr,
-                                  unit: '(cm)',
+                                  unit: '(${'unit_cm'.tr})',
                                   isMandatory: true,
                                 ),
                                 _buildTextInput(

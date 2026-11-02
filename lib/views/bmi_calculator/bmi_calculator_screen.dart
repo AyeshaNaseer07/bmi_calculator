@@ -141,18 +141,18 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     220.0,
                   );
                   final minHeightText = isCm
-                      ? '120 cm'
+                      ? '120 ${'unit_cm'.tr}'
                       : '$minFt ${'unit_ft'.tr} $minInches ${'unit_in'.tr}';
                   final maxHeightText = isCm
-                      ? '220 cm'
+                      ? '220 ${'unit_cm'.tr}'
                       : '$maxFt ${'unit_ft'.tr} $maxInches ${'unit_in'.tr}';
 
                   final minWeightText = isKg
-                      ? '30 kg'
-                      : '${BMIService.kgToLbs(30.0).round()} lb';
+                      ? '30 ${'unit_kg'.tr}'
+                      : '${BMIService.kgToLbs(30.0).round()} ${'unit_lb'.tr}';
                   final maxWeightText = isKg
-                      ? '130 kg'
-                      : '${BMIService.kgToLbs(130.0).round()} lb';
+                      ? '130 ${'unit_kg'.tr}'
+                      : '${BMIService.kgToLbs(130.0).round()} ${'unit_lb'.tr}';
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,8 +297,8 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                   ),
                                 ),
                                 _buildUnitToggle(
-                                  leftLabel: 'cm',
-                                  rightLabel: 'ft/in',
+                                  leftLabel: 'unit_cm'.tr,
+                                  rightLabel: 'unit_ft_in'.tr,
                                   isLeftSelected: isCm,
                                   onToggle: (val) =>
                                       controller.toggleHeightUnit(val),

@@ -154,7 +154,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                       child: _buildSummaryCard(
                         imagePath: AppAssets.healthWeight,
                         label: 'weight'.tr,
-                        value: '${weight.toStringAsFixed(1)}kg',
+                        value: '${weight.toStringAsFixed(1)}${'unit_kg'.tr}',
                         valueColor: const Color(0xFF09B389),
                       ),
                     ),
@@ -163,7 +163,7 @@ class HealthInsightResultScreen extends StatelessWidget {
                       child: _buildSummaryCard(
                         imagePath: AppAssets.healthHeight,
                         label: 'height'.tr,
-                        value: '${height.toStringAsFixed(0)}cm',
+                        value: '${height.toStringAsFixed(0)}${'unit_cm'.tr}',
                         valueColor: const Color(0xFF09B389),
                       ),
                     ),

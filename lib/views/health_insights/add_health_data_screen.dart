@@ -329,7 +329,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildFieldLabel('height'.tr, unit: '(cm)'),
+                            _buildFieldLabel('height'.tr, unit: '(${'unit_cm'.tr})'),
                             _buildTextInput(
                               controller: _controller.heightController,
                               focusNode: _heightFocusNode,
@@ -347,7 +347,7 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                   SizedBox(height: 12.h),
 
                   // Weight
-                  _buildFieldLabel('weight'.tr, unit: '(kg)'),
+                  _buildFieldLabel('weight'.tr, unit: '(${'unit_kg'.tr})'),
                   _buildTextInput(
                     controller: _controller.weightController,
                     focusNode: _weightFocusNode,

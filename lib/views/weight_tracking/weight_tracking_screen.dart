@@ -44,11 +44,11 @@ class WeightTrackingScreen extends StatelessWidget {
               final xLabels = controller.getXAxisLabels();
               final hasRecords = controller.weightHistory.isNotEmpty;
               final currentStr = hasRecords
-                  ? '${current.toStringAsFixed(1)}kg'
-                  : '00.0kg';
+                  ? '${current.toStringAsFixed(1)}${'unit_kg'.tr}'
+                  : '00.0${'unit_kg'.tr}';
               final goalStr = hasRecords
-                  ? '${goal.toStringAsFixed(1)}kg'
-                  : '00.0kg';
+                  ? '${goal.toStringAsFixed(1)}${'unit_kg'.tr}'
+                  : '00.0${'unit_kg'.tr}';
               final centerValStr = hasRecords
                   ? current.toStringAsFixed(1)
                   : '00.0';
@@ -62,14 +62,14 @@ class WeightTrackingScreen extends StatelessWidget {
               final pMonth = controller.progressThisMonth.value;
               final pTotal = controller.progressTotal.value;
               final weekStr = pWeek == 0.0
-                  ? '-0.0kg'
-                  : '${pWeek > 0 ? '+' : ''}${pWeek.toStringAsFixed(1)}kg';
+                  ? '-0.0${'unit_kg'.tr}'
+                  : '${pWeek > 0 ? '+' : ''}${pWeek.toStringAsFixed(1)}${'unit_kg'.tr}';
               final monthStr = pMonth == 0.0
-                  ? '-0.0kg'
-                  : '${pMonth > 0 ? '+' : ''}${pMonth.toStringAsFixed(1)}kg';
+                  ? '-0.0${'unit_kg'.tr}'
+                  : '${pMonth > 0 ? '+' : ''}${pMonth.toStringAsFixed(1)}${'unit_kg'.tr}';
               final totalStr = pTotal == 0.0
-                  ? '-0.0kg'
-                  : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}kg';
+                  ? '-0.0${'unit_kg'.tr}'
+                  : '${pTotal > 0 ? '+' : ''}${pTotal.toStringAsFixed(1)}${'unit_kg'.tr}';
               const double calculatedMinY = 0.0;
               const double calculatedMaxY = 140.0;
               const double calculatedInterval = 20.0;
@@ -496,7 +496,7 @@ class WeightTrackingScreen extends StatelessWidget {
                                                       goalSpots.length - 1) {
                                                     return _GoalLabelPainter(
                                                       label:
-                                                          '${spot.y.toStringAsFixed(1)}kg',
+                                                          '${spot.y.toStringAsFixed(1)}${'unit_kg'.tr}',
                                                     );
                                                   }
                                                   return FlDotCirclePainter(

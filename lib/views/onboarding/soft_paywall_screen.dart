@@ -221,7 +221,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                               border: Border.all(color: _ringBorder, width: 1),
                             ),
                             child: Text(
-                              'OR',
+                              'or_caps'.tr,
                               style: TextStyle(
                                 color: AppPalette.textSecondary,
                                 fontSize: 8.sp,

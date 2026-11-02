@@ -48,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
         : AppStrings.appStoreUrl;
     await ShareHelper.shareText(
       '${'check_out_this_bmi_calculator_app'.tr}\n\n$storeUrl',
-      subject: 'BMI Calculator',
+      subject: 'app_name'.tr,
       context: context,
     );
   }

@@ -139,14 +139,14 @@ class BMIRecord {
   });
 
   String get heightDisplay {
-    if (isCm) return '${heightCm.toStringAsFixed(0)} cm';
+    if (isCm) return '${heightCm.toStringAsFixed(0)} ${'unit_cm'.tr}';
     final totalInches = (heightCm / 2.54).round();
     return "${totalInches ~/ 12}'${totalInches % 12}\"";
   }
 
   String get weightDisplay {
-    if (isKg) return '${weightKg.toStringAsFixed(1)} kg';
-    return '${(weightKg * 2.20462).toStringAsFixed(1)} lb';
+    if (isKg) return '${weightKg.toStringAsFixed(1)} ${'unit_kg'.tr}';
+    return '${(weightKg * 2.20462).toStringAsFixed(1)} ${'unit_lb'.tr}';
   }
 
   Map<String, dynamic> toJson() {

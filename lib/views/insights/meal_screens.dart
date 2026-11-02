@@ -252,7 +252,7 @@ class _MealCard extends StatelessWidget {
                             ),
                             SizedBox(width: 3.w),
                             Text(
-                              '${meal.kcal} kcal',
+                              '${meal.kcal} ${'unit_kcal'.tr}',
                               style: bodyStyle(
                                 12,
                                 color: _kDeep,
@@ -733,13 +733,13 @@ class MealDetailScreen extends StatelessWidget {
                     _macro('energy_caps'.tr, '${meal.kcal}', 'kcal'),
                     _macro(
                       'protein_caps'.tr,
-                      '${meal.protein}g',
+                      '${meal.protein}${'unit_g'.tr}',
                       '${meal.proteinPct}%',
                       hi: true,
                     ),
                     _macro(
                       'carbs_caps'.tr,
-                      '${meal.carbs}g',
+                      '${meal.carbs}${'unit_g'.tr}',
                       '${meal.carbsPct}%',
                     ),
                     _macro('fat_caps'.tr, '${meal.fat}g', '${meal.fatPct}%'),

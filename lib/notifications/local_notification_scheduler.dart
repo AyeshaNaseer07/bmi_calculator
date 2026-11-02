@@ -23,7 +23,7 @@ class LocalNotificationScheduler {
   /// Debug-only test reminder; inside the range [_cancelAll] clears.
   static const int _debugTestId = _baseId + 49;
 
-  static const NotificationDetails _details = NotificationDetails(
+  static NotificationDetails get _details => NotificationDetails(
     iOS: DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
@@ -31,8 +31,8 @@ class LocalNotificationScheduler {
     ),
     android: AndroidNotificationDetails(
       'bmi_calculator_reminders_channel',
-      'BMI Calculator Reminders',
-      channelDescription: 'Scheduled health and weight tracking reminders',
+      'notification_channel_name'.tr,
+      channelDescription: 'notification_channel_description'.tr,
       importance: Importance.max,
       priority: Priority.high,
     ),

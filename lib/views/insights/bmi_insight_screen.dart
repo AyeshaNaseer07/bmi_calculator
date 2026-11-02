@@ -388,7 +388,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                   style: headStyle(24, color: color),
                 ),
                 TextSpan(
-                  text: ' kg',
+                  text: ' ${'unit_kg'.tr}',
                   style: headStyle(12, color: color, weight: FontWeight.w700),
                 ),
               ],
