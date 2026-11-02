@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "Combina cardio, fuerza y estiramientos para mantener estables tu peso y tu energía.",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "La actividad de bajo impacto protege tus articulaciones. La constancia importa más que la intensidad.",
   "Start small and add a few minutes each week. Every bit of movement counts.": "Empieza poco a poco y añade unos minutos cada semana. Cada movimiento cuenta.",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "Mantén tu frecuencia cardíaca elevada con caminatas rápidas, ciclismo o baile. Intenta moverte al menos 20-30 minutos la mayoría de los días.",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "Prueba ejercicios de fuerza como flexiones, sentadillas o levantamiento de pesas 2-3 veces por semana. Ayudan a ganar músculo y aceleran tu metabolismo.",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "Incluye actividades que de verdad disfrutes, ya sea bailar, nadar, hacer jardinería o practicar deporte. Si te diviertes, es más probable que seas constante.",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "Escucha a tu cuerpo. Si algo duele, para. El descanso y la recuperación son tan importantes como el ejercicio. No te exijas demasiado, sobre todo al empezar.",
   "unit_ft": "pies",
   "unit_in": "pulg.",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "pies/pulg.",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "Recordatorios de Calculadora de IMC",
+  "notification_channel_description": "Recordatorios programados de seguimiento de salud y peso"
 }
