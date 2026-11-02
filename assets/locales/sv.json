@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "Kombinera kondition, styrka och stretching för att hålla vikt och energi stabila.",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "Aktivitet med låg belastning skyddar dina leder. Regelbundenhet är viktigare än intensitet.",
   "Start small and add a few minutes each week. Every bit of movement counts.": "Börja smått och lägg till några minuter varje vecka. Varje rörelse räknas.",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "Håll pulsen uppe med rask promenad, cykling eller dans. Försök att röra på dig i minst 20–30 minuter de flesta dagar.",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "Prova styrkeövningar som armhävningar, knäböj eller styrketräning med vikter 2–3 gånger i veckan. Det hjälper dig att bygga muskler och ökar ämnesomsättningen.",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "Välj aktiviteter som du verkligen tycker om, till exempel dans, simning, trädgårdsarbete eller sport. När du har roligt är det lättare att fortsätta.",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "Lyssna på kroppen. Sluta om något gör ont. Vila och återhämtning är lika viktiga som träning. Pressa dig inte för hårt, särskilt inte när du precis har börjat.",
   "unit_ft": "fot",
   "unit_in": "tum",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "ft/tum",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "BMI-kalkylatorns påminnelser",
+  "notification_channel_description": "Schemalagda påminnelser om hälsa och viktregistrering"
 }

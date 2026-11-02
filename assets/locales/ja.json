@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "体重とエネルギーを安定させるために、有酸素運動、筋トレ、ストレッチを組み合わせましょう。",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "負荷の少ない運動は関節を守ります。強度より継続が大切です。",
   "Start small and add a few minutes each week. Every bit of movement counts.": "小さく始めて、毎週数分ずつ増やしましょう。どんな動きも大切です。",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "早歩きやサイクリング、ダンスなどで心拍数を上げましょう。できるだけ多くの日に、20〜30分以上体を動かすことを目指しましょう。",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "腕立て伏せやスクワット、ウェイトトレーニングなどの筋力トレーニングを週2〜3回取り入れてみましょう。筋肉をつけ、代謝を高めるのに役立ちます。",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "ダンス、水泳、ガーデニング、スポーツなど、自分が心から楽しめる活動を取り入れましょう。楽しめることなら、無理なく続けやすくなります。",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "自分の体の声に耳を傾けましょう。痛みを感じたら中止してください。休息と回復も運動と同じくらい大切です。特に始めたばかりの頃は、無理をしないようにしましょう。",
   "unit_ft": "フィート",
   "unit_in": "インチ",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "ft/in",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "BMI計算機のリマインダー",
+  "notification_channel_description": "健康管理と体重記録の定期リマインダー"
 }

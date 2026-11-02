@@ -158,12 +158,16 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      'daily_water_intake'.tr,
-                      style: headStyle(
-                        17,
-                        weight: FontWeight.w700,
-                      ).copyWith(height: 1.15),
+                    SizedBox(
+                      width: 120.w,
+                      child: Text(
+                        'daily_water_intake'.tr,
+                        style: headStyle(
+                          17,
+                          weight: FontWeight.w700,
+                        ).copyWith(height: 1.15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     SizedBox(width: 10.w),
                     Container(
@@ -191,9 +195,10 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                           height: 1.50,
                           letterSpacing: 0.25,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(width: 40.w),
+                    Spacer(),
                     Text(
                       'glasses_progress'.trParams({
                         'glasses': '$_glasses',
@@ -208,6 +213,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                         height: 1.33,
                         letterSpacing: -0.25,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

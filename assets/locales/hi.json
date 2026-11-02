@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "वज़न और ऊर्जा को स्थिर रखने के लिए कार्डियो, स्ट्रेंथ और स्ट्रेचिंग को मिलाएँ।",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "कम प्रभाव वाली गतिविधि आपके जोड़ों की रक्षा करती है। तीव्रता से ज़्यादा निरंतरता मायने रखती है।",
   "Start small and add a few minutes each week. Every bit of movement counts.": "छोटी शुरुआत करें और हर हफ़्ते कुछ मिनट जोड़ें। हर तरह की हलचल मायने रखती है।",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "तेज़ चलने, साइकिलिंग या डांस से अपनी हृदय गति बढ़ाए रखें। ज़्यादातर दिन कम से कम 20-30 मिनट चलने-फिरने की कोशिश करें।",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "हफ़्ते में 2-3 बार पुश-अप्स, स्क्वैट्स या वेट उठाने जैसे स्ट्रेंथ व्यायाम आज़माएँ। इससे मांसपेशियाँ बनती हैं और मेटाबॉलिज़्म बढ़ता है।",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "ऐसी गतिविधियाँ शामिल करें जो आपको सच में पसंद हों, चाहे वह डांस हो, तैराकी, बागवानी या खेल। जब मज़ा आता है, तो उसे जारी रखना आसान होता है।",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "अपने शरीर की सुनें। कहीं दर्द हो तो रुक जाएँ। आराम और रिकवरी भी व्यायाम जितने ही ज़रूरी हैं। खुद पर ज़्यादा ज़ोर न डालें, खासकर जब आप अभी शुरुआत कर रहे हों।",
   "unit_ft": "फीट",
   "unit_in": "इंच",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "फीट/इंच",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "BMI कैलकुलेटर रिमाइंडर",
+  "notification_channel_description": "सेहत और वज़न ट्रैकिंग के निर्धारित रिमाइंडर"
 }

@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "Combine cardio, força e alongamento para manter o peso e a energia estáveis.",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "A atividade de baixo impacto protege as suas articulações. A consistência importa mais do que a intensidade.",
   "Start small and add a few minutes each week. Every bit of movement counts.": "Comece devagar e acrescente alguns minutos a cada semana. Cada movimento conta.",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "Mantém o ritmo cardíaco elevado com caminhadas rápidas, ciclismo ou dança. Tenta fazer exercício durante pelo menos 20 a 30 minutos na maioria dos dias.",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "Experimenta exercícios de força, como flexões, agachamentos ou levantamento de pesos, 2 a 3 vezes por semana. Isto ajuda a desenvolver os músculos e a acelerar o metabolismo.",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "Inclui atividades de que gostes verdadeiramente, como dançar, nadar, jardinar ou praticar desporto. Quando te divertes, é mais provável que mantenhas o hábito.",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "Ouve o teu corpo. Se sentires dor, para. O descanso e a recuperação são tão importantes como o exercício. Não te esforces demasiado, especialmente quando estás a começar.",
   "unit_ft": "pés",
   "unit_in": "pol.",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "pés/pol.",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "Lembretes da Calculadora de IMC",
+  "notification_channel_description": "Lembretes programados para acompanhar a saúde e o peso"
 }

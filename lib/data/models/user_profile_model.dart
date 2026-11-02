@@ -128,6 +128,15 @@ class UserProfile {
       ? ''
       : name.trim();
 
+  /// Short form for the Home greeting. Three or more words collapse to the
+  /// first word's initial plus the second word, e.g. "Muhammad Azwar Rafiq"
+  /// becomes "M. Azwar". Shorter names are shown unchanged.
+  String get homeDisplayName {
+    final parts = displayName.split(RegExp(r'\s+'));
+    if (parts.length < 3) return displayName;
+    return '${parts[0].substring(0, 1).toUpperCase()}. ${parts[1]}';
+  }
+
   UserProfile copyWith({
     String? name,
     int? age,

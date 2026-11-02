@@ -677,12 +677,16 @@ class MealDetailScreen extends StatelessWidget {
                     color: i == 0 ? const Color(0xFFC5F6E3) : _kLav,
                     borderRadius: BorderRadius.circular(16.r),
                   ),
-                  child: Text(
-                    meal.chips[i],
-                    style: bodyStyle(
-                      12.5,
-                      color: _kDeep,
-                      weight: FontWeight.w600,
+                  child: SizedBox(
+                    width: 79.5.w,
+                    child: Text(
+                      meal.chips[i],
+                      style: bodyStyle(
+                        12.5,
+                        color: _kDeep,
+                        weight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -720,7 +724,7 @@ class MealDetailScreen extends StatelessWidget {
                       'nutrition_summary'.tr,
                       style: headStyle(16, weight: FontWeight.w600),
                     ),
-                    const Spacer(),
+                    Spacer(),
                     Text(
                       'target_pct_daily'.trParams({'pct': '${meal.target}'}),
                       style: bodyStyle(12, color: AppPalette.textBody),

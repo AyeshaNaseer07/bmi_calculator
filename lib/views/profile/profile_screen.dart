@@ -738,9 +738,9 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                     focusNode: _focusNode,
                     autofocus: true,
                     textCapitalization: TextCapitalization.words,
-                    // Max 10 characters (letters, spaces, numbers, symbols);
+                    // Max 20 characters (letters, spaces, numbers, symbols);
                     // no counter, so the layout is unchanged.
-                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                    inputFormatters: [LengthLimitingTextInputFormatter(20)],
                     textInputAction: TextInputAction.done,
                     onTapOutside: (_) => _focusNode.unfocus(),
                     onSubmitted: (_) => _saveName(),

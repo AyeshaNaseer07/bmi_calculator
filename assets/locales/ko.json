@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "체중과 에너지를 안정적으로 유지하려면 유산소, 근력 운동, 스트레칭을 함께 하세요.",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "저강도 운동은 관절을 보호합니다. 강도보다 꾸준함이 더 중요합니다.",
   "Start small and add a few minutes each week. Every bit of movement counts.": "작게 시작해서 매주 몇 분씩 늘려 가세요. 움직임은 조금이라도 모두 의미가 있습니다.",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "빠르게 걷기, 자전거 타기 또는 춤추기 등으로 심박수를 높여 보세요. 대부분의 날에 20~30분 이상 움직이는 것을 목표로 하세요.",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "팔굽혀펴기, 스쿼트 또는 웨이트 트레이닝과 같은 근력 운동을 일주일에 2~3회 해 보세요. 근육을 키우고 신진대사를 높이는 데 도움이 됩니다.",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "춤, 수영, 정원 가꾸기 또는 스포츠처럼 정말 즐길 수 있는 활동을 포함해 보세요. 즐겁게 할수록 꾸준히 이어갈 가능성이 높아집니다.",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "몸의 신호에 귀 기울이세요. 통증이 느껴지면 운동을 멈추세요. 휴식과 회복도 운동만큼 중요합니다. 특히 운동을 막 시작했다면 무리하지 마세요.",
   "unit_ft": "피트",
   "unit_in": "인치",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "ft/in",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "BMI 계산기 알림",
+  "notification_channel_description": "정기적인 건강 및 체중 기록 알림"
 }

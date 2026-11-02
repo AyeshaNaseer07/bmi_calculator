@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "把有氧、力量和拉伸结合起来，有助于保持体重和精力稳定。",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "低冲击运动能保护关节。坚持比强度更重要。",
   "Start small and add a few minutes each week. Every bit of movement counts.": "从小处开始，每周增加几分钟。每一点运动都有意义。",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "通过快走、骑行或跳舞保持较高心率。尽量在大多数日子里运动至少 20-30 分钟。",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "每周做 2-3 次力量训练，如俯卧撑、深蹲或举重。这有助于增肌并提高新陈代谢。",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "选择您真正喜欢的活动，无论是跳舞、游泳、园艺还是运动。玩得开心，才更容易坚持。",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "倾听身体的声音。如果感到疼痛，请立即停止。休息和恢复与锻炼同样重要。不要过度勉强自己，尤其是刚开始的时候。",
   "unit_ft": "英尺",
   "unit_in": "英寸",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "英尺/英寸",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "BMI 计算器提醒",
+  "notification_channel_description": "定时的健康和体重追踪提醒"
 }

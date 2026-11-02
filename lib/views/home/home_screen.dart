@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildGreeting(bool hasData, ProfileController profileController) {
-    final userName = profileController.userProfile.value.displayName;
+    final userName = profileController.userProfile.value.homeDisplayName;
     final greeting = userName.isNotEmpty
         ? 'hello_name'.trParams({'name': userName})
         : 'hello_guest'.tr;

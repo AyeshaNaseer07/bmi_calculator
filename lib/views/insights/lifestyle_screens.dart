@@ -52,12 +52,18 @@ class StayActiveScreen extends StatelessWidget {
                       color: all ? _kLav : _kPill,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Text(
-                      chip,
-                      style: bodyStyle(
-                        11.5,
-                        color: _kDeep,
-                        weight: FontWeight.w500,
+                    child: SizedBox(
+                      width: 65.w,
+                      child: Center(
+                        child: Text(
+                          chip,
+                          style: bodyStyle(
+                            11.5,
+                            color: _kDeep,
+                            weight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ),
