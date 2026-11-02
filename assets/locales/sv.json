@@ -956,7 +956,10 @@
   "Water or low-impact fun": "Vatten eller skonsam aktivitet",
   "Walking in a pool or a relaxed dance.": "Gång i en pool eller en lugn dans.",
   "Strength training helps turn extra calories into muscle. Eat a snack within an hour after exercise.": "Styrketräning hjälper till att omvandla extra kalorier till muskler. Ät ett mellanmål inom en timme efter träningen.",
-  "Mix cardio, strength and stretching to keep your weight and energy steady.": "Blanda kondition, styrka och stretching för att hålla vikt och energi stabila.",
-  "Low-impact activity protects your joints. Consistency matters more than intensity.": "Skonsam aktivitet skyddar lederna. Kontinuitet är viktigare än intensitet.",
-  "Start small and add a few minutes each week. Every bit of movement counts.": "Börja smått och lägg till några minuter varje vecka. All rörelse räknas."
+  "Mix cardio, strength and stretching to keep your weight and energy steady.": "Kombinera kondition, styrka och stretching för att hålla vikt och energi stabila.",
+  "Low-impact activity protects your joints. Consistency matters more than intensity.": "Aktivitet med låg belastning skyddar dina leder. Regelbundenhet är viktigare än intensitet.",
+  "Start small and add a few minutes each week. Every bit of movement counts.": "Börja smått och lägg till några minuter varje vecka. Varje rörelse räknas.",
+  "unit_ft": "fot",
+  "unit_in": "tum",
+  "pro_badge": "PRO"
 }

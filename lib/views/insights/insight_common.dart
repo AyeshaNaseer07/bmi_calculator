@@ -641,7 +641,7 @@ class ProBadge extends StatelessWidget {
           ),
           SizedBox(width: 2.w),
           Text(
-            'PRO',
+            'pro_badge'.tr,
             style: TextStyle(
               color: Colors.white,
               fontSize: 9.sp,

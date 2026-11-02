@@ -955,8 +955,11 @@
   "Keep it steady and pain-free.": "حافظ على الثبات ودون ألم.",
   "Water or low-impact fun": "نشاط مائي أو ممتع منخفض التأثير",
   "Walking in a pool or a relaxed dance.": "المشي في المسبح أو رقص هادئ.",
-  "Strength training helps turn extra calories into muscle. Eat a snack within an hour after exercise.": "تمارين القوة تساعد على تحويل السعرات الزائدة إلى عضلات. تناول وجبة خفيفة خلال ساعة من التمرين.",
-  "Mix cardio, strength and stretching to keep your weight and energy steady.": "امزج الكارديو والقوة والتمدد للحفاظ على وزنك وطاقتك ثابتين.",
+  "Strength training helps turn extra calories into muscle. Eat a snack within an hour after exercise.": "يساعد تدريب القوة على تحويل السعرات الحرارية الزائدة إلى عضلات. تناول وجبة خفيفة في غضون ساعة بعد التمرين.",
+  "Mix cardio, strength and stretching to keep your weight and energy steady.": "امزج بين الكارديو والقوة والإطالة للحفاظ على وزنك وطاقتك ثابتين.",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "النشاط منخفض التأثير يحمي مفاصلك. الاستمرارية أهم من الشدة.",
-  "Start small and add a few minutes each week. Every bit of movement counts.": "ابدأ بخطوات صغيرة وأضف بضع دقائق كل أسبوع. كل حركة مهمة."
+  "Start small and add a few minutes each week. Every bit of movement counts.": "ابدأ بالقليل وأضف بضع دقائق كل أسبوع. كل حركة تُحتسب.",
+  "unit_ft": "قدم",
+  "unit_in": "بوصة",
+  "pro_badge": "PRO"
 }

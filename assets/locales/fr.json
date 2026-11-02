@@ -981,8 +981,11 @@
   "Keep it steady and pain-free.": "Restez régulier et sans douleur.",
   "Water or low-impact fun": "Eau ou activité douce",
   "Walking in a pool or a relaxed dance.": "Marche dans une piscine ou danse tranquille.",
-  "Strength training helps turn extra calories into muscle. Eat a snack within an hour after exercise.": "La musculation aide à transformer les calories en surplus en muscle. Prenez une collation dans l'heure qui suit l'exercice.",
-  "Mix cardio, strength and stretching to keep your weight and energy steady.": "Alternez cardio, renforcement et étirements pour garder un poids et une énergie stables.",
-  "Low-impact activity protects your joints. Consistency matters more than intensity.": "Une activité à faible impact protège vos articulations. La régularité compte plus que l'intensité.",
-  "Start small and add a few minutes each week. Every bit of movement counts.": "Commencez petit et ajoutez quelques minutes chaque semaine. Chaque mouvement compte."
+  "Strength training helps turn extra calories into muscle. Eat a snack within an hour after exercise.": "L'entraînement de force aide à transformer les calories en trop en muscle. Mange une collation dans l'heure qui suit l'exercice.",
+  "Mix cardio, strength and stretching to keep your weight and energy steady.": "Associe cardio, renforcement et étirements pour garder un poids et une énergie stables.",
+  "Low-impact activity protects your joints. Consistency matters more than intensity.": "Une activité à faible impact protège tes articulations. La régularité compte plus que l'intensité.",
+  "Start small and add a few minutes each week. Every bit of movement counts.": "Commence doucement et ajoute quelques minutes chaque semaine. Chaque mouvement compte.",
+  "unit_ft": "pi",
+  "unit_in": "po",
+  "pro_badge": "PRO"
 }

@@ -142,10 +142,10 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   );
                   final minHeightText = isCm
                       ? '120 cm'
-                      : '$minFt ft $minInches in';
+                      : '$minFt ${'unit_ft'.tr} $minInches ${'unit_in'.tr}';
                   final maxHeightText = isCm
                       ? '220 cm'
-                      : '$maxFt ft $maxInches in';
+                      : '$maxFt ${'unit_ft'.tr} $maxInches ${'unit_in'.tr}';
 
                   final minWeightText = isKg
                       ? '30 kg'
