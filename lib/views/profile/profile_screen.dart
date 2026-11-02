@@ -441,7 +441,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       shadows: [
                         BoxShadow(
-                          color: AppPalette.shadow(const Color(0x3A33D2AB)),
+                          color: const Color(0x3A33D2AB),
                           blurRadius: 6.80,
                           offset: Offset(0, 4),
                           spreadRadius: 0,
@@ -479,7 +479,6 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _accountRows(BuildContext context) {
-    final AppController appController = Get.find<AppController>();
     return Column(
       children: [
         // Language
@@ -491,70 +490,6 @@ class ProfileScreen extends StatelessWidget {
         ),
         Divider(height: 1, color: AppPalette.surfaceMuted),
 
-        // Notifications Switch
-        Expanded(
-          child: Obx(() {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 4.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 38.w,
-                    height: 38.w,
-                    alignment: Alignment.center,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
-                      shape: OvalBorder(),
-                    ),
-                    child: Icon(
-                      CupertinoIcons.moon,
-                      color: const Color(0xFF33D2AB),
-                      size: 18.sp,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Dark Mode',
-                          style: TextStyle(
-                            color: AppPalette.textPrimary,
-                            fontSize: 12.sp,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 1.h),
-                        Text(
-                          'Switch between light and dark theme',
-                          style: TextStyle(
-                            color: AppPalette.textPrimary.withValues(
-                              alpha: 0.82,
-                            ),
-                            fontSize: 11.sp,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  CupertinoSwitch(
-                    value: appController.isDarkMode.value,
-                    activeTrackColor: const Color(0xFF2FD1A6),
-                    onChanged: appController.setDarkMode,
-                  ),
-                ],
-              ),
-            );
-          }),
-        ),
-        Divider(height: 1, color: AppPalette.surfaceMuted),
         // Rate Us
         _buildAccountRow(
           icon: Icons.star_outline_rounded,
@@ -781,7 +716,7 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                 ),
                 shadows: [
                   BoxShadow(
-                    color: AppPalette.shadow(const Color(0x3A33D2AB)),
+                    color: const Color(0x3A33D2AB),
                     blurRadius: 6.80,
                     offset: const Offset(0, 4),
                     spreadRadius: 0,

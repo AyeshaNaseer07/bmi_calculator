@@ -10,8 +10,9 @@ import '../../controllers/weight_tracker_controller.dart';
 import '../../core/routes/app_routes.dart';
 
 class QuickActionsService {
-  static const MethodChannel _channel =
-      MethodChannel('com.funsoltechnologies.bmi/quick_actions');
+  static const MethodChannel _channel = MethodChannel(
+    'com.funsoltechnologies.bmi/quick_actions',
+  );
 
   static final QuickActionsService instance = QuickActionsService._();
   QuickActionsService._();

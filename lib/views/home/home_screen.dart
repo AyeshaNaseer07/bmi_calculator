@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   return Image.asset(
-                    AppAssets.themed(bgImage),
+                    bgImage,
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.topRight,
                   );
@@ -672,11 +672,7 @@ class _HomeScreenState extends State<HomeScreen> {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         // Pastel fills are light-only; dark mode tints with the category colour.
-        color: isCurrent
-            ? activeBg
-            : AppPalette.isDark
-            ? activeBg.withValues(alpha: 0.22)
-            : inactiveBg,
+        color: isCurrent ? activeBg : inactiveBg,
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(
@@ -785,9 +781,7 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
                   constraints: BoxConstraints(minHeight: 48.h),
                   decoration: BoxDecoration(
                     // Pastel fills are light-only; dark mode tints with the category colour.
-                    color: AppPalette.isDark
-                        ? category.color.withValues(alpha: 0.10)
-                        : category.feedbackBackground,
+                    color: category.feedbackBackground,
                     borderRadius: radius,
                     border: Border.all(
                       color: category.color.withValues(
@@ -827,11 +821,7 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
                                         end: const Alignment(1, 0.4),
                                         colors: [
                                           Colors.white.withValues(alpha: 0),
-                                          Colors.white.withValues(
-                                            alpha: AppPalette.isDark
-                                                ? 0.18
-                                                : 0.7,
-                                          ),
+                                          Colors.white.withValues(alpha: 0.7),
                                           Colors.white.withValues(alpha: 0),
                                         ],
                                       ),
@@ -908,9 +898,7 @@ class _RemoveAdsCard extends StatelessWidget {
             border: Border.all(color: _gold.withValues(alpha: 0.55)),
             boxShadow: [
               BoxShadow(
-                color: AppPalette.shadow(
-                  const Color(0xFF06302B).withValues(alpha: 0.35),
-                ),
+                color: const Color(0xFF06302B).withValues(alpha: 0.35),
                 blurRadius: 18.r,
                 offset: Offset(0, 8.h),
               ),

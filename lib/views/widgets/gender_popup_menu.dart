@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../core/theme/app_palette.dart';
 
 class GenderPopupMenuItem<T> {
@@ -32,7 +33,9 @@ class _GenderPopupMenuEntryState<T> extends State<GenderPopupMenuEntry<T>> {
       width: 144.w,
       height: 137.h,
       decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(11.r),
+        ),
       ),
       child: Stack(
         children: [

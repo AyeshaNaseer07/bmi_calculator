@@ -9,8 +9,8 @@ import 'insight_common.dart';
 import 'personal_targets.dart';
 import '../../core/theme/app_palette.dart';
 
-Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
-Color get _kLav => AppPalette.tint(const Color(0xFFE8EBFB));
+Color get _kDeep => const Color(0xFF006B4E);
+Color get _kLav => const Color(0xFFE8EBFB);
 
 /// "Sleep Well, Live Better".
 class SleepWellScreen extends StatelessWidget {
@@ -23,13 +23,10 @@ class SleepWellScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppPalette.surface,
         borderRadius: BorderRadius.circular(30.r),
-        border: Border.all(
-          color: AppPalette.tintLine(const Color(0xFFCFF1E5)),
-          width: 1.3,
-        ),
+        border: Border.all(color: const Color(0xFFCFF1E5), width: 1.3),
         boxShadow: [
           BoxShadow(
-            color: AppPalette.shadow(const Color(0x1A33D2AB)),
+            color: const Color(0x1A33D2AB),
             blurRadius: 6,
             offset: Offset(0, 2),
           ),
@@ -111,21 +108,15 @@ class SleepWellScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 12.h),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(
-                color: AppPalette.tintLine(const Color(0xFFCFF1E5)),
-                width: 1.3,
-              ),
+              border: Border.all(color: const Color(0xFFCFF1E5), width: 1.3),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  AppPalette.surface,
-                  AppPalette.tint(const Color(0xFFE2F9EF)),
-                ],
+                colors: [AppPalette.surface, const Color(0xFFE2F9EF)],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppPalette.shadow(const Color(0x2633D2AB)),
+                  color: const Color(0x2633D2AB),
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),
@@ -161,7 +152,7 @@ class SleepWellScreen extends StatelessWidget {
                         vertical: 3.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppPalette.tint(const Color(0xFFC9F7E3)),
+                        color: const Color(0xFFC9F7E3),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
@@ -288,7 +279,7 @@ class _SleepRing extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = stroke
-        ..color = AppPalette.tint(const Color(0xFFD7E5F3)),
+        ..color = const Color(0xFFD7E5F3),
     );
     canvas.drawArc(
       rect,

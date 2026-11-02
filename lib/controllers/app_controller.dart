@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart' show AppLifecycleListener, ThemeMode;
+import 'package:flutter/material.dart' show AppLifecycleListener;
 import 'package:get/get.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-import '../core/theme/app_palette.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/localization_service.dart';
 import '../data/services/remote_config_service.dart';
@@ -28,7 +27,6 @@ class AppController extends GetxController {
   final RxString selectedLanguage = 'en'.obs;
   final Rx<UnitSystem> unitSystem = UnitSystem.metric.obs;
   final RxBool notificationsEnabled = true.obs;
-  final RxBool isDarkMode = false.obs;
   final RxBool isPremium = false.obs;
   final RxBool onboardingSeen = false.obs;
 
@@ -41,8 +39,6 @@ class AppController extends GetxController {
     subscriptionService = SubscriptionService(_storage);
     selectedLanguage.value = _storage.getLanguage();
     unitSystem.value = _storage.getUnitSystem();
-    isDarkMode.value = _storage.getDarkMode();
-    AppPalette.isDark = isDarkMode.value;
     final isRemoteNotificationEnabled =
         remoteConfigService.isLocalNotificationEnabled;
     notificationsEnabled.value =
@@ -89,15 +85,6 @@ class AppController extends GetxController {
   void setUnitSystem(UnitSystem system) {
     unitSystem.value = system;
     _storage.setUnitSystem(system);
-  }
-
-  void setDarkMode(bool enabled) {
-    isDarkMode.value = enabled;
-    AppPalette.isDark = enabled;
-    _storage.setDarkMode(enabled);
-    Get.changeThemeMode(enabled ? ThemeMode.dark : ThemeMode.light);
-    // Screens read AppPalette directly, so rebuild everything.
-    Get.forceAppUpdate();
   }
 
   void toggleNotifications(bool enabled) {

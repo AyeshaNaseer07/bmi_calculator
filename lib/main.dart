@@ -29,7 +29,6 @@ void main() async {
 
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
-  AppPalette.isDark = storageService.getDarkMode();
 
   await LocalizationService.init();
   final currentLocale = LocalizationService.getLocaleFromLanguage(
@@ -136,8 +135,7 @@ class BMIApp extends StatelessWidget {
           title: 'BMI Calculator',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: AppPalette.isDark ? ThemeMode.dark : ThemeMode.light,
+          themeMode: ThemeMode.light,
           translations: LocalizationService(),
           locale: initialLocale,
           fallbackLocale: LocalizationService.fallbackLocale,

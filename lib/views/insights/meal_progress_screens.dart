@@ -12,8 +12,8 @@ import 'insight_common.dart';
 import 'meal_screens.dart';
 import '../../core/theme/app_palette.dart';
 
-Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
-Color get _kTrack => AppPalette.tint(const Color(0xFFE3E8FB));
+Color get _kDeep => const Color(0xFF006B4E);
+Color get _kTrack => const Color(0xFFE3E8FB);
 
 BoxDecoration _mintCard({double r = 24}) => BoxDecoration(
   color: AppPalette.surface,
@@ -21,7 +21,7 @@ BoxDecoration _mintCard({double r = 24}) => BoxDecoration(
   border: Border.all(color: kMintBorder, width: 1.4),
   boxShadow: [
     BoxShadow(
-      color: AppPalette.shadow(const Color(0x1F33D2AB)),
+      color: const Color(0x1F33D2AB),
       blurRadius: 8,
       offset: Offset(0, 2),
     ),
@@ -135,7 +135,7 @@ class MealCompletedScreen extends StatelessWidget {
             child: Text(
               _milestone,
               style: TextStyle(
-                color: AppPalette.ink(const Color(0xFF00714D)),
+                color: const Color(0xFF00714D),
                 fontSize: 14,
                 fontFamily: 'Plus Jakarta Sans',
                 fontWeight: FontWeight.w700,
@@ -199,7 +199,7 @@ class MealCompletedScreen extends StatelessWidget {
                           vertical: 4.h,
                         ),
                         decoration: BoxDecoration(
-                          color: AppPalette.tint(const Color(0xFFE8ECFB)),
+                          color: const Color(0xFFE8ECFB),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
@@ -237,7 +237,7 @@ class MealCompletedScreen extends StatelessWidget {
                         width: 44.w,
                         height: 44.w,
                         decoration: BoxDecoration(
-                          color: AppPalette.tint(const Color(0xFFE8ECFB)),
+                          color: const Color(0xFFE8ECFB),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -386,7 +386,7 @@ class MealProgressScreen extends StatelessWidget {
                     vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppPalette.tint(const Color(0xFFA9EBD4)),
+                    color: const Color(0xFFA9EBD4),
                     borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Row(
@@ -417,15 +417,15 @@ class MealProgressScreen extends StatelessWidget {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    AppPalette.tint(const Color(0xFFD6F6E8)),
+                    const Color(0xFFD6F6E8),
                     AppPalette.surface,
-                    AppPalette.tint(const Color(0xFFD6F6E8)),
+                    const Color(0xFFD6F6E8),
                   ],
                   stops: [0.0, 0.5, 1.0],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppPalette.shadow(const Color(0x1A33D2AB)),
+                    color: const Color(0x1A33D2AB),
                     blurRadius: 10,
                     offset: Offset(0, 2),
                   ),
@@ -475,7 +475,7 @@ class MealProgressScreen extends StatelessWidget {
                                 vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
-                                color: AppPalette.tint(const Color(0xFFC9F7E3)),
+                                color: const Color(0xFFC9F7E3),
                                 borderRadius: BorderRadius.circular(14.r),
                               ),
                               child: Row(
@@ -532,7 +532,7 @@ class MealProgressScreen extends StatelessWidget {
                 children: [
                   _statCard(
                     icon: Icons.restaurant_rounded,
-                    tile: AppPalette.tint(const Color(0xFFE8ECFB)),
+                    tile: const Color(0xFFE8ECFB),
                     iconColor: _kDeep,
                     trailing: Text(
                       'Target: 21',
@@ -562,7 +562,7 @@ class MealProgressScreen extends StatelessWidget {
                   SizedBox(width: 12.w),
                   _statCard(
                     icon: Icons.local_fire_department_rounded,
-                    tile: AppPalette.tint(const Color(0xFFFFE9E7)),
+                    tile: const Color(0xFFFFE9E7),
                     iconColor: const Color(0xFFE5392B),
                     trailing: Container(
                       padding: EdgeInsets.symmetric(
@@ -570,7 +570,7 @@ class MealProgressScreen extends StatelessWidget {
                         vertical: 3.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppPalette.tint(const Color(0xFFFFE3E0)),
+                        color: const Color(0xFFFFE3E0),
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Text(
@@ -603,7 +603,7 @@ class MealProgressScreen extends StatelessWidget {
                         width: 30.w,
                         height: 30.w,
                         decoration: BoxDecoration(
-                          color: AppPalette.tint(const Color(0xFFC9F7E3)),
+                          color: const Color(0xFFC9F7E3),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -673,13 +673,13 @@ class MealProgressScreen extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               decoration: ShapeDecoration(
-                color: AppPalette.tint(const Color(0xFFF7FFF1)),
+                color: const Color(0xFFF7FFF1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 shadows: [
                   BoxShadow(
-                    color: AppPalette.shadow(const Color(0x0C000000)),
+                    color: const Color(0x0C000000),
                     blurRadius: 2,
                     offset: Offset(0, 1),
                     spreadRadius: 0,
@@ -697,7 +697,7 @@ class MealProgressScreen extends StatelessWidget {
                         Text(
                           'DAILY WISDOM',
                           style: TextStyle(
-                            color: AppPalette.ink(const Color(0xFF006948)),
+                            color: const Color(0xFF006948),
                             fontSize: 11,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w700,
@@ -750,7 +750,7 @@ class _RingPainter extends CustomPainter {
       ..shader = SweepGradient(
         startAngle: -math.pi / 2,
         endAngle: math.pi * 1.5,
-        colors: [AppPalette.ink(const Color(0xFF006B4E)), Color(0xFF2FD4A8)],
+        colors: [const Color(0xFF006B4E), Color(0xFF2FD4A8)],
       ).createShader(rect);
     canvas.drawArc(rect, 0, math.pi * 2, false, bg);
     canvas.drawArc(rect, -math.pi / 2, math.pi * 2 * progress, false, fg);

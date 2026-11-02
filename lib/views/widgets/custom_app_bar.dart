@@ -59,24 +59,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-/// Back button graphic: the round white button artwork in light mode, a plain
-/// white arrow in dark mode (the artwork's white circle glares on dark).
+/// Back button graphic: the round white button artwork.
 class AppBackIcon extends StatelessWidget {
   const AppBackIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (!AppPalette.isDark) {
-      return Image.asset(AppAssets.insightBackIcon, height: 36.h, width: 36.w);
-    }
-    return SizedBox(
-      height: 36.h,
-      width: 36.w,
-      child: Icon(
-        Icons.arrow_back_ios_new_rounded,
-        color: Colors.white,
-        size: 22.sp,
-      ),
-    );
+    return Image.asset(AppAssets.insightBackIcon, height: 36.h, width: 36.w);
   }
 }

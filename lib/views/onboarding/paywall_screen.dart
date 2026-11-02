@@ -15,7 +15,6 @@ import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
-import '../widgets/app_background.dart';
 import '../widgets/premium_congrats_dialog.dart';
 
 class PaywallScreen extends StatefulWidget {
@@ -37,14 +36,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   static const Color _green = Color(0xFF0AA37D);
 
-  bool get _dark => AppPalette.isDark;
-  Color get _ringBorder =>
-      _dark ? AppPalette.mintBorder : const Color(0xFFB4E4D7);
-  Color get _lineColor => _dark ? AppPalette.border : const Color(0xFFD1D5DB);
-  Color get _badgeFill =>
-      _dark ? const Color(0x336CF8BB) : const Color(0x666CF8BB);
-  Color get _badgeText =>
-      _dark ? const Color(0xFF6CF8BB) : const Color(0xFF00714D);
+  Color get _ringBorder => const Color(0xFFB4E4D7);
+  Color get _lineColor => const Color(0xFFD1D5DB);
+  Color get _badgeFill => const Color(0x666CF8BB);
+  Color get _badgeText => const Color(0xFF00714D);
 
   @override
   void initState() {
@@ -169,18 +164,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: _dark
-            ? AppPalette.background
-            : const Color(0xFFF7FCF9),
+        backgroundColor: const Color(0xFFF7FCF9),
         body: Stack(
           fit: StackFit.expand,
           children: [
-            if (_dark)
-              const DecoratedBox(
-                decoration: BoxDecoration(gradient: AppBackground.darkGradient),
-              )
-            else
-              Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
+            Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
             SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -311,7 +299,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           ),
                           shadows: [
                             BoxShadow(
-                              color: AppPalette.shadow(const Color(0x3F33D2AB)),
+                              color: const Color(0x3F33D2AB),
                               blurRadius: 13.9,
                               spreadRadius: 2,
                             ),
@@ -385,9 +373,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppPalette.shadow(
-                                    const Color(0x1A33D2AB),
-                                  ),
+                                  color: const Color(0x1A33D2AB),
                                   blurRadius: 6,
                                   offset: Offset(0, 2),
                                 ),
@@ -543,9 +529,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         width: 36.w,
                         height: 36.w,
                         decoration: BoxDecoration(
-                          color: _dark
-                              ? AppPalette.surfaceMintDeep
-                              : const Color(0xFFBFEFDF),
+                          color: const Color(0xFFBFEFDF),
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -586,20 +570,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: _dark
-                ? [AppPalette.surface, AppPalette.surfaceMint]
-                : const [Colors.white, Color(0xFFEFFAF6)],
+            colors: const [Colors.white, Color(0xFFEFFAF6)],
           ),
           borderRadius: BorderRadius.circular(18.r),
           border: Border.all(
-            color: selected
-                ? _green
-                : (_dark ? AppPalette.mintBorder : const Color(0xFFE2F4EE)),
+            color: selected ? _green : (const Color(0xFFE2F4EE)),
             width: selected ? 1.5 : 1.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppPalette.shadow(shadowColor),
+              color: shadowColor,
               blurRadius: shadowBlur,
               offset: shadowOffset,
             ),
@@ -668,9 +648,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     child: Text(
                       title,
                       style: TextStyle(
-                        color: _dark
-                            ? AppPalette.textPrimary
-                            : const Color(0xFF0F1F4B),
+                        color: const Color(0xFF0F1F4B),
                         fontSize: 14.sp,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w700,
@@ -702,9 +680,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                       width: 56.w,
                       height: 8.sp,
                       decoration: BoxDecoration(
-                        color: _dark
-                            ? AppPalette.surfaceMuted
-                            : const Color(0xFFE5EAF0),
+                        color: const Color(0xFFE5EAF0),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                     ),
@@ -793,9 +769,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: _dark
-                      ? AppPalette.textPrimary
-                      : const Color(0xFF0F1F2E),
+                  color: const Color(0xFF0F1F2E),
                   fontSize: 15.sp,
                   fontFamily: 'Plus Jakarta Sans',
                   fontWeight: FontWeight.w700,
@@ -830,10 +804,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Text(
         '|',
-        style: TextStyle(
-          fontSize: 11.sp,
-          color: _dark ? AppPalette.border : const Color(0xFFCBD5E1),
-        ),
+        style: TextStyle(fontSize: 11.sp, color: const Color(0xFFCBD5E1)),
       ),
     );
   }

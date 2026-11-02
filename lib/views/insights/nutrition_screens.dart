@@ -57,7 +57,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppPalette.shadow(const Color(0x6633D2AB)),
+                      color: const Color(0x6633D2AB),
                       blurRadius: 36,
                       spreadRadius: 4,
                     ),
@@ -89,7 +89,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
                 Text(
                   'NUTRITION GUIDE',
                   style: TextStyle(
-                    color: AppPalette.ink(const Color(0xFF00714D)),
+                    color: const Color(0xFF00714D),
                     fontSize: 11,
                     fontFamily: 'Plus Jakarta Sans',
                     fontWeight: FontWeight.w700,
@@ -175,7 +175,7 @@ class _HubCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: AppPalette.shadow(const Color(0x3333D2AB)),
+                color: const Color(0x3333D2AB),
                 blurRadius: 8,
                 offset: Offset.zero,
               ),
@@ -249,7 +249,7 @@ class EatVegetablesScreen extends StatelessWidget {
     borderRadius: BorderRadius.circular(20.r),
     boxShadow: [
       BoxShadow(
-        color: AppPalette.shadow(const Color(0x3333D2AB)),
+        color: const Color(0x3333D2AB),
         blurRadius: 8,
         offset: Offset.zero,
       ),
@@ -418,7 +418,7 @@ class LeanProteinScreen extends StatelessWidget {
     width: double.infinity,
     padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 14.h),
     decoration: BoxDecoration(
-      color: AppPalette.tint(const Color(0xFFD9F5EC)),
+      color: const Color(0xFFD9F5EC),
       borderRadius: BorderRadius.circular(16.r),
       border: Border.all(color: const Color(0xFF2CC99E)),
     ),
@@ -521,7 +521,7 @@ class PortionSizesScreen extends StatelessWidget {
       borderRadius: BorderRadius.circular(18.r),
       boxShadow: [
         BoxShadow(
-          color: AppPalette.shadow(const Color(0x3333D2AB)),
+          color: const Color(0x3333D2AB),
           blurRadius: 8,
           offset: Offset.zero,
         ),

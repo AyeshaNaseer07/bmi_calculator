@@ -13,8 +13,8 @@ import '../../core/theme/app_palette.dart';
 
 export 'sleep_screens.dart';
 
-Color get _kDeep => AppPalette.ink(const Color(0xFF006B4E));
-Color get _kLav => AppPalette.tint(const Color(0xFFE8EBFB));
+Color get _kDeep => const Color(0xFF006B4E);
+Color get _kLav => const Color(0xFFE8EBFB);
 const Color _kPill = Color(0xFF5CF2C0);
 
 /// "Stay Active".
@@ -92,12 +92,9 @@ class StayActiveScreen extends StatelessWidget {
                 color: AppPalette.surface,
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
+                  BoxShadow(color: const Color(0x0D000000), blurRadius: 12),
                   BoxShadow(
-                    color: AppPalette.shadow(const Color(0x0D000000)),
-                    blurRadius: 12,
-                  ),
-                  BoxShadow(
-                    color: AppPalette.shadow(const Color(0x0A000000)),
+                    color: const Color(0x0A000000),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -145,10 +142,7 @@ class StayActiveScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Image.asset(
-                  AppAssets.themed(AppAssets.activeHero),
-                  fit: BoxFit.fitWidth,
-                ),
+                Image.asset(AppAssets.activeHero, fit: BoxFit.fitWidth),
               ],
             ),
           ),
@@ -309,7 +303,7 @@ class _LiveActivityCardState extends State<_LiveActivityCard>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppPalette.shadow(const Color(0x1F000000)),
+                    color: const Color(0x1F000000),
                     blurRadius: 14,
                     offset: const Offset(0, 5),
                   ),
@@ -342,9 +336,7 @@ class _LiveActivityCardState extends State<_LiveActivityCard>
                                     end: const Alignment(1, 0.4),
                                     colors: [
                                       kGreen.withValues(alpha: 0),
-                                      kGreen.withValues(
-                                        alpha: AppPalette.isDark ? 0.18 : 0.12,
-                                      ),
+                                      kGreen.withValues(alpha: 0.12),
                                       kGreen.withValues(alpha: 0),
                                     ],
                                   ),
@@ -427,12 +419,10 @@ class ActivityRoutineScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppPalette.surface,
                   borderRadius: BorderRadius.circular(14.r),
-                  border: Border.all(
-                    color: AppPalette.tintLine(const Color(0xFFDDF4EC)),
-                  ),
+                  border: Border.all(color: const Color(0xFFDDF4EC)),
                   boxShadow: [
                     BoxShadow(
-                      color: AppPalette.shadow(const Color(0x1F33D2AB)),
+                      color: const Color(0x1F33D2AB),
                       blurRadius: 8,
                       offset: Offset(0, 2),
                     ),
@@ -444,7 +434,7 @@ class ActivityRoutineScreen extends StatelessWidget {
                       width: 34.w,
                       height: 34.w,
                       decoration: BoxDecoration(
-                        color: AppPalette.tint(const Color(0xFFD3F8E9)),
+                        color: const Color(0xFFD3F8E9),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(d.icon, size: 18.sp, color: _kDeep),
@@ -526,7 +516,7 @@ class ActivityRoutineScreen extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 10.h),
             decoration: BoxDecoration(
-              color: AppPalette.tint(const Color(0xFFDDFBEF)),
+              color: const Color(0xFFDDFBEF),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(

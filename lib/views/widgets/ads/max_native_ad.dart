@@ -104,7 +104,6 @@ class MaxNativeAdView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!Platform.isIOS) return const SizedBox.shrink();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ValueListenableBuilder<MaxNativeAdState>(
       valueListenable: ad.state,
       builder: (context, state, _) {
@@ -113,7 +112,7 @@ class MaxNativeAdView extends StatelessWidget {
           // A new key per ad, so a reloaded ad gets a fresh native view
           key: ObjectKey(ad),
           viewType: 'max_native_ad_view',
-          creationParams: {'placement': ad.placement, 'isDark': isDark},
+          creationParams: {'placement': ad.placement},
           creationParamsCodec: const StandardMessageCodec(),
         );
       },

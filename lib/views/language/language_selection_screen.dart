@@ -176,14 +176,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   static const Color _kCheckGreen = Color(0xFF1BA672);
 
   // Light values are the original design; dark ones follow [AppPalette].
-  Color get _doneChipColor => AppPalette.isDark ? _kCheckGreen : _kMint;
-  Color get _doneTextColor => AppPalette.isDark ? Colors.white : Colors.black;
-  Color get _radioColor =>
-      AppPalette.isDark ? AppPalette.surfaceMintDeep : _kMint;
-  Color get _radioBorder =>
-      AppPalette.isDark ? AppPalette.mintBorder : const Color(0xFFB3E6D3);
-  Color get _adBackground =>
-      AppPalette.isDark ? AppPalette.surfaceMuted : const Color(0xFFF7F7F7);
+  Color get _doneChipColor => _kMint;
+  Color get _doneTextColor => Colors.black;
+  Color get _radioColor => _kMint;
+  Color get _radioBorder => const Color(0xFFB3E6D3);
+  Color get _adBackground => const Color(0xFFF7F7F7);
 
   Widget _buildDoneChip() {
     return IgnorePointer(
@@ -222,10 +219,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: AppPalette.isDark ? Colors.white12 : Colors.black12,
-          width: 0.5,
-        ),
+        border: Border.all(color: Colors.black12, width: 0.5),
       ),
       child: ClipOval(
         child: OverflowBox(
@@ -357,9 +351,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                           ),
                                           shadows: [
                                             BoxShadow(
-                                              color: AppPalette.shadow(
-                                                const Color(0x1633D2AB),
-                                              ),
+                                              color: const Color(0x1633D2AB),
                                               blurRadius: 6.80,
                                               offset: Offset(0, 3),
                                               spreadRadius: 0,

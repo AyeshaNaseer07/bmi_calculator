@@ -142,8 +142,7 @@ final class MaxNativeAdViewFactory: NSObject, FlutterPlatformViewFactory {
         let params = args as? [String: Any]
         return MaxNativeAdPlatformView(
             frame: frame,
-            placement: params?["placement"] as? String ?? "",
-            isDark: params?["isDark"] as? Bool ?? false
+            placement: params?["placement"] as? String ?? ""
         )
     }
 
@@ -162,8 +161,8 @@ final class MaxNativeAdViewFactory: NSObject, FlutterPlatformViewFactory {
 final class MaxNativeAdPlatformView: NSObject, FlutterPlatformView {
     private let adView: MANativeAdView
 
-    init(frame: CGRect, placement: String, isDark: Bool) {
-        adView = MaxNativeAdPlatformView.makeMediaAdView(isDark: isDark)
+    init(frame: CGRect, placement: String) {
+        adView = MaxNativeAdPlatformView.makeMediaAdView()
         adView.frame = frame
         super.init()
         if !MaxNativeAdPlugin.shared.render(placement: placement, into: adView) {
@@ -182,14 +181,12 @@ final class MaxNativeAdPlatformView: NSObject, FlutterPlatformView {
     private static let mediaTag = 1005
     private static let callToActionTag = 1006
 
-    private static func makeMediaAdView(isDark: Bool) -> MANativeAdView {
+    private static func makeMediaAdView() -> MANativeAdView {
         let inset: CGFloat = 14
         let cornerRadius: CGFloat = 18
 
         let adView = MANativeAdView(frame: .zero)
-        adView.backgroundColor = isDark
-            ? UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
-            : UIColor(red: 0.95, green: 0.95, blue: 0.97, alpha: 1.0)
+        adView.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.97, alpha: 1.0)
         // Rounded by the background only - see the class comment
         adView.layer.cornerRadius = cornerRadius
         adView.layer.masksToBounds = false
@@ -214,7 +211,7 @@ final class MaxNativeAdPlatformView: NSObject, FlutterPlatformView {
         let titleLabel = UILabel()
         titleLabel.tag = titleTag
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        titleLabel.textColor = isDark ? .white : UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        titleLabel.textColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         titleLabel.numberOfLines = 1
         titleLabel.lineBreakMode = .byTruncatingTail
 
@@ -222,15 +219,15 @@ final class MaxNativeAdPlatformView: NSObject, FlutterPlatformView {
         adBadge.text = "Ad"
         adBadge.font = UIFont.systemFont(ofSize: 9, weight: .bold)
         adBadge.textAlignment = .center
-        adBadge.textColor = isDark ? UIColor(white: 0.85, alpha: 1.0) : UIColor(white: 0.25, alpha: 1.0)
-        adBadge.backgroundColor = isDark ? UIColor(white: 0.25, alpha: 0.9) : UIColor(white: 0.88, alpha: 0.9)
+        adBadge.textColor = UIColor(white: 0.25, alpha: 1.0)
+        adBadge.backgroundColor = UIColor(white: 0.88, alpha: 0.9)
         adBadge.layer.cornerRadius = 3
         adBadge.layer.masksToBounds = true
 
         let bodyLabel = UILabel()
         bodyLabel.tag = bodyTag
         bodyLabel.font = UIFont.systemFont(ofSize: 13)
-        bodyLabel.textColor = isDark ? UIColor(white: 0.65, alpha: 1.0) : UIColor(white: 0.45, alpha: 1.0)
+        bodyLabel.textColor = UIColor(white: 0.45, alpha: 1.0)
         bodyLabel.numberOfLines = 2
         bodyLabel.lineBreakMode = .byTruncatingTail
 

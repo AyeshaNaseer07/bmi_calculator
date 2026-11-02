@@ -448,12 +448,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       padding: EdgeInsets.zero,
                       shadows: [
                         BoxShadow(
-                          color: AppPalette.shadow(const Color(0x2E33D2AB)),
+                          color: const Color(0x2E33D2AB),
                           blurRadius: 18.r,
                           offset: Offset(0, 6.h),
                         ),
                         BoxShadow(
-                          color: AppPalette.shadow(const Color(0x1433D2AB)),
+                          color: const Color(0x1433D2AB),
                           blurRadius: 4.r,
                         ),
                       ],
@@ -704,8 +704,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     decoration: BoxDecoration(
                                       color: _selectedRecordIds.isNotEmpty
                                           ? const Color(0xFF09B389)
-                                          : AppPalette.border
-                                                .withValues(alpha: 0.99),
+                                          : AppPalette.border.withValues(
+                                              alpha: 0.99,
+                                            ),
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     child: Row(
@@ -1084,7 +1085,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 height: 20.w,
                 margin: EdgeInsets.only(right: 8.w),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF09B389) : AppPalette.surface,
+                  color: isSelected
+                      ? const Color(0xFF09B389)
+                      : AppPalette.surface,
                   borderRadius: BorderRadius.circular(6.r),
                   border: Border.all(
                     color: isSelected
@@ -1326,12 +1329,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           // Soft mint glow all round, a little deeper under the card.
           shadows: [
             BoxShadow(
-              color: AppPalette.shadow(const Color(0x3333D2AB)),
+              color: const Color(0x3333D2AB),
               blurRadius: 18.r,
               offset: Offset(0, 4.h),
             ),
             BoxShadow(
-              color: AppPalette.shadow(const Color(0x1F33D2AB)),
+              color: const Color(0x1F33D2AB),
               blurRadius: 4.r,
               offset: Offset.zero,
             ),
@@ -1490,7 +1493,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F766E), Color(0xFF00946F), const Color(0xFF33D2AB)],
+            colors: [
+              Color(0xFF0F766E),
+              Color(0xFF00946F),
+              const Color(0xFF33D2AB),
+            ],
           ),
           borderRadius: BorderRadius.circular(24.r),
           boxShadow: [

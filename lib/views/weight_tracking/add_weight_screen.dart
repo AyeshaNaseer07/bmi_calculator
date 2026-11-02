@@ -447,11 +447,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       height: 48.h,
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        color: isError
-            ? (AppPalette.isDark
-                  ? const Color(0x33EF4444)
-                  : const Color(0xFFFEF2F2))
-            : AppPalette.surface,
+        color: isError ? (const Color(0xFFFEF2F2)) : AppPalette.surface,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
           color: isError ? const Color(0xFFEF4444) : AppPalette.mintBorder,

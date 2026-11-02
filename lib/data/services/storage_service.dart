@@ -11,7 +11,6 @@ class StorageService {
   static const String _keyLanguage = 'selected_language';
   static const String _keyUnitSystem = 'unit_system';
   static const String _keyNotifications = 'notifications_enabled';
-  static const String _keyDarkMode = 'dark_mode';
   static const String _keyIsPremium = 'is_premium';
   static const String _keyPremiumInstallId = 'premium_install_id';
   static const String _keyUserProfile = 'user_profile';
@@ -51,11 +50,6 @@ class StorageService {
 
   Future<void> setUnitSystem(UnitSystem unit) =>
       _prefs.setString(_keyUnitSystem, unit.name);
-
-  // ── Theme ──
-  bool getDarkMode() => _prefs.getBool(_keyDarkMode) ?? false;
-  Future<void> setDarkMode(bool enabled) =>
-      _prefs.setBool(_keyDarkMode, enabled);
 
   // ── Notifications ──
   bool getNotificationsEnabled() => _prefs.getBool(_keyNotifications) ?? true;

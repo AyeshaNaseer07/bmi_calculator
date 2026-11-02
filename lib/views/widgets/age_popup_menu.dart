@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../core/theme/app_palette.dart';
 
 class AgePopupMenuEntry extends PopupMenuEntry<int> {
-  const AgePopupMenuEntry({
-    super.key,
-    required this.items,
-    this.selectedAge,
-  });
+  const AgePopupMenuEntry({super.key, required this.items, this.selectedAge});
 
   final List<int> items;
   final int? selectedAge;

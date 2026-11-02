@@ -100,7 +100,9 @@ class _RateUsDialogState extends State<RateUsDialog> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 4.w),
                     child: Icon(
-                      isSelected ? Icons.star_rounded : Icons.star_outline_rounded,
+                      isSelected
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
                       size: 36.sp,
                       color: isSelected
                           ? const Color(0xFFF59E0B)

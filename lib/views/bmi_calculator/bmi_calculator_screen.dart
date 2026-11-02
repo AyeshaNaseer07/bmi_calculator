@@ -613,7 +613,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppPalette.shadow(const Color(0x2633D2AB)),
+              color: const Color(0x2633D2AB),
               blurRadius: 8,
               offset: Offset(0, 2),
             ),

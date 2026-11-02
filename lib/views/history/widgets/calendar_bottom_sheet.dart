@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+
 import '../../../core/theme/app_palette.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
@@ -483,7 +484,9 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF2FD1A6) : AppPalette.surface,
+                  color: isSelected
+                      ? const Color(0xFF2FD1A6)
+                      : AppPalette.surface,
                   borderRadius: BorderRadius.circular(8.r),
                   border: isSelected
                       ? null

@@ -28,7 +28,6 @@ class PremiumCongratsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = AppPalette.isDark;
     final still = MediaQuery.disableAnimationsOf(context);
     final radius = BorderRadius.circular(24.r);
 
@@ -43,7 +42,7 @@ class PremiumCongratsDialog extends StatelessWidget {
             color: AppPalette.surface.withValues(alpha: 0.97),
             borderRadius: radius,
             border: Border.all(
-              color: _mint.withValues(alpha: dark ? 0.35 : 0.45),
+              color: _mint.withValues(alpha: 0.45),
               width: 1.2,
             ),
           ),
@@ -57,16 +56,14 @@ class PremiumCongratsDialog extends StatelessWidget {
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: dark
-                      ? const Color(0xFF1A3A2A)
-                      : const Color(0xFFE9FBF3),
+                  color: const Color(0xFFE9FBF3),
                   border: Border.all(
                     color: _mint.withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: _mint.withValues(alpha: dark ? 0.35 : 0.3),
+                      color: _mint.withValues(alpha: 0.3),
                       blurRadius: 24,
                       spreadRadius: 2,
                     ),
@@ -157,12 +154,12 @@ class PremiumCongratsDialog extends StatelessWidget {
               borderRadius: radius,
               boxShadow: [
                 BoxShadow(
-                  color: _mint.withValues(alpha: dark ? 0.18 : 0.22),
+                  color: _mint.withValues(alpha: 0.22),
                   blurRadius: 32,
                   spreadRadius: 2,
                 ),
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: dark ? 0.45 : 0.12),
+                  color: Colors.black.withValues(alpha: 0.12),
                   blurRadius: 18,
                   offset: const Offset(0, 10),
                 ),

@@ -17,16 +17,12 @@ import '../../core/theme/app_palette.dart';
 /// image width, so the text can be laid over the card.
 class _HeroArt {
   final double aspect;
-  final double left;
-  final double top;
-  final double cardHeight;
 
-  const _HeroArt(
-    this.aspect, {
-    this.left = 15 / 1065,
-    this.top = 15 / 1065,
-    this.cardHeight = 363 / 1065,
-  });
+  const _HeroArt(this.aspect);
+
+  double get left => 15 / 1065;
+  double get top => 15 / 1065;
+  double get cardHeight => 363 / 1065;
 }
 
 class _Variant {
@@ -41,8 +37,6 @@ class _Variant {
   final String image;
   final _HeroArt art;
 
-  /// Same art for dark mode, from `assets/images/dark/`.
-  final _HeroArt darkArt;
   final Color weightColor;
   final Color barBg;
   final Color barFill;
@@ -65,7 +59,6 @@ class _Variant {
     required this.messageColor,
     required this.image,
     required this.art,
-    required this.darkArt,
     required this.weightColor,
     required this.barBg,
     required this.barFill,
@@ -84,21 +77,15 @@ _Variant _variantFor(BMICategory c) {
         screenTitle: 'Maintain Your BMI',
         planTitle: 'How to Maintain Your BMI',
         chip: 'NORMAL',
-        chipBg: AppPalette.tint(const Color(0xFFE3F8F1)),
+        chipBg: const Color(0xFFE3F8F1),
         chipFg: Color(0xFF09B389),
         range: '18.5 – 24.9',
         message: 'Keep up your healthy routine!',
         messageColor: Color(0xFF09B389),
         image: AppAssets.insightNormal,
         art: _HeroArt(1065 / 456),
-        darkArt: _HeroArt(
-          1918 / 820,
-          left: 0.00938,
-          top: 0.01460,
-          cardHeight: 0.39781,
-        ),
         weightColor: Color(0xFF09B389),
-        barBg: AppPalette.tint(const Color(0xFFE3F8F1)),
+        barBg: const Color(0xFFE3F8F1),
         barFill: Color(0xFF09B389),
         barText: Color(0xFF09B389),
         whyBorder: kMintBorder,
@@ -108,24 +95,18 @@ _Variant _variantFor(BMICategory c) {
         screenTitle: 'Improve Your BMI',
         planTitle: 'Your Healthy Weight Plan',
         chip: 'UNDERWEIGHT',
-        chipBg: AppPalette.tint(const Color(0xFFE3F1FB)),
-        chipFg: AppPalette.ink(const Color(0xFF0A8FD6)),
+        chipBg: const Color(0xFFE3F1FB),
+        chipFg: const Color(0xFF0A8FD6),
         range: 'Below 18.5',
         message: 'Your BMI is below the healthy range.',
-        messageColor: AppPalette.ink(const Color(0xFF0A8FD6)),
+        messageColor: const Color(0xFF0A8FD6),
         image: AppAssets.insightUnder,
         art: _HeroArt(1065 / 507),
-        darkArt: _HeroArt(
-          1812 / 868,
-          left: 0.01049,
-          top: 0.02759,
-          cardHeight: 0.39570,
-        ),
-        weightColor: AppPalette.ink(const Color(0xFF0A8FD6)),
-        barBg: AppPalette.tint(const Color(0xFFD3ECFA)),
-        barFill: AppPalette.ink(const Color(0xFF1B7FC4)),
-        barText: AppPalette.ink(const Color(0xFF0A6FB0)),
-        whyBorder: AppPalette.tintLine(const Color(0xFFD3E8F8)),
+        weightColor: const Color(0xFF0A8FD6),
+        barBg: const Color(0xFFD3ECFA),
+        barFill: const Color(0xFF1B7FC4),
+        barText: const Color(0xFF0A6FB0),
+        whyBorder: const Color(0xFFD3E8F8),
         gain: true,
         whyTitle: 'Why You May Be Underweight?',
         whyBullets: [
@@ -141,24 +122,18 @@ _Variant _variantFor(BMICategory c) {
         screenTitle: 'Improve Your BMI',
         planTitle: 'How to Improve Your BMI',
         chip: 'OVERWEIGHT',
-        chipBg: AppPalette.tint(const Color(0xFFFFEFC2)),
-        chipFg: AppPalette.ink(const Color(0xFFB45309)),
+        chipBg: const Color(0xFFFFEFC2),
+        chipFg: const Color(0xFFB45309),
         range: '25.0–29.9',
         message: 'Your BMI is above the healthy range.',
-        messageColor: AppPalette.ink(const Color(0xFF9A4A0C)),
+        messageColor: const Color(0xFF9A4A0C),
         image: AppAssets.insightOver,
         art: _HeroArt(1065 / 510),
-        darkArt: _HeroArt(
-          1915 / 821,
-          left: 0.01044,
-          top: 0.01619,
-          cardHeight: 0.39582,
-        ),
-        weightColor: AppPalette.ink(const Color(0xFF9A4A0C)),
-        barBg: AppPalette.tint(const Color(0xFFFFEFC2)),
-        barFill: AppPalette.ink(const Color(0xFF8A3B0E)),
-        barText: AppPalette.ink(const Color(0xFF7A3A0A)),
-        whyBorder: AppPalette.tintLine(const Color(0xFFD3E8F8)),
+        weightColor: const Color(0xFF9A4A0C),
+        barBg: const Color(0xFFFFEFC2),
+        barFill: const Color(0xFF8A3B0E),
+        barText: const Color(0xFF7A3A0A),
+        whyBorder: const Color(0xFFD3E8F8),
         whyTitle: 'Why You May Be Overweight?',
         whyBullets: [
           'Eating more calories than your body needs.',
@@ -173,24 +148,18 @@ _Variant _variantFor(BMICategory c) {
         screenTitle: 'Improve Your BMI',
         planTitle: 'How to Improve Your BMI',
         chip: 'OBESE',
-        chipBg: AppPalette.tint(const Color(0xFFFDE4E4)),
-        chipFg: AppPalette.ink(const Color(0xFFC01818)),
+        chipBg: const Color(0xFFFDE4E4),
+        chipFg: const Color(0xFFC01818),
         range: '30.0-34.9',
         message: 'Your BMI is above the healthy range.',
-        messageColor: AppPalette.ink(const Color(0xFFC01818)),
+        messageColor: const Color(0xFFC01818),
         image: AppAssets.insightObese,
         art: _HeroArt(1056 / 537),
-        darkArt: _HeroArt(
-          1812 / 868,
-          left: 0.01104,
-          top: 0.01600,
-          cardHeight: 0.42936,
-        ),
         weightColor: Color(0xFFE11D1D),
-        barBg: AppPalette.tint(const Color(0xFFFCCFCF)),
-        barFill: AppPalette.ink(const Color(0xFFB91C1C)),
-        barText: AppPalette.ink(const Color(0xFFB91C1C)),
-        whyBorder: AppPalette.tintLine(const Color(0xFFF8D4D4)),
+        barBg: const Color(0xFFFCCFCF),
+        barFill: const Color(0xFFB91C1C),
+        barText: const Color(0xFFB91C1C),
+        whyBorder: const Color(0xFFF8D4D4),
         whyTitle: 'Why You’re in the Obese Range?',
         whyBullets: [
           'Weight is high compared to your height.',
@@ -286,7 +255,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
   }
 
   Widget _buildHero(_Variant v) {
-    final art = AppPalette.isDark ? v.darkArt : v.art;
+    final art = v.art;
     return AspectRatio(
       aspectRatio: art.aspect,
       child: LayoutBuilder(
@@ -297,7 +266,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
           return Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(AppAssets.themed(v.image), fit: BoxFit.cover),
+              Image.asset(v.image, fit: BoxFit.cover),
               Positioned(
                 left: w * art.left,
                 top: w * art.top,
@@ -438,7 +407,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppPalette.shadow(const Color(0x4033D2AB)),
+            color: const Color(0x4033D2AB),
             blurRadius: 8,
             offset: Offset.zero,
           ),
@@ -547,7 +516,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               Expanded(
                 child: _TipCard(
                   icon: AppAssets.mealIcon,
-                  tile: AppPalette.tint(const Color(0xFFE6F8EE)),
+                  tile: const Color(0xFFE6F8EE),
                   title: 'Eat Balanced Meals',
                   subtitle: 'Choose balanced, nutritious foods.',
                   onTap: () => Get.to(() => const EatBalancedMealsScreen()),
@@ -557,7 +526,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               Expanded(
                 child: _TipCard(
                   icon: AppAssets.tipHydrated,
-                  tile: AppPalette.tint(const Color(0xFFEAF1FD)),
+                  tile: const Color(0xFFEAF1FD),
                   title: 'Stay Hydrated',
                   subtitle: 'Drink enough water daily.',
                   onTap: () => Get.to(() => const StayHydratedScreen()),
@@ -574,7 +543,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               Expanded(
                 child: _TipCard(
                   icon: AppAssets.tipActive,
-                  tile: AppPalette.tint(const Color(0xFFFFF7DC)),
+                  tile: const Color(0xFFFFF7DC),
                   title: 'Stay Active',
                   subtitle: 'Move your body every day.',
                   onTap: () => Get.to(() => const StayActiveScreen()),
@@ -584,7 +553,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               Expanded(
                 child: _TipCard(
                   icon: AppAssets.tipSleep,
-                  tile: AppPalette.tint(const Color(0xFFEBEEFD)),
+                  tile: const Color(0xFFEBEEFD),
                   title: 'Sleep Well',
                   subtitle:
                       'Aim for ${PersonalTargets.sleepText(widget.record.age)} hours nightly.',
@@ -742,7 +711,7 @@ class _TipCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
-              color: AppPalette.shadow(const Color(0x4033D2AB)),
+              color: const Color(0x4033D2AB),
               blurRadius: 8,
               offset: Offset.zero,
             ),
