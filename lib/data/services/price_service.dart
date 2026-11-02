@@ -73,22 +73,30 @@ class PriceService {
     SubscriptionPlan.yearly: PlanPrice(29.99, 'USD', '\$29.99'),
   };
 
-  static Map<SubscriptionPlan, PlanPrice>? _cache;
+  static final Map<PaywallType, Map<SubscriptionPlan, PlanPrice>> _cache = {};
   static final Map<String, ProductDetails> _products = {};
   static final RxMap<String, bool> trialEligibility = <String, bool>{}.obs;
   static Future<Map<SubscriptionPlan, PlanPrice>> load(
     RemoteConfigService rc,
+    PaywallType paywall,
   ) async {
-    if (_cache != null) {
+    final cached = _cache[paywall];
+    if (cached != null) {
       await refreshTrialEligibility();
-      return _cache!;
+      return cached;
     }
     final result = Map<SubscriptionPlan, PlanPrice>.of(fallback);
     try {
       if (!await InAppPurchase.instance.isAvailable()) return result;
       final ids = {
-        SubscriptionPlan.monthly: rc.getProductId(SubscriptionPlan.monthly),
-        SubscriptionPlan.yearly: rc.getProductId(SubscriptionPlan.yearly),
+        SubscriptionPlan.monthly: rc.getProductId(
+          SubscriptionPlan.monthly,
+          paywall,
+        ),
+        SubscriptionPlan.yearly: rc.getProductId(
+          SubscriptionPlan.yearly,
+          paywall,
+        ),
       }..removeWhere((_, id) => id.isEmpty);
       if (ids.isEmpty) return result;
       await _query(ids.values.toSet());
@@ -96,7 +104,7 @@ class PriceService {
         final p = _products[entry.value];
         if (p != null) result[entry.key] = _price(p);
       }
-      _cache = result;
+      _cache[paywall] = result;
       await refreshTrialEligibility();
     } catch (e) {
       debugPrint('Price fetch failed, using defaults: $e');
@@ -110,8 +118,9 @@ class PriceService {
     SubscriptionPlan slot,
     RemoteConfigService rc,
     Map<SubscriptionPlan, PlanPrice> prices,
+    PaywallType paywall,
   ) {
-    final productId = rc.getProductId(slot);
+    final productId = rc.getProductId(slot, paywall);
     final product = productFor(productId);
     return PlanOffer(
       slot: slot,
@@ -287,9 +296,9 @@ class PriceService {
     return getFreeTrialPeriod(p);
   }
 
-  static String getCtaLabel(ProductDetails? selected) {
+  static String getCtaLabel(ProductDetails? selected, PaywallType paywall) {
     if (getEligibleTrialPeriod(selected) != null) return 'start_free_trial'.tr;
-    final text = RemoteConfigService.to.buttonText.trim();
+    final text = RemoteConfigService.to.paywallBtnText(paywall).trim();
     if (text.isEmpty || text.toLowerCase().contains('trial')) {
       return 'continue_btn'.tr;
     }

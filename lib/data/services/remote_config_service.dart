@@ -9,6 +9,9 @@ import '../models/remote_model.dart';
 import 'storage_service.dart';
 import 'subscription_service.dart';
 
+/// Which paywall a remote value belongs to: `onb_paywall_*` or `week_paywall_*`.
+enum PaywallType { onboarding, week }
+
 class RemoteConfigService extends GetxService {
   final StorageService? _storage;
 
@@ -38,11 +41,15 @@ class RemoteConfigService extends GetxService {
     }
   }
 
-  String get paywallBtnText => model.value.paywallBtnText;
-  String get buttonText => model.value.paywallBtnText;
-  int get crossDelaySeconds => model.value.crossDelay;
-  String get weeklyProductId => model.value.weeklyProductId;
-  String get yearlyProductId => model.value.yearlyProductId;
+  String paywallBtnText(PaywallType type) => switch (type) {
+    PaywallType.onboarding => model.value.onbPaywallBtnText,
+    PaywallType.week => model.value.weekPaywallBtnText,
+  };
+
+  int crossDelaySeconds(PaywallType type) => switch (type) {
+    PaywallType.onboarding => model.value.onbPaywallCrossDelay,
+    PaywallType.week => model.value.weekPaywallCrossDelay,
+  };
 
   bool get isSoftPaywallAccessEnabled {
     try {
@@ -98,9 +105,17 @@ class RemoteConfigService extends GetxService {
 
   String get appOpenAdId => model.value.appOpenAdId;
 
-  bool get isSplashInterAdEnabled {
+  bool get isFirstTimeSplashInterAdEnabled {
     try {
-      return model.value.isSplashInterAdEnabled;
+      return model.value.isFirstTimeSplashInterAdEnabled;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  bool get isSecondTimeSplashInterAdEnabled {
+    try {
+      return model.value.isSecondTimeSplashInterAdEnabled;
     } catch (_) {
       return true;
     }
@@ -194,8 +209,8 @@ class RemoteConfigService extends GetxService {
       return;
     }
     debugPrint('[RemoteConfig] no activated values yet; using cached/defaults');
-    if (model.value.weeklyProductId.isEmpty ||
-        model.value.yearlyProductId.isEmpty) {
+    if (model.value.onbPaywallWeeklyProductId.isEmpty ||
+        model.value.onbPaywallYearlyProductId.isEmpty) {
       final defaults = RemoteModel.defaults();
       model.value = defaults;
       remoteModel = defaults;
@@ -209,10 +224,14 @@ class RemoteConfigService extends GetxService {
       '[RemoteConfig] values ($source): '
       'first_time_onboarding=${m.firstTimeOnboarding}, '
       'second_time_onboarding=${m.secondTimeOnboarding}, '
-      'paywall_btn_text="${m.paywallBtnText}", cross_delay=${m.crossDelay}, '
+      'onb_paywall_btn_text="${m.onbPaywallBtnText}", '
+      'onb_paywall_cross_delay=${m.onbPaywallCrossDelay}, '
+      'week_paywall_btn_text="${m.weekPaywallBtnText}", '
+      'week_paywall_cross_delay=${m.weekPaywallCrossDelay}, '
       'soft_paywall_access=${m.softPaywallAccess}, '
       'show_ads_debugger=${m.showAdsDebugger}, '
-      'splash_inter_ad=${m.splashInterAd}, '
+      'first_time_splash_inter_ad=${m.firstTimeSplashInterAd}, '
+      'second_time_splash_inter_ad=${m.secondTimeSplashInterAd}, '
       'onb_paywall_enable=${m.onbPaywallEnable}, '
       'week_paywall_enable=${m.weekPaywallEnable}, '
       'calculator_inter_ad=${m.calculatorInterAd}, '
@@ -232,14 +251,15 @@ class RemoteConfigService extends GetxService {
     _storage?.setRemoteButtonText(jsonEncode(parsed.toJson()));
   }
 
-  String getProductId(SubscriptionPlan plan) {
-    switch (plan) {
-      case SubscriptionPlan.weekly:
-      case SubscriptionPlan.monthly:
-        return model.value.weeklyProductId;
-      case SubscriptionPlan.yearly:
-        return model.value.yearlyProductId;
-    }
+  String getProductId(SubscriptionPlan plan, PaywallType type) {
+    final m = model.value;
+    final weekly = type == PaywallType.onboarding
+        ? m.onbPaywallWeeklyProductId
+        : m.weekPaywallWeeklyProductId;
+    final yearly = type == PaywallType.onboarding
+        ? m.onbPaywallYearlyProductId
+        : m.weekPaywallYearlyProductId;
+    return plan == SubscriptionPlan.yearly ? yearly : weekly;
   }
 }
 

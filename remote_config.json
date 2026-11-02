@@ -1,0 +1,95 @@
+{
+  "first_time_onboarding": {
+    "value": "on"
+  },
+  "second_time_onboarding": {
+    "value": "off"
+  },
+  "soft_paywall_access": {
+    "value": "true"
+  },
+  "show_ads_debugger": {
+    "value": "off"
+  },
+  "onb_paywall_btn_text": {
+    "value": "Start Free Trial"
+  },
+  "onb_paywall_cross_delay": {
+    "value": "3"
+  },
+  "onb_paywall_weekly_product_id": {
+    "value": "com.weekly.bmi.calculator.app"
+  },
+  "onb_paywall_yearly_product_id": {
+    "value": "com.yearly.bmi.calculator.app"
+  },
+  "week_paywall_btn_text": {
+    "value": "Start Free Trial"
+  },
+  "week_paywall_cross_delay": {
+    "value": "3"
+  },
+  "week_paywall_weekly_product_id": {
+    "value": "com.weekly.bmi.calculator.app"
+  },
+  "week_paywall_yearly_product_id": {
+    "value": "com.yearly.bmi.calculator.app"
+  },
+  "first_time_splash_inter_ad": {
+    "value": "on"
+  },
+  "second_time_splash_inter_ad": {
+    "value": "on"
+  },
+  "splash_inter_ad_id": {
+    "value": "85b22c87e3ca84c2"
+  },
+  "onb_paywall_enable": {
+    "value": "on"
+  },
+  "onb_paywall_id": {
+    "value": "ff833ded57dafd9a"
+  },
+  "week_paywall_enable": {
+    "value": "on"
+  },
+  "week_paywall_id": {
+    "value": "ff833ded57dafd9a"
+  },
+  "calculator_inter_ad": {
+    "value": "on"
+  },
+  "calculator_inter_ad_id": {
+    "value": "0a4481fa2371003a"
+  },
+  "language_native_ad": {
+    "value": "on"
+  },
+  "language_native_ad_id": {
+    "value": "18189ba9818ddf0a"
+  },
+  "onboarding_native_ad": {
+    "value": "on"
+  },
+  "onboarding_native_ad_id": {
+    "value": "99f2f2b2c1b0ca6a"
+  },
+  "full_screen_native_ad": {
+    "value": "on"
+  },
+  "full_screen_native_ad_id": {
+    "value": "2854da2e9e4a2bc5"
+  },
+  "app_open_ad": {
+    "value": "on"
+  },
+  "app_open_ad_id": {
+    "value": "8912e79bed7e47df"
+  },
+  "local_notification": {
+    "value": "on"
+  },
+  "show_notification_frequency": {
+    "value": "d"
+  }
+}

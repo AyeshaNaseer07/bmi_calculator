@@ -3,10 +3,14 @@ import 'package:flutter/foundation.dart';
 class RemoteModel {
   String? _firstTimeOnboarding;
   String? _secondTimeOnboarding;
-  String? _paywallBtnText;
-  int? _crossDelay;
-  String? _weeklyProductId;
-  String? _yearlyProductId;
+  String? _onbPaywallBtnText;
+  int? _onbPaywallCrossDelay;
+  String? _onbPaywallWeeklyProductId;
+  String? _onbPaywallYearlyProductId;
+  String? _weekPaywallBtnText;
+  int? _weekPaywallCrossDelay;
+  String? _weekPaywallWeeklyProductId;
+  String? _weekPaywallYearlyProductId;
   String? _fullScreenNativeAd;
   String? _languageNativeAd;
   String? _onboardingNativeAd;
@@ -15,7 +19,8 @@ class RemoteModel {
   String? _onboardingNativeAdId;
   String? _appOpenAd;
   String? _appOpenAdId;
-  String? _splashInterAd;
+  String? _firstTimeSplashInterAd;
+  String? _secondTimeSplashInterAd;
   String? _splashInterAdId;
   String? _onbPaywallEnable;
   String? _onbPaywallId;
@@ -29,6 +34,8 @@ class RemoteModel {
   String? _showAdsDebugger;
 
   // AppLovin MAX ad units; Remote Config overrides each one.
+  static const String defaultWeeklyProductId = 'com.weekly.bmi.calculator.app';
+  static const String defaultYearlyProductId = 'com.yearly.bmi.calculator.app';
   static const String defaultAppOpenAdId = '8912e79bed7e47df';
   static const String defaultSplashInterAdId = '85b22c87e3ca84c2';
   // Both paywalls' cross interstitials share this ad unit until set separately.
@@ -44,19 +51,39 @@ class RemoteModel {
   String get secondTimeOnboarding => _secondTimeOnboarding ?? 'off';
   set secondTimeOnboarding(String value) => _secondTimeOnboarding = value;
 
-  String get paywallBtnText => _paywallBtnText ?? '';
-  set paywallBtnText(String value) => _paywallBtnText = value;
+  // Onboarding paywall (onb_paywall_*).
+  String get onbPaywallBtnText => _onbPaywallBtnText ?? '';
+  set onbPaywallBtnText(String value) => _onbPaywallBtnText = value;
 
-  int get crossDelay => _crossDelay ?? 3;
-  set crossDelay(int value) => _crossDelay = value;
+  int get onbPaywallCrossDelay => _onbPaywallCrossDelay ?? 3;
+  set onbPaywallCrossDelay(int value) => _onbPaywallCrossDelay = value;
 
-  String get weeklyProductId =>
-      _weeklyProductId ?? 'com.weekly.bmi.calculator.app';
-  set weeklyProductId(String value) => _weeklyProductId = value;
+  String get onbPaywallWeeklyProductId =>
+      _onbPaywallWeeklyProductId ?? defaultWeeklyProductId;
+  set onbPaywallWeeklyProductId(String value) =>
+      _onbPaywallWeeklyProductId = value;
 
-  String get yearlyProductId =>
-      _yearlyProductId ?? 'com.yearly.bmi.calculator.app';
-  set yearlyProductId(String value) => _yearlyProductId = value;
+  String get onbPaywallYearlyProductId =>
+      _onbPaywallYearlyProductId ?? defaultYearlyProductId;
+  set onbPaywallYearlyProductId(String value) =>
+      _onbPaywallYearlyProductId = value;
+
+  // Week (soft) paywall (week_paywall_*).
+  String get weekPaywallBtnText => _weekPaywallBtnText ?? '';
+  set weekPaywallBtnText(String value) => _weekPaywallBtnText = value;
+
+  int get weekPaywallCrossDelay => _weekPaywallCrossDelay ?? 3;
+  set weekPaywallCrossDelay(int value) => _weekPaywallCrossDelay = value;
+
+  String get weekPaywallWeeklyProductId =>
+      _weekPaywallWeeklyProductId ?? defaultWeeklyProductId;
+  set weekPaywallWeeklyProductId(String value) =>
+      _weekPaywallWeeklyProductId = value;
+
+  String get weekPaywallYearlyProductId =>
+      _weekPaywallYearlyProductId ?? defaultYearlyProductId;
+  set weekPaywallYearlyProductId(String value) =>
+      _weekPaywallYearlyProductId = value;
 
   String get fullScreenNativeAd => _fullScreenNativeAd ?? 'on';
   set fullScreenNativeAd(String value) => _fullScreenNativeAd = value;
@@ -85,8 +112,13 @@ class RemoteModel {
   String get appOpenAdId => _appOpenAdId ?? defaultAppOpenAdId;
   set appOpenAdId(String value) => _appOpenAdId = value;
 
-  String get splashInterAd => _splashInterAd ?? 'on';
-  set splashInterAd(String value) => _splashInterAd = value;
+  /// Splash interstitial until onboarding has been completed once.
+  String get firstTimeSplashInterAd => _firstTimeSplashInterAd ?? 'on';
+  set firstTimeSplashInterAd(String value) => _firstTimeSplashInterAd = value;
+
+  /// Splash interstitial on every launch after that.
+  String get secondTimeSplashInterAd => _secondTimeSplashInterAd ?? 'on';
+  set secondTimeSplashInterAd(String value) => _secondTimeSplashInterAd = value;
 
   String get splashInterAdId => _splashInterAdId ?? defaultSplashInterAdId;
   set splashInterAdId(String value) => _splashInterAdId = value;
@@ -128,10 +160,14 @@ class RemoteModel {
   RemoteModel({
     this._firstTimeOnboarding,
     this._secondTimeOnboarding,
-    this._paywallBtnText,
-    this._crossDelay,
-    this._weeklyProductId,
-    this._yearlyProductId,
+    this._onbPaywallBtnText,
+    this._onbPaywallCrossDelay,
+    this._onbPaywallWeeklyProductId,
+    this._onbPaywallYearlyProductId,
+    this._weekPaywallBtnText,
+    this._weekPaywallCrossDelay,
+    this._weekPaywallWeeklyProductId,
+    this._weekPaywallYearlyProductId,
     this._fullScreenNativeAd,
     this._languageNativeAd,
     this._onboardingNativeAd,
@@ -140,7 +176,8 @@ class RemoteModel {
     this._onboardingNativeAdId,
     this._appOpenAd,
     this._appOpenAdId,
-    this._splashInterAd,
+    this._firstTimeSplashInterAd,
+    this._secondTimeSplashInterAd,
     this._splashInterAdId,
     this._onbPaywallEnable,
     this._onbPaywallId,
@@ -172,7 +209,8 @@ class RemoteModel {
   bool get isLanguageNativeAdEnabled => _isOn(languageNativeAd);
   bool get isOnboardingNativeAdEnabled => _isOn(onboardingNativeAd);
 
-  bool get isSplashInterAdEnabled => _isOn(splashInterAd);
+  bool get isFirstTimeSplashInterAdEnabled => _isOn(firstTimeSplashInterAd);
+  bool get isSecondTimeSplashInterAdEnabled => _isOn(secondTimeSplashInterAd);
   bool get isOnbPaywallInterAdEnabled => _isOn(onbPaywallEnable);
   bool get isWeekPaywallInterAdEnabled => _isOn(weekPaywallEnable);
   bool get isCalculatorInterAdEnabled => _isOn(calculatorInterAd);
@@ -184,7 +222,6 @@ class RemoteModel {
   bool get isAdsDebuggerEnabled => _isOn(showAdsDebugger);
 
   // Compatibility aliases
-  String get splashYearlyProductId => yearlyProductId;
 
   static String _parseString(dynamic val, String defaultValue) {
     if (val == null) return defaultValue;
@@ -226,33 +263,70 @@ class RemoteModel {
               remoteConfig['is_second_time_onboarding'],
           'off',
         ),
-        paywallBtnText: _parseString(
-          remoteConfig['premium_btn_text'] ??
+        // Old shared keys still apply when a per-paywall key is unset.
+        onbPaywallBtnText: _parseString(
+          remoteConfig['onb_paywall_btn_text'] ??
+              remoteConfig['premium_btn_text'] ??
               remoteConfig['paywall_btn_text'] ??
               remoteConfig['paywall_button_text'] ??
               remoteConfig['splash_product_btn_text'] ??
               remoteConfig['button_text'],
           '',
         ),
-        crossDelay: _parseInt(
-          remoteConfig['cross_delay'] ??
+        onbPaywallCrossDelay: _parseInt(
+          remoteConfig['onb_paywall_cross_delay'] ??
+              remoteConfig['cross_delay'] ??
               remoteConfig['paywall_cross_delay'] ??
               remoteConfig['splash_product_cross_delay'],
           3,
         ),
-        weeklyProductId: _parseString(
-          remoteConfig['weekly_product_id'] ??
+        onbPaywallWeeklyProductId: _parseString(
+          remoteConfig['onb_paywall_weekly_product_id'] ??
+              remoteConfig['weekly_product_id'] ??
               remoteConfig['splash_weekly_product_id'] ??
               remoteConfig['weeklyProductId'] ??
               remoteConfig['splash_product_id'],
-          'com.weekly.bmi.calculator.app',
+          defaultWeeklyProductId,
         ),
-        yearlyProductId: _parseString(
-          remoteConfig['yearly_product_id'] ??
+        onbPaywallYearlyProductId: _parseString(
+          remoteConfig['onb_paywall_yearly_product_id'] ??
+              remoteConfig['yearly_product_id'] ??
               remoteConfig['splashYearlyProductId'] ??
               remoteConfig['splash_yearly_product_id'] ??
               remoteConfig['yearlyProductId'],
-          'com.yearly.bmi.calculator.app',
+          defaultYearlyProductId,
+        ),
+        weekPaywallBtnText: _parseString(
+          remoteConfig['week_paywall_btn_text'] ??
+              remoteConfig['premium_btn_text'] ??
+              remoteConfig['paywall_btn_text'] ??
+              remoteConfig['paywall_button_text'] ??
+              remoteConfig['splash_product_btn_text'] ??
+              remoteConfig['button_text'],
+          '',
+        ),
+        weekPaywallCrossDelay: _parseInt(
+          remoteConfig['week_paywall_cross_delay'] ??
+              remoteConfig['cross_delay'] ??
+              remoteConfig['paywall_cross_delay'] ??
+              remoteConfig['splash_product_cross_delay'],
+          3,
+        ),
+        weekPaywallWeeklyProductId: _parseString(
+          remoteConfig['week_paywall_weekly_product_id'] ??
+              remoteConfig['weekly_product_id'] ??
+              remoteConfig['splash_weekly_product_id'] ??
+              remoteConfig['weeklyProductId'] ??
+              remoteConfig['splash_product_id'],
+          defaultWeeklyProductId,
+        ),
+        weekPaywallYearlyProductId: _parseString(
+          remoteConfig['week_paywall_yearly_product_id'] ??
+              remoteConfig['yearly_product_id'] ??
+              remoteConfig['splashYearlyProductId'] ??
+              remoteConfig['splash_yearly_product_id'] ??
+              remoteConfig['yearlyProductId'],
+          defaultYearlyProductId,
         ),
         languageNativeAd: _parseString(
           remoteConfig['language_native_ad'] ??
@@ -295,8 +369,19 @@ class RemoteModel {
           remoteConfig['app_open_ad_id'] ?? remoteConfig['appOpenAdId'],
           defaultAppOpenAdId,
         ),
-        splashInterAd: _parseString(
-          remoteConfig['splash_inter_ad'] ?? remoteConfig['splashInterAd'],
+        // The old single splash_inter_ad key still applies if a new one is unset.
+        firstTimeSplashInterAd: _parseString(
+          remoteConfig['first_time_splash_inter_ad'] ??
+              remoteConfig['firstTimeSplashInterAd'] ??
+              remoteConfig['splash_inter_ad'] ??
+              remoteConfig['splashInterAd'],
+          'on',
+        ),
+        secondTimeSplashInterAd: _parseString(
+          remoteConfig['second_time_splash_inter_ad'] ??
+              remoteConfig['secondTimeSplashInterAd'] ??
+              remoteConfig['splash_inter_ad'] ??
+              remoteConfig['splashInterAd'],
           'on',
         ),
         splashInterAdId: _parseString(
@@ -365,10 +450,14 @@ class RemoteModel {
     return RemoteModel(
       firstTimeOnboarding: 'on',
       secondTimeOnboarding: 'off',
-      paywallBtnText: '',
-      crossDelay: 3,
-      weeklyProductId: 'com.weekly.bmi.calculator.app',
-      yearlyProductId: 'com.yearly.bmi.calculator.app',
+      onbPaywallBtnText: '',
+      onbPaywallCrossDelay: 3,
+      onbPaywallWeeklyProductId: defaultWeeklyProductId,
+      onbPaywallYearlyProductId: defaultYearlyProductId,
+      weekPaywallBtnText: '',
+      weekPaywallCrossDelay: 3,
+      weekPaywallWeeklyProductId: defaultWeeklyProductId,
+      weekPaywallYearlyProductId: defaultYearlyProductId,
       languageNativeAd: 'on',
       onboardingNativeAd: 'on',
       fullScreenNativeAd: 'on',
@@ -377,7 +466,8 @@ class RemoteModel {
       onboardingNativeAdId: defaultOnboardingNativeAdId,
       appOpenAd: 'on',
       appOpenAdId: defaultAppOpenAdId,
-      splashInterAd: 'on',
+      firstTimeSplashInterAd: 'on',
+      secondTimeSplashInterAd: 'on',
       splashInterAdId: defaultSplashInterAdId,
       onbPaywallEnable: 'on',
       onbPaywallId: defaultPaywallCrossInterAdId,
@@ -396,10 +486,14 @@ class RemoteModel {
     return {
       'first_time_onboarding': firstTimeOnboarding,
       'second_time_onboarding': secondTimeOnboarding,
-      'paywall_btn_text': paywallBtnText,
-      'cross_delay': crossDelay,
-      'weekly_product_id': weeklyProductId,
-      'yearly_product_id': yearlyProductId,
+      'onb_paywall_btn_text': onbPaywallBtnText,
+      'onb_paywall_cross_delay': onbPaywallCrossDelay,
+      'onb_paywall_weekly_product_id': onbPaywallWeeklyProductId,
+      'onb_paywall_yearly_product_id': onbPaywallYearlyProductId,
+      'week_paywall_btn_text': weekPaywallBtnText,
+      'week_paywall_cross_delay': weekPaywallCrossDelay,
+      'week_paywall_weekly_product_id': weekPaywallWeeklyProductId,
+      'week_paywall_yearly_product_id': weekPaywallYearlyProductId,
       'language_native_ad': languageNativeAd,
       'onboarding_native_ad': onboardingNativeAd,
       'full_screen_native_ad': fullScreenNativeAd,
@@ -408,7 +502,8 @@ class RemoteModel {
       'onboarding_native_ad_id': onboardingNativeAdId,
       'app_open_ad': appOpenAd,
       'app_open_ad_id': appOpenAdId,
-      'splash_inter_ad': splashInterAd,
+      'first_time_splash_inter_ad': firstTimeSplashInterAd,
+      'second_time_splash_inter_ad': secondTimeSplashInterAd,
       'splash_inter_ad_id': splashInterAdId,
       'onb_paywall_enable': onbPaywallEnable,
       'onb_paywall_id': onbPaywallId,

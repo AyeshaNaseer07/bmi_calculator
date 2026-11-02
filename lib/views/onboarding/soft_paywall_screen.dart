@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +11,7 @@ import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/open_url.dart';
 import '../../data/services/price_service.dart';
+import '../../data/services/remote_config_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
@@ -29,19 +32,35 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   SubscriptionPlan _plan = SubscriptionPlan.yearly;
   bool _loading = false;
   bool _pricesLoading = true;
+  bool _showCloseButton = false;
+  Timer? _crossDelayTimer;
   Map<SubscriptionPlan, PlanPrice> _prices = PriceService.fallback;
 
   @override
   void initState() {
     super.initState();
     InterstitialAdManager.instance.load(InterstitialPlacement.weekPaywallCross);
-    PriceService.load(_app.remoteConfigService).then((p) {
+    final delay = _app.remoteConfigService.crossDelaySeconds(PaywallType.week);
+    if (delay <= 0) {
+      _showCloseButton = true;
+    } else {
+      _crossDelayTimer = Timer(Duration(seconds: delay), () {
+        if (mounted) setState(() => _showCloseButton = true);
+      });
+    }
+    PriceService.load(_app.remoteConfigService, PaywallType.week).then((p) {
       if (!mounted) return;
       setState(() {
         _prices = p;
         _pricesLoading = false;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _crossDelayTimer?.cancel();
+    super.dispose();
   }
 
   static const Color _green = Color(0xFF0AA37D);
@@ -69,7 +88,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     setState(() => _loading = true);
     bool ok = false;
     try {
-      ok = await _app.upgradeToPremium(_plan);
+      ok = await _app.upgradeToPremium(_plan, PaywallType.week);
     } catch (e) {
       debugPrint('Subscription error: $e');
     }
@@ -118,8 +137,12 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     }
   }
 
-  PlanOffer _offer(SubscriptionPlan slot) =>
-      PriceService.offerFor(slot, _app.remoteConfigService, _prices);
+  PlanOffer _offer(SubscriptionPlan slot) => PriceService.offerFor(
+    slot,
+    _app.remoteConfigService,
+    _prices,
+    PaywallType.week,
+  );
 
   // Per-day / per-month breakdown, same as the main paywall.
   String _period(PlanOffer o) => switch (o.type) {
@@ -156,28 +179,35 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                        onTap: _close,
-                        child: Container(
-                          width: 28.w,
-                          height: 28.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0x22000000),
-                                blurRadius: 6,
-                                offset: Offset(0, 2),
+                      child: AnimatedOpacity(
+                        opacity: _showCloseButton ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: IgnorePointer(
+                          ignoring: !_showCloseButton,
+                          child: GestureDetector(
+                            onTap: _close,
+                            child: Container(
+                              width: 28.w,
+                              height: 28.w,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0x22000000),
+                                    blurRadius: 6,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Image.asset(
-                            AppAssets.preCross,
-                            width: 12.w,
-                            height: 12.w,
-                            fit: BoxFit.contain,
+                              child: Image.asset(
+                                AppAssets.preCross,
+                                width: 12.w,
+                                height: 12.w,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -270,6 +300,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                             () => AnimatedCtaButton(
                               text: PriceService.getCtaLabel(
                                 _offer(_plan).product,
+                                PaywallType.week,
                               ),
                               gradient: const LinearGradient(
                                 colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],

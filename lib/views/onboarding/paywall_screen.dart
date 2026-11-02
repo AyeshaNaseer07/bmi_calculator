@@ -11,6 +11,7 @@ import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/open_url.dart';
+import '../../data/services/remote_config_service.dart';
 import '../../data/services/price_service.dart';
 import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
@@ -54,7 +55,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   Future<void> _loadPrices() async {
-    final prices = await PriceService.load(_appController.remoteConfigService);
+    final prices = await PriceService.load(
+      _appController.remoteConfigService,
+      PaywallType.onboarding,
+    );
     if (!mounted) return;
     setState(() {
       _prices = prices;
@@ -63,7 +67,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   void _initCrossDelay() {
-    final delaySeconds = _appController.remoteConfigService.crossDelaySeconds;
+    final delaySeconds = _appController.remoteConfigService.crossDelaySeconds(
+      PaywallType.onboarding,
+    );
     if (delaySeconds <= 0) {
       _showCloseButton = true;
     } else {
@@ -107,12 +113,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
     final selectedProductId = _appController.remoteConfigService.getProductId(
       _selectedPlan,
+      PaywallType.onboarding,
     );
     debugPrint('Subscribing with remote product ID: $selectedProductId');
 
     bool success = false;
     try {
-      success = await _appController.upgradeToPremium(_selectedPlan);
+      success = await _appController.upgradeToPremium(
+        _selectedPlan,
+        PaywallType.onboarding,
+      );
     } catch (e) {
       debugPrint('Subscription error: $e');
     }
@@ -147,8 +157,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
   }
 
-  PlanOffer _offer(SubscriptionPlan slot) =>
-      PriceService.offerFor(slot, _appController.remoteConfigService, _prices);
+  PlanOffer _offer(SubscriptionPlan slot) => PriceService.offerFor(
+    slot,
+    _appController.remoteConfigService,
+    _prices,
+    PaywallType.onboarding,
+  );
 
   String _breakdown(PlanOffer o) => switch (o.type) {
     PlanType.yearly => 'price_per_month'.trParams({
@@ -437,6 +451,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             () => AnimatedCtaButton(
                               text: PriceService.getCtaLabel(
                                 _offer(_selectedPlan).product,
+                                PaywallType.onboarding,
                               ),
                               gradient: const LinearGradient(
                                 colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],

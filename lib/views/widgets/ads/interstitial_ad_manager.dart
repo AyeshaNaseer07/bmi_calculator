@@ -42,13 +42,22 @@ class InterstitialAdManager {
       ? RemoteConfigService.to.current
       : remoteModel;
 
+  bool get _isOnboardingSeen =>
+      Get.isRegistered<AppController>() &&
+      Get.find<AppController>().onboardingSeen.value;
+
   bool _isEnabled(InterstitialPlacement placement) {
     if (Get.isRegistered<AppController>() &&
         Get.find<AppController>().isPremium.value) {
       return false;
     }
     return switch (placement) {
-      InterstitialPlacement.splash => _config.isSplashInterAdEnabled,
+      // first_time_* until onboarding has been completed once, second_time_*
+      // on every launch after that.
+      InterstitialPlacement.splash =>
+        _isOnboardingSeen
+            ? _config.isSecondTimeSplashInterAdEnabled
+            : _config.isFirstTimeSplashInterAdEnabled,
       InterstitialPlacement.onbPaywallCross =>
         _config.isOnbPaywallInterAdEnabled,
       InterstitialPlacement.weekPaywallCross =>

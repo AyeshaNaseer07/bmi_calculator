@@ -93,8 +93,11 @@ class AppController extends GetxController {
     _storage.setNotificationsEnabled(enabled);
   }
 
-  Future<bool> upgradeToPremium(SubscriptionPlan plan) async {
-    final remoteProductId = remoteConfigService.getProductId(plan);
+  Future<bool> upgradeToPremium(
+    SubscriptionPlan plan,
+    PaywallType paywall,
+  ) async {
+    final remoteProductId = remoteConfigService.getProductId(plan, paywall);
     return subscriptionService.purchase(plan, productId: remoteProductId);
   }
 
