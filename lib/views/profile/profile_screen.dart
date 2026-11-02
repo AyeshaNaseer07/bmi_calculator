@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../controllers/profile_controller.dart';
@@ -14,6 +13,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/utils/open_url.dart';
+import '../../core/utils/share_helper.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
@@ -40,6 +40,17 @@ class ProfileScreen extends StatelessWidget {
       query: 'subject=$subject',
     );
     openUrl(emailLaunchUri.toString());
+  }
+
+  Future<void> shareApp([BuildContext? context]) async {
+    final storeUrl = Platform.isAndroid
+        ? AppStrings.playStoreUrl
+        : AppStrings.appStoreUrl;
+    await ShareHelper.shareText(
+      '${'check_out_this_bmi_calculator_app'.tr}\n\n$storeUrl',
+      subject: 'BMI Calculator',
+      context: context,
+    );
   }
 
   void _showEditProfileBottomSheet(
@@ -533,11 +544,7 @@ class ProfileScreen extends StatelessWidget {
           icon: CupertinoIcons.share,
           title: 'share_app'.tr,
           subtitle: 'share_this_app_with_friends_family'.tr,
-          onTap: () {
-            SharePlus.instance.share(
-              ShareParams(text: 'check_out_this_bmi_calculator_app'.tr),
-            );
-          },
+          onTap: () => shareApp(context),
         ),
       ],
     );
