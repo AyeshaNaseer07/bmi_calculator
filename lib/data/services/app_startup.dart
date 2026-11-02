@@ -32,7 +32,7 @@ class AppStartup {
 
     AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
       afDevKey: "HpMZN7qSFkAnYvUMpVMhBP",
-      appId: "6779616188",
+      appId: "6812737379",
       showDebug: kDebugMode,
       timeToWaitForATTUserAuthorization: 30,
       manualStart: false,

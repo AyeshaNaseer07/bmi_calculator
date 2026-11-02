@@ -19,7 +19,6 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_loader.dart';
 import '../widgets/mandatory_label.dart';
-import 'dialogs/rate_us_dialog.dart';
 import '../../core/theme/app_palette.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -29,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, this.showBackButton = true});
 
   void _openRateUsDialog(BuildContext context) {
-    showDialog(context: context, builder: (_) => const RateUsDialog());
+    openUrl(AppStrings.rateUsUrl);
   }
 
   void sendFeedback() {

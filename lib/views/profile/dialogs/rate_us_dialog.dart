@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_palette.dart';
+import '../../../core/utils/open_url.dart';
 
 class RateUsDialog extends StatefulWidget {
   const RateUsDialog({super.key});
@@ -157,6 +159,9 @@ class _RateUsDialogState extends State<RateUsDialog> {
                     ),
                     onPressed: () {
                       Get.back();
+                      if (_selectedRating >= 4) {
+                        openUrl(AppStrings.rateUsUrl);
+                      }
                       Get.snackbar(
                         'thank_you'.tr,
                         'rating_thanks'.trParams({
