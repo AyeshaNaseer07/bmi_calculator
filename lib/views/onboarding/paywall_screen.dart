@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_palette.dart';
@@ -17,6 +16,7 @@ import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/app_background.dart';
+import '../widgets/premium_congrats_dialog.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -125,78 +125,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
     setState(() => _isLoading = false);
 
     if (success) {
-      await _showCongratsDialog();
+      await PremiumCongratsDialog.show();
     }
     if (!mounted) return;
     Get.offAllNamed(AppRoutes.home);
-  }
-
-  Future<void> _showCongratsDialog() {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.symmetric(horizontal: 32.w),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(24.w, 28.h, 24.w, 24.h),
-          decoration: BoxDecoration(
-            color: AppPalette.surface,
-            borderRadius: BorderRadius.circular(24.r),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(AppAssets.crown, width: 72.w, height: 72.w),
-              SizedBox(height: 16.h),
-              Text(
-                'Congratulations! 🎉',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w800,
-                  color: _dark ? AppPalette.textPrimary : Colors.black,
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                "You're now a Premium member.\nEnjoy an ad-free experience and all\nadvanced features.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppPalette.textSecondary,
-                  height: 1.4,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.of(ctx).pop(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryTeal,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                  ),
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Future<void> _onRestore() async {
@@ -210,13 +142,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
     if (!mounted) return;
     setState(() => _isLoading = false);
-    if (restored) _leavePaywall();
-    Get.snackbar(
-      'Restore',
-      restored
-          ? 'Purchase restored successfully.'
-          : 'No previous purchase found.',
-    );
+    if (restored) {
+      await PremiumCongratsDialog.show(isRestore: true);
+      _leavePaywall();
+    } else {
+      Get.snackbar('Restore', 'No previous purchase found.');
+    }
   }
 
   PlanOffer _offer(SubscriptionPlan slot) =>

@@ -13,6 +13,7 @@ import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/app_background.dart';
+import '../widgets/premium_congrats_dialog.dart';
 
 class SoftPaywallScreen extends StatefulWidget {
   final VoidCallback? onUnlocked;
@@ -87,6 +88,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     if (!mounted) return;
     setState(() => _loading = false);
     if (ok) {
+      await PremiumCongratsDialog.show();
       Get.back();
       widget.onUnlocked?.call();
     }
@@ -118,15 +120,12 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     if (!mounted) return;
     setState(() => _loading = false);
     if (restored) {
+      await PremiumCongratsDialog.show(isRestore: true);
       Get.back();
       widget.onUnlocked?.call();
+    } else {
+      Get.snackbar('Restore', 'No previous purchase found.');
     }
-    Get.snackbar(
-      'Restore',
-      restored
-          ? 'Purchase restored successfully.'
-          : 'No previous purchase found.',
-    );
   }
 
   PlanOffer _offer(SubscriptionPlan slot) =>
