@@ -41,13 +41,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: const AppBackIcon(),
                 ),
               ),
-            Text(
-              title,
-              style: TextStyle(
-                color: AppPalette.textPrimary,
-                fontSize: 20.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w700,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 48.w),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppPalette.textPrimary,
+                  fontSize: 20.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             if (trailing != null)

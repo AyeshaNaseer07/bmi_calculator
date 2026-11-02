@@ -246,6 +246,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                         fontWeight: FontWeight.w400,
                         height: 1.5,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 18.h),
                   ],
@@ -291,13 +293,17 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                               size: 14.sp,
                             ),
                             SizedBox(width: 5.w),
-                            Text(
-                              'weight_cannot_exceed_120_kg'.tr,
-                              style: TextStyle(
-                                color: const Color(0xFFEF4444),
-                                fontSize: 12.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                'weight_cannot_exceed_120_kg'.tr,
+                                style: TextStyle(
+                                  color: const Color(0xFFEF4444),
+                                  fontSize: 12.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -330,13 +336,17 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                               size: 14.sp,
                             ),
                             SizedBox(width: 5.w),
-                            Text(
-                              'goal_weight_cannot_exceed_120_kg'.tr,
-                              style: TextStyle(
-                                color: const Color(0xFFEF4444),
-                                fontSize: 12.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                'goal_weight_cannot_exceed_120_kg'.tr,
+                                style: TextStyle(
+                                  color: const Color(0xFFEF4444),
+                                  fontSize: 12.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -536,16 +546,20 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                _selectedAge != null ? '$_selectedAge' : 'select'.tr,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: _selectedAge != null
-                      ? FontWeight.w600
-                      : FontWeight.w400,
-                  color: _selectedAge != null
-                      ? AppColors.textDark
-                      : AppColors.textLight,
+              Flexible(
+                child: Text(
+                  _selectedAge != null ? '$_selectedAge' : 'select'.tr,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: _selectedAge != null
+                        ? FontWeight.w600
+                        : FontWeight.w400,
+                    color: _selectedAge != null
+                        ? AppColors.textDark
+                        : AppColors.textLight,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Icon(
@@ -613,16 +627,20 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                _selectedGender?.displayName ?? 'select'.tr,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: _selectedGender != null
-                      ? FontWeight.w600
-                      : FontWeight.w400,
-                  color: _selectedGender != null
-                      ? AppColors.textDark
-                      : AppColors.textLight,
+              Flexible(
+                child: Text(
+                  _selectedGender?.displayName ?? 'select'.tr,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: _selectedGender != null
+                        ? FontWeight.w600
+                        : FontWeight.w400,
+                    color: _selectedGender != null
+                        ? AppColors.textDark
+                        : AppColors.textLight,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Icon(

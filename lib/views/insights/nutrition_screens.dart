@@ -83,15 +83,19 @@ class EatBalancedMealsScreen extends StatelessWidget {
               children: [
                 Image.asset(AppAssets.leafIcon, width: 12.w, height: 12.h),
                 SizedBox(width: 5.w),
-                Text(
-                  'nutrition_guide'.tr,
-                  style: TextStyle(
-                    color: const Color(0xFF00714D),
-                    fontSize: 11,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w700,
-                    height: 1.27,
-                    letterSpacing: 0.55,
+                Flexible(
+                  child: Text(
+                    'nutrition_guide'.tr,
+                    style: TextStyle(
+                      color: const Color(0xFF00714D),
+                      fontSize: 11,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w700,
+                      height: 1.27,
+                      letterSpacing: 0.55,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -109,6 +113,8 @@ class EatBalancedMealsScreen extends StatelessWidget {
               height: 1.6,
               letterSpacing: 0.06,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 16.h),
           _HubCard(
@@ -333,10 +339,17 @@ class EatVegetablesScreen extends StatelessWidget {
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(height: 10.h),
-          Text('why_vegetables_matter'.tr, style: _section),
+          Text(
+            'why_vegetables_matter'.tr,
+            style: _section,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           SizedBox(height: 10.h),
           _why(
             AppAssets.tipRichInFiber,
@@ -354,7 +367,12 @@ class EatVegetablesScreen extends StatelessWidget {
             'choose_different_vegetables_for_variety'.tr,
           ),
           SizedBox(height: 4.h),
-          Text('try_this_today'.tr, style: _section),
+          Text(
+            'try_this_today'.tr,
+            style: _section,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           SizedBox(height: 10.h),
           Container(
             width: double.infinity,
@@ -379,7 +397,12 @@ class EatVegetablesScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('simple_meal'.tr, style: _title(16.5)),
+                          Text(
+                            'simple_meal'.tr,
+                            style: _title(16.5),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           SizedBox(height: 3.h),
                           Text(
                             'half_plate_of_vegetables_quarter_protein'.tr,
@@ -588,6 +611,8 @@ class PortionSizesScreen extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 height: 1.57,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(height: 14.h),

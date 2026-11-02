@@ -82,6 +82,8 @@ class PremiumCongratsDialog extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.3,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: 8.h),
               Text(
@@ -126,6 +128,8 @@ class PremiumCongratsDialog extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),

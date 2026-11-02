@@ -96,6 +96,8 @@ class WeightTrackingScreen extends StatelessWidget {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2.h),
                             Text(
@@ -175,6 +177,8 @@ class WeightTrackingScreen extends StatelessWidget {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2.h),
                             Text(
@@ -308,13 +312,17 @@ class WeightTrackingScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 5.w),
-                            Text(
-                              'current_weight'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textBody,
-                                fontSize: 11.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                'current_weight'.tr,
+                                style: TextStyle(
+                                  color: AppPalette.textBody,
+                                  fontSize: 11.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             SizedBox(width: 14.w),
@@ -328,13 +336,17 @@ class WeightTrackingScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 5.w),
-                            Text(
-                              'goal_weight'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textBody,
-                                fontSize: 11.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                'goal_weight'.tr,
+                                style: TextStyle(
+                                  color: AppPalette.textBody,
+                                  fontSize: 11.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -602,13 +614,17 @@ class WeightTrackingScreen extends StatelessWidget {
                     color: AppPalette.textSecondary,
                   ),
                   SizedBox(width: 4.w),
-                  Text(
-                    'swipe_to_see_the_full_graph'.tr,
-                    style: TextStyle(
-                      color: AppPalette.textSecondary,
-                      fontSize: 10.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Text(
+                      'swipe_to_see_the_full_graph'.tr,
+                      style: TextStyle(
+                        color: AppPalette.textSecondary,
+                        fontSize: 10.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

@@ -279,15 +279,19 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             height: 20.w,
                           ),
                           SizedBox(width: 6.w),
-                          Text(
-                            'premium_health_pass'.tr,
-                            style: TextStyle(
-                              color: _badgeText,
-                              fontSize: 12.sp,
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontWeight: FontWeight.w700,
-                              height: 1.27,
-                              letterSpacing: 0.55,
+                          Flexible(
+                            child: Text(
+                              'premium_health_pass'.tr,
+                              style: TextStyle(
+                                color: _badgeText,
+                                fontSize: 12.sp,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w700,
+                                height: 1.27,
+                                letterSpacing: 0.55,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -396,6 +400,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),
@@ -484,6 +490,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w400,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         SizedBox(
@@ -634,13 +642,17 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     width: 9.w,
                                   ),
                                   SizedBox(width: 3.w),
-                                  Text(
-                                    'best_value'.tr,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 7.5.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w700,
+                                  Flexible(
+                                    child: Text(
+                                      'best_value'.tr,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 7.5.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],

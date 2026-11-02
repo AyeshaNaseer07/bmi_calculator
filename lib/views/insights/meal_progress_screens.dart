@@ -180,31 +180,39 @@ class MealCompletedScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 6.w),
-                          Text(
-                            'day_of_7'.trParams({'day': '${meal.day}'}),
-                            style: bodyStyle(
-                              14,
-                              color: _kDeep,
-                              weight: FontWeight.w800,
+                          Flexible(
+                            child: Text(
+                              'day_of_7'.trParams({'day': '${meal.day}'}),
+                              style: bodyStyle(
+                                14,
+                                color: _kDeep,
+                                weight: FontWeight.w800,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8ECFB),
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          'clean_eating_plan'.tr,
-                          style: bodyStyle(
-                            12,
-                            color: _kDeep,
-                            weight: FontWeight.w700,
+                      Flexible(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE8ECFB),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            'clean_eating_plan'.tr,
+                            style: bodyStyle(
+                              12,
+                              color: _kDeep,
+                              weight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
@@ -223,6 +231,8 @@ class MealCompletedScreen extends StatelessWidget {
                                       : 'meals_completed_many')
                                   .trParams({'count': '$done'}),
                               style: headStyle(22, weight: FontWeight.w600),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 4.h),
                             Text(
@@ -231,6 +241,8 @@ class MealCompletedScreen extends StatelessWidget {
                                       : 'meals_remaining_many')
                                   .trParams({'count': '${3 - done}'}),
                               style: bodyStyle(13, color: AppPalette.textBody),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -254,12 +266,16 @@ class MealCompletedScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'daily_progress'.tr,
-                        style: bodyStyle(
-                          13,
-                          color: AppPalette.textBody,
-                          weight: FontWeight.w500,
+                      Flexible(
+                        child: Text(
+                          'daily_progress'.tr,
+                          style: bodyStyle(
+                            13,
+                            color: AppPalette.textBody,
+                            weight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
@@ -379,32 +395,40 @@ class MealProgressScreen extends StatelessWidget {
                   child: Text(
                     'consistent_nourishment_balance'.tr,
                     style: bodyStyle(13.5, color: AppPalette.textBody),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(width: 8.w),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFA9EBD4),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.eco_rounded, size: 14.sp, color: _kDeep),
-                      SizedBox(width: 4.w),
-                      Text(
-                        'n_7_day_living_plan'.tr,
-                        style: bodyStyle(
-                          12,
-                          color: _kDeep,
-                          weight: FontWeight.w800,
+                Flexible(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA9EBD4),
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.eco_rounded, size: 14.sp, color: _kDeep),
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            'n_7_day_living_plan'.tr,
+                            style: bodyStyle(
+                              12,
+                              color: _kDeep,
+                              weight: FontWeight.w800,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -469,6 +493,8 @@ class MealProgressScreen extends StatelessWidget {
                                 color: AppPalette.textBody,
                                 weight: FontWeight.w700,
                               ).copyWith(letterSpacing: 0.5),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 6.h),
                             Container(
@@ -492,12 +518,16 @@ class MealProgressScreen extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(width: 5.w),
-                                  Text(
-                                    'pct_reached'.trParams({'pct': '$pct'}),
-                                    style: bodyStyle(
-                                      12,
-                                      color: _kDeep,
-                                      weight: FontWeight.w800,
+                                  Flexible(
+                                    child: Text(
+                                      'pct_reached'.trParams({'pct': '$pct'}),
+                                      style: bodyStyle(
+                                        12,
+                                        color: _kDeep,
+                                        weight: FontWeight.w800,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
@@ -514,15 +544,19 @@ class MealProgressScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.verified_rounded, size: 18.sp, color: _kDeep),
                       SizedBox(width: 6.w),
-                      Text(
-                        'day_phase'.trParams({
-                          'day': '$cur',
-                          'phase': phases[cur - 1],
-                        }),
-                        style: bodyStyle(
-                          13.5,
-                          color: AppPalette.textPrimary,
-                          weight: FontWeight.w600,
+                      Flexible(
+                        child: Text(
+                          'day_phase'.trParams({
+                            'day': '$cur',
+                            'phase': phases[cur - 1],
+                          }),
+                          style: bodyStyle(
+                            13.5,
+                            color: AppPalette.textPrimary,
+                            weight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -546,6 +580,8 @@ class MealProgressScreen extends StatelessWidget {
                         color: kInk,
                         weight: FontWeight.w800,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     label: 'meals_logged'.tr,
                     value: Text.rich(
@@ -585,6 +621,8 @@ class MealProgressScreen extends StatelessWidget {
                           color: const Color(0xFFD62B1F),
                           weight: FontWeight.w700,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     label: 'current_streak'.tr,
@@ -592,6 +630,8 @@ class MealProgressScreen extends StatelessWidget {
                       (streak == 1 ? 'streak_days_one' : 'streak_days_many')
                           .trParams({'count': '$streak'}),
                       style: headStyle(22, weight: FontWeight.w600),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -627,6 +667,8 @@ class MealProgressScreen extends StatelessWidget {
                             color: kInk,
                             weight: FontWeight.w600,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text('$pct%', style: headStyle(19, color: _kDeep)),
@@ -646,23 +688,31 @@ class MealProgressScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'day_of_7'.trParams({'day': '$cur'}),
-                        style: bodyStyle(
-                          12.5,
-                          color: AppPalette.textBody,
-                          weight: FontWeight.w500,
+                      Flexible(
+                        child: Text(
+                          'day_of_7'.trParams({'day': '$cur'}),
+                          style: bodyStyle(
+                            12.5,
+                            color: AppPalette.textBody,
+                            weight: FontWeight.w500,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Text(
-                        (7 - cur == 1
-                                ? 'days_remaining_one'
-                                : 'days_remaining_many')
-                            .trParams({'count': '${7 - cur}'}),
-                        style: bodyStyle(
-                          12.5,
-                          color: AppPalette.textBody,
-                          weight: FontWeight.w500,
+                      Flexible(
+                        child: Text(
+                          (7 - cur == 1
+                                  ? 'days_remaining_one'
+                                  : 'days_remaining_many')
+                              .trParams({'count': '${7 - cur}'}),
+                          style: bodyStyle(
+                            12.5,
+                            color: AppPalette.textBody,
+                            weight: FontWeight.w500,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -713,6 +763,8 @@ class MealProgressScreen extends StatelessWidget {
                             height: 1.27,
                             letterSpacing: 0.28,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 2.h),
                         Text(
@@ -724,6 +776,8 @@ class MealProgressScreen extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             height: 1.48,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

@@ -77,6 +77,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             color: AppPalette.textPrimary,
             fontFamily: 'Inter',
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         content: Text(
           'delete_record_confirm'.trParams({
@@ -87,6 +89,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             color: AppPalette.textSecondary,
             fontFamily: 'Inter',
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         actionsPadding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
         actions: [
@@ -109,6 +113,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       fontWeight: FontWeight.w600,
                       color: AppPalette.textSecondary,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -151,6 +157,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -180,6 +188,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             color: AppPalette.textPrimary,
             fontFamily: 'Inter',
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         content: Text(
           (count > 1
@@ -191,6 +201,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             color: AppPalette.textSecondary,
             fontFamily: 'Inter',
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         actionsPadding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
         actions: [
@@ -213,6 +225,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       fontWeight: FontWeight.w600,
                       color: AppPalette.textSecondary,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -256,6 +270,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -294,13 +310,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'sort_bmi_history'.tr,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppPalette.textPrimary,
-                    fontFamily: 'Inter',
+                Flexible(
+                  child: Text(
+                    'sort_bmi_history'.tr,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppPalette.textPrimary,
+                      fontFamily: 'Inter',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 if (_currentSort != HistorySortOption.newest)
@@ -316,6 +336,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         fontWeight: FontWeight.w600,
                         color: const Color(0xFF09B389),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
               ],
@@ -500,6 +522,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                             fontFamily: 'Inter',
                                             fontWeight: FontWeight.w700,
                                           ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                         SizedBox(height: 4.h),
                                         Text(
@@ -513,6 +537,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                             fontWeight: FontWeight.w400,
                                             height: 1.3,
                                           ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),
@@ -663,13 +689,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         : null,
                                   ),
                                   SizedBox(width: 8.w),
-                                  Text(
-                                    'select_all'.tr,
-                                    style: TextStyle(
-                                      color: AppPalette.textPrimary,
-                                      fontSize: 13.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w700,
+                                  Flexible(
+                                    child: Text(
+                                      'select_all'.tr,
+                                      style: TextStyle(
+                                        color: AppPalette.textPrimary,
+                                        fontSize: 13.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   if (_selectedRecordIds.isNotEmpty) ...[
@@ -729,13 +759,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           color: Colors.white,
                                         ),
                                         SizedBox(width: 4.w),
-                                        Text(
-                                          'delete'.tr,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Inter',
+                                        Flexible(
+                                          child: Text(
+                                            'delete'.tr,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: 'Inter',
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ],
@@ -770,6 +804,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         fontWeight: FontWeight.w600,
                                         fontFamily: 'Inter',
                                       ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -782,13 +818,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'bmi_history'.tr,
-                            style: TextStyle(
-                              color: AppPalette.textPrimary,
-                              fontSize: 16.sp,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
+                          Flexible(
+                            child: Text(
+                              'bmi_history'.tr,
+                              style: TextStyle(
+                                color: AppPalette.textPrimary,
+                                fontSize: 16.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Row(
@@ -910,16 +950,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               color: const Color(0xFF0F766E),
                             ),
                             SizedBox(width: 6.w),
-                            Text(
-                              'date_filter'.trParams({
-                                'date': DateFormat('dd MMM yyyy')
-                                    .format(_selectedDate!),
-                              }),
-                              style: TextStyle(
-                                color: const Color(0xFF0F766E),
-                                fontSize: 12.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
+                            Flexible(
+                              child: Text(
+                                'date_filter'.trParams({
+                                  'date': DateFormat('dd MMM yyyy')
+                                      .format(_selectedDate!),
+                                }),
+                                style: TextStyle(
+                                  color: const Color(0xFF0F766E),
+                                  fontSize: 12.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             SizedBox(width: 8.w),
@@ -988,6 +1032,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               color: AppPalette.textPrimary,
               fontFamily: 'Inter',
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 4.h),
           Text(
@@ -1017,6 +1063,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   color: Colors.white,
                   fontFamily: 'Inter',
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -1154,7 +1202,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('bmi_label'.tr, style: labelStyle),
+                  Text(
+                    'bmi_label'.tr,
+                    style: labelStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   SizedBox(height: 4.h),
                   Text(
                     record.bmiValue.toStringAsFixed(1),
@@ -1175,7 +1228,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('weight'.tr, style: labelStyle),
+                  Text(
+                    'weight'.tr,
+                    style: labelStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   SizedBox(height: 4.h),
                   FittedBox(
                     fit: BoxFit.scaleDown,
@@ -1257,13 +1315,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
           children: [
             Icon(CupertinoIcons.trash, color: Colors.white, size: 20.sp),
             SizedBox(width: 6.w),
-            Text(
-              'delete'.tr,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 13.sp,
-                fontFamily: 'Inter',
+            Flexible(
+              child: Text(
+                'delete'.tr,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13.sp,
+                  fontFamily: 'Inter',
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -1390,6 +1452,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.textDark,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 4.h),
                             Text(
@@ -1399,6 +1463,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 color: AppColors.textLight,
                                 height: 1.35,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 18.h),
                             GestureDetector(
@@ -1427,6 +1493,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
@@ -1444,7 +1512,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
         SizedBox(height: 12.h),
 
         // About History Section
-        Text('about_history'.tr, style: _sectionTitleStyle),
+        Text(
+          'about_history'.tr,
+          style: _sectionTitleStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -1475,7 +1548,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
         SizedBox(height: 12.h),
 
         // What you'll see here Section
-        Text('what_youll_see_here'.tr, style: _sectionTitleStyle),
+        Text(
+          'what_youll_see_here'.tr,
+          style: _sectionTitleStyle,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         SizedBox(height: 14.h),
         _buildFeatureItem(
           icon: Icons.trending_up,
@@ -1581,6 +1659,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               fontWeight: FontWeight.w800,
                               fontSize: 15.sp,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 3.h),
                           Text(
@@ -1591,6 +1671,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               fontSize: 10.5.sp,
                               height: 1.3,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -1615,13 +1697,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'go_premium'.tr,
-                            style: TextStyle(
-                              color: const Color(0xFF00946F),
-                              fontFamily: 'Inter',
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w800,
+                          Flexible(
+                            child: Text(
+                              'go_premium'.tr,
+                              style: TextStyle(
+                                color: const Color(0xFF00946F),
+                                fontFamily: 'Inter',
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           SizedBox(width: 2.w),

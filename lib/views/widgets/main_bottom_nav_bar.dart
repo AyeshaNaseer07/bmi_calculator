@@ -110,32 +110,39 @@ class MainBottomNavBar extends StatelessWidget {
     final isSelected = currentIndex == index;
     final color = isSelected ? _kActiveNavColor : const Color(0xFF9AA6A9);
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => onTap(index),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              icon,
-              width: 20.sp,
-              height: 20.sp,
-              color: color,
-              colorBlendMode: BlendMode.srcIn,
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              label,
-              style: TextStyle(
+    return Flexible(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => onTap(index),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                icon,
+                width: 20.sp,
+                height: 20.sp,
                 color: color,
-                fontSize: 10.sp,
-                fontFamily: 'Inter',
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                colorBlendMode: BlendMode.srcIn,
               ),
-            ),
-          ],
+              SizedBox(height: 4.h),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 10.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

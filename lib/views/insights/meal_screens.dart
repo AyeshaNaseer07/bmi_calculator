@@ -38,6 +38,8 @@ class DailyMealPlanScreen extends StatelessWidget {
               height: 1.33,
               letterSpacing: -0.18,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 8.h),
           const _TargetBanner(),
@@ -79,6 +81,8 @@ class _TargetBanner extends StatelessWidget {
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
         ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -134,6 +138,8 @@ class _DayMeals extends StatelessWidget {
                   color: selected ? Colors.white70 : AppPalette.textSecondary,
                   weight: FontWeight.w700,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               Text(
                 '$d',
@@ -251,12 +257,16 @@ class _MealCard extends StatelessWidget {
                               color: _kDeep,
                             ),
                             SizedBox(width: 3.w),
-                            Text(
-                              '${meal.kcal} ${'unit_kcal'.tr}',
-                              style: bodyStyle(
-                                12,
-                                color: _kDeep,
-                                weight: FontWeight.w700,
+                            Flexible(
+                              child: Text(
+                                '${meal.kcal} ${'unit_kcal'.tr}',
+                                style: bodyStyle(
+                                  12,
+                                  color: _kDeep,
+                                  weight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -350,6 +360,8 @@ class _MealCard extends StatelessWidget {
                                 height: 1.29,
                                 letterSpacing: 0.14,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         );
@@ -576,15 +588,19 @@ class MealDetailScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 6.w),
-                          Text(
-                            'balanced_meal_kcal'.trParams({
-                              'meal': meal.slot.toUpperCase(),
-                              'kcal': '${meal.kcal}',
-                            }),
-                            style: bodyStyle(
-                              11.5,
-                              color: _kDeep,
-                              weight: FontWeight.w800,
+                          Flexible(
+                            child: Text(
+                              'balanced_meal_kcal'.trParams({
+                                'meal': meal.slot.toUpperCase(),
+                                'kcal': '${meal.kcal}',
+                              }),
+                              style: bodyStyle(
+                                11.5,
+                                color: _kDeep,
+                                weight: FontWeight.w800,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -720,14 +736,22 @@ class MealDetailScreen extends StatelessWidget {
                       height: 14.h,
                     ),
                     SizedBox(width: 4.w),
-                    Text(
-                      'nutrition_summary'.tr,
-                      style: headStyle(16, weight: FontWeight.w600),
+                    Flexible(
+                      child: Text(
+                        'nutrition_summary'.tr,
+                        style: headStyle(16, weight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     Spacer(),
-                    Text(
-                      'target_pct_daily'.trParams({'pct': '${meal.target}'}),
-                      style: bodyStyle(12, color: AppPalette.textBody),
+                    Flexible(
+                      child: Text(
+                        'target_pct_daily'.trParams({'pct': '${meal.target}'}),
+                        style: bodyStyle(12, color: AppPalette.textBody),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -800,19 +824,27 @@ class MealDetailScreen extends StatelessWidget {
                 children: [
                   Image.asset(AppAssets.flowerIcon, width: 22.w, height: 24.h),
                   SizedBox(width: 8.w),
-                  Text(
-                    'ingredients'.tr,
-                    style: headStyle(18, weight: FontWeight.w600),
+                  Flexible(
+                    child: Text(
+                      'ingredients'.tr,
+                      style: headStyle(18, weight: FontWeight.w600),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const Spacer(),
-                  Text(
-                    'items_count'.trParams({
-                      'count': '${meal.ingredients.length}',
-                    }),
-                    style: bodyStyle(
-                      14,
-                      color: _kDeep,
-                      weight: FontWeight.w700,
+                  Flexible(
+                    child: Text(
+                      'items_count'.trParams({
+                        'count': '${meal.ingredients.length}',
+                      }),
+                      style: bodyStyle(
+                        14,
+                        color: _kDeep,
+                        weight: FontWeight.w700,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -860,17 +892,21 @@ class IngredientsScreen extends StatelessWidget {
                           height: 18.h,
                         ),
                         SizedBox(width: 6.w),
-                        Text(
-                          'items_count'.trParams({
-                            'count': '${meal.ingredients.length}',
-                          }),
-                          style: TextStyle(
-                            color: const Color(0xFF006948),
-                            fontSize: 14,
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontWeight: FontWeight.w600,
-                            height: 1.27,
-                            letterSpacing: 0.44,
+                        Flexible(
+                          child: Text(
+                            'items_count'.trParams({
+                              'count': '${meal.ingredients.length}',
+                            }),
+                            style: TextStyle(
+                              color: const Color(0xFF006948),
+                              fontSize: 14,
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontWeight: FontWeight.w600,
+                              height: 1.27,
+                              letterSpacing: 0.44,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -889,6 +925,8 @@ class IngredientsScreen extends StatelessWidget {
                         fontSize: 11.sp,
                         fontFamily: 'Inter',
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 for (final ing in meal.ingredients)

@@ -71,6 +71,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w400,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 12.h),
                         Row(
@@ -88,6 +90,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
@@ -146,6 +150,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 10.h),
                 Row(
@@ -189,6 +195,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 10.h),
                 Container(
@@ -220,6 +228,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2.h),
                             Text(
@@ -247,6 +257,8 @@ class HealthInsightResultScreen extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                     color: AppColors.textDark,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 10.h),
                 _buildTipItem(

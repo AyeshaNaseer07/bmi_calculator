@@ -959,7 +959,20 @@
   "Mix cardio, strength and stretching to keep your weight and energy steady.": "Kilonuzu ve enerjinizi dengede tutmak için kardiyo, kuvvet ve esneme çalışmalarını birleştirin.",
   "Low-impact activity protects your joints. Consistency matters more than intensity.": "Düşük etkili aktiviteler eklemlerinizi korur. Yoğunluktan çok süreklilik önemlidir.",
   "Start small and add a few minutes each week. Every bit of movement counts.": "Küçük başlayın ve her hafta birkaç dakika ekleyin. Her hareket önemlidir.",
+  "Keep your heart rate up with brisk walking, cycling, or dancing. Try to move for at least 20-30 minutes most days.": "Tempolu yürüyüş, bisiklete binme veya dans ederek kalp atış hızını artır. Haftanın çoğu günü en az 20-30 dakika hareket etmeye çalış.",
+  "Try strength exercises like push-ups, squats, or lifting weights 2-3 times a week. This helps build muscle and boosts your metabolism.": "Haftada 2-3 kez şınav, squat veya ağırlık kaldırma gibi kuvvet egzersizlerini dene. Bunlar kas geliştirmeye ve metabolizmanı hızlandırmaya yardımcı olur.",
+  "Include activities that you genuinely enjoy, whether it's dancing, swimming, gardening, or sports. When you have fun, you're more likely to stick with it.": "Dans etmek, yüzmek, bahçeyle uğraşmak veya spor yapmak gibi gerçekten keyif aldığın aktiviteleri seç. Eğlendiğinde bu alışkanlığı sürdürme olasılığın artar.",
+  "Listen to your body. If something hurts, stop. Rest and recovery are just as important as exercise. Don't push yourself too hard, especially when you're just starting out.": "Vücudunu dinle. Bir yerin ağrırsa dur. Dinlenme ve toparlanma da egzersiz kadar önemlidir. Özellikle yeni başlıyorsan kendini fazla zorlama.",
   "unit_ft": "ft",
   "unit_in": "inç",
-  "pro_badge": "PRO"
+  "pro_badge": "PRO",
+  "unit_kg": "kg",
+  "unit_cm": "cm",
+  "unit_lb": "lb",
+  "unit_ft_in": "ft/in",
+  "unit_kcal": "kcal",
+  "unit_g": "g",
+  "g": "g",
+  "notification_channel_name": "VKİ Hesaplayıcı Hatırlatmaları",
+  "notification_channel_description": "Planlanmış sağlık ve kilo takibi hatırlatmaları"
 }

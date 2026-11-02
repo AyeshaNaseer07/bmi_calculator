@@ -120,6 +120,8 @@ class BMIResultScreen extends StatelessWidget {
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 4.h),
 
@@ -207,6 +209,8 @@ class BMIResultScreen extends StatelessWidget {
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 10.h),
                       Row(
@@ -260,6 +264,8 @@ class BMIResultScreen extends StatelessWidget {
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w700,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 8.h),
                       Row(

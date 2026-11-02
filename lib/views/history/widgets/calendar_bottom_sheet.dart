@@ -241,6 +241,8 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Inter',
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.symmetric(
@@ -250,13 +252,17 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                   ),
                 )
               else
-                Text(
-                  'tap_a_date_to_filter'.tr,
-                  style: TextStyle(
-                    color: AppPalette.textMuted,
-                    fontSize: 12.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
+                Flexible(
+                  child: Text(
+                    'tap_a_date_to_filter'.tr,
+                    style: TextStyle(
+                      color: AppPalette.textMuted,
+                      fontSize: 12.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               TextButton(
@@ -283,6 +289,8 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                     fontWeight: FontWeight.w700,
                     fontFamily: 'Inter',
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

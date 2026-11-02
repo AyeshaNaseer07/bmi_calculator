@@ -274,6 +274,8 @@ class _NumberKeypad extends StatelessWidget {
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

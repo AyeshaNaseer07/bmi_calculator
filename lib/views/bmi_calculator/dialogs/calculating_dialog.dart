@@ -49,6 +49,8 @@ class CalculatingDialog extends StatelessWidget {
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w600,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

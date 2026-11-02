@@ -78,13 +78,17 @@ class SleepWellScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.dark_mode, size: 14.sp, color: _kDeep),
                   SizedBox(width: 6.w),
-                  Text(
-                    'restful_sleep'.tr,
-                    style: bodyStyle(
-                      12,
-                      color: _kDeep,
-                      weight: FontWeight.w800,
-                    ).copyWith(letterSpacing: 0.4),
+                  Flexible(
+                    child: Text(
+                      'restful_sleep'.tr,
+                      style: bodyStyle(
+                        12,
+                        color: _kDeep,
+                        weight: FontWeight.w800,
+                      ).copyWith(letterSpacing: 0.4),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -101,6 +105,8 @@ class SleepWellScreen extends StatelessWidget {
                 weight: FontWeight.w500,
                 height: 1.35,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(height: 14.h),
@@ -137,31 +143,39 @@ class SleepWellScreen extends StatelessWidget {
                           color: _kDeep,
                         ),
                         SizedBox(width: 6.w),
-                        Text(
-                          'recommended_sleep'.tr,
-                          style: bodyStyle(
-                            12,
-                            color: _kDeep,
-                            weight: FontWeight.w800,
-                          ).copyWith(letterSpacing: 0.4),
+                        Flexible(
+                          child: Text(
+                            'recommended_sleep'.tr,
+                            style: bodyStyle(
+                              12,
+                              color: _kDeep,
+                              weight: FontWeight.w800,
+                            ).copyWith(letterSpacing: 0.4),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 3.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC9F7E3),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        'optimal_rest'.tr,
-                        style: bodyStyle(
-                          12,
-                          color: _kDeep,
-                          weight: FontWeight.w700,
+                    Flexible(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFC9F7E3),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Text(
+                          'optimal_rest'.tr,
+                          style: bodyStyle(
+                            12,
+                            color: _kDeep,
+                            weight: FontWeight.w700,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -200,6 +214,8 @@ class SleepWellScreen extends StatelessWidget {
                               color: AppPalette.textBody,
                               height: 1.3,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 6.h),
                           Text(
@@ -239,6 +255,8 @@ class SleepWellScreen extends StatelessWidget {
           Text(
             'healthy_sleep_routine'.tr,
             style: headStyle(14.5, weight: FontWeight.w800),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 10.h),
           _routine(

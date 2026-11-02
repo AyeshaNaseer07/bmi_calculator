@@ -155,6 +155,8 @@ class LoaderOverlay extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     decoration: TextDecoration.none,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

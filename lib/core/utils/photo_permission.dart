@@ -33,6 +33,8 @@ class PhotoPermission {
             color: AppColors.textDark,
             fontWeight: FontWeight.w600,
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         content: Text(
           'allow_access_to_your_photos_in'.tr,
@@ -44,6 +46,8 @@ class PhotoPermission {
             child: Text(
               'cancel'.tr,
               style: TextStyle(color: AppColors.textMuted),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           TextButton(
@@ -57,6 +61,8 @@ class PhotoPermission {
                 color: AppColors.primaryTeal,
                 fontWeight: FontWeight.w600,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

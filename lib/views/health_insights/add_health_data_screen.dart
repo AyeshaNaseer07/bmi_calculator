@@ -180,6 +180,8 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
                                 ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(height: 5.h),
                               Text(
@@ -293,17 +295,21 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        selectedGender?.displayName ??
-                                            'select'.tr,
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          fontWeight: selectedGender != null
-                                              ? FontWeight.w600
-                                              : FontWeight.w400,
-                                          color: selectedGender != null
-                                              ? AppColors.textDark
-                                              : AppColors.textLight,
+                                      Flexible(
+                                        child: Text(
+                                          selectedGender?.displayName ??
+                                              'select'.tr,
+                                          style: TextStyle(
+                                            fontSize: 13.sp,
+                                            fontWeight: selectedGender != null
+                                                ? FontWeight.w600
+                                                : FontWeight.w400,
+                                            color: selectedGender != null
+                                                ? AppColors.textDark
+                                                : AppColors.textLight,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Icon(
@@ -329,7 +335,10 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildFieldLabel('height'.tr, unit: '(${'unit_cm'.tr})'),
+                            _buildFieldLabel(
+                              'height'.tr,
+                              unit: '(${'unit_cm'.tr})',
+                            ),
                             _buildTextInput(
                               controller: _controller.heightController,
                               focusNode: _heightFocusNode,
@@ -367,13 +376,17 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                           size: 14.sp,
                         ),
                         SizedBox(width: 5.w),
-                        Text(
-                          'weight_cannot_exceed_120_kg'.tr,
-                          style: TextStyle(
-                            color: const Color(0xFFEF4444),
-                            fontSize: 12.sp,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Text(
+                            'weight_cannot_exceed_120_kg'.tr,
+                            style: TextStyle(
+                              color: const Color(0xFFEF4444),
+                              fontSize: 12.sp,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -397,17 +410,21 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            selectedActivity?.title ??
-                                'select_your_activity_level'.tr,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: selectedActivity != null
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: selectedActivity != null
-                                  ? AppColors.textDark
-                                  : AppColors.textLight,
+                          Flexible(
+                            child: Text(
+                              selectedActivity?.title ??
+                                  'select_your_activity_level'.tr,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: selectedActivity != null
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: selectedActivity != null
+                                    ? AppColors.textDark
+                                    : AppColors.textLight,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Icon(
@@ -437,16 +454,20 @@ class _AddHealthDataScreenState extends State<AddHealthDataScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            selectedGoal?.title ?? 'select_your_goal'.tr,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: selectedGoal != null
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: selectedGoal != null
-                                  ? AppColors.textDark
-                                  : AppColors.textLight,
+                          Flexible(
+                            child: Text(
+                              selectedGoal?.title ?? 'select_your_goal'.tr,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: selectedGoal != null
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: selectedGoal != null
+                                    ? AppColors.textDark
+                                    : AppColors.textLight,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Icon(

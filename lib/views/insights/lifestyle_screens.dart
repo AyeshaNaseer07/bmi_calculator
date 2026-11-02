@@ -172,13 +172,17 @@ class StayActiveScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 6.w),
-                  Text(
-                    'stay_active_2'.tr,
-                    style: bodyStyle(
-                      12,
-                      color: _kDeep,
-                      weight: FontWeight.w800,
-                    ).copyWith(letterSpacing: 0.5),
+                  Flexible(
+                    child: Text(
+                      'stay_active_2'.tr,
+                      style: bodyStyle(
+                        12,
+                        color: _kDeep,
+                        weight: FontWeight.w800,
+                      ).copyWith(letterSpacing: 0.5),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -189,12 +193,16 @@ class StayActiveScreen extends StatelessWidget {
             child: Text(
               'small_movements_healthier_habits'.tr,
               style: bodyStyle(13.5, color: AppPalette.textBody),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(height: 14.h),
           Text(
             'todays_activity'.tr,
             style: headStyle(15, weight: FontWeight.w800),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 10.h),
           // Display only.
@@ -533,9 +541,13 @@ class ActivityRoutineScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.eco_rounded, size: 18.sp, color: kGreen),
                       SizedBox(width: 6.w),
-                      Text(
-                        'stay_consistent'.tr,
-                        style: headStyle(19, weight: FontWeight.w600),
+                      Flexible(
+                        child: Text(
+                          'stay_consistent'.tr,
+                          style: headStyle(19, weight: FontWeight.w600),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

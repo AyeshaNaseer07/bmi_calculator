@@ -248,26 +248,34 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'age_yr'.trParams({
-                                      'age': '${BMIController.minAge}',
-                                    }),
-                                    style: TextStyle(
-                                      color: AppPalette.textSecondary,
-                                      fontSize: 12.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
+                                  Flexible(
+                                    child: Text(
+                                      'age_yr'.trParams({
+                                        'age': '${BMIController.minAge}',
+                                      }),
+                                      style: TextStyle(
+                                        color: AppPalette.textSecondary,
+                                        fontSize: 12.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Text(
-                                    'age_yr'.trParams({
-                                      'age': '${BMIController.maxAge}',
-                                    }),
-                                    style: TextStyle(
-                                      color: AppPalette.textSecondary,
-                                      fontSize: 12.sp,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w500,
+                                  Flexible(
+                                    child: Text(
+                                      'age_yr'.trParams({
+                                        'age': '${BMIController.maxAge}',
+                                      }),
+                                      style: TextStyle(
+                                        color: AppPalette.textSecondary,
+                                        fontSize: 12.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],

@@ -73,11 +73,15 @@ class CustomGradientButton extends StatelessWidget {
                       SizedBox(width: 8.w),
                     ],
                     Flexible(
-                      child: Text(
-                        text,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: effectiveTextStyle,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          text,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: effectiveTextStyle,
+                        ),
                       ),
                     ),
                   ],
@@ -98,10 +102,14 @@ class CustomGradientButton extends StatelessWidget {
         children: [
           if (leadingIcon != null) ...[leadingIcon!, SizedBox(width: 8.w)],
           Flexible(
-            child: Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: effectiveTextStyle,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                text,
+                maxLines: 1,
+                softWrap: false,
+                style: effectiveTextStyle,
+              ),
             ),
           ),
           if (trailingIcon != null) ...[SizedBox(width: 8.w), trailingIcon!],

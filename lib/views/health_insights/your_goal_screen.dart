@@ -91,6 +91,8 @@ class YourGoalScreen extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               height: 1.35,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

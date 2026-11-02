@@ -230,6 +230,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                           height: 1.13,
                           letterSpacing: 0.14,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 10.h),
                       _buildWeightCard(
@@ -457,6 +459,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                   height: 1.17,
                   letterSpacing: 0.44,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             )
           else
@@ -470,15 +474,19 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               ),
               child: Row(
                 children: [
-                  Text(
-                    'kg_to_healthy'.trParams({
-                      'sign': v.gain ? '+' : '−',
-                      'diff': '$diff',
-                    }),
-                    style: bodyStyle(
-                      12,
-                      color: v.barText,
-                      weight: FontWeight.w700,
+                  Flexible(
+                    child: Text(
+                      'kg_to_healthy'.trParams({
+                        'sign': v.gain ? '+' : '−',
+                        'diff': '$diff',
+                      }),
+                      style: bodyStyle(
+                        12,
+                        color: v.barText,
+                        weight: FontWeight.w700,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   SizedBox(width: 16.w),

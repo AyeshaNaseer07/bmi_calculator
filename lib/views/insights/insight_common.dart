@@ -412,13 +412,17 @@ class PrecautionCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 10.w),
-                        Text(
-                          'precaution_caps'.tr,
-                          style: bodyStyle(
-                            16,
-                            color: const Color(0xFFB45309),
-                            weight: FontWeight.w800,
-                          ).copyWith(letterSpacing: 0.3),
+                        Flexible(
+                          child: Text(
+                            'precaution_caps'.tr,
+                            style: bodyStyle(
+                              16,
+                              color: const Color(0xFFB45309),
+                              weight: FontWeight.w800,
+                            ).copyWith(letterSpacing: 0.3),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -640,14 +644,18 @@ class ProBadge extends StatelessWidget {
             color: Colors.white,
           ),
           SizedBox(width: 2.w),
-          Text(
-            'pro_badge'.tr,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 9.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.3,
+          Flexible(
+            child: Text(
+              'pro_badge'.tr,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 9.sp,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.3,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

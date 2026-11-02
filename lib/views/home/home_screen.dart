@@ -323,6 +323,8 @@ class _HomeScreenState extends State<HomeScreen> {
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w700,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 6.h),
           Text(
@@ -382,13 +384,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'your_bmi'.tr,
-                    style: TextStyle(
-                      color: AppPalette.textPrimary,
-                      fontSize: 18,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      'your_bmi'.tr,
+                      style: TextStyle(
+                        color: AppPalette.textPrimary,
+                        fontSize: 18,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Column(
@@ -402,6 +408,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 2.h),
                       Text(
@@ -485,13 +493,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 10.w,
                           ),
                           SizedBox(width: 4.w),
-                          Text(
-                            'view_history'.tr,
-                            style: TextStyle(
-                              color: AppPalette.textPrimary,
-                              fontSize: 9,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
+                          Flexible(
+                            child: Text(
+                              'view_history'.tr,
+                              style: TextStyle(
+                                color: AppPalette.textPrimary,
+                                fontSize: 9,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -982,6 +994,8 @@ class _RemoveAdsCard extends StatelessWidget {
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 1.4,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 2.h),
                                 // Scales down rather than truncating.
@@ -1089,6 +1103,8 @@ class _UpgradeButtonState extends State<_UpgradeButton>
         fontFamily: 'Inter',
         fontWeight: FontWeight.w800,
       ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
 
     return AnimatedBuilder(

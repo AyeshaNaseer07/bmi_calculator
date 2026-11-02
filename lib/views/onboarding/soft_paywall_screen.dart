@@ -121,9 +121,19 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   PlanOffer _offer(SubscriptionPlan slot) =>
       PriceService.offerFor(slot, _app.remoteConfigService, _prices);
 
-  String _period(PlanOffer o) => o.type.periodWord == null
-      ? 'one_time'.tr
-      : 'one_per_${o.type.periodWord}'.tr;
+  // Per-day / per-month breakdown, same as the main paywall.
+  String _period(PlanOffer o) => switch (o.type) {
+    PlanType.yearly => 'price_per_month'.trParams({
+      'price': o.price.perMonth(o.type),
+    }),
+    PlanType.monthly => 'price_per_week'.trParams({
+      'price': o.price.perWeek(o.type),
+    }),
+    PlanType.weekly => 'price_per_day'.trParams({
+      'price': o.price.perDay(o.type),
+    }),
+    PlanType.lifetime => 'one_time_payment'.tr,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -194,6 +204,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                         fontSize: 11.sp,
                         fontFamily: 'Inter',
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 12.h),
                     Expanded(flex: 9, child: _featureCard()),
@@ -205,7 +217,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                             SubscriptionPlan.monthly,
                             '${left.type.name}_plan'.tr,
                             _pricesLoading ? '' : left.price.priceString,
-                            _period(left),
+                            _pricesLoading ? '' : _period(left),
                             best: leftIsBest,
                           ),
                         ),
@@ -227,6 +239,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                                 fontSize: 8.sp,
                                 fontWeight: FontWeight.w700,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -235,7 +249,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                             SubscriptionPlan.yearly,
                             '${right.type.name}_plan'.tr,
                             _pricesLoading ? '' : right.price.priceString,
-                            _period(right),
+                            _pricesLoading ? '' : _period(right),
                             best: !leftIsBest,
                           ),
                         ),
@@ -307,6 +321,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                               fontSize: 11.sp,
                               fontFamily: 'Inter',
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         SizedBox(
@@ -407,14 +423,18 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
         children: [
           Image.asset(AppAssets.softBadge, width: 18.w, height: 18.w),
           SizedBox(width: 6.w),
-          Text(
-            'n_7_day_healthy_meal_plan'.tr,
-            style: TextStyle(
-              color: const Color(0xFF00714D),
-              fontSize: 11.sp,
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.4,
+          Flexible(
+            child: Text(
+              'n_7_day_healthy_meal_plan'.tr,
+              style: TextStyle(
+                color: const Color(0xFF00714D),
+                fontSize: 11.sp,
+                fontFamily: 'Plus Jakarta Sans',
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.4,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -579,12 +599,16 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           height: 9.w,
                         ),
                         SizedBox(width: 3.w),
-                        Text(
-                          'best_value'.tr,
-                          style: TextStyle(
-                            fontSize: 7.5.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                        Flexible(
+                          child: Text(
+                            'best_value'.tr,
+                            style: TextStyle(
+                              fontSize: 7.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -631,7 +655,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
               ),
             ),
             Text(
-              period,
+              period.isEmpty ? ' ' : period,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: const Color(0xFF9CA3AF),
                 fontSize: 11.sp,

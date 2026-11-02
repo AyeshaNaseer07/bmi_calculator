@@ -223,6 +223,8 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                     'litres': PersonalTargets.litres(_ml),
                   }),
                   style: bodyStyle(14, color: _kSub, height: 1.3),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 12.h),
                 for (int start = 1; start <= _goal; start += 8) ...[
@@ -318,6 +320,8 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                     color: AppPalette.textSecondary,
                     weight: FontWeight.w700,
                   ).copyWith(letterSpacing: 1.0),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 12.h),
                 _tipRow(

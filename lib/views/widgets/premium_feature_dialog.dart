@@ -70,6 +70,8 @@ class PremiumFeatureDialog extends StatelessWidget {
                     fontFamily: 'Instrument Sans',
                     fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 10.h),
                 Text(
@@ -107,6 +109,8 @@ class PremiumFeatureDialog extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -229,6 +233,8 @@ class _UnlockButtonState extends State<_UnlockButton>
           fontFamily: 'Inter',
           fontWeight: FontWeight.w700,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
 
