@@ -24,7 +24,7 @@ abstract class AppAssets {
   static const String bmiGauge = '$_imagesBase/guagae.webp';
 
   // ── Onboarding ──
-  static const String onboarding1 = '$_imagesBase/onboarding_1.png';
+  static const String onboarding1 = '$_imagesBase/onboarding_1.webp';
   static const String onboarding2 = '$_imagesBase/onboarding_2.webp';
   static const String onboarding3 = '$_imagesBase/onboarding_3.webp';
 
@@ -123,7 +123,7 @@ abstract class AppAssets {
   static const String insightObese = '$_imagesBase/obese_bmi.webp';
   static const String insightRise = '$_imagesBase/rise_bmi.webp';
   static const String tipMeals = '$_imagesBase/balance_meal.webp';
-  static const String tipHydrated = '$_imagesBase/water.png';
+  static const String tipHydrated = '$_imagesBase/water.webp';
   static const String tipActive = '$_imagesBase/active.webp';
   static const String tipSleep = '$_imagesBase/sleep.webp';
   static const String mealIcon = '$_imagesBase/meal.webp';

@@ -92,6 +92,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   }
 
   void _close() {
+    // Can't leave while a purchase or restore is in progress.
+    if (_loading) return;
     InterstitialAdManager.instance.show(
       InterstitialPlacement.weekPaywallCross,
       onDone: () {
@@ -137,214 +139,217 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     final left = _offer(SubscriptionPlan.monthly);
     final right = _offer(SubscriptionPlan.yearly);
     final leftIsBest = left.type.rank > right.type.rank;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(AppAssets.softBg, fit: BoxFit.cover),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 6.h),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: _close,
-                      child: Container(
-                        width: 28.w,
-                        height: 28.w,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0x22000000),
-                              blurRadius: 6,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
+    return PopScope(
+      canPop: !_loading,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(AppAssets.softBg, fit: BoxFit.cover),
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 6.h),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: _close,
+                        child: Container(
+                          width: 28.w,
+                          height: 28.w,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0x22000000),
+                                blurRadius: 6,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Image.asset(
+                            AppAssets.preCross,
+                            width: 12.w,
+                            height: 12.w,
+                            fit: BoxFit.contain,
+                          ),
                         ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 3,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: 84.h),
                         child: Image.asset(
-                          AppAssets.preCross,
-                          width: 12.w,
-                          height: 12.w,
+                          AppAssets.softCrown,
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 84.h),
-                      child: Image.asset(
-                        AppAssets.softCrown,
-                        fit: BoxFit.contain,
+                    SizedBox(height: 4.h),
+                    _title(),
+                    SizedBox(height: 10.h),
+                    _badge(),
+                    SizedBox(height: 8.h),
+                    Text(
+                      'Better Meals  •  Healthier You',
+                      style: TextStyle(
+                        color: AppPalette.textBody,
+                        fontSize: 11.sp,
+                        fontFamily: 'Inter',
                       ),
                     ),
-                  ),
-                  SizedBox(height: 4.h),
-                  _title(),
-                  SizedBox(height: 10.h),
-                  _badge(),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Better Meals  •  Healthier You',
-                    style: TextStyle(
-                      color: AppPalette.textBody,
-                      fontSize: 11.sp,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Expanded(flex: 9, child: _featureCard()),
-                  SizedBox(height: 14.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _planCard(
-                          SubscriptionPlan.monthly,
-                          '${left.type.title} Plan',
-                          _pricesLoading ? '' : left.price.priceString,
-                          _period(left),
-                          best: leftIsBest,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        child: Container(
-                          width: 24.w,
-                          height: 24.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: AppPalette.surface,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: _ringBorder, width: 1),
-                          ),
-                          child: Text(
-                            'OR',
-                            style: TextStyle(
-                              color: AppPalette.textSecondary,
-                              fontSize: 8.sp,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: _planCard(
-                          SubscriptionPlan.yearly,
-                          '${right.type.title} Plan',
-                          _pricesLoading ? '' : right.price.priceString,
-                          _period(right),
-                          best: !leftIsBest,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    children: [
-                      Image.asset(
-                        AppAssets.softLeft,
-                        width: 16.w,
-                        height: 30.h,
-                        fit: BoxFit.contain,
-                      ),
-                      SizedBox(width: 6.w),
-                      Expanded(
-                        child: Obx(
-                          () => AnimatedCtaButton(
-                            text: PriceService.getCtaLabel(
-                              _offer(_plan).product,
-                            ),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],
-                            ),
-                            borderRadius: BorderRadius.circular(28.r),
-                            height: 52.h,
-                            isLoading: _loading,
-                            leadingIcon: Image.asset(
-                              AppAssets.premiumCrown,
-                              width: 18.w,
-                              height: 18.w,
-                              color: Colors.white,
-                              fit: BoxFit.contain,
-                            ),
-                            trailingIcon: Icon(
-                              Icons.arrow_forward_rounded,
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
-                            onPressed: (_loading || _pricesLoading)
-                                ? null
-                                : _subscribe,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 6.w),
-                      Image.asset(
-                        AppAssets.softRight,
-                        width: 16.w,
-                        height: 30.h,
-                        fit: BoxFit.contain,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 32.w,
-                        child: Divider(height: 1, color: _lineColor),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: Text(
-                          'Cancel Anytime',
-                          style: TextStyle(
-                            color: AppPalette.textSecondary,
-                            fontSize: 11.sp,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 32.w,
-                        child: Divider(height: 1, color: _lineColor),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    SizedBox(height: 12.h),
+                    Expanded(flex: 9, child: _featureCard()),
+                    SizedBox(height: 14.h),
+                    Row(
                       children: [
-                        _link(
-                          'Privacy Policy',
-                          () => openUrl(AppStrings.privacyPolicyUrl),
+                        Expanded(
+                          child: _planCard(
+                            SubscriptionPlan.monthly,
+                            '${left.type.title} Plan',
+                            _pricesLoading ? '' : left.price.priceString,
+                            _period(left),
+                            best: leftIsBest,
+                          ),
                         ),
-                        _sep(),
-                        _link('Restore Purchase', _restore),
-                        _sep(),
-                        _link(
-                          'Terms of Use',
-                          () => openUrl(AppStrings.termsUrl),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: Container(
+                            width: 24.w,
+                            height: 24.w,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppPalette.surface,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: _ringBorder, width: 1),
+                            ),
+                            child: Text(
+                              'OR',
+                              style: TextStyle(
+                                color: AppPalette.textSecondary,
+                                fontSize: 8.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: _planCard(
+                            SubscriptionPlan.yearly,
+                            '${right.type.title} Plan',
+                            _pricesLoading ? '' : right.price.priceString,
+                            _period(right),
+                            best: !leftIsBest,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 4.h),
-                ],
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Image.asset(
+                          AppAssets.softLeft,
+                          width: 16.w,
+                          height: 30.h,
+                          fit: BoxFit.contain,
+                        ),
+                        SizedBox(width: 6.w),
+                        Expanded(
+                          child: Obx(
+                            () => AnimatedCtaButton(
+                              text: PriceService.getCtaLabel(
+                                _offer(_plan).product,
+                              ),
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF1BD19E), Color(0xFF078A6A)],
+                              ),
+                              borderRadius: BorderRadius.circular(28.r),
+                              height: 52.h,
+                              isLoading: _loading,
+                              leadingIcon: Image.asset(
+                                AppAssets.premiumCrown,
+                                width: 18.w,
+                                height: 18.w,
+                                color: Colors.white,
+                                fit: BoxFit.contain,
+                              ),
+                              trailingIcon: Icon(
+                                Icons.arrow_forward_rounded,
+                                color: Colors.white,
+                                size: 20.sp,
+                              ),
+                              onPressed: (_loading || _pricesLoading)
+                                  ? null
+                                  : _subscribe,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Image.asset(
+                          AppAssets.softRight,
+                          width: 16.w,
+                          height: 30.h,
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 32.w,
+                          child: Divider(height: 1, color: _lineColor),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Text(
+                            'Cancel Anytime',
+                            style: TextStyle(
+                              color: AppPalette.textSecondary,
+                              fontSize: 11.sp,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 32.w,
+                          child: Divider(height: 1, color: _lineColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _link(
+                            'Privacy Policy',
+                            () => openUrl(AppStrings.privacyPolicyUrl),
+                          ),
+                          _sep(),
+                          _link('Restore Purchase', _restore),
+                          _sep(),
+                          _link(
+                            'Terms of Use',
+                            () => openUrl(AppStrings.termsUrl),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

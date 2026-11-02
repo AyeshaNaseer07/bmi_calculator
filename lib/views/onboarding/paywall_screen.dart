@@ -84,6 +84,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
       InterstitialPlacement.onbPaywallCross;
 
   void _onClose() {
+    // Can't leave while a purchase or restore is in progress.
+    if (_isLoading) return;
     InterstitialAdManager.instance.show(
       _crossAdPlacement,
       onDone: _leavePaywall,
@@ -111,7 +113,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
     bool success = false;
     try {
       success = await _appController.upgradeToPremium(_selectedPlan);
-      _appController.completeOnboarding();
     } catch (e) {
       debugPrint('Subscription error: $e');
     }
@@ -119,9 +120,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (success) {
-      await PremiumCongratsDialog.show();
-    }
+    // Cancelled or failed: stay on the paywall.
+    if (!success) return;
+    _appController.completeOnboarding();
+    await PremiumCongratsDialog.show();
     if (!mounted) return;
     Get.offAllNamed(AppRoutes.home);
   }
