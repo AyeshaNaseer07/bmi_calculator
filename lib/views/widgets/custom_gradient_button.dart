@@ -5,6 +5,12 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/constants/app_typography.dart';
+import '../../core/utils/responsive.dart';
+
+/// The same left-to-right teal-to-blue fill as [AppAssets.btnRectangle].
+const LinearGradient _kBtnRectangleGradient = LinearGradient(
+  colors: [Color(0xFF33D3AB), Color(0xFF128ADB)],
+);
 
 class CustomGradientButton extends StatelessWidget {
   final String text;
@@ -160,18 +166,26 @@ class CustomGradientButton extends StatelessWidget {
         ),
       );
     } else {
+      final image = backgroundImage ?? AppAssets.btnRectangle;
+      // The pill image is stretched to fill the button, which squashes its
+      // rounded ends on wide tablet buttons; draw the gradient instead there.
+      final useImageGradient =
+          solidColor == null &&
+          gradient == null &&
+          image == AppAssets.btnRectangle &&
+          isTablet(context);
+      final effectiveGradient = useImageGradient
+          ? _kBtnRectangleGradient
+          : gradient;
       buttonContent = Container(
         height: effectiveHeight,
         width: width ?? double.infinity,
         decoration: BoxDecoration(
           color: solidColor,
-          gradient: gradient,
+          gradient: effectiveGradient,
           borderRadius: effectiveBorderRadius,
-          image: (solidColor == null && gradient == null)
-              ? DecorationImage(
-                  image: AssetImage(backgroundImage ?? AppAssets.btnRectangle),
-                  fit: BoxFit.fill,
-                )
+          image: (solidColor == null && effectiveGradient == null)
+              ? DecorationImage(image: AssetImage(image), fit: BoxFit.fill)
               : null,
           boxShadow: isEnabled ? boxShadow : null,
         ),

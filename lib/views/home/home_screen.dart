@@ -58,7 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Stack(
           children: [
             Positioned(
-              top: 10.h,
+              // The art is drawn for a 44pt status bar, but the content below
+              // starts under the real safe area. Tablets have a much shorter
+              // one, which slid the BMI card up over the avatars' crossed
+              // arms, so the art moves by the same amount there.
+              top: isTablet(context)
+                  ? 10.h + MediaQuery.paddingOf(context).top - 44.h
+                  : 10.h,
               left: 0,
               right: 0,
               child: IgnorePointer(
@@ -91,17 +97,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Kept at the phone design width so on tablets the art
                   // stays beside the greeting instead of growing behind
                   // the BMI card.
+                  Widget art = Image.asset(
+                    bgImage,
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topRight,
+                  );
+                  // The art is an opaque full-screen phone background, so on
+                  // the wider tablet canvas its left half fades into the app
+                  // background instead of ending in a hard edge. The guy,
+                  // girl and couple all sit in the right third, clear of it.
+                  if (isTablet(context)) {
+                    art = ShaderMask(
+                      blendMode: BlendMode.dstIn,
+                      shaderCallback: (rect) => const LinearGradient(
+                        colors: [Colors.transparent, Colors.black],
+                        stops: [0.0, 0.5],
+                      ).createShader(rect),
+                      child: art,
+                    );
+                  }
                   return MirrorOnRtl(
                     child: Align(
                       alignment: Alignment.topRight,
-                      child: SizedBox(
-                        width: 375.w,
-                        child: Image.asset(
-                          bgImage,
-                          fit: BoxFit.fitWidth,
-                          alignment: Alignment.topRight,
-                        ),
-                      ),
+                      child: SizedBox(width: 375.w, child: art),
                     ),
                   );
                 }),
