@@ -8,6 +8,7 @@ import '../data/services/localization_service.dart';
 import '../data/services/remote_config_service.dart';
 import '../data/services/storage_service.dart';
 import '../data/services/subscription_service.dart';
+import '../data/services/analytics_service.dart';
 
 class AppController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
@@ -77,6 +78,7 @@ class AppController extends GetxController {
 
   void changeLanguage(String code) {
     selectedLanguage.value = code;
+    AnalyticsService.log(AnalyticsService.languageChanged, {'language': code});
     _storage.setLanguage(code);
     LocalizationService.applyIntlLocale(code);
     final locale = LocalizationService.getLocaleFromLanguage(code);
@@ -98,6 +100,12 @@ class AppController extends GetxController {
     PaywallType paywall,
   ) async {
     final remoteProductId = remoteConfigService.getProductId(plan, paywall);
+    final params = {
+      'plan': plan.name,
+      'paywall': paywall.name,
+      'product_id': remoteProductId,
+    };
+    AnalyticsService.log(AnalyticsService.purchaseStart, params);
     return subscriptionService.purchase(plan, productId: remoteProductId);
   }
 
@@ -105,6 +113,7 @@ class AppController extends GetxController {
 
   void completeOnboarding() {
     onboardingSeen.value = true;
+    AnalyticsService.log(AnalyticsService.onboardingComplete);
     _storage.setOnboardingSeen(true);
   }
 }

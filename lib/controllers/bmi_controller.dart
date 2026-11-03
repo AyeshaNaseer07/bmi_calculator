@@ -5,6 +5,7 @@ import '../data/models/user_profile_model.dart';
 import '../data/services/bmi_service.dart';
 import '../data/services/storage_service.dart';
 import 'profile_controller.dart';
+import '../data/services/analytics_service.dart';
 
 class BMIController extends GetxController {
   static const int minAge = 1;
@@ -149,6 +150,11 @@ class BMIController extends GetxController {
     await _storage.addBmiRecord(record);
     bmiHistory.insert(0, record);
     latestRecord.value = record;
+    AnalyticsService.log(AnalyticsService.bmiCalculated, {
+      'category': category.toString(),
+      'gender': record.gender,
+      'activity': record.activity.toString(),
+    });
 
     final profile = _storage.getUserProfile();
     final updatedProfile = profile.copyWith(
@@ -166,6 +172,7 @@ class BMIController extends GetxController {
   }
 
   void deleteRecord(String id) async {
+    AnalyticsService.log(AnalyticsService.recordsDeleted, {'count': 1});
     bmiHistory.removeWhere((item) => item.id == id);
     await _storage.saveBmiHistory(bmiHistory);
     if (latestRecord.value?.id == id) {
@@ -175,6 +182,9 @@ class BMIController extends GetxController {
 
   void deleteMultipleRecords(Iterable<String> ids) async {
     final idSet = ids.toSet();
+    AnalyticsService.log(AnalyticsService.recordsDeleted, {
+      'count': idSet.length,
+    });
     bmiHistory.removeWhere((item) => idSet.contains(item.id));
     await _storage.saveBmiHistory(bmiHistory);
     if (idSet.contains(latestRecord.value?.id)) {

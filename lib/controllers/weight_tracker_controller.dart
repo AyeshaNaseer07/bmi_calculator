@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../data/models/weight_record_model.dart';
 import '../data/services/storage_service.dart';
+import '../data/services/analytics_service.dart';
 
 class WeightTrackerController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
@@ -103,6 +104,10 @@ class WeightTrackerController extends GetxController {
     );
     await _storage.addWeightRecord(newRecord);
     weightHistory.add(newRecord);
+    AnalyticsService.log(AnalyticsService.weightLogged, {
+      'has_note': note != null && note.isNotEmpty,
+      'has_goal': goalWeight > 0,
+    });
     currentWeight.value = weight;
     // Update goal weight if provided
     if (goalWeight > 0) {

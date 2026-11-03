@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../data/services/analytics_service.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,6 +41,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService.log(AnalyticsService.paywallView, {'paywall': 'week'});
     _plan = _app.remoteConfigService.defaultPlan(PaywallType.week);
     InterstitialAdManager.instance.load(InterstitialPlacement.weekPaywallCross);
     final delay = _app.remoteConfigService.crossDelaySeconds(PaywallType.week);

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -91,6 +92,36 @@ class NativeAds {
     return true;
   }
 
+  /// Resolves once the ad for [placement] has loaded, failed, or [timeout]
+  /// has passed, so a screen can open with its ad already there instead of
+  /// racing the load. Starts the load if it isn't under way.
+  static Future<void> waitForLoad(
+    NativeAdPlacement placement, {
+    required Duration timeout,
+  }) async {
+    if (!isEnabled(placement)) return;
+    final ad = of(placement);
+    if (ad.state.value == MaxNativeAdState.loaded) return;
+
+    final done = Completer<void>();
+    void onState() {
+      final s = ad.state.value;
+      if ((s == MaxNativeAdState.loaded || s == MaxNativeAdState.failed) &&
+          !done.isCompleted) {
+        done.complete();
+      }
+    }
+
+    ad.state.addListener(onState);
+    try {
+      if (!await preload(placement)) return;
+      onState();
+      await done.future.timeout(timeout, onTimeout: () {});
+    } finally {
+      ad.state.removeListener(onState);
+    }
+  }
+
   static void _setCallbacks() {
     if (_callbacksSet) return;
     _callbacksSet = true;
@@ -129,6 +160,11 @@ class NativeAdCard extends StatefulWidget {
 class _NativeAdCardState extends State<NativeAdCard> {
   late final MaxNativeAd _ad = NativeAds.of(widget.placement);
   bool _isFailed = false;
+  int _retries = 0;
+  Timer? _retryTimer;
+
+  static const int _maxRetries = 2;
+  static const Duration _retryDelay = Duration(seconds: 3);
 
   @override
   void initState() {
@@ -142,7 +178,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
     NativeAds.preload(widget.placement).then((started) {
       if (!mounted) return;
       if (!started) {
-        _fail();
+        _retryOrFail();
       } else if (_ad.state.value == MaxNativeAdState.loaded) {
         _notifyAvailability(true);
       }
@@ -156,11 +192,27 @@ class _NativeAdCardState extends State<NativeAdCard> {
         _notifyAvailability(true);
         setState(() {});
       case MaxNativeAdState.failed:
-        _fail();
+        _retryOrFail();
       case MaxNativeAdState.idle:
       case MaxNativeAdState.loading:
         setState(() {});
     }
+  }
+
+  void _retryOrFail() {
+    if (_isFailed || _retryTimer != null) return;
+    if (_retries >= _maxRetries) {
+      _fail();
+      return;
+    }
+    _retries++;
+    _retryTimer = Timer(_retryDelay, () {
+      _retryTimer = null;
+      if (!mounted || _isFailed) return;
+      NativeAds.preload(widget.placement).then((started) {
+        if (mounted && !started) _retryOrFail();
+      });
+    });
   }
 
   void _fail() {
@@ -177,6 +229,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
 
   @override
   void dispose() {
+    _retryTimer?.cancel();
     _ad.state.removeListener(_onAdStateChanged);
     if (!_isFailed) _ad.destroy();
     super.dispose();

@@ -647,10 +647,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
-                'obese_30_34_9'.tr,
-                currentCategory == BMICategory.obese,
-                inactiveBg: const Color(0xFFFFB1B2),
-                activeBg: AppColors.obese,
+                'normal_18_5_24_9'.tr,
+                currentCategory == BMICategory.normal,
+                inactiveBg: const Color(0xFFC0ECE6),
+                activeBg: AppColors.normal,
               ),
             ),
           ],
@@ -669,10 +669,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 10.w),
             Expanded(
               child: _buildCategoryBadge(
-                'normal_18_5_24_9'.tr,
-                currentCategory == BMICategory.normal,
-                inactiveBg: const Color(0xFFC0ECE6),
-                activeBg: AppColors.normal,
+                'obese_30_34_9'.tr,
+                currentCategory == BMICategory.obese,
+                inactiveBg: const Color(0xFFFFB1B2),
+                activeBg: AppColors.obese,
               ),
             ),
           ],

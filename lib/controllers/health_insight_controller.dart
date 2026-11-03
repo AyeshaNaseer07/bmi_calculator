@@ -6,6 +6,7 @@ import '../data/services/storage_service.dart';
 
 import 'bmi_controller.dart';
 import 'profile_controller.dart';
+import '../data/services/analytics_service.dart';
 
 class HealthInsightController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
@@ -89,6 +90,10 @@ class HealthInsightController extends GetxController {
       Get.find<ProfileController>().loadProfile();
     }
     hasInsights.value = true;
+    AnalyticsService.log(AnalyticsService.insightsGenerated, {
+      'goal': selectedGoal.value.toString(),
+      'activity': selectedActivity.value.toString(),
+    });
   }
 
   @override

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../data/services/analytics_service.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,6 +47,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService.log(AnalyticsService.paywallView, {
+      'paywall': 'onboarding',
+    });
     final args = Get.arguments;
     if (args is Map && args['fromOnboarding'] == true) {
       _fromOnboarding = true;
@@ -95,6 +100,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   void _onClose() {
     // Can't leave while a purchase or restore is in progress.
     if (_isLoading) return;
+    AnalyticsService.log(AnalyticsService.paywallClose, {
+      'paywall': 'onboarding',
+    });
     InterstitialAdManager.instance.show(
       _crossAdPlacement,
       onDone: _leavePaywall,

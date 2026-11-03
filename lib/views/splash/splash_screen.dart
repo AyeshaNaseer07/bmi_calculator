@@ -9,6 +9,7 @@ import '../../core/constants/app_typography.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/services/app_startup.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
+import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -71,8 +72,19 @@ class _SplashScreenState extends State<SplashScreen>
     await InterstitialAdManager.instance.show(
       InterstitialPlacement.splash,
       waitFor: _splashAdWait,
-      onDone: () => Get.offAllNamed(AppRoutes.languageSelection),
+      onDone: _openLanguage,
     );
+  }
+
+  /// Opens the language screen once its native ad has loaded (or given up),
+  /// so the ad is there when the screen appears rather than loading late.
+  Future<void> _openLanguage() async {
+    await NativeAds.waitForLoad(
+      NativeAdPlacement.language,
+      timeout: _splashAdWait,
+    );
+    if (!mounted) return;
+    Get.offAllNamed(AppRoutes.languageSelection);
   }
 
   @override

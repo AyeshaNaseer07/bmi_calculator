@@ -17,6 +17,7 @@ import 'core/theme/app_palette.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/localization_service.dart';
 import 'data/services/storage_service.dart';
+import 'data/services/analytics_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -149,7 +150,7 @@ class BMIApp extends StatelessWidget {
           ],
           initialRoute: AppPages.initial,
           getPages: AppPages.routes,
-          navigatorObservers: [appRouteObserver],
+          navigatorObservers: [appRouteObserver, AnalyticsRouteObserver()],
           defaultTransition: Transition.cupertino,
           builder: (context, child) {
             Widget content = GestureDetector(

@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../core/utils/photo_permission.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/storage_service.dart';
+import '../data/services/analytics_service.dart';
 
 class ProfileController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
@@ -56,6 +57,7 @@ class ProfileController extends GetxController {
         Future.delayed(const Duration(milliseconds: 900)),
       ]);
       profileImagePath.value = picked.path;
+      AnalyticsService.log(AnalyticsService.profilePhotoUpdated);
     } finally {
       isUploading.value = false;
     }
