@@ -189,7 +189,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                         'recommended_caps'.tr,
                         style: TextStyle(
                           color: const Color(0xFF0F766E),
-                          fontSize: 10,
+                          fontSize: 10.sp,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w600,
                           height: 1.50,
@@ -207,7 +207,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: const Color(0xFF059669),
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w800,
                         height: 1.33,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../../core/utils/responsive.dart';
 import '../onboarding/soft_paywall_screen.dart';
 import '../widgets/premium_feature_dialog.dart';
 import 'insight_common.dart';
@@ -88,7 +89,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
                     'nutrition_guide'.tr,
                     style: TextStyle(
                       color: const Color(0xFF00714D),
-                      fontSize: 11,
+                      fontSize: 11.sp,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w700,
                       height: 1.27,
@@ -107,7 +108,7 @@ class EatBalancedMealsScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 11.5,
+              fontSize: 11.5.sp,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w400,
               height: 1.6,
@@ -200,7 +201,7 @@ class _HubCard extends StatelessWidget {
                             title,
                             style: TextStyle(
                               color: AppPalette.textPrimary,
-                              fontSize: 15.5,
+                              fontSize: 15.5.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
@@ -229,7 +230,7 @@ class _HubCard extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         color: AppPalette.textSecondary,
-                        fontSize: 12.5,
+                        fontSize: 12.5.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         height: 1.35,
@@ -269,14 +270,14 @@ class EatVegetablesScreen extends StatelessWidget {
 
   static TextStyle _title(double size) => TextStyle(
     color: AppPalette.textPrimary,
-    fontSize: size,
+    fontSize: size.sp,
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
   );
 
   static TextStyle get _sub => TextStyle(
     color: AppPalette.textSecondary,
-    fontSize: 13,
+    fontSize: 13.sp,
     fontFamily: 'Inter',
     fontWeight: FontWeight.w400,
     height: 1.45,
@@ -284,7 +285,7 @@ class EatVegetablesScreen extends StatelessWidget {
 
   static TextStyle get _section => TextStyle(
     color: AppPalette.textPrimary,
-    fontSize: 18,
+    fontSize: 18.sp,
     fontFamily: 'Plus Jakarta Sans',
     fontWeight: FontWeight.w700,
   );
@@ -343,7 +344,7 @@ class EatVegetablesScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 12.5,
+                fontSize: 12.5.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
@@ -460,7 +461,7 @@ class LeanProteinScreen extends StatelessWidget {
           title,
           style: TextStyle(
             color: AppPalette.textPrimary,
-            fontSize: 15,
+            fontSize: 15.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
           ),
@@ -470,7 +471,7 @@ class LeanProteinScreen extends StatelessWidget {
           subtitle,
           style: TextStyle(
             color: AppPalette.textSecondary,
-            fontSize: 12,
+            fontSize: 12.sp,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
             height: 1.4,
@@ -501,7 +502,7 @@ class LeanProteinScreen extends StatelessWidget {
           AssetOrPlaceholder(
             asset: AppAssets.photoBalancedMeal,
             width: double.infinity,
-            height: 182.h,
+            height: isTablet(context) ? 320.h : 182.h,
             radius: 20.r,
           ),
           SizedBox(height: 14.h),
@@ -569,7 +570,7 @@ class PortionSizesScreen extends StatelessWidget {
                 title,
                 style: TextStyle(
                   color: AppPalette.textPrimary,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
@@ -579,7 +580,7 @@ class PortionSizesScreen extends StatelessWidget {
                 subtitle,
                 style: TextStyle(
                   color: AppPalette.textSecondary,
-                  fontSize: 13.5,
+                  fontSize: 13.5.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,
                   height: 1.4,
@@ -614,7 +615,7 @@ class PortionSizesScreen extends StatelessWidget {
               'enjoy_balanced_portions_without_skipping_meals'.tr,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
                 height: 1.57,

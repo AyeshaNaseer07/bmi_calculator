@@ -135,28 +135,34 @@ class SleepWellScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.schedule_rounded,
-                          size: 16.sp,
-                          color: _kDeep,
-                        ),
-                        SizedBox(width: 6.w),
-                        Flexible(
-                          child: Text(
-                            'recommended_sleep'.tr,
-                            style: bodyStyle(
-                              12,
-                              color: _kDeep,
-                              weight: FontWeight.w800,
-                            ).copyWith(letterSpacing: 0.4),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                    // Flexible + min size: a bare Row here had unbounded width,
+                    // which its Flexible text can't lay out in.
+                    Flexible(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.schedule_rounded,
+                            size: 16.sp,
+                            color: _kDeep,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 6.w),
+                          Flexible(
+                            child: Text(
+                              'recommended_sleep'.tr,
+                              style: bodyStyle(
+                                12,
+                                color: _kDeep,
+                                weight: FontWeight.w800,
+                              ).copyWith(letterSpacing: 0.4),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    SizedBox(width: 8.w),
                     Flexible(
                       child: Container(
                         padding: EdgeInsets.symmetric(

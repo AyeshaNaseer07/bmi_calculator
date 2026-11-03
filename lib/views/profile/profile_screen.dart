@@ -607,7 +607,7 @@ class ProfileScreen extends StatelessWidget {
                       title,
                       style: TextStyle(
                         color: AppPalette.textPrimary,
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
                       ),
@@ -617,7 +617,7 @@ class ProfileScreen extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         color: AppPalette.textPrimary,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                       ),

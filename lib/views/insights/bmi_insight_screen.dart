@@ -224,7 +224,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                         'your_weight_progress'.tr,
                         style: TextStyle(
                           color: AppPalette.textPrimary,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w700,
                           height: 1.13,
@@ -453,7 +453,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 'youre_in_the_healthy_bmi_range'.tr,
                 style: TextStyle(
                   color: const Color(0xFF09B389),
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontFamily: 'Plus Jakarta Sans',
                   fontWeight: FontWeight.w600,
                   height: 1.17,
@@ -587,7 +587,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
           textAlign: TextAlign.left,
           style: TextStyle(
             color: AppPalette.textPrimary,
-            fontSize: 18,
+            fontSize: 18.sp,
             fontFamily: 'Plus Jakarta Sans',
             fontWeight: FontWeight.w700,
             height: 1.33,
@@ -641,7 +641,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                           v.whyTitle!,
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.14,
@@ -725,7 +725,7 @@ class _TipCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final subStyle = TextStyle(
       color: AppPalette.textMuted,
-      fontSize: 11.50,
+      fontSize: 11.50.sp,
       fontFamily: 'Plus Jakarta Sans',
       fontWeight: FontWeight.w500,
       height: 1.37,
@@ -770,7 +770,7 @@ class _TipCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: AppPalette.textPrimary,
-                      fontSize: 14.50,
+                      fontSize: 14.50.sp,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w700,
                       height: 1.38,
@@ -786,7 +786,7 @@ class _TipCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: AppPalette.textMuted,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w500,
                           height: 1.37,

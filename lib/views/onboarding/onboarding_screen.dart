@@ -170,7 +170,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           }),
                         ),
                         SizedBox(height: 20.h),
-
                         // Next Gradient Button
                         _AnimatedGradientNextButton(onPressed: _onNext),
                       ],
@@ -352,7 +351,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontFamily: 'SF Pro',
                   fontWeight: FontWeight.w400,
                 ),

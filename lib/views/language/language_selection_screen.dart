@@ -227,7 +227,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
               'done'.tr,
               style: TextStyle(
                 color: _doneTextColor,
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
               ),
@@ -308,7 +308,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                 'languages'.tr,
                                 style: TextStyle(
                                   color: AppPalette.textPrimary,
-                                  fontSize: 24,
+                                  fontSize: 24.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -320,7 +320,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                 'select_lang_subtitle'.tr,
                                 style: TextStyle(
                                   color: AppPalette.textBody,
-                                  fontSize: 13,
+                                  fontSize: 13.sp,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w400,
                                 ),

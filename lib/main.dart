@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:applovin_max/applovin_max.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,9 +19,10 @@ import 'core/theme/app_theme.dart';
 import 'data/services/localization_service.dart';
 import 'data/services/storage_service.dart';
 import 'data/services/analytics_service.dart';
+import 'views/widgets/device_preview_control.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  DevicePreview.enable();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _waitUntilAppActive();
@@ -105,21 +107,43 @@ void logAdRevenue({
 
 const Size _phoneDesignSize = Size(375, 812);
 
-const double _tabletMaxContentWidth = 640;
-
 bool _isTabletScreen(Size screen) =>
     !screen.isEmpty && screen.shortestSide >= 600;
 
-double _contentWidthFor(Size screen) => _isTabletScreen(screen)
-    ? math.min(screen.shortestSide, _tabletMaxContentWidth)
-    : screen.width;
+// Tablets use the full width in portrait; landscape keeps the portrait width
+// so rows and cards don't stretch across the whole screen.
+double _contentWidthFor(Size screen) =>
+    _isTabletScreen(screen) ? screen.shortestSide : screen.width;
 
-double _tabletScaleFor(Size screen) =>
-    (screen.shortestSide / 375 * 0.62).clamp(1.15, 1.4).toDouble();
+// Tablets scale the phone design up as far as the screen height allows, so
+// the design height stays at 812 (every phone layout still fits vertically)
+// and only the width grows. Measured on the content column, so landscape
+// scales the same as portrait.
+double _tabletScaleFor(Size screen) {
+  final double width = _contentWidthFor(screen);
+  return math.min(
+    width / _phoneDesignSize.width,
+    screen.height / _phoneDesignSize.height,
+  );
+}
+
 Size _designSizeFor(Size screen) {
   if (!_isTabletScreen(screen)) return _phoneDesignSize;
   final double scale = _tabletScaleFor(screen);
   return Size(screen.width / scale, screen.height / scale);
+}
+
+Size _screenSize(BuildContext context) {
+  final mqSize = MediaQuery.maybeSizeOf(context);
+  if (mqSize != null && !mqSize.isEmpty) return mqSize;
+  final view = View.maybeOf(context);
+  if (view != null) {
+    final ratio = view.devicePixelRatio;
+    if (ratio > 0 && !view.physicalSize.isEmpty) {
+      return view.physicalSize / ratio;
+    }
+  }
+  return _phoneDesignSize;
 }
 
 class BMIApp extends StatelessWidget {
@@ -130,7 +154,7 @@ class BMIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: _designSizeFor(MediaQuery.sizeOf(context)),
+      designSize: _designSizeFor(_screenSize(context)),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -175,7 +199,7 @@ class BMIApp extends StatelessWidget {
                 ),
               );
             }
-            return content;
+            return DevicePreviewControl(navigatorKey: Get.key, child: content);
           },
         );
       },

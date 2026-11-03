@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/app_palette.dart';
+import '../../core/utils/responsive.dart';
 
 /// "Premium Feature" prompt for a locked feature: a lock badge over the card,
 /// a [message] explaining what Premium unlocks, an "Unlock Premium" button
@@ -38,7 +39,7 @@ class PremiumFeatureDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: EdgeInsets.symmetric(horizontal: 30.w),
+      insetPadding: phoneWidthDialogInset(context, 30.w),
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,

@@ -32,7 +32,7 @@ class DailyMealPlanScreen extends StatelessWidget {
             'meal_planner'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
-              fontSize: 18,
+              fontSize: 18.sp,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w600,
               height: 1.33,
@@ -232,7 +232,7 @@ class _MealCard extends StatelessWidget {
                         meal.slot.toUpperCase(),
                         style: TextStyle(
                           color: const Color(0xFF006948),
-                          fontSize: 11,
+                          fontSize: 11.sp,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w700,
                           height: 1.27,
@@ -282,7 +282,7 @@ class _MealCard extends StatelessWidget {
                       meal.name,
                       style: TextStyle(
                         color: AppPalette.textPrimary,
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w600,
                         height: 1.33,
@@ -297,7 +297,7 @@ class _MealCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: AppPalette.textBody,
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w400,
                       height: 1.38,
@@ -320,7 +320,7 @@ class _MealCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: AppPalette.textBody,
-                            fontSize: 11,
+                            fontSize: 11.sp,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w700,
                             height: 1.27,
@@ -354,7 +354,7 @@ class _MealCard extends StatelessWidget {
                               'view'.tr,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w600,
                                 height: 1.29,
@@ -400,7 +400,7 @@ class _TealPill extends StatelessWidget {
             text,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w700,
               height: 1.27,
@@ -744,10 +744,10 @@ class MealDetailScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Spacer(),
-                    Flexible(
+                    Expanded(
                       child: Text(
                         'target_pct_daily'.trParams({'pct': '${meal.target}'}),
+                        textAlign: TextAlign.end,
                         style: bodyStyle(12, color: AppPalette.textBody),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -814,7 +814,7 @@ class MealDetailScreen extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             onTap: () => Get.to(() => IngredientsScreen(meal: meal)),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
               decoration: BoxDecoration(
                 color: AppPalette.surface,
                 borderRadius: BorderRadius.circular(16.r),
@@ -824,30 +824,30 @@ class MealDetailScreen extends StatelessWidget {
                 children: [
                   Image.asset(AppAssets.flowerIcon, width: 22.w, height: 24.h),
                   SizedBox(width: 8.w),
-                  Flexible(
-                    child: Text(
-                      'ingredients'.tr,
-                      style: headStyle(18, weight: FontWeight.w600),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Text(
+                    'ingredients'.tr,
+                    style: headStyle(18, weight: FontWeight.w600),
+                    maxLines: 1,
                   ),
-                  const Spacer(),
-                  Flexible(
-                    child: Text(
-                      'items_count'.trParams({
-                        'count': '${meal.ingredients.length}',
-                      }),
-                      style: bodyStyle(
-                        14,
-                        color: _kDeep,
-                        weight: FontWeight.w700,
+                  Spacer(),
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Text(
+                        'items_count'.trParams({
+                          'count': '${meal.ingredients.length}',
+                        }),
+                        style: bodyStyle(
+                          14,
+                          color: _kDeep,
+                          weight: FontWeight.w700,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  SizedBox(width: 18.w),
+                  SizedBox(width: 8.w),
                   Icon(Icons.arrow_forward_ios, size: 15.sp),
                 ],
               ),
@@ -899,7 +899,7 @@ class IngredientsScreen extends StatelessWidget {
                             }),
                             style: TextStyle(
                               color: const Color(0xFF006948),
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontFamily: 'Plus Jakarta Sans',
                               fontWeight: FontWeight.w600,
                               height: 1.27,

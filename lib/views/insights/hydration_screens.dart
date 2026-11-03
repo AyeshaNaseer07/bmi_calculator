@@ -68,7 +68,7 @@ class _Benefit extends StatelessWidget {
                       title,
                       style: TextStyle(
                         color: AppPalette.textPrimary,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
                         height: 1.3,
@@ -79,7 +79,7 @@ class _Benefit extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         color: AppPalette.textSecondary,
-                        fontSize: 13,
+                        fontSize: 13.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         height: 1.35,
@@ -122,7 +122,7 @@ class StayHydratedScreen extends StatelessWidget {
               'drink_enough_water_daily'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
@@ -135,7 +135,7 @@ class StayHydratedScreen extends StatelessWidget {
             'benefits'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
-              fontSize: 18,
+              fontSize: 18.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
@@ -218,7 +218,7 @@ class _MintRow extends StatelessWidget {
                     title,
                     style: TextStyle(
                       color: AppPalette.textPrimary,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
                     ),
@@ -228,7 +228,7 @@ class _MintRow extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                       color: AppPalette.textSecondary,
-                      fontSize: 13.5,
+                      fontSize: 13.5.sp,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
                       height: 1.35,
@@ -274,7 +274,7 @@ class BoostsEnergyScreen extends StatelessWidget {
               'stay_hydrated_to_help_your_body'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
-                fontSize: 13,
+                fontSize: 13.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
@@ -287,7 +287,7 @@ class BoostsEnergyScreen extends StatelessWidget {
             'how_water_helps'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
-              fontSize: 17,
+              fontSize: 17.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
@@ -350,7 +350,7 @@ class SupportsDigestionScreen extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: AppPalette.textPrimary,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
@@ -360,7 +360,7 @@ class SupportsDigestionScreen extends StatelessWidget {
                   sub,
                   style: TextStyle(
                     color: AppPalette.textSecondary,
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
                     height: 1.40,
@@ -386,7 +386,7 @@ class SupportsDigestionScreen extends StatelessWidget {
               'water_plays_an_important_role_in'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
-                fontSize: 11,
+                fontSize: 11.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
                 height: 1.50,
@@ -400,7 +400,7 @@ class SupportsDigestionScreen extends StatelessWidget {
             'why_water_matters'.tr,
             style: TextStyle(
               color: AppPalette.textPrimary,
-              fontSize: 17,
+              fontSize: 17.sp,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),

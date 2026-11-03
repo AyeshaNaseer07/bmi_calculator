@@ -173,14 +173,14 @@ class InsightHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (titleIcon != null) ...[
-                      Icon(titleIcon, color: kGreen, size: 26),
+                      Icon(titleIcon, color: kGreen, size: 26.sp),
                       const SizedBox(width: 8),
                     ],
                     Text(
                       title,
                       style: TextStyle(
                         color: AppPalette.textPrimary,
-                        fontSize: 26,
+                        fontSize: 26.sp,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w700,
                         height: 1.08,
@@ -322,7 +322,7 @@ class InfoRowCard extends StatelessWidget {
                           title,
                           style: TextStyle(
                             color: AppPalette.textPrimary,
-                            fontSize: 15,
+                            fontSize: 15.sp,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
                           ),

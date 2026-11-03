@@ -25,6 +25,7 @@ import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/rtl.dart';
+import '../../core/utils/responsive.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -87,11 +88,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // The art sits opposite the greeting, which starts on the
                   // right in right-to-left languages.
+                  // Kept at the phone design width so on tablets the art
+                  // stays beside the greeting instead of growing behind
+                  // the BMI card.
                   return MirrorOnRtl(
-                    child: Image.asset(
-                      bgImage,
-                      fit: BoxFit.fitWidth,
+                    child: Align(
                       alignment: Alignment.topRight,
+                      child: SizedBox(
+                        width: 375.w,
+                        child: Image.asset(
+                          bgImage,
+                          fit: BoxFit.fitWidth,
+                          alignment: Alignment.topRight,
+                        ),
+                      ),
                     ),
                   );
                 }),
@@ -286,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: const Color(0xFF63C9B7),
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     fontFamily: 'Instrument Sans',
                     fontWeight: FontWeight.w700,
                   ),
@@ -305,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : 'welcome_lets_begin_your_health_journey'.tr,
               style: TextStyle(
                 color: AppPalette.textSecondary,
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
@@ -380,6 +390,8 @@ class _HomeScreenState extends State<HomeScreen> {
             'time': DateFormat('h:mm a').format(record.date),
           })
         : DateFormat('MMM d, h:mm a').format(record.date);
+    // Tablets get a larger gauge and chip so the card isn't mostly empty.
+    final tablet = isTablet(context);
 
     return Column(
       children: [
@@ -400,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'your_bmi'.tr,
                       style: TextStyle(
                         color: AppPalette.textPrimary,
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w600,
                       ),
@@ -415,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         'last_updated'.tr,
                         style: TextStyle(
                           color: const Color(0xFF96ADB0),
-                          fontSize: 10,
+                          fontSize: 10.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                         ),
@@ -427,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         formattedTime,
                         style: TextStyle(
                           color: AppPalette.textPrimary,
-                          fontSize: 10,
+                          fontSize: 10.sp,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
                         ),
@@ -441,7 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Center(
                 child: BMIGaugeWidget(
                   bmiValue: record.bmiValue,
-                  size: 170.w,
+                  size: tablet ? 215.w : 170.w,
                   showLabels: true,
                 ),
               ),
@@ -456,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     record.bmiValue.toStringAsFixed(1),
                     style: TextStyle(
                       color: record.category.color,
-                      fontSize: 36,
+                      fontSize: tablet ? 40.sp : 36.sp,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w800,
                     ),
@@ -464,7 +476,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 14.w,
-                      vertical: 4.h,
+                      vertical: tablet ? 6.h : 4.h,
                     ),
                     decoration: ShapeDecoration(
                       color: record.category.color.withValues(alpha: 0.12),
@@ -476,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       record.category.label,
                       style: TextStyle(
                         color: record.category.color,
-                        fontSize: 12,
+                        fontSize: tablet ? 14.sp : 12.sp,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
@@ -486,8 +498,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => Get.toNamed(AppRoutes.history),
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 6.h,
+                        horizontal: tablet ? 12.w : 8.w,
+                        vertical: tablet ? 8.h : 6.h,
                       ),
                       decoration: ShapeDecoration(
                         color: AppPalette.surfaceMuted,
@@ -500,8 +512,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Image.asset(
                             AppAssets.viewHistory,
-                            width: 10.w,
-                            height: 10.w,
+                            width: tablet ? 13.w : 10.w,
+                            height: tablet ? 13.w : 10.w,
                           ),
                           SizedBox(width: 4.w),
                           Flexible(
@@ -509,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               'view_history'.tr,
                               style: TextStyle(
                                 color: AppPalette.textPrimary,
-                                fontSize: 9,
+                                fontSize: tablet ? 11.sp : 9.sp,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w700,
                               ),
@@ -627,7 +639,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 text: 'bmi'.tr,
                 style: TextStyle(
                   color: AppPalette.textPrimary,
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
                 ),
@@ -636,7 +648,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 text: 'categories'.tr,
                 style: TextStyle(
                   color: const Color(0xFF09B389),
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w700,
                 ),
@@ -763,12 +775,14 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
   Widget build(BuildContext context) {
     final category = widget.record.category;
     final still = MediaQuery.disableAnimationsOf(context);
+    // Larger banner on tablets so the category message reads at a glance.
+    final tablet = isTablet(context);
 
     final message = Text(
       category.feedbackMessage,
       style: TextStyle(
         color: AppPalette.textPrimary,
-        fontSize: 12,
+        fontSize: tablet ? 15.sp : 12.sp,
         fontFamily: 'Inter',
         fontWeight: FontWeight.w400,
         height: 1.40,
@@ -809,7 +823,7 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
                 scale: 1 + 0.015 * pulse,
                 child: Container(
                   width: double.infinity,
-                  constraints: BoxConstraints(minHeight: 48.h),
+                  constraints: BoxConstraints(minHeight: tablet ? 64.h : 48.h),
                   decoration: BoxDecoration(
                     // Pastel fills are light-only; dark mode tints with the category colour.
                     color: category.feedbackBackground,
@@ -862,14 +876,16 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
                               ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 14.w,
-                                vertical: 10.h,
+                                horizontal: tablet ? 18.w : 14.w,
+                                vertical: tablet ? 16.h : 10.h,
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  category.buildFeedbackIcon(size: 24.w),
-                                  SizedBox(width: 10.w),
+                                  category.buildFeedbackIcon(
+                                    size: tablet ? 32.w : 24.w,
+                                  ),
+                                  SizedBox(width: tablet ? 14.w : 10.w),
                                   Expanded(child: message),
                                   SizedBox(width: 6.w),
                                   // Arrow nudges forward with the pulse.
@@ -881,8 +897,8 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
                                     child: MirrorOnRtl(
                                       child: Image.asset(
                                         AppAssets.ageForward,
-                                        height: 16.h,
-                                        width: 16.w,
+                                        height: tablet ? 20.h : 16.h,
+                                        width: tablet ? 20.w : 16.w,
                                       ),
                                     ),
                                   ),

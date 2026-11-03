@@ -437,7 +437,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         isMandatory: isMandatory,
         style: TextStyle(
           color: AppPalette.textPrimary,
-          fontSize: 13,
+          fontSize: 13.sp,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
         ),

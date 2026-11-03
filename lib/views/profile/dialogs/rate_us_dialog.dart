@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/utils/open_url.dart';
+import '../../../core/utils/responsive.dart';
 
 class RateUsDialog extends StatefulWidget {
   const RateUsDialog({super.key});
@@ -38,7 +39,7 @@ class _RateUsDialogState extends State<RateUsDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: 28.w),
+      insetPadding: phoneWidthDialogInset(context, 28.w),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
         decoration: BoxDecoration(

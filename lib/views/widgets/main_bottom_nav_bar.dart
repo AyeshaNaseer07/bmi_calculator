@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/utils/responsive.dart';
 
 const Color _kActiveNavColor = Color(0xFF2EC4B6);
 
@@ -21,6 +22,7 @@ class MainBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tablet = isTablet(context);
     return Container(
       color: AppPalette.surface,
       child: SizedBox(
@@ -54,26 +56,38 @@ class MainBottomNavBar extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildNavItem(
-                      icon: AppAssets.navHome,
-                      label: 'home'.tr,
-                      index: 0,
+                    _slot(
+                      tablet,
+                      _buildNavItem(
+                        icon: AppAssets.navHome,
+                        label: 'home'.tr,
+                        index: 0,
+                      ),
                     ),
-                    _buildNavItem(
-                      icon: AppAssets.navWeight,
-                      label: 'weight'.tr,
-                      index: 2,
+                    _slot(
+                      tablet,
+                      _buildNavItem(
+                        icon: AppAssets.navWeight,
+                        label: 'weight'.tr,
+                        index: 2,
+                      ),
                     ),
                     SizedBox(width: 56.w),
-                    _buildNavItem(
-                      icon: AppAssets.navProfile,
-                      label: 'profile'.tr,
-                      index: 1,
+                    _slot(
+                      tablet,
+                      _buildNavItem(
+                        icon: AppAssets.navProfile,
+                        label: 'profile'.tr,
+                        index: 1,
+                      ),
                     ),
-                    _buildNavItem(
-                      icon: AppAssets.navHistory,
-                      label: 'history'.tr,
-                      index: 3,
+                    _slot(
+                      tablet,
+                      _buildNavItem(
+                        icon: AppAssets.navHistory,
+                        label: 'history'.tr,
+                        index: 3,
+                      ),
                     ),
                   ],
                 ),
@@ -102,6 +116,11 @@ class MainBottomNavBar extends StatelessWidget {
     );
   }
 
+  /// On tablets each tab gets an equal slot, so the wide bar doesn't push
+  /// the outer tabs to the edges.
+  Widget _slot(bool isTablet, Widget item) =>
+      isTablet ? Expanded(child: Center(child: item)) : Flexible(child: item);
+
   Widget _buildNavItem({
     required String icon,
     required String label,
@@ -110,39 +129,37 @@ class MainBottomNavBar extends StatelessWidget {
     final isSelected = currentIndex == index;
     final color = isSelected ? _kActiveNavColor : const Color(0xFF9AA6A9);
 
-    return Flexible(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => onTap(index),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(
-                icon,
-                width: 20.sp,
-                height: 20.sp,
-                color: color,
-                colorBlendMode: BlendMode.srcIn,
-              ),
-              SizedBox(height: 4.h),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  softWrap: false,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 10.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                  ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => onTap(index),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              icon,
+              width: 20.sp,
+              height: 20.sp,
+              color: color,
+              colorBlendMode: BlendMode.srcIn,
+            ),
+            SizedBox(height: 4.h),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                softWrap: false,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 10.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

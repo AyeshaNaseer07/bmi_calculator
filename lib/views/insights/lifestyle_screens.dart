@@ -44,7 +44,7 @@ class StayActiveScreen extends StatelessWidget {
                     title,
                     style: TextStyle(
                       color: const Color(0xFF141B2B),
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w600,
                       height: 1.43,
@@ -87,7 +87,7 @@ class StayActiveScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: const Color(0xFF3D4A42),
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontFamily: 'Plus Jakarta Sans',
                   fontWeight: FontWeight.w600,
                   height: 1.33,

@@ -70,14 +70,17 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
           children: [
             // Fixed Header: Subtitle & Background Illustration (Non-scrollable)
             SizedBox(
+              width: double.infinity,
               height: 116.h,
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
                   // Background Illustration (Calculator background at top right)
+                  // Pinned to the screen edge; it used to hang off the
+                  // subtitle's fixed width, which only lined up on phones.
                   Positioned(
                     top: -20.h,
-                    right: -145.w,
+                    right: 0,
                     child: Image.asset(
                       AppAssets.bmiCalIcon,
                       height: 160.h,
@@ -94,12 +97,12 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       children: [
                         SizedBox(height: 30.h),
                         SizedBox(
-                          width: 193,
+                          width: 193.w,
                           child: Text(
                             'make_sure_to_enter_accurate_details'.tr,
                             style: TextStyle(
                               color: const Color(0xFF6F6F6F),
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
                               height: 1.38,
@@ -654,7 +657,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 15.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
                 color: isSelected

@@ -133,7 +133,7 @@ class MealCompletedScreen extends StatelessWidget {
               _milestone,
               style: TextStyle(
                 color: const Color(0xFF00714D),
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontFamily: 'Plus Jakarta Sans',
                 fontWeight: FontWeight.w700,
                 height: 1.27,
@@ -149,7 +149,7 @@ class MealCompletedScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppPalette.textBody,
-                fontSize: 11,
+                fontSize: 11.sp,
                 fontFamily: 'Plus Jakarta Sans',
                 fontWeight: FontWeight.w400,
                 height: 1.82,
@@ -169,31 +169,35 @@ class MealCompletedScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 8.w,
-                            height: 8.w,
-                            decoration: BoxDecoration(
-                              color: _kDeep,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          SizedBox(width: 6.w),
-                          Flexible(
-                            child: Text(
-                              'day_of_7'.trParams({'day': '${meal.day}'}),
-                              style: bodyStyle(
-                                14,
+                      Flexible(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8.w,
+                              height: 8.w,
+                              decoration: BoxDecoration(
                                 color: _kDeep,
-                                weight: FontWeight.w800,
+                                shape: BoxShape.circle,
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 6.w),
+                            Flexible(
+                              child: Text(
+                                'day_of_7'.trParams({'day': '${meal.day}'}),
+                                style: bodyStyle(
+                                  14,
+                                  color: _kDeep,
+                                  weight: FontWeight.w800,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      SizedBox(width: 8.w),
                       Flexible(
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -757,7 +761,7 @@ class MealProgressScreen extends StatelessWidget {
                           'daily_wisdom'.tr,
                           style: TextStyle(
                             color: const Color(0xFF006948),
-                            fontSize: 11,
+                            fontSize: 11.sp,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w700,
                             height: 1.27,
@@ -771,7 +775,7 @@ class MealProgressScreen extends StatelessWidget {
                           'keep_going_small_daily_choices_build'.tr,
                           style: TextStyle(
                             color: AppPalette.textPrimary,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                             fontFamily: 'Playpen Sans Deva',
                             fontWeight: FontWeight.w400,
                             height: 1.48,
