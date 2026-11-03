@@ -11,6 +11,7 @@ import '../../data/services/app_startup.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
+import '../../core/utils/responsive.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -102,10 +103,20 @@ class _SplashScreenState extends State<SplashScreen>
           fit: StackFit.expand,
           children: [
             // — Full Screen Background —
+            // The art is phone-shaped with its waves along the bottom. Kept
+            // at full width on the wider tablet canvas it grows taller than
+            // the screen and pushes the waves off the bottom, so tablets
+            // stretch it to the screen height instead (bottom trimmed the
+            // way a phone trims it).
             Positioned(
               left: -5.w,
               right: -5.w,
-              child: Image.asset(AppAssets.splashBg, fit: BoxFit.cover),
+              top: isTablet(context) ? 0 : null,
+              bottom: isTablet(context) ? -12.h : null,
+              child: Image.asset(
+                AppAssets.splashBg,
+                fit: isTablet(context) ? BoxFit.fill : BoxFit.cover,
+              ),
             ),
             // Center Logo & Tagline
             SafeArea(

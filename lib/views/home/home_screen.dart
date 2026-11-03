@@ -307,16 +307,22 @@ class _HomeScreenState extends State<HomeScreen> {
           // Greeting Text Section
           Row(
             children: [
+              // Scales down rather than truncating, so long translations
+              // and names stay fully readable.
               Flexible(
-                child: Text(
-                  greeting,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: const Color(0xFF63C9B7),
-                    fontSize: 24.sp,
-                    fontFamily: 'Instrument Sans',
-                    fontWeight: FontWeight.w700,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    greeting,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: const Color(0xFF63C9B7),
+                      fontSize: 24.sp,
+                      fontFamily: 'Instrument Sans',
+
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -491,24 +497,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: tablet ? 6.h : 4.h,
-                    ),
-                    decoration: ShapeDecoration(
-                      color: record.category.color.withValues(alpha: 0.12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.r),
+                  // Flexible so a long translated category shrinks (and
+                  // ellipsizes) instead of overflowing the row.
+                  Flexible(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 6.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: tablet ? 6.h : 4.h,
                       ),
-                    ),
-                    child: Text(
-                      record.category.label,
-                      style: TextStyle(
-                        color: record.category.color,
-                        fontSize: tablet ? 14.sp : 12.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
+                      decoration: ShapeDecoration(
+                        color: record.category.color.withValues(alpha: 0.12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.r),
+                        ),
+                      ),
+                      child: Text(
+                        record.category.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: record.category.color,
+                          fontSize: tablet ? 14.sp : 12.sp,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
