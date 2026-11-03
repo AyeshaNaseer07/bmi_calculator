@@ -83,9 +83,9 @@ class BMIResultScreen extends StatelessWidget {
                   child: Stack(
                     children: [
                       // Top Right Heart Icon Badge
-                      Positioned(
+                      PositionedDirectional(
                         top: 4.h,
-                        right: 4.w,
+                        end: 4.w,
                         child: Image.asset(
                           AppAssets.hearticon,
                           height: 34.h,

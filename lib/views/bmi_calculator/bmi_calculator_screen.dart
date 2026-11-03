@@ -187,7 +187,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         child: Column(
                           children: [
                             Align(
-                              alignment: Alignment.centerLeft,
+                              alignment: AlignmentDirectional.centerStart,
                               child: MandatoryLabel(
                                 text: 'age'.tr,
                                 style: TextStyle(

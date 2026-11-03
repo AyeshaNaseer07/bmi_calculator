@@ -467,7 +467,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           width: isError ? 1.5.w : 1.w,
         ),
       ),
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: TextField(
         controller: controller,
         focusNode: focusNode,

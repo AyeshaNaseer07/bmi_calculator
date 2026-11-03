@@ -34,8 +34,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
   bool _fromOnboarding = false;
-  bool _pricesLoading = true;
-  Map<SubscriptionPlan, PlanPrice> _prices = const {};
+  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.cached(
+    PaywallType.onboarding,
+  );
 
   static const Color _green = Color(0xFF0AA37D);
 
@@ -70,7 +71,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
     if (!mounted) return;
     setState(() {
       _prices = prices;
-      _pricesLoading = false;
     });
   }
 
@@ -121,9 +121,13 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Future<void> _onSubscribe() async {
     if (_isLoading) return;
     if (!_offer(_selectedPlan).isAvailable) {
-      Get.snackbar('no_product_found'.tr, 'check_internet_connection'.tr);
-      unawaited(_loadPrices());
-      return;
+      // The splash fetch may still be running; give it a moment, then retry.
+      await _loadPrices().timeout(const Duration(seconds: 3), onTimeout: () {});
+      if (!mounted) return;
+      if (!_offer(_selectedPlan).isAvailable) {
+        Get.snackbar('no_product_found'.tr, 'check_internet_connection'.tr);
+        return;
+      }
     }
     setState(() => _isLoading = true);
 
@@ -395,10 +399,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.monthly,
                             title: '${left.type.name}_plan'.tr,
-                            price: _pricesLoading
-                                ? ''
-                                : (left.price?.priceString ?? '--'),
-                            period: _pricesLoading ? '' : _breakdown(left),
+                            price: (left.price?.priceString ?? '--'),
+                            period: _breakdown(left),
                             showBestValue: leftIsBest,
                             shadowColor: const Color(0x9189DED6),
                             shadowBlur: 13.1,
@@ -444,10 +446,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.yearly,
                             title: '${right.type.name}_plan'.tr,
-                            price: _pricesLoading
-                                ? ''
-                                : (right.price?.priceString ?? '--'),
-                            period: _pricesLoading ? '' : _breakdown(right),
+                            price: (right.price?.priceString ?? '--'),
+                            period: _breakdown(right),
                             showBestValue: !leftIsBest,
                             shadowColor: const Color(0x2433D2AB),
                             shadowBlur: 12,
@@ -491,9 +491,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                 color: Colors.white,
                                 size: 20.sp,
                               ),
-                              onPressed: (_isLoading || _pricesLoading)
-                                  ? null
-                                  : _onSubscribe,
+                              onPressed: _isLoading ? null : _onSubscribe,
                             ),
                           ),
                         ),
@@ -564,9 +562,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
 
             // Close button
-            Positioned(
+            PositionedDirectional(
               top: 14.h,
-              left: 18.w,
+              start: 18.w,
               child: SafeArea(
                 child: AnimatedOpacity(
                   opacity: _showCloseButton ? 1.0 : 0.0,

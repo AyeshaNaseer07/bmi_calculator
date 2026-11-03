@@ -639,7 +639,7 @@ class MealProgressScreen extends StatelessWidget {
             }),
             SizedBox(height: 12.h),
             Container(
-              padding: EdgeInsets.fromLTRB(12.w, 12.h, 14.w, 12.h),
+              padding: EdgeInsetsDirectional.fromSTEB(12.w, 12.h, 14.w, 12.h),
               decoration: _mintCard(r: 18),
               child: Column(
                 children: [

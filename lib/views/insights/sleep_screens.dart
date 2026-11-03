@@ -20,7 +20,7 @@ class SleepWellScreen extends StatelessWidget {
   Widget _routine(String icon, String title, String sub) => Padding(
     padding: EdgeInsets.only(bottom: 8.h),
     child: Container(
-      padding: EdgeInsets.fromLTRB(8.w, 6.h, 12.w, 6.h),
+      padding: EdgeInsetsDirectional.fromSTEB(8.w, 6.h, 12.w, 6.h),
       decoration: BoxDecoration(
         color: AppPalette.surface,
         borderRadius: BorderRadius.circular(30.r),

@@ -6,6 +6,7 @@ import '../../core/constants/app_assets.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../../core/theme/app_palette.dart';
+import '../../controllers/app_controller.dart';
 
 Color get kInk => AppPalette.textPrimary;
 const Color kGreen = Color(0xFF09B389);
@@ -157,7 +158,7 @@ class InsightHeader extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => Get.back(),
@@ -327,7 +328,17 @@ class InfoRowCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (pro) ...[SizedBox(width: 6.w), const ProBadge()],
+                      if (pro)
+                        Obx(
+                          () => Get.find<AppController>().isPremium.value
+                              ? const SizedBox.shrink()
+                              : Padding(
+                                  padding: EdgeInsetsDirectional.only(
+                                    start: 6.w,
+                                  ),
+                                  child: const ProBadge(),
+                                ),
+                        ),
                     ],
                   ),
                   SizedBox(height: 2.h),

@@ -158,7 +158,7 @@ class _SplashScreenState extends State<SplashScreen>
                               animation: _progressAnimation,
                               builder: (context, child) {
                                 return Align(
-                                  alignment: Alignment.centerLeft,
+                                  alignment: AlignmentDirectional.centerStart,
                                   child: Container(
                                     width: 140.w * _progressAnimation.value,
                                     height: 8.h,

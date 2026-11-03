@@ -206,14 +206,22 @@ class _HubCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (pro) ...[
-                          SizedBox(width: 6.w),
-                          Image.asset(
-                            AppAssets.weekPro,
-                            width: 20.w,
-                            height: 20.w,
+                        // The premium mark goes away once subscribed.
+                        if (pro)
+                          Obx(
+                            () => Get.find<AppController>().isPremium.value
+                                ? const SizedBox.shrink()
+                                : Padding(
+                                    padding: EdgeInsetsDirectional.only(
+                                      start: 6.w,
+                                    ),
+                                    child: Image.asset(
+                                      AppAssets.weekPro,
+                                      width: 20.w,
+                                      height: 20.w,
+                                    ),
+                                  ),
                           ),
-                        ],
                       ],
                     ),
                     SizedBox(height: 4.h),

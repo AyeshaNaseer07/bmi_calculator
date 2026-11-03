@@ -14,6 +14,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
 import 'widgets/calendar_bottom_sheet.dart';
 import '../../core/theme/app_palette.dart';
+import '../../controllers/app_controller.dart';
 
 enum HistorySortOption {
   newest('newest_first_date'),
@@ -1145,7 +1146,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               Container(
                 width: 20.w,
                 height: 20.w,
-                margin: EdgeInsets.only(right: 8.w),
+                margin: EdgeInsetsDirectional.only(end: 8.w),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? const Color(0xFF09B389)
@@ -1307,8 +1308,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         return false;
       },
       background: Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 20.w),
+        alignment: AlignmentDirectional.centerEnd,
+        padding: EdgeInsetsDirectional.only(end: 20.w),
         color: const Color(0xFFEF4444),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1396,8 +1397,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Unlock Premium Banner
-        _buildPremiumBanner(),
-        SizedBox(height: 18.h),
+        Obx(
+          () => Get.find<AppController>().isPremium.value
+              ? const SizedBox.shrink()
+              : Column(
+                  children: [
+                    _buildPremiumBanner(),
+                    SizedBox(height: 18.h),
+                  ],
+                ),
+        ),
         // Top empty card with clipboard graphic
         CustomCard(
           borderRadius: 22,
@@ -1521,7 +1530,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.fromLTRB(14.w, 14.h, 16.w, 14.h),
+          padding: EdgeInsetsDirectional.fromSTEB(14.w, 14.h, 16.w, 14.h),
           decoration: BoxDecoration(
             color: AppPalette.surfaceMint,
             borderRadius: BorderRadius.circular(16.r),
@@ -1754,7 +1763,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12.w, 12.h, 14.w, 12.h),
+      padding: EdgeInsetsDirectional.fromSTEB(12.w, 12.h, 14.w, 12.h),
       decoration: BoxDecoration(
         color: AppPalette.surfaceMintDeep,
         borderRadius: BorderRadius.circular(14.r),

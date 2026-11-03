@@ -15,6 +15,7 @@ import '../../views/widgets/ads/applovin_sdk.dart';
 import '../../views/widgets/ads/interstitial_ad_manager.dart';
 import '../../views/widgets/ads/native_ad_card.dart';
 import 'logger_service.dart';
+import 'price_service.dart';
 import 'purchase_connector.dart';
 import 'quick_actions_service.dart';
 import 'remote_config_service.dart';
@@ -81,6 +82,10 @@ class AppStartup {
     Get.put<RemoteConfigService>(remoteConfigService, permanent: true);
 
     Get.put<AppController>(AppController(), permanent: true);
+
+    // Fetch both paywalls' store products now, in the background, so their
+    // prices are ready by the time the user reaches a paywall.
+    PriceService.preload(remoteConfigService);
 
     try {
       QuickActionsService.instance.initialize();

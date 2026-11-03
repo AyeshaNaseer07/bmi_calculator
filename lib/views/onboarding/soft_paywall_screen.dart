@@ -33,10 +33,11 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   final AppController _app = Get.find<AppController>();
   SubscriptionPlan _plan = SubscriptionPlan.yearly;
   bool _loading = false;
-  bool _pricesLoading = true;
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
-  Map<SubscriptionPlan, PlanPrice> _prices = const {};
+  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.cached(
+    PaywallType.week,
+  );
 
   @override
   void initState() {
@@ -52,13 +53,15 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
         if (mounted) setState(() => _showCloseButton = true);
       });
     }
-    PriceService.load(_app.remoteConfigService, PaywallType.week).then((p) {
-      if (!mounted) return;
-      setState(() {
-        _prices = p;
-        _pricesLoading = false;
-      });
-    });
+    _loadPrices();
+  }
+
+  Future<void> _loadPrices() async {
+    final prices = await PriceService.load(
+      _app.remoteConfigService,
+      PaywallType.week,
+    );
+    if (mounted) setState(() => _prices = prices);
   }
 
   @override
@@ -90,11 +93,13 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   Future<void> _subscribe() async {
     if (_loading) return;
     if (!_offer(_plan).isAvailable) {
-      Get.snackbar('no_product_found'.tr, 'check_internet_connection'.tr);
-      PriceService.load(_app.remoteConfigService, PaywallType.week).then((p) {
-        if (mounted) setState(() => _prices = p);
-      });
-      return;
+      // The splash fetch may still be running; give it a moment, then retry.
+      await _loadPrices().timeout(const Duration(seconds: 3), onTimeout: () {});
+      if (!mounted) return;
+      if (!_offer(_plan).isAvailable) {
+        Get.snackbar('no_product_found'.tr, 'check_internet_connection'.tr);
+        return;
+      }
     }
     setState(() => _loading = true);
     bool ok = false;
@@ -259,10 +264,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           child: _planCard(
                             SubscriptionPlan.monthly,
                             '${left.type.name}_plan'.tr,
-                            _pricesLoading
-                                ? ''
-                                : (left.price?.priceString ?? '--'),
-                            _pricesLoading ? '' : _period(left),
+                            (left.price?.priceString ?? '--'),
+                            _period(left),
                             best: leftIsBest,
                           ),
                         ),
@@ -293,10 +296,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           child: _planCard(
                             SubscriptionPlan.yearly,
                             '${right.type.name}_plan'.tr,
-                            _pricesLoading
-                                ? ''
-                                : (right.price?.priceString ?? '--'),
-                            _pricesLoading ? '' : _period(right),
+                            (right.price?.priceString ?? '--'),
+                            _period(right),
                             best: !leftIsBest,
                           ),
                         ),
@@ -337,9 +338,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                                 color: Colors.white,
                                 size: 20.sp,
                               ),
-                              onPressed: (_loading || _pricesLoading)
-                                  ? null
-                                  : _subscribe,
+                              onPressed: _loading ? null : _subscribe,
                             ),
                           ),
                         ),

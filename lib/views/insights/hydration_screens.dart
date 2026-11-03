@@ -201,7 +201,7 @@ class _MintRow extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 14.h),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(12.w, 14.h, 14.w, 14.h),
+        padding: EdgeInsetsDirectional.fromSTEB(12.w, 14.h, 14.w, 14.h),
         decoration: BoxDecoration(
           color: const Color(0xFFDFF7EF),
           borderRadius: BorderRadius.circular(18.r),

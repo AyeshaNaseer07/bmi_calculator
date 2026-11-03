@@ -589,7 +589,7 @@ class WeightTrackingScreen extends StatelessWidget {
           height: 185.h,
           child: Padding(
             // Room so the last dot / goal label isn't clipped at the edge.
-            padding: EdgeInsets.only(right: scrollable ? 24.w : 0),
+            padding: EdgeInsetsDirectional.only(end: scrollable ? 24.w : 0),
             child: chart,
           ),
         );

@@ -85,10 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     bgImage = AppAssets.homeAvatarDefault;
                   }
 
-                  return Image.asset(
-                    bgImage,
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topRight,
+                  // The art sits opposite the greeting, which starts on the
+                  // right in right-to-left languages.
+                  return MirrorOnRtl(
+                    child: Image.asset(
+                      bgImage,
+                      fit: BoxFit.fitWidth,
+                      alignment: Alignment.topRight,
+                    ),
                   );
                 }),
               ),
@@ -173,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 alignment: Alignment.topCenter,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  alignment: Alignment.topLeft,
+                                  alignment: AlignmentDirectional.topStart,
                                   child: SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width -
@@ -209,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             width: 38.w,
             height: 38.w,
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Obx(() {
               final imgPath = profileController.profileImagePath.value;
               if (imgPath != null) {
@@ -242,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               width: 38.w,
               height: 38.w,
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: Transform.translate(
                 offset: Offset(0, -3.5.w),
                 child: Lottie.asset(
@@ -250,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 38.w,
                   height: 38.w,
                   fit: BoxFit.contain,
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                 ),
               ),
             ),
@@ -266,47 +270,51 @@ class _HomeScreenState extends State<HomeScreen> {
         ? 'hello_name'.trParams({'name': '\u2068$userName\u2069'})
         : 'hello_guest'.tr;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Greeting Text Section
-        Row(
-          children: [
-            Flexible(
-              child: Text(
-                greeting,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: const Color(0xFF63C9B7),
-                  fontSize: 24,
-                  fontFamily: 'Instrument Sans',
-                  fontWeight: FontWeight.w700,
+    return ConstrainedBox(
+      // Keeps long names and long translations clear of the avatar art.
+      constraints: BoxConstraints(maxWidth: 260.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Greeting Text Section
+          Row(
+            children: [
+              Flexible(
+                child: Text(
+                  greeting,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: const Color(0xFF63C9B7),
+                    fontSize: 24,
+                    fontFamily: 'Instrument Sans',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 8.w),
-            Text('👋', style: TextStyle(fontSize: 24.sp)),
-          ],
-        ),
-        SizedBox(height: 8.h),
-        SizedBox(
-          width: 240.w,
-          child: Text(
-            hasData
-                ? 'lets_track_your_health_today'.tr
-                : 'welcome_lets_begin_your_health_journey'.tr,
-            style: TextStyle(
-              color: AppPalette.textSecondary,
-              fontSize: 12,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+              SizedBox(width: 8.w),
+              Text('👋', style: TextStyle(fontSize: 24.sp)),
+            ],
           ),
-        ),
-      ],
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: 240.w,
+            child: Text(
+              hasData
+                  ? 'lets_track_your_health_today'.tr
+                  : 'welcome_lets_begin_your_health_journey'.tr,
+              style: TextStyle(
+                color: AppPalette.textSecondary,
+                fontSize: 12,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1009,7 +1017,7 @@ class _RemoveAdsCard extends StatelessWidget {
                                 // Scales down rather than truncating.
                                 FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  alignment: Alignment.centerLeft,
+                                  alignment: AlignmentDirectional.centerStart,
                                   child: Text(
                                     'remove_annoying_ads'.tr,
                                     maxLines: 1,

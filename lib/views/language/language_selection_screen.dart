@@ -36,6 +36,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   bool _bottomAdAvailable = true;
 
   final GlobalKey _doneButtonKey = GlobalKey();
+  final GlobalKey _overlayKey = GlobalKey();
   final GlobalKey _firstTileKey = GlobalKey();
 
   _HandPhase _handPhase = _HandPhase.tapping;
@@ -45,8 +46,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   late AnimationController _moveController;
   Animation<Offset>? _moveAnimation;
   Animation<double>? _moveFade;
-
-  Offset? _doneButtonCenter;
 
   double _handOffsetX = 70;
   double _handOffsetY = 16;
@@ -123,24 +122,15 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       return;
     }
 
-    final tileGlobal = tileBox.localToGlobal(Offset.zero);
-    final doneGlobal = doneBox.localToGlobal(Offset.zero);
-
-    final startPos = Offset(
-      tileGlobal.dx + tileBox.size.width / 2 + _handOffsetX,
-      tileGlobal.dy + tileBox.size.height / 2 + _handOffsetY,
+    final tileCenter = _inOverlay(
+      tileBox.localToGlobal(tileBox.size.center(Offset.zero)),
     );
-
-    final endPos = Offset(
-      doneGlobal.dx + doneBox.size.width / 2 + 14.w,
-      doneGlobal.dy + doneBox.size.height / 2 + 20.h,
-    );
+    final startPos = tileCenter + Offset(_handOffsetX, _handOffsetY);
+    final endPos = _doneHandCenter() ?? startPos;
 
     _moveAnimation = Tween<Offset>(begin: startPos, end: endPos).animate(
       CurvedAnimation(parent: _moveController, curve: Curves.easeInOutCubic),
     );
-
-    _doneButtonCenter = endPos;
 
     setState(() => _handPhase = _HandPhase.movingToDone);
 
@@ -150,6 +140,23 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
         _handController.repeat();
       }
     });
+  }
+
+  /// A screen point in the overlay Stack's own coordinates, which the hand
+  /// is positioned in. Measuring it this way keeps the hand on target
+  /// whichever side the Done chip ends up on.
+  Offset _inOverlay(Offset global) {
+    final box = _overlayKey.currentContext?.findRenderObject() as RenderBox?;
+    return box == null ? global : box.globalToLocal(global);
+  }
+
+  /// Where the hand rests on the Done chip, measured as it is now: the chip
+  /// jumps sides and changes width with the language.
+  Offset? _doneHandCenter() {
+    final box = _doneButtonKey.currentContext?.findRenderObject();
+    if (box is! RenderBox || !box.attached || !box.hasSize) return null;
+    final center = _inOverlay(box.localToGlobal(box.size.center(Offset.zero)));
+    return center + Offset(14.w, 20.h);
   }
 
   void _onDone() {
@@ -281,6 +288,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
+          key: _overlayKey,
           children: [
             SafeArea(
               child: Column(
@@ -458,11 +466,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                 },
               ),
 
-            if (_handPhase == _HandPhase.tappingDone &&
-                _doneButtonCenter != null)
+            if (_handPhase == _HandPhase.tappingDone)
               _DoneButtonHandOverlay(
                 controller: _handController,
-                center: _doneButtonCenter!,
+                centerOf: _doneHandCenter,
               ),
           ],
         ),
@@ -613,11 +620,11 @@ class _SparklePainter extends CustomPainter {
 
 class _DoneButtonHandOverlay extends StatelessWidget {
   final AnimationController controller;
-  final Offset center;
+  final Offset? Function() centerOf;
 
   const _DoneButtonHandOverlay({
     required this.controller,
-    required this.center,
+    required this.centerOf,
   });
 
   @override
@@ -651,6 +658,8 @@ class _DoneButtonHandOverlay extends StatelessWidget {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
+        final center = centerOf();
+        if (center == null) return const SizedBox.shrink();
         final left = center.dx - 26.w;
         final top = center.dy - 26.h + floatY.value;
 

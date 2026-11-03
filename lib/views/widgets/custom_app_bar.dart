@@ -1,3 +1,5 @@
+import '../../core/utils/rtl.dart';
+
 import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,7 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             if (canShowBack)
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: GestureDetector(
                   onTap: onBackPressed ?? () => Get.back(),
                   child: const AppBackIcon(),
@@ -57,7 +59,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             if (trailing != null)
-              Align(alignment: Alignment.centerRight, child: trailing!),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: trailing!,
+              ),
           ],
         ),
       ),
@@ -71,6 +76,8 @@ class AppBackIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(AppAssets.insightBackIcon, height: 36.h, width: 36.w);
+    return MirrorOnRtl(
+      child: Image.asset(AppAssets.insightBackIcon, height: 36.h, width: 36.w),
+    );
   }
 }

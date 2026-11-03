@@ -275,10 +275,10 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                 height: cardH,
                 width: textW + 18.w,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(18.w, 6.h, 0, 6.h),
+                  padding: EdgeInsetsDirectional.fromSTEB(18.w, 6.h, 0, 6.h),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: SizedBox(
                       width: textW,
                       child: Column(
@@ -324,7 +324,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                           // Range: 18.5 – 24.9
                           FittedBox(
                             fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
+                            alignment: AlignmentDirectional.centerStart,
                             child: Text(v.range, style: headStyle(32)),
                           ),
                           SizedBox(height: 8.h),
@@ -493,7 +493,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
                   // Rounded bar anchored to the right end of the pill.
                   Expanded(
                     child: Align(
-                      alignment: Alignment.centerRight,
+                      alignment: AlignmentDirectional.centerEnd,
                       child: FractionallySizedBox(
                         widthFactor: fill,
                         child: Container(
@@ -750,7 +750,7 @@ class _TipCard extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, c) => FittedBox(
             fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: SizedBox(
               width: c.maxWidth,
               child: Column(

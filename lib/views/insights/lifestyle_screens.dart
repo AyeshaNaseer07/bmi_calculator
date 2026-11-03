@@ -552,7 +552,7 @@ class ActivityRoutineScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 4.w),
+                  padding: EdgeInsetsDirectional.only(start: 4.w),
                   child: Row(
                     children: [
                       Icon(Icons.eco_rounded, size: 18.sp, color: kGreen),

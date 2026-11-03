@@ -187,7 +187,7 @@ class _MealCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 14.h),
       child: Container(
-        padding: EdgeInsets.fromLTRB(14.w, 14.h, 12.w, 12.h),
+        padding: EdgeInsetsDirectional.fromSTEB(14.w, 14.h, 12.w, 12.h),
         decoration: BoxDecoration(
           color: AppPalette.surface,
           borderRadius: BorderRadius.circular(20.r),
@@ -212,8 +212,8 @@ class _MealCard extends StatelessWidget {
                   Positioned.fill(
                     child: AssetOrPlaceholder(asset: meal.photo, circle: true),
                   ),
-                  Positioned(
-                    right: -4.w,
+                  PositionedDirectional(
+                    end: -4.w,
                     bottom: 2.h,
                     child: Image.asset(meal.badge, width: 30.w, height: 30.w),
                   ),
@@ -277,7 +277,7 @@ class _MealCard extends StatelessWidget {
                   SizedBox(height: 3.h),
                   FittedBox(
                     fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: Text(
                       meal.name,
                       style: TextStyle(
@@ -458,9 +458,9 @@ class MealDetailScreen extends StatelessWidget {
               ),
             ),
             if (hi)
-              Positioned(
+              PositionedDirectional(
                 top: -6.h,
-                right: 4.w,
+                end: 4.w,
                 child: Container(
                   width: 7.w,
                   height: 7.w,
@@ -564,9 +564,9 @@ class MealDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
+                  PositionedDirectional(
                     top: 10.h,
-                    left: 10.w,
+                    start: 10.w,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 12.w,
@@ -880,9 +880,9 @@ class IngredientsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 8.h),
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 4.w, 8.h),
                   child: Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

@@ -75,7 +75,36 @@ class PriceService {
   static final Map<PaywallType, Map<SubscriptionPlan, PlanPrice>> _cache = {};
   static final Map<String, ProductDetails> _products = {};
   static final RxMap<String, bool> trialEligibility = <String, bool>{}.obs;
+  static final Map<PaywallType, Future<Map<SubscriptionPlan, PlanPrice>>>
+  _inFlight = {};
+
+  /// Prices already fetched for [paywall], or empty.
+  static Map<SubscriptionPlan, PlanPrice> cached(PaywallType paywall) =>
+      _cache[paywall] ?? const {};
+
+  /// Starts fetching both paywalls' products (call once Remote Config is
+  /// ready, e.g. at splash) so they're on hand when a paywall opens.
+  static void preload(RemoteConfigService rc) {
+    for (final type in PaywallType.values) {
+      load(rc, type);
+    }
+  }
+
+  /// Concurrent callers share one fetch.
   static Future<Map<SubscriptionPlan, PlanPrice>> load(
+    RemoteConfigService rc,
+    PaywallType paywall,
+  ) {
+    final running = _inFlight[paywall];
+    if (running != null) return running;
+    final future = _load(
+      rc,
+      paywall,
+    ).whenComplete(() => _inFlight.remove(paywall));
+    return _inFlight[paywall] = future;
+  }
+
+  static Future<Map<SubscriptionPlan, PlanPrice>> _load(
     RemoteConfigService rc,
     PaywallType paywall,
   ) async {
