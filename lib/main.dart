@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:applovin_max/applovin_max.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,10 +18,9 @@ import 'core/theme/app_theme.dart';
 import 'data/services/localization_service.dart';
 import 'data/services/storage_service.dart';
 import 'data/services/analytics_service.dart';
-import 'views/widgets/device_preview_control.dart';
 
 void main() async {
-  DevicePreview.enable();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _waitUntilAppActive();
@@ -199,7 +197,7 @@ class BMIApp extends StatelessWidget {
                 ),
               );
             }
-            return DevicePreviewControl(navigatorKey: Get.key, child: content);
+            return content;
           },
         );
       },
