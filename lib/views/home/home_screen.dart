@@ -24,6 +24,7 @@ import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/utils/rtl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,9 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       QuickActionsService.instance.consumePendingAction();
-      // Home can be put in place behind an interstitial (e.g. the onboarding
-      // paywall cross ad); the notification dialog must wait until the ad is
-      // closed, otherwise it draws on top of it.
       await InterstitialAdManager.instance.whenAdClosed();
       if (!mounted) return;
       NotificationService.instance.requestPermission();
@@ -265,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildGreeting(bool hasData, ProfileController profileController) {
     final userName = profileController.userProfile.value.homeDisplayName;
     final greeting = userName.isNotEmpty
-        ? 'hello_name'.trParams({'name': userName})
+        ? 'hello_name'.trParams({'name': '\u2068$userName\u2069'})
         : 'hello_guest'.tr;
 
     return Column(
@@ -868,11 +866,16 @@ class _FeedbackBannerState extends State<_FeedbackBanner>
                                   SizedBox(width: 6.w),
                                   // Arrow nudges forward with the pulse.
                                   Transform.translate(
-                                    offset: Offset(7.w * pulse, 0),
-                                    child: Image.asset(
-                                      AppAssets.ageForward,
-                                      height: 16.h,
-                                      width: 16.w,
+                                    offset: Offset(
+                                      7.w * pulse * dirSign(context),
+                                      0,
+                                    ),
+                                    child: MirrorOnRtl(
+                                      child: Image.asset(
+                                        AppAssets.ageForward,
+                                        height: 16.h,
+                                        width: 16.w,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -1177,7 +1180,7 @@ class _UpgradeButtonState extends State<_UpgradeButton>
                             SizedBox(width: 2.w),
                             // Arrow nudges forward with the pulse.
                             Transform.translate(
-                              offset: Offset(3.w * pulse, 0),
+                              offset: Offset(3.w * pulse * dirSign(context), 0),
                               child: Icon(
                                 Icons.chevron_right_rounded,
                                 color: _onGold,

@@ -91,14 +91,23 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   }
 
   void _onLanguageTap(String code) {
-    if (_handPhase == _HandPhase.tapping) {
-      _flyToDone();
-    }
+    final flyHand = _handPhase == _HandPhase.tapping;
     setState(() {
       _selectedLang = code;
       _hasSelected = true;
     });
     _appController.changeLanguage(code);
+    if (flyHand) {
+      // The locale switch re-lays the screen out (the Done chip jumps sides
+      // for RTL languages and changes width), so measure it only once that
+      // new layout is in place.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _handPhase == _HandPhase.tapping) _flyToDone();
+        });
+      });
+    }
   }
 
   void _flyToDone() {

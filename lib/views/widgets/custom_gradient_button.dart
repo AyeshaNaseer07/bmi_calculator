@@ -89,7 +89,10 @@ class CustomGradientButton extends StatelessWidget {
               ),
             ),
             if (trailingIcon != null)
-              Align(alignment: Alignment.centerRight, child: trailingIcon!),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: trailingIcon!,
+              ),
           ],
         ),
       );

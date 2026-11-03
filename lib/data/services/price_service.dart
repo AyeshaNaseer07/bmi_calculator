@@ -156,8 +156,6 @@ class PriceService {
     }
   }
 
-  /// Play returns one entry per base plan and offer, and only offers the
-  /// user is eligible for: prefer the free trial, then the base plan.
   static ProductDetails _pick(List<ProductDetails> options) {
     final play = options.whereType<GooglePlayProductDetails>();
     return play.where((p) => getFreeTrialPeriod(p) != null).firstOrNull ??
@@ -173,7 +171,6 @@ class PriceService {
     return index == null || offers == null ? null : offers[index];
   }
 
-  /// The renewal price, not a trial or intro phase.
   static PlanPrice _price(ProductDetails p) {
     if (p is GooglePlayProductDetails) {
       final phase = _playOffer(p)?.pricingPhases.lastOrNull;
@@ -302,6 +299,10 @@ class PriceService {
     if (text.isEmpty || text.toLowerCase().contains('trial')) {
       return 'continue_btn'.tr;
     }
-    return LocalizationService.trEnglish(text);
+    final localized = LocalizationService.trEnglish(text);
+    if (localized == text && Get.locale?.languageCode != 'en') {
+      return 'continue_btn'.tr;
+    }
+    return localized;
   }
 }

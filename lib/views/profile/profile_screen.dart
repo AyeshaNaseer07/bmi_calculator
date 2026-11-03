@@ -23,6 +23,7 @@ import '../widgets/custom_card.dart';
 import '../widgets/custom_loader.dart';
 import '../widgets/mandatory_label.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/utils/rtl.dart';
 
 class ProfileScreen extends StatelessWidget {
   /// False when shown as a bottom-nav tab, which has nothing to go back to.
@@ -624,10 +625,13 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
-                CupertinoIcons.chevron_right,
-                size: 14.sp,
-                color: AppPalette.textPrimary,
+              // CupertinoIcons don't mirror on their own.
+              MirrorOnRtl(
+                child: Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 14.sp,
+                  color: AppPalette.textPrimary,
+                ),
               ),
             ],
           ),

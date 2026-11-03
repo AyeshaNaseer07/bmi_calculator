@@ -46,13 +46,28 @@ class RemoteConfigService extends GetxService {
     PaywallType.week => model.value.weekPaywallBtnText,
   };
 
-  /// Plan card preselected on a paywall. `weekly` is the left card (the
-  /// `monthly` slot); anything else selects the yearly card.
+  /// Plan card preselected on a paywall. The remote value is a product ID
+  /// (e.g. `com.weekly.bmi.calculator.app`), matched against that paywall's
+  /// weekly and yearly product IDs. The older `weekly`/`monthly`/`yearly`
+  /// words still work. `weekly` is the left card (the `monthly` slot); an
+  /// unrecognised value selects the yearly card.
   SubscriptionPlan defaultPlan(PaywallType type) {
     final value = switch (type) {
       PaywallType.onboarding => model.value.onbPaywallDefaultPlan,
       PaywallType.week => model.value.weekPaywallDefaultPlan,
     }.trim().toLowerCase();
+
+    final weeklyId = getProductId(
+      SubscriptionPlan.monthly,
+      type,
+    ).trim().toLowerCase();
+    final yearlyId = getProductId(
+      SubscriptionPlan.yearly,
+      type,
+    ).trim().toLowerCase();
+
+    if (value.isNotEmpty && value == weeklyId) return SubscriptionPlan.monthly;
+    if (value.isNotEmpty && value == yearlyId) return SubscriptionPlan.yearly;
     return value == 'weekly' || value == 'monthly'
         ? SubscriptionPlan.monthly
         : SubscriptionPlan.yearly;

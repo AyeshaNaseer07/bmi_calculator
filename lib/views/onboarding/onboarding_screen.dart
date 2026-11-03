@@ -12,6 +12,7 @@ import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/next_button.dart';
+import '../../core/utils/rtl.dart';
 
 class OnboardingItem {
   final String imagePath;
@@ -396,11 +397,13 @@ class _AnimatedGradientNextButtonState
       text: 'next'.tr,
       backgroundImage: AppAssets.btnRectangle,
       borderRadius: BorderRadius.circular(12.r),
-      trailingIcon: Image.asset(
-        AppAssets.arrowIcon,
-        width: 18.w,
-        height: 18.w,
-        color: Colors.white,
+      trailingIcon: MirrorOnRtl(
+        child: Image.asset(
+          AppAssets.arrowIcon,
+          width: 18.w,
+          height: 18.w,
+          color: Colors.white,
+        ),
       ),
       onPressed: _handleTap,
     );

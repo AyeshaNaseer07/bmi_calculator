@@ -847,7 +847,7 @@ class MealDetailScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  SizedBox(width: 18.w),
                   Icon(Icons.arrow_forward_ios, size: 15.sp),
                 ],
               ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_assets.dart';
 import 'custom_gradient_button.dart';
+import '../../core/utils/rtl.dart';
 
 class AnimatedCtaButton extends StatefulWidget {
   final String text;
@@ -142,7 +143,7 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
         animation: _arrowOffsetAnimation,
         builder: (context, child) {
           return Transform.translate(
-            offset: Offset(_arrowOffsetAnimation.value.w, 0),
+            offset: Offset(_arrowOffsetAnimation.value.w * dirSign(context), 0),
             child: child,
           );
         },

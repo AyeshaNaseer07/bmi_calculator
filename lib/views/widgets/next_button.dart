@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../core/constants/app_assets.dart';
 import 'animated_cta_button.dart';
+import '../../core/utils/rtl.dart';
 
 class NextButton extends StatefulWidget {
   final VoidCallback onNext;
@@ -14,8 +15,6 @@ class NextButton extends StatefulWidget {
   State<NextButton> createState() => _NextButtonState();
 }
 
-/// Compact "Next" pill, animated like the premium screen CTA (pulse, glow,
-/// shimmer sweep, arrow nudge, press-down).
 class _NextButtonState extends State<NextButton> {
   bool _isNavigating = false;
 
@@ -50,11 +49,13 @@ class _NextButtonState extends State<NextButton> {
       // full-width layout that pins the arrow to the right edge).
       alignTrailingToEnd: false,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-      trailingIcon: Image.asset(
-        AppAssets.arrowIcon,
-        width: 18.w,
-        height: 18.w,
-        color: Colors.white,
+      trailingIcon: MirrorOnRtl(
+        child: Image.asset(
+          AppAssets.arrowIcon,
+          width: 18.w,
+          height: 18.w,
+          color: Colors.white,
+        ),
       ),
       onPressed: _handleTap,
     );

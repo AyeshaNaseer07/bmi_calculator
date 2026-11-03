@@ -21,8 +21,6 @@ const Color _kPill = Color(0xFF5CF2C0);
 class StayActiveScreen extends StatelessWidget {
   const StayActiveScreen({super.key});
 
-  /// Activity row. Without [onTap] it is display-only: a flat, dimmed card.
-  /// With [onTap] it is the one live card, raised and gently animated.
   Widget _row(
     String iconAsset,
     String title,
@@ -58,7 +56,9 @@ class StayActiveScreen extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: ShapeDecoration(
-                      color: all ? _kLav : Color(0xFF6CF8BB),
+                      color: all
+                          ? _kLav
+                          : Color(0xFF6CF8BB).withValues(alpha: 0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(9999),
                       ),
@@ -243,7 +243,7 @@ class StayActiveScreen extends StatelessWidget {
             true,
             onTap: () => Get.to(() => const ActivityRoutineScreen()),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 2.h),
           TipBanner(
             text: 'your_daily_tip'.trParams({
               'tip': ActivityPlanData.tipFor(mc.category),
@@ -326,7 +326,7 @@ class _LiveActivityCardState extends State<_LiveActivityCard>
             final shine = (t / 0.5).clamp(0.0, 1.0);
             return Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(3),
+              padding: EdgeInsets.all(3),
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
