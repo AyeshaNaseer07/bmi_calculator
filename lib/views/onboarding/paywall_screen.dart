@@ -49,6 +49,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
     if (args is Map && args['fromOnboarding'] == true) {
       _fromOnboarding = true;
     }
+    _selectedPlan = _appController.remoteConfigService.defaultPlan(
+      PaywallType.onboarding,
+    );
     _initCrossDelay();
     _loadPrices();
     InterstitialAdManager.instance.load(_crossAdPlacement);

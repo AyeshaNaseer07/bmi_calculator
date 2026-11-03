@@ -46,6 +46,18 @@ class RemoteConfigService extends GetxService {
     PaywallType.week => model.value.weekPaywallBtnText,
   };
 
+  /// Plan card preselected on a paywall. `weekly` is the left card (the
+  /// `monthly` slot); anything else selects the yearly card.
+  SubscriptionPlan defaultPlan(PaywallType type) {
+    final value = switch (type) {
+      PaywallType.onboarding => model.value.onbPaywallDefaultPlan,
+      PaywallType.week => model.value.weekPaywallDefaultPlan,
+    }.trim().toLowerCase();
+    return value == 'weekly' || value == 'monthly'
+        ? SubscriptionPlan.monthly
+        : SubscriptionPlan.yearly;
+  }
+
   int crossDelaySeconds(PaywallType type) => switch (type) {
     PaywallType.onboarding => model.value.onbPaywallCrossDelay,
     PaywallType.week => model.value.weekPaywallCrossDelay,
@@ -228,6 +240,8 @@ class RemoteConfigService extends GetxService {
       'onb_paywall_cross_delay=${m.onbPaywallCrossDelay}, '
       'week_paywall_btn_text="${m.weekPaywallBtnText}", '
       'week_paywall_cross_delay=${m.weekPaywallCrossDelay}, '
+      'onb_paywall_default_plan=${m.onbPaywallDefaultPlan}, '
+      'week_paywall_default_plan=${m.weekPaywallDefaultPlan}, '
       'soft_paywall_access=${m.softPaywallAccess}, '
       'show_ads_debugger=${m.showAdsDebugger}, '
       'first_time_splash_inter_ad=${m.firstTimeSplashInterAd}, '

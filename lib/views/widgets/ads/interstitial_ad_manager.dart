@@ -35,8 +35,13 @@ class InterstitialAdManager {
   bool _listening = false;
   final Map<String, Completer<void>> _loading = {};
   VoidCallback? _onDone;
+  bool _showing = false;
 
-  bool get isShowing => _onDone != null;
+  /// The ad covers the screen, so the next screen is put in place behind it
+  /// once it's up, giving it a moment to be fully on screen first.
+  static const Duration _navigateBehindAdDelay = Duration(milliseconds: 350);
+
+  bool get isShowing => _showing;
 
   RemoteModel get _config => Get.isRegistered<RemoteConfigService>()
       ? RemoteConfigService.to.current
@@ -105,7 +110,10 @@ class InterstitialAdManager {
           );
           _loading.remove(adUnitId)?.complete();
         },
-        onAdDisplayedCallback: (_) {},
+        onAdDisplayedCallback: (_) {
+          if (_onDone == null) return;
+          Future.delayed(_navigateBehindAdDelay, _runDone);
+        },
         onAdDisplayFailedCallback: (ad, error) {
           debugPrint(
             '[InterstitialAd] failed to show ${ad.adUnitId}: '
@@ -161,7 +169,7 @@ class InterstitialAdManager {
     }
 
     var ready = false;
-    if (_onDone == null && _isEnabled(placement)) {
+    if (!_showing && _isEnabled(placement)) {
       try {
         if (!await AppLovinSdk.ready) throw StateError('SDK not ready');
         ready = await AppLovinMAX.isInterstitialReady(adUnitId) ?? false;
@@ -174,11 +182,18 @@ class InterstitialAdManager {
       return;
     }
 
+    _showing = true;
     _onDone = onDone;
     AppLovinMAX.showInterstitial(adUnitId, placement: placement.name);
   }
 
+  /// The ad is gone; moves on now if that hasn't already happened behind it.
   void _finish() {
+    _showing = false;
+    _runDone();
+  }
+
+  void _runDone() {
     final onDone = _onDone;
     _onDone = null;
     onDone?.call();

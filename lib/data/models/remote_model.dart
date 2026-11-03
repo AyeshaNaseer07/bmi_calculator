@@ -32,6 +32,8 @@ class RemoteModel {
   String? _notificationFrequency;
   String? _softPaywallAccess;
   String? _showAdsDebugger;
+  String? _onbPaywallDefaultPlan;
+  String? _weekPaywallDefaultPlan;
 
   // AppLovin MAX ad units; Remote Config overrides each one.
   static const String defaultWeeklyProductId = 'com.weekly.bmi.calculator.app';
@@ -157,6 +159,13 @@ class RemoteModel {
   String get showAdsDebugger => _showAdsDebugger ?? 'off';
   set showAdsDebugger(String value) => _showAdsDebugger = value;
 
+  /// Plan preselected on each paywall: `weekly` (left card) or `yearly`.
+  String get onbPaywallDefaultPlan => _onbPaywallDefaultPlan ?? 'yearly';
+  set onbPaywallDefaultPlan(String value) => _onbPaywallDefaultPlan = value;
+
+  String get weekPaywallDefaultPlan => _weekPaywallDefaultPlan ?? 'yearly';
+  set weekPaywallDefaultPlan(String value) => _weekPaywallDefaultPlan = value;
+
   RemoteModel({
     this._firstTimeOnboarding,
     this._secondTimeOnboarding,
@@ -189,6 +198,8 @@ class RemoteModel {
     this._notificationFrequency,
     this._softPaywallAccess,
     this._showAdsDebugger,
+    this._onbPaywallDefaultPlan,
+    this._weekPaywallDefaultPlan,
   });
 
   bool get isFirstTimeOnboarding => _isOn(firstTimeOnboarding);
@@ -436,6 +447,14 @@ class RemoteModel {
           remoteConfig['show_ads_debugger'] ?? remoteConfig['showAdsDebugger'],
           'off',
         ),
+        onbPaywallDefaultPlan: _parseString(
+          remoteConfig['onb_paywall_default_plan'],
+          'yearly',
+        ),
+        weekPaywallDefaultPlan: _parseString(
+          remoteConfig['week_paywall_default_plan'],
+          'yearly',
+        ),
       );
     } catch (e, stackTrace) {
       if (kDebugMode || kProfileMode) {
@@ -479,6 +498,8 @@ class RemoteModel {
       notificationFrequency: 'd',
       softPaywallAccess: 'true',
       showAdsDebugger: 'off',
+      onbPaywallDefaultPlan: 'yearly',
+      weekPaywallDefaultPlan: 'yearly',
     );
   }
 
@@ -515,6 +536,8 @@ class RemoteModel {
       'show_notification_frequency': notificationFrequency,
       'soft_paywall_access': softPaywallAccess,
       'show_ads_debugger': showAdsDebugger,
+      'onb_paywall_default_plan': onbPaywallDefaultPlan,
+      'week_paywall_default_plan': weekPaywallDefaultPlan,
     };
   }
 }

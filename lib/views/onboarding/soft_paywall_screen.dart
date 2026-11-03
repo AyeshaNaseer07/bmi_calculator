@@ -39,6 +39,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   @override
   void initState() {
     super.initState();
+    _plan = _app.remoteConfigService.defaultPlan(PaywallType.week);
     InterstitialAdManager.instance.load(InterstitialPlacement.weekPaywallCross);
     final delay = _app.remoteConfigService.crossDelaySeconds(PaywallType.week);
     if (delay <= 0) {

@@ -153,6 +153,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       return;
     }
 
+    // Already purchased and past the first run: no onboarding or paywall,
+    // whatever second_time_onboarding says.
+    if (_appController.onboardingSeen.value && _appController.isPremium.value) {
+      Get.offAllNamed(AppRoutes.home);
+      return;
+    }
+
     if (_isOnboardingEnabled) {
       Get.offNamed(AppRoutes.onboarding);
     } else {

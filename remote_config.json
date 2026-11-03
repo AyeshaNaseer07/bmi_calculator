@@ -23,6 +23,9 @@
   "onb_paywall_yearly_product_id": {
     "value": "com.yearly.bmi.calculator.app"
   },
+  "onb_paywall_default_plan": {
+    "value": "yearly"
+  },
   "week_paywall_btn_text": {
     "value": "Start Free Trial"
   },
@@ -34,6 +37,9 @@
   },
   "week_paywall_yearly_product_id": {
     "value": "com.yearly.bmi.calculator.app"
+  },
+  "week_paywall_default_plan": {
+    "value": "yearly"
   },
   "first_time_splash_inter_ad": {
     "value": "on"
