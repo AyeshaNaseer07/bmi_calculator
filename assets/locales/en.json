@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI Calculator Reminders",
-  "notification_channel_description": "Scheduled health and weight tracking reminders"
+  "notification_channel_description": "Scheduled health and weight tracking reminders",
+  "no_product_found": "No product found",
+  "check_internet_connection": "Please check your internet connection."
 }

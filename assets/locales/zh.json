@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI 计算器提醒",
-  "notification_channel_description": "定时的健康和体重追踪提醒"
+  "notification_channel_description": "定时的健康和体重追踪提醒",
+  "no_product_found": "未找到产品",
+  "check_internet_connection": "请检查您的网络连接。"
 }

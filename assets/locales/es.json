@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "Recordatorios de Calculadora de IMC",
-  "notification_channel_description": "Recordatorios programados de seguimiento de salud y peso"
+  "notification_channel_description": "Recordatorios programados de seguimiento de salud y peso",
+  "no_product_found": "No se encontró ningún producto",
+  "check_internet_connection": "Comprueba tu conexión a internet."
 }

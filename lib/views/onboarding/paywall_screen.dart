@@ -35,7 +35,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Timer? _crossDelayTimer;
   bool _fromOnboarding = false;
   bool _pricesLoading = true;
-  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.fallback;
+  Map<SubscriptionPlan, PlanPrice> _prices = const {};
 
   static const Color _green = Color(0xFF0AA37D);
 
@@ -120,6 +120,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   Future<void> _onSubscribe() async {
     if (_isLoading) return;
+    if (!_offer(_selectedPlan).isAvailable) {
+      Get.snackbar('no_product_found'.tr, 'check_internet_connection'.tr);
+      unawaited(_loadPrices());
+      return;
+    }
     setState(() => _isLoading = true);
 
     final selectedProductId = _appController.remoteConfigService.getProductId(
@@ -175,18 +180,20 @@ class _PaywallScreenState extends State<PaywallScreen> {
     PaywallType.onboarding,
   );
 
-  String _breakdown(PlanOffer o) => switch (o.type) {
-    PlanType.yearly => 'price_per_month'.trParams({
-      'price': o.price.perMonth(o.type),
-    }),
-    PlanType.monthly => 'price_per_week'.trParams({
-      'price': o.price.perWeek(o.type),
-    }),
-    PlanType.weekly => 'price_per_day'.trParams({
-      'price': o.price.perDay(o.type),
-    }),
-    PlanType.lifetime => 'one_time_payment'.tr,
-  };
+  String _breakdown(PlanOffer o) => o.price == null
+      ? '--'
+      : switch (o.type) {
+          PlanType.yearly => 'price_per_month'.trParams({
+            'price': o.price!.perMonth(o.type),
+          }),
+          PlanType.monthly => 'price_per_week'.trParams({
+            'price': o.price!.perWeek(o.type),
+          }),
+          PlanType.weekly => 'price_per_day'.trParams({
+            'price': o.price!.perDay(o.type),
+          }),
+          PlanType.lifetime => 'one_time_payment'.tr,
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -388,7 +395,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: _buildPlanCard(
                             plan: SubscriptionPlan.monthly,
                             title: '${left.type.name}_plan'.tr,
-                            price: _pricesLoading ? '' : left.price.priceString,
+                            price: _pricesLoading
+                                ? ''
+                                : (left.price?.priceString ?? '--'),
                             period: _pricesLoading ? '' : _breakdown(left),
                             showBestValue: leftIsBest,
                             shadowColor: const Color(0x9189DED6),
@@ -437,7 +446,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                             title: '${right.type.name}_plan'.tr,
                             price: _pricesLoading
                                 ? ''
-                                : right.price.priceString,
+                                : (right.price?.priceString ?? '--'),
                             period: _pricesLoading ? '' : _breakdown(right),
                             showBestValue: !leftIsBest,
                             shadowColor: const Color(0x2433D2AB),

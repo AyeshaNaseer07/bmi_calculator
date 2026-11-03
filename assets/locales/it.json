@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "Promemoria del Calcolatore BMI",
-  "notification_channel_description": "Promemoria programmati per salute e monitoraggio del peso"
+  "notification_channel_description": "Promemoria programmati per salute e monitoraggio del peso",
+  "no_product_found": "Nessun prodotto trovato",
+  "check_internet_connection": "Controlla la tua connessione a internet."
 }

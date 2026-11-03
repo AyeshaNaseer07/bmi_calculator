@@ -974,5 +974,7 @@
   "unit_g": "غ",
   "g": "غ",
   "notification_channel_name": "تذكيرات حاسبة BMI",
-  "notification_channel_description": "تذكيرات مجدولة لتتبع الصحة والوزن"
+  "notification_channel_description": "تذكيرات مجدولة لتتبع الصحة والوزن",
+  "no_product_found": "لم يتم العثور على منتج",
+  "check_internet_connection": "يرجى التحقق من اتصالك بالإنترنت."
 }

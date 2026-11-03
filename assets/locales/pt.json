@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "Lembretes da Calculadora de IMC",
-  "notification_channel_description": "Lembretes programados para acompanhar a saúde e o peso"
+  "notification_channel_description": "Lembretes programados para acompanhar a saúde e o peso",
+  "no_product_found": "Nenhum produto encontrado",
+  "check_internet_connection": "Verifique sua conexão com a internet."
 }

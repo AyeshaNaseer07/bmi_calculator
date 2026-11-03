@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "Rappels du Calculateur d'IMC",
-  "notification_channel_description": "Rappels programmés de santé et de suivi du poids"
+  "notification_channel_description": "Rappels programmés de santé et de suivi du poids",
+  "no_product_found": "Aucun produit trouvé",
+  "check_internet_connection": "Vérifiez votre connexion internet."
 }

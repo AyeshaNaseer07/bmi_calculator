@@ -974,5 +974,7 @@
   "unit_g": "گرام",
   "g": "گرام",
   "notification_channel_name": "BMI کیلکولیٹر کی یاددہانیاں",
-  "notification_channel_description": "صحت اور وزن کی ٹریکنگ کے لیے مقررہ یاددہانیاں"
+  "notification_channel_description": "صحت اور وزن کی ٹریکنگ کے لیے مقررہ یاددہانیاں",
+  "no_product_found": "کوئی پروڈکٹ نہیں ملا",
+  "check_internet_connection": "براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں۔"
 }

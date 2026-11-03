@@ -56,7 +56,9 @@ class PlanOffer {
   final String productId;
   final ProductDetails? product;
   final PlanType type;
-  final PlanPrice price;
+
+  /// Null when the store didn't return this product.
+  final PlanPrice? price;
 
   const PlanOffer({
     required this.slot,
@@ -65,14 +67,11 @@ class PlanOffer {
     required this.type,
     required this.price,
   });
+
+  bool get isAvailable => product != null && price != null;
 }
 
 class PriceService {
-  static const Map<SubscriptionPlan, PlanPrice> fallback = {
-    SubscriptionPlan.monthly: PlanPrice(4.99, 'USD', '\$4.99'),
-    SubscriptionPlan.yearly: PlanPrice(29.99, 'USD', '\$29.99'),
-  };
-
   static final Map<PaywallType, Map<SubscriptionPlan, PlanPrice>> _cache = {};
   static final Map<String, ProductDetails> _products = {};
   static final RxMap<String, bool> trialEligibility = <String, bool>{}.obs;
@@ -85,7 +84,9 @@ class PriceService {
       await refreshTrialEligibility();
       return cached;
     }
-    final result = Map<SubscriptionPlan, PlanPrice>.of(fallback);
+    // Only plans the store actually returned are included; a missing plan
+    // has no price and the paywall shows a placeholder for it.
+    final result = <SubscriptionPlan, PlanPrice>{};
     try {
       if (!await InAppPurchase.instance.isAvailable()) return result;
       final ids = {
@@ -104,10 +105,11 @@ class PriceService {
         final p = _products[entry.value];
         if (p != null) result[entry.key] = _price(p);
       }
-      _cache[paywall] = result;
+      // Don't cache a partial result, so the next open retries the store.
+      if (result.length == ids.length) _cache[paywall] = result;
       await refreshTrialEligibility();
     } catch (e) {
-      debugPrint('Price fetch failed, using defaults: $e');
+      debugPrint('Price fetch failed: $e');
     }
     return result;
   }
@@ -131,7 +133,7 @@ class PriceService {
         productId: productId,
         fallback: PlanType.values.byName(slot.name),
       ),
-      price: prices[slot] ?? fallback[slot]!,
+      price: prices[slot],
     );
   }
 

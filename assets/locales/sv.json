@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI-kalkylatorns påminnelser",
-  "notification_channel_description": "Schemalagda påminnelser om hälsa och viktregistrering"
+  "notification_channel_description": "Schemalagda påminnelser om hälsa och viktregistrering",
+  "no_product_found": "Ingen produkt hittades",
+  "check_internet_connection": "Kontrollera din internetanslutning."
 }

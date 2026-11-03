@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "VKİ Hesaplayıcı Hatırlatmaları",
-  "notification_channel_description": "Planlanmış sağlık ve kilo takibi hatırlatmaları"
+  "notification_channel_description": "Planlanmış sağlık ve kilo takibi hatırlatmaları",
+  "no_product_found": "Ürün bulunamadı",
+  "check_internet_connection": "Lütfen internet bağlantınızı kontrol edin."
 }

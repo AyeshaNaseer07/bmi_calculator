@@ -974,5 +974,7 @@
   "unit_g": "г",
   "g": "г",
   "notification_channel_name": "Напоминания BMI Calculator",
-  "notification_channel_description": "Запланированные напоминания для отслеживания здоровья и веса"
+  "notification_channel_description": "Запланированные напоминания для отслеживания здоровья и веса",
+  "no_product_found": "Продукт не найден",
+  "check_internet_connection": "Проверьте подключение к интернету."
 }

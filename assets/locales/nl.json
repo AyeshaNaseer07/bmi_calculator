@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI Calculator-herinneringen",
-  "notification_channel_description": "Geplande herinneringen om je gezondheid en gewicht bij te houden"
+  "notification_channel_description": "Geplande herinneringen om je gezondheid en gewicht bij te houden",
+  "no_product_found": "Geen product gevonden",
+  "check_internet_connection": "Controleer je internetverbinding."
 }

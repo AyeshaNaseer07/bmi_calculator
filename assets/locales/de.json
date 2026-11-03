@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI-Rechner Erinnerungen",
-  "notification_channel_description": "Geplante Erinnerungen zur Gesundheits- und Gewichtsverfolgung"
+  "notification_channel_description": "Geplante Erinnerungen zur Gesundheits- und Gewichtsverfolgung",
+  "no_product_found": "Kein Produkt gefunden",
+  "check_internet_connection": "Bitte überprüfe deine Internetverbindung."
 }

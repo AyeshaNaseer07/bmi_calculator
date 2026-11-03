@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI計算機のリマインダー",
-  "notification_channel_description": "健康管理と体重記録の定期リマインダー"
+  "notification_channel_description": "健康管理と体重記録の定期リマインダー",
+  "no_product_found": "商品が見つかりません",
+  "check_internet_connection": "インターネット接続を確認してください。"
 }

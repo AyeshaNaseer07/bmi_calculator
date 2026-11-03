@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI 계산기 알림",
-  "notification_channel_description": "정기적인 건강 및 체중 기록 알림"
+  "notification_channel_description": "정기적인 건강 및 체중 기록 알림",
+  "no_product_found": "제품을 찾을 수 없습니다",
+  "check_internet_connection": "인터넷 연결을 확인해 주세요."
 }

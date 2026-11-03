@@ -974,5 +974,7 @@
   "unit_g": "g",
   "g": "g",
   "notification_channel_name": "BMI कैलकुलेटर रिमाइंडर",
-  "notification_channel_description": "सेहत और वज़न ट्रैकिंग के निर्धारित रिमाइंडर"
+  "notification_channel_description": "सेहत और वज़न ट्रैकिंग के निर्धारित रिमाइंडर",
+  "no_product_found": "कोई प्रोडक्ट नहीं मिला",
+  "check_internet_connection": "कृपया अपना इंटरनेट कनेक्शन जाँचें।"
 }

@@ -36,7 +36,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   bool _pricesLoading = true;
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
-  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.fallback;
+  Map<SubscriptionPlan, PlanPrice> _prices = const {};
 
   @override
   void initState() {
@@ -89,6 +89,13 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
 
   Future<void> _subscribe() async {
     if (_loading) return;
+    if (!_offer(_plan).isAvailable) {
+      Get.snackbar('no_product_found'.tr, 'check_internet_connection'.tr);
+      PriceService.load(_app.remoteConfigService, PaywallType.week).then((p) {
+        if (mounted) setState(() => _prices = p);
+      });
+      return;
+    }
     setState(() => _loading = true);
     bool ok = false;
     try {
@@ -149,18 +156,20 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   );
 
   // Per-day / per-month breakdown, same as the main paywall.
-  String _period(PlanOffer o) => switch (o.type) {
-    PlanType.yearly => 'price_per_month'.trParams({
-      'price': o.price.perMonth(o.type),
-    }),
-    PlanType.monthly => 'price_per_week'.trParams({
-      'price': o.price.perWeek(o.type),
-    }),
-    PlanType.weekly => 'price_per_day'.trParams({
-      'price': o.price.perDay(o.type),
-    }),
-    PlanType.lifetime => 'one_time_payment'.tr,
-  };
+  String _period(PlanOffer o) => o.price == null
+      ? '--'
+      : switch (o.type) {
+          PlanType.yearly => 'price_per_month'.trParams({
+            'price': o.price!.perMonth(o.type),
+          }),
+          PlanType.monthly => 'price_per_week'.trParams({
+            'price': o.price!.perWeek(o.type),
+          }),
+          PlanType.weekly => 'price_per_day'.trParams({
+            'price': o.price!.perDay(o.type),
+          }),
+          PlanType.lifetime => 'one_time_payment'.tr,
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +259,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           child: _planCard(
                             SubscriptionPlan.monthly,
                             '${left.type.name}_plan'.tr,
-                            _pricesLoading ? '' : left.price.priceString,
+                            _pricesLoading
+                                ? ''
+                                : (left.price?.priceString ?? '--'),
                             _pricesLoading ? '' : _period(left),
                             best: leftIsBest,
                           ),
@@ -282,7 +293,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           child: _planCard(
                             SubscriptionPlan.yearly,
                             '${right.type.name}_plan'.tr,
-                            _pricesLoading ? '' : right.price.priceString,
+                            _pricesLoading
+                                ? ''
+                                : (right.price?.priceString ?? '--'),
                             _pricesLoading ? '' : _period(right),
                             best: !leftIsBest,
                           ),
