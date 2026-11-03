@@ -42,15 +42,26 @@ class StayActiveScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(title, style: headStyle(16, weight: FontWeight.w600)),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 3.h,
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: const Color(0xFF141B2B),
+                      fontSize: 14,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w600,
+                      height: 1.43,
                     ),
-                    decoration: BoxDecoration(
-                      color: all ? _kLav : _kPill,
-                      borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: all ? _kLav : Color(0xFF6CF8BB),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9999),
+                      ),
                     ),
                     child: SizedBox(
                       width: 65.w,
@@ -59,7 +70,7 @@ class StayActiveScreen extends StatelessWidget {
                           chip,
                           style: bodyStyle(
                             11.5,
-                            color: _kDeep,
+                            color: Color(0xFF00714D),
                             weight: FontWeight.w500,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -72,12 +83,15 @@ class StayActiveScreen extends StatelessWidget {
               SizedBox(height: 2.h),
               Text(
                 sub,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: bodyStyle(
-                  13,
-                  color: AppPalette.textBody,
-                  weight: FontWeight.w600,
+                style: TextStyle(
+                  color: const Color(0xFF3D4A42),
+                  fontSize: 12,
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontWeight: FontWeight.w600,
+                  height: 1.33,
+                  letterSpacing: 0.24,
                 ),
               ),
             ],
@@ -91,18 +105,19 @@ class StayActiveScreen extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 12.h),
       child: onTap == null
           ? Container(
-              padding: padding,
-              decoration: BoxDecoration(
-                // White card with a soft shadow on every side (an even glow
-                // plus a slight lift), no border and no tap.
-                color: AppPalette.surface,
-                borderRadius: BorderRadius.circular(20.r),
-                boxShadow: [
-                  BoxShadow(color: const Color(0x0D000000), blurRadius: 12),
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: ShapeDecoration(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(19),
+                ),
+                shadows: [
                   BoxShadow(
-                    color: const Color(0x0A000000),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
+                    color: Color(0x0C000000),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                    spreadRadius: 0,
                   ),
                 ],
               ),
@@ -310,18 +325,19 @@ class _LiveActivityCardState extends State<_LiveActivityCard>
             // Shine crosses during the first half, then rests.
             final shine = (t / 0.5).clamp(0.0, 1.0);
             return Container(
-              decoration: BoxDecoration(
-                color: AppPalette.surface,
-                borderRadius: radius,
-                border: Border.all(
-                  color: kGreen.withValues(alpha: 0.18 + 0.27 * pulse),
-                  width: 1.2,
+              width: double.infinity,
+              padding: const EdgeInsets.all(3),
+              decoration: ShapeDecoration(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                boxShadow: [
+                shadows: [
                   BoxShadow(
-                    color: const Color(0x1F000000),
-                    blurRadius: 14,
-                    offset: const Offset(0, 5),
+                    color: Color(0x3D000000),
+                    blurRadius: 7.40,
+                    offset: Offset(0, 0),
+                    spreadRadius: 0,
                   ),
                   BoxShadow(
                     color: kGreen.withValues(alpha: 0.10 + 0.18 * pulse),

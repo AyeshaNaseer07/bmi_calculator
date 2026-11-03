@@ -17,6 +17,7 @@ import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
+import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
 import '../widgets/bmi_gauge_widget.dart';
@@ -35,11 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        NotificationService.instance.requestPermission();
-        QuickActionsService.instance.consumePendingAction();
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      QuickActionsService.instance.consumePendingAction();
+      // Home can be put in place behind an interstitial (e.g. the onboarding
+      // paywall cross ad); the notification dialog must wait until the ad is
+      // closed, otherwise it draws on top of it.
+      await InterstitialAdManager.instance.whenAdClosed();
+      if (!mounted) return;
+      NotificationService.instance.requestPermission();
     });
   }
 

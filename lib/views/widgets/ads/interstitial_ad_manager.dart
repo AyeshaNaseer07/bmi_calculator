@@ -35,7 +35,27 @@ class InterstitialAdManager {
   bool _listening = false;
   final Map<String, Completer<void>> _loading = {};
   VoidCallback? _onDone;
-  bool _showing = false;
+  final ValueNotifier<bool> _showingNotifier = ValueNotifier(false);
+
+  bool get _showing => _showingNotifier.value;
+  set _showing(bool v) => _showingNotifier.value = v;
+
+  /// Completes once no interstitial is on screen (immediately if none is).
+  /// Used to hold back system dialogs that would otherwise draw over the ad.
+  Future<void> whenAdClosed() async {
+    if (!_showing) return;
+    final done = Completer<void>();
+    void listener() {
+      if (!_showing && !done.isCompleted) done.complete();
+    }
+
+    _showingNotifier.addListener(listener);
+    try {
+      await done.future;
+    } finally {
+      _showingNotifier.removeListener(listener);
+    }
+  }
 
   /// The ad covers the screen, so the next screen is put in place behind it
   /// once it's up, giving it a moment to be fully on screen first.
