@@ -83,8 +83,6 @@ class AppStartup {
 
     Get.put<AppController>(AppController(), permanent: true);
 
-    // Fetch both paywalls' store products now, in the background, so their
-    // prices are ready by the time the user reaches a paywall.
     PriceService.preload(remoteConfigService);
 
     try {
@@ -96,7 +94,6 @@ class AppStartup {
     _loadAds();
   }
 
-  /// Needs Remote Config (switches + ad unit IDs) and AppController (premium).
   static void _loadAds() {
     // The language screen comes straight after the splash.
     NativeAds.preload(NativeAdPlacement.language);

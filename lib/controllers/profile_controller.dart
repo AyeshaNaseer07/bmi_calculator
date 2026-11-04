@@ -39,11 +39,6 @@ class ProfileController extends GetxController {
   Future<void> pickProfileImage() async {
     if (isUploading.value) return;
     if (!await PhotoPermission.request()) return;
-    // Raise the loader before the picker opens. On iOS, pickImage only
-    // returns after the sheet dismisses and the image is re-encoded
-    // (imageQuality), which left a visible gap with no loader. The overlay is
-    // already in place behind the picker, so it is on screen the instant the
-    // sheet closes.
     isUploading.value = true;
     try {
       final XFile? picked = await _picker.pickImage(

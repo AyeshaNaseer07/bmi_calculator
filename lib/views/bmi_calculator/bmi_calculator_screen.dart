@@ -43,9 +43,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     Get.back(); // close dialog
     InterstitialAdManager.instance.show(
       InterstitialPlacement.calculator,
-      // No transition: Home is simply there when the ad goes away. A fade
-      // here made this (Cupertino) route slide aside under it, which showed
-      // as a sliding glitch right after the ad.
       onDone: () => Get.offAll(
         () => const MainNavigationScreen(),
         routeName: AppRoutes.home,
@@ -75,9 +72,6 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Background Illustration (Calculator background at top right)
-                  // Pinned to the screen edge; it used to hang off the
-                  // subtitle's fixed width, which only lined up on phones.
                   Positioned(
                     top: -20.h,
                     right: 0,

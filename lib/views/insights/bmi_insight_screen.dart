@@ -13,8 +13,6 @@ import 'nutrition_screens.dart';
 import 'personal_targets.dart';
 import '../../core/theme/app_palette.dart';
 
-/// Hero image proportions and where its card sits, as fractions of the
-/// image width, so the text can be laid over the card.
 class _HeroArt {
   final double aspect;
 
@@ -36,7 +34,6 @@ class _Variant {
   final Color messageColor;
   final String image;
   final _HeroArt art;
-
   final Color weightColor;
   final Color barBg;
   final Color barFill;
@@ -44,8 +41,6 @@ class _Variant {
   final Color whyBorder;
   final String? whyTitle;
   final List<String> whyBullets;
-
-  /// True when the healthy goal means gaining weight (underweight).
   final bool gain;
 
   const _Variant({

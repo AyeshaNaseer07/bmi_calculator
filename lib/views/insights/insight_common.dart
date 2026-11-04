@@ -359,9 +359,6 @@ class InfoRowCard extends StatelessWidget {
   }
 }
 
-/// The one precaution design used app-wide: amber panel, shield icon,
-/// PRECAUTION label, bold [lead] and softer [body]. Only the text changes. Like
-/// [TipBanner] it eases in, here with the shield giving a single amber pulse.
 class PrecautionCard extends StatelessWidget {
   final String lead;
   final String body;
@@ -395,8 +392,6 @@ class PrecautionCard extends StatelessWidget {
                   border: Border.all(color: const Color(0xFFFDE7C1)),
                 ),
                 child: Column(
-                  // Left-aligned: a one-line lead would otherwise be centred
-                  // and look indented next to the wrapping body text.
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -468,9 +463,6 @@ class PrecautionCard extends StatelessWidget {
   }
 }
 
-/// The one tip design used app-wide: mint panel, round green bulb, dark-green
-/// text. Only [text] changes. A short lead-in such as "Simple Tip:" is shown
-/// in bold, and the banner eases in with the bulb briefly lighting up.
 class TipBanner extends StatelessWidget {
   final String text;
 

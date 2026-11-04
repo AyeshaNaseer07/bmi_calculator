@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 /// Surface, text and border colours.
-///
-/// Brand teal, gradients on buttons and the BMI category colours stay in
-/// [AppColors].
 abstract class AppPalette {
   // ── Backgrounds ──
   static const Color background = Color(0xFFF7FAF8);

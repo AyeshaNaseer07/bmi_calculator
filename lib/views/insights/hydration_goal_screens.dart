@@ -23,10 +23,7 @@ class DailyGoalScreen extends StatefulWidget {
 class _DailyGoalScreenState extends State<DailyGoalScreen> {
   final StorageService _storage = Get.find<StorageService>();
 
-  /// Today's ticked glasses, kept when the screen is left and reopened;
-  /// starts again from 0 the next day.
   late int _glasses = _storage.getWaterGlasses(DateTime.now()).clamp(0, _goal);
-
   late final int _ml = PersonalTargets.waterMl(
     MealPlanController.to.weightKg,
     MealPlanController.to.activity,

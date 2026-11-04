@@ -129,9 +129,6 @@ class LocalizationService extends Translations {
       getLocaleFromLanguage(language.code),
   ];
 
-  /// Translates English text that comes from outside the app (e.g. Remote
-  /// Config) when it matches one of our English strings; otherwise returns it
-  /// unchanged.
   static String trEnglish(String text) {
     final wanted = text.trim().toLowerCase();
     for (final entry in (_keys['en'] ?? const {}).entries) {
@@ -140,14 +137,11 @@ class LocalizationService extends Translations {
     return text;
   }
 
-  /// Makes `DateFormat` use [langCode] for month and day names. Digits stay
-  /// Western so dates match the rest of the app's numbers.
   static void applyIntlLocale(String langCode) {
     Intl.defaultLocale = langCode;
     DateFormat.useNativeDigitsByDefaultFor(langCode, false);
   }
 
-  /// Loads JSON translation files asynchronously from assets/locales/
   static Future<void> init() async {
     await initializeDateFormatting();
     for (final language in supportedLanguages) {

@@ -250,9 +250,6 @@ class MealPlanData {
   MealPlanData._();
 
   static int get days => 7;
-
-  /// The three meals of [day]. When [targetKcal] is given, portions are scaled
-  /// so the day adds up to that personal calorie target.
   static List<MealInfo> mealsFor(
     BMICategory cat,
     int day, {

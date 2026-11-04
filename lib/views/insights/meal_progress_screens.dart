@@ -83,8 +83,6 @@ class MealCompletedScreen extends StatelessWidget {
     final c = MealPlanController.to;
     return InsightScaffold(
       title: 'meal_completed'.trParams({'meal': meal.slot}),
-      // Same look as GradientActionButton, plus the app's CTA animation
-      // (breathing pulse, shine sweep, arrow nudge).
       bottom: AnimatedCtaButton(
         text: 'view_your_progress'.tr,
         height: 52.h,
@@ -104,8 +102,6 @@ class MealCompletedScreen extends StatelessWidget {
           color: Colors.white,
           size: 20.sp,
         ),
-        // Replaces this screen, so Back on Your Progress goes straight to
-        // the 1 Week Meal Plan.
         onPressed: () => Get.off(() => const MealProgressScreen()),
       ),
       body: Column(

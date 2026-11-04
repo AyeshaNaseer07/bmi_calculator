@@ -125,8 +125,6 @@ class RemoteModel {
   String get splashInterAdId => _splashInterAdId ?? defaultSplashInterAdId;
   set splashInterAdId(String value) => _splashInterAdId = value;
 
-  /// Interstitial on the main paywall's cross (`onb_paywall_*`), both after
-  /// onboarding and when opened inside the app.
   String get onbPaywallEnable => _onbPaywallEnable ?? 'on';
   set onbPaywallEnable(String value) => _onbPaywallEnable = value;
 

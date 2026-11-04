@@ -97,9 +97,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     });
     _appController.changeLanguage(code);
     if (flyHand) {
-      // The locale switch re-lays the screen out (the Done chip jumps sides
-      // for RTL languages and changes width), so measure it only once that
-      // new layout is in place.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -142,16 +139,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     });
   }
 
-  /// A screen point in the overlay Stack's own coordinates, which the hand
-  /// is positioned in. Measuring it this way keeps the hand on target
-  /// whichever side the Done chip ends up on.
   Offset _inOverlay(Offset global) {
     final box = _overlayKey.currentContext?.findRenderObject() as RenderBox?;
     return box == null ? global : box.globalToLocal(global);
   }
 
-  /// Where the hand rests on the Done chip, measured as it is now: the chip
-  /// jumps sides and changes width with the language.
   Offset? _doneHandCenter() {
     final box = _doneButtonKey.currentContext?.findRenderObject();
     if (box is! RenderBox || !box.attached || !box.hasSize) return null;
@@ -169,8 +161,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       return;
     }
 
-    // Already purchased and past the first run: no onboarding or paywall,
-    // whatever second_time_onboarding says.
     if (_appController.onboardingSeen.value && _appController.isPremium.value) {
       Get.offAllNamed(AppRoutes.home);
       return;
@@ -183,8 +173,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
     }
   }
 
-  /// first_time_onboarding until onboarding has been completed once,
-  /// second_time_onboarding on every launch after that.
   bool get _isOnboardingEnabled {
     final seen = _appController.onboardingSeen.value;
     if (Get.isRegistered<RemoteConfigService>()) {

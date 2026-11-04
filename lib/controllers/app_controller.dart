@@ -50,7 +50,6 @@ class AppController extends GetxController {
     subscriptionService.onChanged = (premium) => isPremium.value = premium;
     subscriptionService.start();
     subscriptionVerified = subscriptionService.verifyWithStore();
-    // Catches refunds made while the app was in the background.
     _lifecycle = AppLifecycleListener(
       onResume: () => subscriptionService.verifyWithStore(),
     );

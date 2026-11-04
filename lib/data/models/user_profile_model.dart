@@ -128,9 +128,6 @@ class UserProfile {
       ? ''
       : name.trim();
 
-  /// Short form for the Home greeting. Three or more words collapse to the
-  /// first word's initial plus the second word, e.g. "Muhammad Azwar Rafiq"
-  /// becomes "M. Azwar". Shorter names are shown unchanged.
   String get homeDisplayName {
     final parts = displayName.split(RegExp(r'\s+'));
     if (parts.length < 3) return displayName;

@@ -365,8 +365,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-/// Full-width "Next" button used on pages 2 & 3, animated like the premium
-/// screen CTA (pulse, glow, shimmer sweep, arrow nudge, press-down).
 class _AnimatedGradientNextButton extends StatefulWidget {
   final VoidCallback onPressed;
 

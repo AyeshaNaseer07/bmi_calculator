@@ -146,9 +146,6 @@ class StayActiveScreen extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // Soft mint glow behind the upper-left side. It fades out
-                // before the box's top edge, which the scroll view would
-                // otherwise clip into a hard line.
                 Positioned(
                   left: -120.w,
                   top: 0,
@@ -263,9 +260,6 @@ class StayActiveScreen extends StatelessWidget {
   }
 }
 
-/// The tappable "Daily Movement" card: raised with a mint border, a shine
-/// sweeping across it and a breathing glow, so it reads as the one to tap.
-/// Still under the system "reduce motion" setting.
 class _LiveActivityCard extends StatefulWidget {
   final VoidCallback onTap;
   final EdgeInsetsGeometry padding;

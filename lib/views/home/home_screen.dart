@@ -58,10 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Stack(
           children: [
             Positioned(
-              // The art is drawn for a 44pt status bar, but the content below
-              // starts under the real safe area. Tablets have a much shorter
-              // one, which slid the BMI card up over the avatars' crossed
-              // arms, so the art moves by the same amount there.
               top: isTablet(context)
                   ? 10.h + MediaQuery.paddingOf(context).top - 44.h
                   : 10.h,
@@ -92,20 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     bgImage = AppAssets.homeAvatarDefault;
                   }
 
-                  // The art sits opposite the greeting, which starts on the
-                  // right in right-to-left languages.
-                  // Kept at the phone design width so on tablets the art
-                  // stays beside the greeting instead of growing behind
-                  // the BMI card.
                   Widget art = Image.asset(
                     bgImage,
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.topRight,
                   );
-                  // The art is an opaque full-screen phone background, so on
-                  // the wider tablet canvas its left half fades into the app
-                  // background instead of ending in a hard edge. The guy,
-                  // girl and couple all sit in the right third, clear of it.
                   if (isTablet(context)) {
                     art = ShaderMask(
                       blendMode: BlendMode.dstIn,
@@ -497,8 +484,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  // Flexible so a long translated category shrinks (and
-                  // ellipsizes) instead of overflowing the row.
                   Flexible(
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 6.w),

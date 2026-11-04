@@ -6,17 +6,12 @@ import '../../data/services/logger_service.dart';
 import '../../views/widgets/ads/app_open_ad_manager.dart';
 
 abstract class ShareHelper {
-  /// Opens the native share sheet with [text].
-  ///
-  /// Pass the tapped widget's [context] so the sheet anchors to it on iPad,
-  /// where share_plus throws without a `sharePositionOrigin`.
   static Future<void> shareText(
     String text, {
     String? subject,
     BuildContext? context,
   }) async {
     try {
-      // The share sheet backgrounds the app; don't show an app-open ad on return.
       AppOpenAdManager.instance.skipNextResume();
       await SharePlus.instance.share(
         ShareParams(

@@ -512,8 +512,6 @@ class MealDetailScreen extends StatelessWidget {
               ? null
               : () {
                   MealPlanController.to.markEaten(meal.key);
-                  // Replaces this screen: once eaten, Back skips the detail
-                  // and returns to the 1 Week Meal Plan.
                   Get.off(() => MealCompletedScreen(meal: meal));
                 },
         );

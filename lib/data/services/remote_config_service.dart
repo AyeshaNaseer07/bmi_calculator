@@ -9,7 +9,6 @@ import '../models/remote_model.dart';
 import 'storage_service.dart';
 import 'subscription_service.dart';
 
-/// Which paywall a remote value belongs to: `onb_paywall_*` or `week_paywall_*`.
 enum PaywallType { onboarding, week }
 
 class RemoteConfigService extends GetxService {
@@ -46,11 +45,6 @@ class RemoteConfigService extends GetxService {
     PaywallType.week => model.value.weekPaywallBtnText,
   };
 
-  /// Plan card preselected on a paywall. The remote value is a product ID
-  /// (e.g. `com.weekly.bmi.calculator.app`), matched against that paywall's
-  /// weekly and yearly product IDs. The older `weekly`/`monthly`/`yearly`
-  /// words still work. `weekly` is the left card (the `monthly` slot); an
-  /// unrecognised value selects the yearly card.
   SubscriptionPlan defaultPlan(PaywallType type) {
     final value = switch (type) {
       PaywallType.onboarding => model.value.onbPaywallDefaultPlan,
@@ -196,8 +190,6 @@ class RemoteConfigService extends GetxService {
     loadCachedConfig();
     await fetchRemoteConfig();
     RemoteConfig.listenForUpdates();
-    // The startup fetch timed out or failed: try again in the background
-    // instead of running the whole session on cached or default values.
     if (!RemoteConfig.lastFetchSucceeded) RemoteConfig.refresh();
     _lifecycle = AppLifecycleListener(onResume: RemoteConfig.refresh);
     return this;
@@ -226,8 +218,6 @@ class RemoteConfigService extends GetxService {
     }
   }
 
-  /// Applies the values Firebase has activated (fetched this launch, or kept
-  /// from an earlier one). Keeps the cached/default values if there are none.
   Future<void> fetchRemoteConfig() async {
     final map = RemoteConfig.getAllValuesAsMap();
     if (map.isNotEmpty) {
@@ -308,8 +298,6 @@ class RemoteConfig {
   static bool get lastFetchSucceeded =>
       remoteConfig.lastFetchStatus == RemoteConfigFetchStatus.success;
 
-  /// Fetches and activates the published values. Called during the splash,
-  /// before [RemoteConfigService] exists, which then reads what's activated.
   static Future<String> initialize() async {
     try {
       await remoteConfig.setConfigSettings(
@@ -335,8 +323,6 @@ class RemoteConfig {
     }
   }
 
-  /// Fetches again and applies the result: when the startup fetch failed,
-  /// and each time the app comes back to the foreground.
   static Future<bool> refresh() {
     final last = _lastRefreshAt;
     if (_refreshing != null ||

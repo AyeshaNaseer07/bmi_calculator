@@ -455,8 +455,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 break;
             }
 
-            // Empty state is a fixed page (no scrolling); on short screens
-            // it scales down as a whole instead of being cut off.
             if (!hasRecords) {
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
