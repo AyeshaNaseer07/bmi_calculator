@@ -212,36 +212,39 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 10.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildHero(v),
-                      Text(
-                        'your_weight_progress'.tr,
-                        style: TextStyle(
-                          color: AppPalette.textPrimary,
-                          fontSize: 16.sp,
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontWeight: FontWeight.w700,
-                          height: 1.13,
-                          letterSpacing: 0.14,
+                  child: _wrapScroll(
+                    context,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildHero(v),
+                        Text(
+                          'your_weight_progress'.tr,
+                          style: TextStyle(
+                            color: AppPalette.textPrimary,
+                            fontSize: 16.sp,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w700,
+                            height: 1.13,
+                            letterSpacing: 0.14,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 10.h),
-                      _buildWeightCard(
-                        v,
-                        isNormal: isNormal,
-                        current: current,
-                        target: target,
-                        diff: diff,
-                        fill: fill,
-                      ),
-                      SizedBox(height: 14.h),
-                      // Remaining space is shared by the tip cards.
-                      Expanded(child: _buildWhyAndTips(v)),
-                    ],
+                        SizedBox(height: 10.h),
+                        _buildWeightCard(
+                          v,
+                          isNormal: isNormal,
+                          current: current,
+                          target: target,
+                          diff: diff,
+                          fill: fill,
+                        ),
+                        SizedBox(height: 14.h),
+                        // Remaining space is shared by the tip cards.
+                        _tipsArea(context, _buildWhyAndTips(v)),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -251,6 +254,15 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
       ),
     );
   }
+
+  /// iPad: the screen scrolls and the tips get a fixed, roomy height so the
+  /// larger cards are never clipped. Phones keep the original fill layout.
+  Widget _wrapScroll(BuildContext context, Widget child) =>
+      isTablet(context) ? SingleChildScrollView(child: child) : child;
+
+  Widget _tipsArea(BuildContext context, Widget tips) => isTablet(context)
+      ? SizedBox(height: 420.h, child: tips)
+      : Expanded(child: tips);
 
   Widget _buildHero(_Variant v) {
     final art = v.art;
@@ -732,7 +744,7 @@ class _TipCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(14.w),
+        padding: EdgeInsets.all(tablet ? 18.w : 14.w),
         decoration: BoxDecoration(
           color: AppPalette.surface,
           borderRadius: BorderRadius.circular(20.r),
@@ -749,8 +761,8 @@ class _TipCard extends StatelessWidget {
                 children: [
                   Image.asset(
                     icon,
-                    width: 64.w,
-                    height: 64.w,
+                    width: 76.w,
+                    height: 76.w,
                     fit: BoxFit.contain,
                   ),
                   SizedBox(width: 14.w),
@@ -765,7 +777,7 @@ class _TipCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: AppPalette.textPrimary,
-                            fontSize: 20.sp,
+                            fontSize: 24.sp,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w700,
                             height: 1.3,
@@ -778,7 +790,7 @@ class _TipCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: AppPalette.textMuted,
-                            fontSize: 16.sp,
+                            fontSize: 19.sp,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w500,
                             height: 1.3,

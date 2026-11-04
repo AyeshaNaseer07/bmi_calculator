@@ -147,6 +147,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Bottom clears the nav bar's raised + button.
                           padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 24.h),
                           child: Column(
+                            // Premium users have no ads card below, so centre
+                            // the BMI card in the free space.
+                            mainAxisAlignment: isPremium
+                                ? MainAxisAlignment.center
+                                : MainAxisAlignment.start,
                             children: [
                               Flexible(
                                 child: FittedBox(
@@ -192,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 alignment: Alignment.topCenter,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  alignment: AlignmentDirectional.topStart,
+                                  alignment: Alignment.topCenter,
                                   child: SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width -
@@ -726,13 +731,9 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color inactiveBg,
     required Color activeBg,
   }) {
-    final leftAlign = isTablet(context);
     return Container(
       height: 40.h,
-      alignment: leftAlign
-          ? AlignmentDirectional.centerStart
-          : Alignment.center,
-      padding: leftAlign ? EdgeInsets.symmetric(horizontal: 16.w) : null,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         // Pastel fills are light-only; dark mode tints with the category colour.
         color: isCurrent ? activeBg : inactiveBg,
@@ -740,7 +741,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Text(
         text,
-        textAlign: leftAlign ? TextAlign.start : TextAlign.center,
+        textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 12.sp,
           fontFamily: 'Outfit',

@@ -822,7 +822,7 @@ class MealDetailScreen extends StatelessWidget {
                 children: [
                   Image.asset(AppAssets.flowerIcon, width: 22.w, height: 24.h),
                   SizedBox(width: 8.w),
-                  Flexible(
+                  Expanded(
                     child: Text(
                       'ingredients'.tr,
                       style: headStyle(18, weight: FontWeight.w600),
@@ -831,22 +831,16 @@ class MealDetailScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Text(
-                        'items_count'.trParams({
-                          'count': '${meal.ingredients.length}',
-                        }),
-                        style: bodyStyle(
-                          14,
-                          color: _kDeep,
-                          weight: FontWeight.w700,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  Text(
+                    'items_count'.trParams({
+                      'count': '${meal.ingredients.length}',
+                    }),
+                    style: bodyStyle(
+                      14,
+                      color: _kDeep,
+                      weight: FontWeight.w700,
                     ),
+                    maxLines: 1,
                   ),
                   SizedBox(width: 8.w),
                   Icon(Icons.arrow_forward_ios, size: 15.sp),
