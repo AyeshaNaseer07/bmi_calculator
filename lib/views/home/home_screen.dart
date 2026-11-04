@@ -145,7 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             Get.find<AppController>().isPremium.value;
                         return Padding(
                           // Bottom clears the nav bar's raised + button.
-                          padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 24.h),
+                          padding: EdgeInsets.fromLTRB(
+                            18.w,
+                            2.h,
+                            18.w,
+                            // Premium: extra room so the centred card sits
+                            // above the nav bar's overlap, not on it.
+                            isPremium ? 145.h : 24.h,
+                          ),
                           child: Column(
                             // Premium users have no ads card below, so centre
                             // the BMI card in the free space.
