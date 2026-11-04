@@ -7,6 +7,8 @@ import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../log_transition.dart';
+import '../models/remote_model.dart';
 import 'price_service.dart';
 import 'storage_service.dart';
 
@@ -55,6 +57,10 @@ class SubscriptionService {
     // A purchase in progress decides the status itself.
     if (_purchase != null) return null;
     try {
+      if (Platform.isIOS && await _storeDeniesEntitlement()) {
+        await _setPremium(false);
+        return false;
+      }
       final active = (await _activeProductIds()).isNotEmpty;
       await _setPremium(active);
       return active;
@@ -80,6 +86,9 @@ class SubscriptionService {
       switch (outcome) {
         case _Outcome.purchased:
           await _setPremium(true);
+          if (Platform.isIOS) {
+            unawaited(PlatformCode.logTransactionToFirebase(txt: id));
+          }
           return true;
         case _Outcome.pending:
           // Ask to Buy and similar: the purchase stream unlocks it later.
@@ -217,6 +226,20 @@ class SubscriptionService {
     } finally {
       _restored = null;
     }
+  }
+
+  static const _knownProductIds = [
+    RemoteModel.defaultWeeklyProductId,
+    RemoteModel.defaultYearlyProductId,
+  ];
+
+  /// True only when the App Store says the entitlement was refunded,
+  /// revoked or lapsed. Unknown / none results never revoke.
+  Future<bool> _storeDeniesEntitlement() async {
+    final ids = {..._knownProductIds, ?_purchaseProductId}.toList();
+    final status = await PlatformCode.getSubscriptionStatus(ids);
+    debugPrint('Store entitlement status: $status');
+    return status == 'revoked' || status == 'expired';
   }
 
   Future<void> _setPremium(bool premium) async {

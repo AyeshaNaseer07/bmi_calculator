@@ -1,15 +1,11 @@
 import Flutter
 import UIKit
 import UserNotifications
+import StoreKit
+import FirebaseAnalytics
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
-  
-   // MARK: 2. Transaction Log Channel
-    let transactionChannel = FlutterMethodChannel(
-      name: "bmi.calculator/log_transaction",
-      binaryMessenger: controller.binaryMessenger
-    )
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -22,7 +18,18 @@ import UserNotifications
       SceneDelegate.pendingShortcutType = shortcutItem.type
     }
     SceneDelegate.clearDynamicShortcuts()
-     transactionChannel.setMethodCallHandler { [weak self] call, result in
+
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+  private var transactionChannel: FlutterMethodChannel?
+
+  private func setupTransactionChannel(messenger: FlutterBinaryMessenger) {
+    let transactionChannel = FlutterMethodChannel(
+      name: "bmi.calculator/log_transaction",
+      binaryMessenger: messenger
+    )
+    self.transactionChannel = transactionChannel
+    transactionChannel.setMethodCallHandler { [weak self] call, result in
       guard let self = self else { return }
 
       if call.method == "logStoreKitTransaction" {
@@ -70,9 +77,35 @@ import UserNotifications
         result(FlutterMethodNotImplemented)
       }
     }
-
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+
+  /// `active`, `revoked`, `expired`, `none` or `unknown` for [productIds].
+  @available(iOS 15.0, *)
+  func subscriptionStatus(productIds: [String]) async -> String {
+    let ids = Set(productIds)
+    var sawInactive: String?
+
+    for await result in Transaction.currentEntitlements {
+      guard case .verified(let transaction) = result,
+            ids.contains(transaction.productID) else { continue }
+      if transaction.revocationDate != nil { sawInactive = "revoked"; continue }
+      if let expiry = transaction.expirationDate, expiry < Date() {
+        sawInactive = "expired"; continue
+      }
+      return "active"
+    }
+    if let sawInactive = sawInactive { return sawInactive }
+
+    // Not a current entitlement: look at the latest transaction per product.
+    for id in ids {
+      guard let latest = await Transaction.latest(for: id),
+            case .verified(let transaction) = latest else { continue }
+      if transaction.revocationDate != nil { return "revoked" }
+      if let expiry = transaction.expirationDate, expiry < Date() { return "expired" }
+    }
+    return "none"
+  }
+
   @available(iOS 15.0, *)
   func fetchActiveSubscription(productId: String) async {
     do {
@@ -85,7 +118,7 @@ import UserNotifications
             let isFirstPurchase = transaction.originalPurchaseDate == transaction.purchaseDate
 
             if isFirstPurchase {
-              Analytics.logTransaction(transaction)
+              logPurchase(transaction)
               print("🆕 First Purchase: \(transaction.productID)")
             } else {
               print("🔄 Restored Purchase: \(transaction.productID)")
@@ -106,6 +139,14 @@ import UserNotifications
     }
   }
 
+  @available(iOS 15.0, *)
+  private func logPurchase(_ transaction: Transaction) {
+    Analytics.logEvent(AnalyticsEventPurchase, parameters: [
+      AnalyticsParameterItemID: transaction.productID,
+      AnalyticsParameterTransactionID: String(transaction.id),
+    ])
+  }
+
   override func application(
     _ application: UIApplication,
     performActionFor shortcutItem: UIApplicationShortcutItem,
@@ -117,6 +158,7 @@ import UserNotifications
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    setupTransactionChannel(messenger: engineBridge.applicationRegistrar.messenger())
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "MaxNativeAdPlugin") {
       MaxNativeAdPlugin.register(with: registrar)
     }
