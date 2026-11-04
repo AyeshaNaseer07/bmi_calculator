@@ -25,10 +25,6 @@ final ValueNotifier<NumberKeypadTarget?> numberKeypadTarget = ValueNotifier(
   null,
 );
 
-/// Hooks a numeric text field up to the app keypad: shows it while [focus]
-/// has focus and types into [controller]. iOS only; elsewhere the field keeps
-/// the system number keyboard via [keyboardType]. Call [dispose] with the
-/// field's state.
 class NumberKeypadBinding {
   final TextEditingController controller;
   final FocusNode focus;
@@ -135,8 +131,6 @@ class NumberKeypadBinding {
   }
 }
 
-/// Put in the screen's `bottomNavigationBar`, so the page shrinks (and can
-/// scroll the field into view) while the keypad is up.
 class NumberKeypadHost extends StatelessWidget {
   const NumberKeypadHost({super.key});
 
@@ -146,16 +140,12 @@ class NumberKeypadHost extends StatelessWidget {
       valueListenable: numberKeypadTarget,
       builder: (context, target, _) {
         if (target == null) return const SizedBox.shrink();
-        // Part of the field, so key taps aren't a "tap outside" that ends
-        // editing.
         return TextFieldTapRegion(child: _NumberKeypad(target: target));
       },
     );
   }
 }
 
-/// Digits on the left; ⌫ at the top of the right column with a tall OK under
-/// it.
 class _NumberKeypad extends StatelessWidget {
   final NumberKeypadTarget target;
 
@@ -215,8 +205,6 @@ class _NumberKeypad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.paddingOf(context).bottom;
-    // Swallows taps on the gaps so they don't reach the app-wide
-    // "tap anywhere to dismiss the keyboard" handler.
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {},

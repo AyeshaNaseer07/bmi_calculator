@@ -7,9 +7,6 @@ import 'package:get/get.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/responsive.dart';
 
-/// "Premium Feature" prompt for a locked feature: a lock badge over the card,
-/// a [message] explaining what Premium unlocks, an "Unlock Premium" button
-/// that runs [onUnlock] and a "Not Now" that just closes it.
 class PremiumFeatureDialog extends StatelessWidget {
   final String message;
   final VoidCallback onUnlock;
@@ -124,8 +121,6 @@ class PremiumFeatureDialog extends StatelessWidget {
   }
 }
 
-/// Repeating 0 → 1 clock shared by the badge and button; stays at 0 with the
-/// system "reduce motion" setting.
 mixin _LoopAnimation<T extends StatefulWidget>
     on State<T>, SingleTickerProviderStateMixin<T> {
   late final AnimationController loop = AnimationController(
@@ -154,8 +149,6 @@ mixin _LoopAnimation<T extends StatefulWidget>
   double get pulse => 0.5 - 0.5 * math.cos(loop.value * 2 * math.pi);
 }
 
-/// Green lock badge that wiggles at the start of each cycle while its glow
-/// breathes.
 class _LockBadge extends StatefulWidget {
   final double size;
 
@@ -208,8 +201,6 @@ class _LockBadgeState extends State<_LockBadge>
   }
 }
 
-/// Green CTA that gently pulses, has a shine sweeping across it and an arrow
-/// nudging forward.
 class _UnlockButton extends StatefulWidget {
   final VoidCallback onTap;
 

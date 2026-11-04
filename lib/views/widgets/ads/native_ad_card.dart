@@ -92,9 +92,6 @@ class NativeAds {
     return true;
   }
 
-  /// Resolves once the ad for [placement] has loaded, failed, or [timeout]
-  /// has passed, so a screen can open with its ad already there instead of
-  /// racing the load. Starts the load if it isn't under way.
   static Future<void> waitForLoad(
     NativeAdPlacement placement, {
     required Duration timeout,

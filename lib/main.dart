@@ -108,15 +108,9 @@ const Size _phoneDesignSize = Size(375, 812);
 bool _isTabletScreen(Size screen) =>
     !screen.isEmpty && screen.shortestSide >= 600;
 
-// Tablets use the full width in portrait; landscape keeps the portrait width
-// so rows and cards don't stretch across the whole screen.
 double _contentWidthFor(Size screen) =>
     _isTabletScreen(screen) ? screen.shortestSide : screen.width;
 
-// Tablets scale the phone design up as far as the screen height allows, so
-// the design height stays at 812 (every phone layout still fits vertically)
-// and only the width grows. Measured on the content column, so landscape
-// scales the same as portrait.
 double _tabletScaleFor(Size screen) {
   final double width = _contentWidthFor(screen);
   return math.min(

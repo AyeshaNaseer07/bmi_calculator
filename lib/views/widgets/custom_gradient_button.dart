@@ -167,8 +167,6 @@ class CustomGradientButton extends StatelessWidget {
       );
     } else {
       final image = backgroundImage ?? AppAssets.btnRectangle;
-      // The pill image is stretched to fill the button, which squashes its
-      // rounded ends on wide tablet buttons; draw the gradient instead there.
       final useImageGradient =
           solidColor == null &&
           gradient == null &&

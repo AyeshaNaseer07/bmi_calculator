@@ -116,8 +116,6 @@ class MainBottomNavBar extends StatelessWidget {
     );
   }
 
-  /// On tablets each tab gets an equal slot, so the wide bar doesn't push
-  /// the outer tabs to the edges.
   Widget _slot(bool isTablet, Widget item) =>
       isTablet ? Expanded(child: Center(child: item)) : Flexible(child: item);
 

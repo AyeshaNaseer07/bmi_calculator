@@ -11,8 +11,6 @@ import '../../../main.dart';
 import 'app_open_ad_manager.dart';
 import 'applovin_sdk.dart';
 
-/// Places in the app that show an interstitial ad, each switched on/off and
-/// given its ad unit ID from Remote Config.
 enum InterstitialPlacement {
   splash,
 
@@ -24,10 +22,6 @@ enum InterstitialPlacement {
   calculator,
 }
 
-/// AppLovin MAX interstitials: loaded ahead of time for each placement and
-/// shown right before the screen moves on. Never for premium users.
-///
-/// MAX keeps one ad per ad unit ID, so placements sharing an ID share an ad.
 class InterstitialAdManager {
   InterstitialAdManager._();
   static final InterstitialAdManager instance = InterstitialAdManager._();
@@ -40,8 +34,6 @@ class InterstitialAdManager {
   bool get _showing => _showingNotifier.value;
   set _showing(bool v) => _showingNotifier.value = v;
 
-  /// Completes once no interstitial is on screen (immediately if none is).
-  /// Used to hold back system dialogs that would otherwise draw over the ad.
   Future<void> whenAdClosed() async {
     if (!_showing) return;
     final done = Completer<void>();
@@ -57,8 +49,6 @@ class InterstitialAdManager {
     }
   }
 
-  /// The ad covers the screen, so the next screen is put in place behind it
-  /// once it's up, giving it a moment to be fully on screen first.
   static const Duration _navigateBehindAdDelay = Duration(milliseconds: 350);
 
   bool get isShowing => _showing;
@@ -77,8 +67,6 @@ class InterstitialAdManager {
       return false;
     }
     return switch (placement) {
-      // first_time_* until onboarding has been completed once, second_time_*
-      // on every launch after that.
       InterstitialPlacement.splash =>
         _isOnboardingSeen
             ? _config.isSecondTimeSplashInterAdEnabled

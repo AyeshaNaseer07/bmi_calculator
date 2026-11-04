@@ -45,8 +45,6 @@ class _NextButtonState extends State<NextButton> {
         fontFamily: 'Outfit',
         fontWeight: FontWeight.w800,
       ),
-      // Keep text and arrow together (the pill is too narrow for the
-      // full-width layout that pins the arrow to the right edge).
       alignTrailingToEnd: false,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
       trailingIcon: MirrorOnRtl(

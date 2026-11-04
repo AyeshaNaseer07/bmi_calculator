@@ -7,8 +7,6 @@ import 'package:get/get.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/theme/app_palette.dart';
 
-/// Shown after a successful purchase or restore: glowing crown badge, title,
-/// short message and a Continue button. Eases in with a slight scale-up.
 class PremiumCongratsDialog extends StatelessWidget {
   final bool isRestore;
 
