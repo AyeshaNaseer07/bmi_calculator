@@ -49,9 +49,6 @@ abstract class AppAssets {
   static const String preIcon4 = '$_imagesBase/pre_icon4.webp';
   static const String preIcon5 = '$_imagesBase/pre_icon5.webp';
 
-  static const String homeIcon1 = '$_imagesBase/home_1.webp';
-  static const String homeIcon2 = '$_imagesBase/home_2.webp';
-  static const String homeIcon4 = '$_imagesBase/home_4.webp';
 
   // ── Bottom Nav ──
   static const String navHome = '$_imagesBase/nav_1.webp';
@@ -70,7 +67,6 @@ abstract class AppAssets {
   static const String bestValueCrown = '$_imagesBase/best_value_crown.webp';
   static const String profileIcon = '$_imagesBase/profile.webp';
   static const String bmiCalIcon = '$_imagesBase/bmi_cal_bg.webp';
-  static const String bmiCalBackIcon = '$_imagesBase/bmi_cal_back.webp';
   static const String ageBack = '$_imagesBase/age_back.webp';
   static const String ageForward = '$_imagesBase/age_forward.webp';
   static const String viewHistory = '$_imagesBase/view_his.webp';
@@ -144,10 +140,8 @@ abstract class AppAssets {
   static const String portionSizeHero = '$_imagesBase/portion_size.webp';
   static const String portionAddProtein = '$_imagesBase/add_protein.webp';
   static const String portionWholeGrain = '$_imagesBase/whole_grain.webp';
-  static const String portionHeart = '$_imagesBase/pro_heart.webp';
   static const String mealSlotLunch = '$_imagesBase/lunch.webp';
   static const String mealProgress = '$_imagesBase/progress.webp';
-  static const String icProfile = '$_imagesBase/ic_profile.webp';
 
   // Photos that exist already
   static const String photoVegetables = '$_imagesBase/vegs.webp';
@@ -169,7 +163,6 @@ abstract class AppAssets {
   static const String pulseIcon = '$_imagesBase/activity.webp';
   static const String moonIcon = '$_imagesBase/star.webp';
   static const String brainIcon = '$_imagesBase/brain.webp';
-  static const String glassTipIcon = '$_imagesBase/tip_icon.webp';
   static const String tipBulbIcon = '$_imagesBase/tip.webp';
   static const String glassEmpty = '$_imagesBase/empty_glass.webp';
   static const String glassFull = '$_imagesBase/half_glass.webp';
