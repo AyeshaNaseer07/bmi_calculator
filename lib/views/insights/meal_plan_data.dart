@@ -11,7 +11,7 @@ import 'meal_plan_underweight.dart';
 const Map<String, String> kMealPhotoOverrides = {};
 
 const String _meals = 'assets/images/meals';
-const String _fallbackPhoto = '$_meals/oatmeal_bowl.jpg';
+const String _fallbackPhoto = '$_meals/oatmeal_bowl.webp';
 const String _badges = 'assets/images/badges';
 
 /// Photo for each dish, by meal name (shared by all four BMI plans).
