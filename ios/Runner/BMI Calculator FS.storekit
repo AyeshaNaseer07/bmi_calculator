@@ -1,0 +1,107 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "1E9EE1FE",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6812737379",
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_developerTeamID" : "35C4LYN8J8",
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 815469317.42156196,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "22410006",
+      "localizations" : [
+
+      ],
+      "name" : "BMI Calculator Subscriptions",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "5.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6815617998",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Get Premium Access for One Week",
+              "displayName" : "Weekly Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.weekly.bmi.calculator.app",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Weekly Subscription",
+          "subscriptionGroupID" : "22410006",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "34.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6815618458",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Get Premium Access for One Year",
+              "displayName" : "Yearly Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.yearly.bmi.calculator.app",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly Subscription",
+          "subscriptionGroupID" : "22410006",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
