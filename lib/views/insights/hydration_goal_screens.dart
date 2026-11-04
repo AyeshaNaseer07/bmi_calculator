@@ -169,10 +169,10 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                     ),
                     SizedBox(width: 8.w),
                     Flexible(
-                      flex: 2,
+                      flex: 3,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
+                          horizontal: 2,
                           vertical: 2,
                         ),
                         decoration: ShapeDecoration(
@@ -200,7 +200,7 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 8.w),
+                    Spacer(),
                     Flexible(
                       flex: 2,
                       child: Text(

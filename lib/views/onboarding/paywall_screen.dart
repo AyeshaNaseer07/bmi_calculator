@@ -228,55 +228,61 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     SizedBox(height: 6.h),
 
                     // Title with wreaths
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          AppAssets.wreathRight,
-                          width: 22.56.w,
-                          height: 44.44.h,
-                          fit: BoxFit.contain,
-                        ),
-                        SizedBox(width: 8.w),
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'unlock'.tr,
-                                    style: TextStyle(
-                                      color: AppPalette.textPrimary,
-                                      fontSize: 32.sp,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w800,
+                    // Locked to LTR so the wreaths don't swap sides in RTL
+                    // languages; the title text keeps the real direction.
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            AppAssets.wreathRight,
+                            width: 22.56.w,
+                            height: 44.44.h,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: 8.w),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'unlock'.tr,
+                                      style: TextStyle(
+                                        color: AppPalette.textPrimary,
+                                        fontSize: 32.sp,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'premium'.tr,
-                                    style: TextStyle(
-                                      color: _green,
-                                      fontSize: 32.sp,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w800,
+                                    TextSpan(
+                                      text: 'premium'.tr,
+                                      style: TextStyle(
+                                        color: _green,
+                                        fontSize: 32.sp,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                textDirection: Directionality.of(context),
                               ),
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Image.asset(
-                          AppAssets.wreathLeft,
-                          width: 22.56.w,
-                          height: 44.44.h,
-                          fit: BoxFit.contain,
-                        ),
-                      ],
+                          SizedBox(width: 8.w),
+                          Image.asset(
+                            AppAssets.wreathLeft,
+                            width: 22.56.w,
+                            height: 44.44.h,
+                            fit: BoxFit.contain,
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 10.h),
 

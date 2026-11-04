@@ -147,11 +147,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     }
   }
 
-  PlanOffer _offer(SubscriptionPlan slot) => PriceService.offerFor(
-    slot,
-    _app.remoteConfigService,
-    PaywallType.week,
-  );
+  PlanOffer _offer(SubscriptionPlan slot) =>
+      PriceService.offerFor(slot, _app.remoteConfigService, PaywallType.week);
 
   // Per-day / per-month breakdown, same as the main paywall.
   String _period(PlanOffer o) => o.price == null
@@ -234,7 +231,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       ),
                     ),
                     SizedBox(height: 4.h),
-                    _title(),
+                    _title(context),
                     SizedBox(height: 10.h),
                     _badge(),
                     SizedBox(height: 8.h),
@@ -402,45 +399,51 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     );
   }
 
-  Widget _title() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(AppAssets.wreathRight, height: 44.h, fit: BoxFit.contain),
-        SizedBox(width: 6.w),
-        Flexible(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'unlock'.tr,
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 30.sp,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w800,
+  Widget _title(BuildContext context) {
+    // Locked to LTR so the wreaths don't swap sides in RTL languages; the
+    // title text keeps the real direction.
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppAssets.wreathRight, height: 44.h, fit: BoxFit.contain),
+          SizedBox(width: 6.w),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'unlock'.tr,
+                      style: TextStyle(
+                        color: _navy,
+                        fontSize: 30.sp,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: 'premium'.tr,
-                    style: TextStyle(
-                      color: _green,
-                      fontSize: 30.sp,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w800,
+                    TextSpan(
+                      text: 'premium'.tr,
+                      style: TextStyle(
+                        color: _green,
+                        fontSize: 30.sp,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                maxLines: 1,
+                textDirection: Directionality.of(context),
               ),
-              maxLines: 1,
             ),
           ),
-        ),
-        SizedBox(width: 6.w),
-        Image.asset(AppAssets.wreathLeft, height: 44.h, fit: BoxFit.contain),
-      ],
+          SizedBox(width: 6.w),
+          Image.asset(AppAssets.wreathLeft, height: 44.h, fit: BoxFit.contain),
+        ],
+      ),
     );
   }
 
