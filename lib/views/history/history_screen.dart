@@ -202,7 +202,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             color: AppPalette.textSecondary,
             fontFamily: 'Inter',
           ),
-          maxLines: 2,
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
         actionsPadding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),

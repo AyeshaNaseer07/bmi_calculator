@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../../core/utils/responsive.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../widgets/app_background.dart';
 import 'hydration_screens.dart';
@@ -579,7 +580,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
         if (hasWhy) SizedBox(height: collapsedH.h + 14.h),
         Text(
           v.planTitle,
-          textAlign: TextAlign.left,
+          textAlign: TextAlign.start,
           style: TextStyle(
             color: AppPalette.textPrimary,
             fontSize: 18.sp,
@@ -725,6 +726,7 @@ class _TipCard extends StatelessWidget {
       fontWeight: FontWeight.w500,
       height: 1.37,
     );
+    final tablet = isTablet(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -742,58 +744,103 @@ class _TipCard extends StatelessWidget {
             ),
           ],
         ),
-        child: LayoutBuilder(
-          builder: (context, c) => FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: AlignmentDirectional.centerStart,
-            child: SizedBox(
-              width: c.maxWidth,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: tablet
+            ? Row(
                 children: [
                   Image.asset(
                     icon,
-                    width: 54.w,
-                    height: 54.w,
+                    width: 64.w,
+                    height: 64.w,
                     fit: BoxFit.contain,
                   ),
-                  SizedBox(height: 10.h),
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: AppPalette.textPrimary,
-                      fontSize: 14.50.sp,
-                      fontFamily: 'Plus Jakarta Sans',
-                      fontWeight: FontWeight.w700,
-                      height: 1.38,
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppPalette.textPrimary,
+                            fontSize: 20.sp,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w700,
+                            height: 1.3,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          subtitle,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppPalette.textMuted,
+                            fontSize: 16.sp,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w500,
+                            height: 1.3,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 4.h),
-                  Stack(
-                    children: [
-                      Text('\n', style: subStyle),
-                      Text(
-                        subtitle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppPalette.textMuted,
-                          fontSize: 12.sp,
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontWeight: FontWeight.w500,
-                          height: 1.37,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
+              )
+            : LayoutBuilder(
+                builder: (context, c) => FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: SizedBox(
+                    width: c.maxWidth,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          icon,
+                          width: 54.w,
+                          height: 54.w,
+                          fit: BoxFit.contain,
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppPalette.textPrimary,
+                            fontSize: 14.50.sp,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w700,
+                            height: 1.38,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Stack(
+                          children: [
+                            Text('\n', style: subStyle),
+                            Text(
+                              subtitle,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppPalette.textMuted,
+                                fontSize: 12.sp,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w500,
+                                height: 1.37,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

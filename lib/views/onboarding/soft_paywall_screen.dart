@@ -35,9 +35,6 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   bool _loading = false;
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
-  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.cached(
-    PaywallType.week,
-  );
 
   @override
   void initState() {
@@ -57,11 +54,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   }
 
   Future<void> _loadPrices() async {
-    final prices = await PriceService.load(
-      _app.remoteConfigService,
-      PaywallType.week,
-    );
-    if (mounted) setState(() => _prices = prices);
+    await PriceService.load(_app.remoteConfigService, PaywallType.week);
+    if (mounted) setState(() {});
   }
 
   @override
@@ -156,7 +150,6 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   PlanOffer _offer(SubscriptionPlan slot) => PriceService.offerFor(
     slot,
     _app.remoteConfigService,
-    _prices,
     PaywallType.week,
   );
 

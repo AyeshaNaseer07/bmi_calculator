@@ -726,9 +726,13 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color inactiveBg,
     required Color activeBg,
   }) {
+    final leftAlign = isTablet(context);
     return Container(
       height: 40.h,
-      alignment: Alignment.center,
+      alignment: leftAlign
+          ? AlignmentDirectional.centerStart
+          : Alignment.center,
+      padding: leftAlign ? EdgeInsets.symmetric(horizontal: 16.w) : null,
       decoration: BoxDecoration(
         // Pastel fills are light-only; dark mode tints with the category colour.
         color: isCurrent ? activeBg : inactiveBg,
@@ -736,7 +740,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Text(
         text,
-        textAlign: TextAlign.center,
+        textAlign: leftAlign ? TextAlign.start : TextAlign.center,
         style: TextStyle(
           fontSize: 12.sp,
           fontFamily: 'Outfit',

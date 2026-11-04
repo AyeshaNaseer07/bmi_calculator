@@ -233,13 +233,43 @@ class WeightTrackerController extends GetxController {
     }
   }
 
+  /// The goal is a plan for one period: this week (Mon-Sun), the month the
+  /// goal was entered in through the next month, or the year it was entered
+  /// in through the next year. The goal is entered with a weight, so the
+  /// latest record's date anchors the plan.
   List<FlSpot> getGoalSpots() {
     final goal = goalWeight.value;
     if (goal <= 0) return [];
     final labels = getXAxisLabels();
     if (labels.isEmpty) return [];
-    final maxX = (labels.length - 1).toDouble();
-    return [FlSpot(0, goal), FlSpot(maxX, goal)];
+    final lastX = (labels.length - 1).toDouble();
+    final tf = selectedTimeframe.value.toLowerCase();
+
+    if (tf == 'week' || weightHistory.isEmpty) {
+      return [FlSpot(0, goal), FlSpot(lastX, goal)];
+    }
+
+    final entered = weightHistory
+        .map((r) => r.date)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+    final now = DateTime.now();
+
+    final int slot;
+    if (tf == 'month') {
+      final monthsAgo =
+          (now.year - entered.year) * 12 + now.month - entered.month;
+      slot = _monthsBack - monthsAgo;
+    } else {
+      slot = _yearsBack - (now.year - entered.year);
+    }
+
+    final start = slot.toDouble();
+    final end = (slot + 1).toDouble();
+    if (end < 0 || start > lastX) return [];
+    return [
+      FlSpot(start.clamp(0, lastX), goal),
+      FlSpot(end.clamp(0, lastX), goal),
+    ];
   }
 
   List<String> getXAxisLabels() {

@@ -72,14 +72,14 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Positioned(
+                  PositionedDirectional(
                     top: -20.h,
-                    right: 0,
+                    end: 0,
                     child: Image.asset(
                       AppAssets.bmiCalIcon,
                       height: 160.h,
                       fit: BoxFit.contain,
-                      alignment: Alignment.topRight,
+                      alignment: AlignmentDirectional.topEnd,
                     ),
                   ),
 

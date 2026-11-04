@@ -155,7 +155,7 @@ class SleepWellScreen extends StatelessWidget {
                                 color: _kDeep,
                                 weight: FontWeight.w800,
                               ).copyWith(letterSpacing: 0.4),
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

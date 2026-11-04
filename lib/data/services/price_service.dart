@@ -72,14 +72,27 @@ class PlanOffer {
 }
 
 class PriceService {
-  static final Map<PaywallType, Map<SubscriptionPlan, PlanPrice>> _cache = {};
   static final Map<String, ProductDetails> _products = {};
   static final RxMap<String, bool> trialEligibility = <String, bool>{}.obs;
   static final Map<PaywallType, Future<Map<SubscriptionPlan, PlanPrice>>>
   _inFlight = {};
 
+  /// Prices for whichever of this paywall's current product ids are loaded.
+  /// Keyed by product id, so a wrong id never borrows another product's price.
   static Map<SubscriptionPlan, PlanPrice> cached(PaywallType paywall) =>
-      _cache[paywall] ?? const {};
+      _pricesFor(RemoteConfigService.to, paywall);
+
+  static Map<SubscriptionPlan, PlanPrice> _pricesFor(
+    RemoteConfigService rc,
+    PaywallType paywall,
+  ) {
+    final result = <SubscriptionPlan, PlanPrice>{};
+    for (final slot in [SubscriptionPlan.monthly, SubscriptionPlan.yearly]) {
+      final p = _products[rc.getProductId(slot, paywall)];
+      if (p != null) result[slot] = _price(p);
+    }
+    return result;
+  }
 
   static void preload(RemoteConfigService rc) {
     for (final type in PaywallType.values) {
@@ -105,36 +118,24 @@ class PriceService {
     RemoteConfigService rc,
     PaywallType paywall,
   ) async {
-    final cached = _cache[paywall];
-    if (cached != null) {
-      await refreshTrialEligibility();
-      return cached;
-    }
-    final result = <SubscriptionPlan, PlanPrice>{};
     try {
-      if (!await InAppPurchase.instance.isAvailable()) return result;
-      final ids = {
-        SubscriptionPlan.monthly: rc.getProductId(
-          SubscriptionPlan.monthly,
-          paywall,
-        ),
-        SubscriptionPlan.yearly: rc.getProductId(
-          SubscriptionPlan.yearly,
-          paywall,
-        ),
-      }..removeWhere((_, id) => id.isEmpty);
-      if (ids.isEmpty) return result;
-      await _query(ids.values.toSet());
-      for (final entry in ids.entries) {
-        final p = _products[entry.value];
-        if (p != null) result[entry.key] = _price(p);
+      if (!await InAppPurchase.instance.isAvailable()) {
+        return _pricesFor(rc, paywall);
       }
-      if (result.length == ids.length) _cache[paywall] = result;
+      final ids = {
+        for (final slot in [SubscriptionPlan.monthly, SubscriptionPlan.yearly])
+          rc.getProductId(slot, paywall).trim(),
+      }..remove('');
+      // Each id is queried on its own: one invalid id must not affect the
+      // others. Already-loaded ids are not fetched again.
+      await Future.wait(
+        ids.where((id) => !_products.containsKey(id)).map(fetchProduct),
+      );
       await refreshTrialEligibility();
     } catch (e) {
       debugPrint('Price fetch failed: $e');
     }
-    return result;
+    return _pricesFor(rc, paywall);
   }
 
   static ProductDetails? productFor(String productId) => _products[productId];
@@ -142,7 +143,6 @@ class PriceService {
   static PlanOffer offerFor(
     SubscriptionPlan slot,
     RemoteConfigService rc,
-    Map<SubscriptionPlan, PlanPrice> prices,
     PaywallType paywall,
   ) {
     final productId = rc.getProductId(slot, paywall);
@@ -156,12 +156,20 @@ class PriceService {
         productId: productId,
         fallback: PlanType.values.byName(slot.name),
       ),
-      price: prices[slot],
+      price: product == null ? null : _price(product),
     );
   }
 
+  /// Never throws; an unknown or failing id simply yields null.
   static Future<ProductDetails?> fetchProduct(String productId) async {
-    if (!_products.containsKey(productId)) await _query({productId});
+    if (productId.isEmpty) return null;
+    if (!_products.containsKey(productId)) {
+      try {
+        await _query({productId});
+      } catch (e) {
+        debugPrint('Product query failed for $productId: $e');
+      }
+    }
     return _products[productId];
   }
 
@@ -171,6 +179,9 @@ class PriceService {
         .timeout(const Duration(seconds: 10));
     if (response.error != null) {
       debugPrint('Product query error: ${response.error}');
+    }
+    if (response.notFoundIDs.isNotEmpty) {
+      debugPrint('Products not found in store: ${response.notFoundIDs}');
     }
     final byId = <String, List<ProductDetails>>{};
     for (final p in response.productDetails) {

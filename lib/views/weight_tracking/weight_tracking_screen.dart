@@ -85,31 +85,37 @@ class WeightTrackingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Current Weight
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'current_weight_2'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textPrimary,
-                                fontSize: 14.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'current_weight_2'.tr,
+                                style: TextStyle(
+                                  color: AppPalette.textPrimary,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              currentStr,
-                              style: TextStyle(
-                                color: const Color(0xFF33D2AB),
-                                fontSize: 24.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
+                              SizedBox(height: 2.h),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  currentStr,
+                                  style: TextStyle(
+                                    color: const Color(0xFF33D2AB),
+                                    fontSize: 24.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
 
                         // Center Ring Gauge
@@ -166,31 +172,37 @@ class WeightTrackingScreen extends StatelessWidget {
                         ),
 
                         // Goal Weight
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'goal_weight_2'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textPrimary,
-                                fontSize: 14.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                'goal_weight_2'.tr,
+                                style: TextStyle(
+                                  color: AppPalette.textPrimary,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              goalStr,
-                              style: TextStyle(
-                                color: const Color(0xFFF97316),
-                                fontSize: 24.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
+                              SizedBox(height: 2.h),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: AlignmentDirectional.centerEnd,
+                                child: Text(
+                                  goalStr,
+                                  style: TextStyle(
+                                    color: const Color(0xFFF97316),
+                                    fontSize: 24.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -234,19 +246,23 @@ class WeightTrackingScreen extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.all(6.w),
-                              decoration: BoxDecoration(
-                                color: AppPalette.surfaceMint,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  padding: EdgeInsets.all(6.w),
+                                  decoration: BoxDecoration(
+                                    color: AppPalette.surfaceMint,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
 
-                              child: Row(
-                                children: ['week'.tr, 'month'.tr, 'year'.tr]
-                                    .map((tab) {
+                                  child: Row(
+                                    children: ['week', 'month', 'year'].map((
+                                      tab,
+                                    ) {
                                       final isSelected =
-                                          timeframe.toLowerCase() ==
-                                          tab.toLowerCase();
+                                          timeframe.toLowerCase() == tab;
                                       return GestureDetector(
                                         onTap: () =>
                                             controller.setTimeframe(tab),
@@ -274,10 +290,15 @@ class WeightTrackingScreen extends StatelessWidget {
                                                   ]
                                                 : null,
                                           ),
-                                          child: SizedBox(
-                                            width: 37.w,
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                              minWidth: 37.w,
+                                            ),
                                             child: Text(
-                                              tab,
+                                              tab.tr,
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 12.sp,
                                                 fontWeight: FontWeight.w500,
@@ -286,13 +307,13 @@ class WeightTrackingScreen extends StatelessWidget {
                                                     ? const Color(0xFF33D2AB)
                                                     : AppPalette.textSecondary,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
                                       );
-                                    })
-                                    .toList(),
+                                    }).toList(),
+                                  ),
+                                ),
                               ),
                             ),
                           ],

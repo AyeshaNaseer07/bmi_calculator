@@ -34,9 +34,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
   bool _fromOnboarding = false;
-  Map<SubscriptionPlan, PlanPrice> _prices = PriceService.cached(
-    PaywallType.onboarding,
-  );
 
   static const Color _green = Color(0xFF0AA37D);
 
@@ -64,14 +61,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   Future<void> _loadPrices() async {
-    final prices = await PriceService.load(
+    await PriceService.load(
       _appController.remoteConfigService,
       PaywallType.onboarding,
     );
-    if (!mounted) return;
-    setState(() {
-      _prices = prices;
-    });
+    if (mounted) setState(() {});
   }
 
   void _initCrossDelay() {
@@ -180,7 +174,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
   PlanOffer _offer(SubscriptionPlan slot) => PriceService.offerFor(
     slot,
     _appController.remoteConfigService,
-    _prices,
     PaywallType.onboarding,
   );
 

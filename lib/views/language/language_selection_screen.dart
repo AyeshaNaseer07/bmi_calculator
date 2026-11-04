@@ -11,6 +11,7 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/remote_model.dart';
 import '../../data/services/localization_service.dart';
 import '../../data/services/remote_config_service.dart';
+import '../../data/services/storage_service.dart';
 import '../../notifications/local_notification_scheduler.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
@@ -40,6 +41,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   final GlobalKey _firstTileKey = GlobalKey();
 
   _HandPhase _handPhase = _HandPhase.tapping;
+  int _selectedIndex = 0;
+  final ScrollController _scrollController = ScrollController();
 
   late AnimationController _handController;
 
@@ -54,7 +57,20 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
   void initState() {
     super.initState();
     _selectedLang = _appController.selectedLanguage.value;
-    _hasSelected = widget.fromProfile;
+    final hasSaved = Get.find<StorageService>().hasSavedLanguage();
+    _hasSelected = widget.fromProfile || hasSaved;
+    _selectedIndex = LocalizationService.supportedLanguages
+        .indexWhere((l) => l.code == _selectedLang)
+        .clamp(0, LocalizationService.supportedLanguages.length - 1);
+    if (hasSaved && !widget.fromProfile) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || !_scrollController.hasClients) return;
+        final target = _selectedIndex * (60.h);
+        _scrollController.jumpTo(
+          target.clamp(0.0, _scrollController.position.maxScrollExtent),
+        );
+      });
+    }
     if (widget.fromProfile) _handPhase = _HandPhase.hidden;
 
     _handController = AnimationController(
@@ -84,6 +100,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _handController.dispose();
     _moveController.dispose();
     super.dispose();
@@ -91,6 +108,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   void _onLanguageTap(String code) {
     final flyHand = _handPhase == _HandPhase.tapping;
+    if (flyHand) {
+      _selectedIndex = LocalizationService.supportedLanguages.indexWhere(
+        (l) => l.code == code,
+      );
+    }
     setState(() {
       _selectedLang = code;
       _hasSelected = true;
@@ -206,18 +228,23 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
           key: _doneButtonKey,
           onTap: _onDone,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
+            constraints: BoxConstraints(minHeight: 36.h),
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: _doneChipColor,
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
               'done'.tr,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: _doneTextColor,
                 fontSize: 16.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
+                height: 1.6,
+                leadingDistribution: TextLeadingDistribution.even,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -330,6 +357,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                   // Language tiles
                   Expanded(
                     child: SingleChildScrollView(
+                      controller: _scrollController,
                       physics: const BouncingScrollPhysics(),
                       padding: EdgeInsets.symmetric(horizontal: 24.w),
                       child: Stack(
@@ -346,7 +374,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                   final isSelected =
                                       _hasSelected &&
                                       _selectedLang == lang.code;
-                                  final isFirstItem = index == 0;
+                                  final isFirstItem = index == _selectedIndex;
 
                                   return Padding(
                                     padding: EdgeInsets.only(bottom: 12.h),
@@ -412,7 +440,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                             Positioned(
                               left: 0,
                               right: 0,
-                              top: 0,
+                              top: _selectedIndex * 60.h,
                               height: 50.h,
                               child: IgnorePointer(
                                 child: _TapHandHint(

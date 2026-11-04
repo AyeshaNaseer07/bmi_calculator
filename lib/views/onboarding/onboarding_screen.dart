@@ -248,13 +248,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: List.generate(_totalPages, (index) {
                     final isActive = index == 0;
                     return Container(
-                      margin: EdgeInsets.only(
-                        right: index < _totalPages - 1 ? 6.w : 0,
-                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 4.w),
                       width: 8.w,
-                      height: 8.w,
+                      height: 8.h,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(4.r),
                         color: isActive
                             ? const Color(0xFF24CCA7)
                             : const Color(0xFFC7F3EA),

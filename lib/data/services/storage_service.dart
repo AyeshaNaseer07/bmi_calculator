@@ -40,6 +40,7 @@ class StorageService {
   // ── Language ──
   String getLanguage() => _prefs.getString(_keyLanguage) ?? 'en';
   Future<void> setLanguage(String code) => _prefs.setString(_keyLanguage, code);
+  bool hasSavedLanguage() => _prefs.containsKey(_keyLanguage);
 
   // ── Unit System ──
   UnitSystem getUnitSystem() {

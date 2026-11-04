@@ -738,7 +738,7 @@ class MealDetailScreen extends StatelessWidget {
                       child: Text(
                         'nutrition_summary'.tr,
                         style: headStyle(16, weight: FontWeight.w600),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
