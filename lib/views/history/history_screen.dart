@@ -372,17 +372,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        option.label,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: isSelected
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                          color: isSelected
-                              ? const Color(0xFF0F766E)
-                              : AppPalette.textPrimary,
-                          fontFamily: 'Inter',
+                      Flexible(
+                        child: Text(
+                          option.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: isSelected
+                                ? const Color(0xFF0F766E)
+                                : AppPalette.textPrimary,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                       if (isSelected)

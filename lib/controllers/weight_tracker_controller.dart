@@ -120,6 +120,12 @@ class WeightTrackerController extends GetxController {
     _recalculateProgress();
   }
 
+  // Chart window: past slots, the current one, then empty future slots.
+  static const int _monthsBack = 4;
+  static const int _monthsAhead = 2;
+  static const int _yearsBack = 3;
+  static const int _yearsAhead = 1;
+
   static List<String> get _monthNames => [
     'jan'.tr,
     'feb'.tr,
@@ -170,8 +176,8 @@ class WeightTrackerController extends GetxController {
       );
     } else if (tf == 'month') {
       final Map<int, double> monthMap = {};
-      for (int i = 5; i >= 0; i--) {
-        final slotIndex = 5 - i;
+      for (int i = _monthsBack; i >= -_monthsAhead; i--) {
+        final slotIndex = _monthsBack - i;
         final startOfMonth = DateTime(now.year, now.month - i, 1);
         final endOfMonth = DateTime(now.year, now.month - i + 1, 1);
         final inMonth = sorted
@@ -192,8 +198,8 @@ class WeightTrackerController extends GetxController {
               ..sort((a, b) => a.x.compareTo(b.x));
         return spots;
       }
-      final recent = sorted.length > 6
-          ? sorted.sublist(sorted.length - 6)
+      final recent = sorted.length > _monthsBack + 1
+          ? sorted.sublist(sorted.length - (_monthsBack + 1))
           : sorted;
       return List.generate(
         recent.length,
@@ -201,8 +207,8 @@ class WeightTrackerController extends GetxController {
       );
     } else {
       final Map<int, double> yearMap = {};
-      for (int i = 4; i >= 0; i--) {
-        final slotIndex = 4 - i;
+      for (int i = _yearsBack; i >= -_yearsAhead; i--) {
+        final slotIndex = _yearsBack - i;
         final targetYear = now.year - i;
         final inYear = sorted.where((r) => r.date.year == targetYear).toList();
         if (inYear.isNotEmpty) {
@@ -252,17 +258,17 @@ class WeightTrackerController extends GetxController {
         'sun'.tr,
       ];
     } else if (tf == 'month') {
-      // Show 6 month names leading up to current month (e.g. Apr, May, Jun, Jul, Aug, Sep)
+      // 4 months back, the current month and 2 ahead (e.g. Jul..Jan in Nov).
       final List<String> labels = [];
-      for (int i = 5; i >= 0; i--) {
+      for (int i = _monthsBack; i >= -_monthsAhead; i--) {
         final d = DateTime(now.year, now.month - i, 1);
         labels.add(_monthNames[d.month - 1]);
       }
       return labels;
     } else {
-      // Show 5 years leading up to current year (e.g. 2022, 2023, 2024, 2025, 2026)
+      // 3 years back, the current year and 1 ahead (e.g. 2023..2027 in 2026).
       final List<String> labels = [];
-      for (int i = 4; i >= 0; i--) {
+      for (int i = _yearsBack; i >= -_yearsAhead; i--) {
         labels.add((now.year - i).toString());
       }
       return labels;

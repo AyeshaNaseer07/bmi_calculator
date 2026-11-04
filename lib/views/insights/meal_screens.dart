@@ -824,12 +824,15 @@ class MealDetailScreen extends StatelessWidget {
                 children: [
                   Image.asset(AppAssets.flowerIcon, width: 22.w, height: 24.h),
                   SizedBox(width: 8.w),
-                  Text(
-                    'ingredients'.tr,
-                    style: headStyle(18, weight: FontWeight.w600),
-                    maxLines: 1,
+                  Flexible(
+                    child: Text(
+                      'ingredients'.tr,
+                      style: headStyle(18, weight: FontWeight.w600),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  Spacer(),
+                  SizedBox(width: 8.w),
                   Expanded(
                     child: Align(
                       alignment: AlignmentDirectional.centerEnd,

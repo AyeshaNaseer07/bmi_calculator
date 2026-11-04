@@ -40,16 +40,21 @@ class StayActiveScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: const Color(0xFF141B2B),
-                      fontSize: 14.sp,
-                      fontFamily: 'Plus Jakarta Sans',
-                      fontWeight: FontWeight.w600,
-                      height: 1.43,
+                  Flexible(
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: const Color(0xFF141B2B),
+                        fontSize: 14.sp,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w600,
+                        height: 1.43,
+                      ),
                     ),
                   ),
+                  SizedBox(width: 6.w),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
@@ -73,6 +78,7 @@ class StayActiveScreen extends StatelessWidget {
                             color: Color(0xFF00714D),
                             weight: FontWeight.w500,
                           ),
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

@@ -466,8 +466,8 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
           else
             Container(
               width: double.infinity,
-              height: 28.h,
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              height: 32.h,
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 1),
               decoration: BoxDecoration(
                 color: v.barBg,
                 borderRadius: BorderRadius.circular(9999),

@@ -158,62 +158,71 @@ class _DailyGoalScreenState extends State<DailyGoalScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 120.w,
+                    Flexible(
+                      flex: 3,
                       child: Text(
                         'daily_water_intake'.tr,
                         style: headStyle(
                           17,
                           weight: FontWeight.w700,
                         ).copyWith(height: 1.15),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(width: 10.w),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFFF0FDFA),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            width: 1,
-                            color: const Color(0xFFCCFBF1),
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFFF0FDFA),
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              width: 1,
+                              color: const Color(0xFFCCFBF1),
+                            ),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      child: Text(
-                        'recommended_caps'.tr,
-                        style: TextStyle(
-                          color: const Color(0xFF0F766E),
-                          fontSize: 10.sp,
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontWeight: FontWeight.w600,
-                          height: 1.50,
-                          letterSpacing: 0.25,
+                        child: Text(
+                          'recommended_caps'.tr,
+                          style: TextStyle(
+                            color: const Color(0xFF0F766E),
+                            fontSize: 10.sp,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w600,
+                            height: 1.50,
+                            letterSpacing: 0.25,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Spacer(),
-                    Text(
-                      'glasses_progress'.trParams({
-                        'glasses': '$_glasses',
-                        'goal': '$_goal',
-                      }),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: const Color(0xFF059669),
-                        fontSize: 12.sp,
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontWeight: FontWeight.w800,
-                        height: 1.33,
-                        letterSpacing: -0.25,
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      flex: 2,
+                      child: Text(
+                        'glasses_progress'.trParams({
+                          'glasses': '$_glasses',
+                          'goal': '$_goal',
+                        }),
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          color: const Color(0xFF059669),
+                          fontSize: 12.sp,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w800,
+                          height: 1.33,
+                          letterSpacing: -0.25,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

@@ -628,37 +628,42 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                       : null,
                 ),
                 if (best)
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 2.5.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFB800),
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          AppAssets.bestValueCrown,
-                          width: 9.w,
-                          height: 9.w,
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 2.5.h,
                         ),
-                        SizedBox(width: 3.w),
-                        Flexible(
-                          child: Text(
-                            'best_value'.tr,
-                            style: TextStyle(
-                              fontSize: 7.5.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFB800),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              AppAssets.bestValueCrown,
+                              width: 9.w,
+                              height: 9.w,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                            SizedBox(width: 3.w),
+                            Flexible(
+                              child: Text(
+                                'best_value'.tr,
+                                style: TextStyle(
+                                  fontSize: 7.5.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
               ],
@@ -666,6 +671,8 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
             SizedBox(height: 6.h),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: const Color(0xFF374151),
                 fontSize: 13.sp,
