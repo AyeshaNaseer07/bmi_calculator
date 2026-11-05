@@ -744,7 +744,7 @@ class _TipCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         // Narrower side padding = wider room for the title and subtitle.
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.w),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.w),
         decoration: BoxDecoration(
           color: AppPalette.surface,
           borderRadius: BorderRadius.circular(20.r),
@@ -802,7 +802,7 @@ class _TipCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: AppPalette.textMuted,
-                          fontSize: 12.sp,
+                          fontSize: 14.sp,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w500,
                           height: 1.37,
