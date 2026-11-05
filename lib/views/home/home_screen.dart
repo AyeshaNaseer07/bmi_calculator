@@ -199,6 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 8.h),
 
                             // BMI Categories Row (scales down to fit if space is tight)
+                            // Heading sits outside the scaled-down block so it
+                            // stays on the page's left edge on iPad.
+                            _buildCategoriesHeading(),
+                            SizedBox(height: 10.h),
                             Expanded(
                               child: Align(
                                 alignment: Alignment.topCenter,
@@ -656,35 +660,37 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(height: 44.h, width: 1.w, color: AppPalette.surfaceMuted);
   }
 
+  Widget _buildCategoriesHeading() {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: 'bmi'.tr,
+            style: TextStyle(
+              color: AppPalette.textPrimary,
+              fontSize: 20.sp,
+              fontFamily: 'Outfit',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(
+            text: 'categories'.tr,
+            style: TextStyle(
+              color: const Color(0xFF09B389),
+              fontSize: 20.sp,
+              fontFamily: 'Outfit',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBmiCategories(BMICategory currentCategory) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'bmi'.tr,
-                style: TextStyle(
-                  color: AppPalette.textPrimary,
-                  fontSize: 20.sp,
-                  fontFamily: 'Outfit',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              TextSpan(
-                text: 'categories'.tr,
-                style: TextStyle(
-                  color: const Color(0xFF09B389),
-                  fontSize: 20.sp,
-                  fontFamily: 'Outfit',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 10.h),
         Row(
           children: [
             Expanded(

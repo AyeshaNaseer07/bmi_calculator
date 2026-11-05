@@ -11,6 +11,7 @@ import '../widgets/ads/full_screen_native_ad_page.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/animated_cta_button.dart';
+import '../../core/utils/responsive.dart';
 import '../widgets/next_button.dart';
 import '../../core/utils/rtl.dart';
 
@@ -391,7 +392,9 @@ class _AnimatedGradientNextButtonState
     return AnimatedCtaButton(
       text: 'next'.tr,
       backgroundImage: AppAssets.btnRectangle,
-      borderRadius: BorderRadius.circular(12.r),
+      // iPad: fully rounded like the other buttons in the app (a fixed .r
+      // radius looks square on the taller tablet button).
+      borderRadius: BorderRadius.circular(isTablet(context) ? 999 : 12.r),
       trailingIcon: MirrorOnRtl(
         child: Image.asset(
           AppAssets.arrowIcon,

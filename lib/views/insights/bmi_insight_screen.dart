@@ -738,13 +738,12 @@ class _TipCard extends StatelessWidget {
       fontWeight: FontWeight.w500,
       height: 1.37,
     );
-    final tablet = isTablet(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(tablet ? 18.w : 14.w),
+        padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
           color: AppPalette.surface,
           borderRadius: BorderRadius.circular(20.r),
@@ -756,103 +755,59 @@ class _TipCard extends StatelessWidget {
             ),
           ],
         ),
-        child: tablet
-            ? Row(
+        // Same icon-on-top column layout on phone and iPad.
+        child: LayoutBuilder(
+          builder: (context, c) => FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: SizedBox(
+              width: c.maxWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
                     icon,
-                    width: 76.w,
-                    height: 76.w,
+                    width: 54.w,
+                    height: 54.w,
                     fit: BoxFit.contain,
                   ),
-                  SizedBox(width: 14.w),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppPalette.textPrimary,
-                            fontSize: 24.sp,
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontWeight: FontWeight.w700,
-                            height: 1.3,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          subtitle,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppPalette.textMuted,
-                            fontSize: 19.sp,
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontWeight: FontWeight.w500,
-                            height: 1.3,
-                          ),
-                        ),
-                      ],
+                  SizedBox(height: 10.h),
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppPalette.textPrimary,
+                      fontSize: 14.50.sp,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w700,
+                      height: 1.38,
                     ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Stack(
+                    children: [
+                      Text('\n', style: subStyle),
+                      Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AppPalette.textMuted,
+                          fontSize: 12.sp,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w500,
+                          height: 1.37,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              )
-            : LayoutBuilder(
-                builder: (context, c) => FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerStart,
-                  child: SizedBox(
-                    width: c.maxWidth,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          icon,
-                          width: 54.w,
-                          height: 54.w,
-                          fit: BoxFit.contain,
-                        ),
-                        SizedBox(height: 10.h),
-                        Text(
-                          title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppPalette.textPrimary,
-                            fontSize: 14.50.sp,
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontWeight: FontWeight.w700,
-                            height: 1.38,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Stack(
-                          children: [
-                            Text('\n', style: subStyle),
-                            Text(
-                              subtitle,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppPalette.textMuted,
-                                fontSize: 12.sp,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w500,
-                                height: 1.37,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -605,24 +605,34 @@ class WeightTrackingScreen extends StatelessWidget {
         final double available = constraints.maxWidth;
         final double chartWidth = math.max(available, pointCount * minSpacing);
         final bool scrollable = chartWidth > available + 1;
-        final Widget sized = SizedBox(
-          width: chartWidth,
-          height: 185.h,
-          child: Padding(
-            // Room so the last dot / goal label isn't clipped at the edge.
-            padding: EdgeInsetsDirectional.only(end: scrollable ? 24.w : 0),
-            child: chart,
+        // The plot is always drawn left to right (time runs left to right, and
+        // fl_chart isn't RTL-aware). In RTL the scroll view would otherwise
+        // start at the right edge, where the chart has no inset, clipping the
+        // first point and its label.
+        final Widget sized = Directionality(
+          textDirection: TextDirection.ltr,
+          child: SizedBox(
+            width: chartWidth,
+            height: 185.h,
+            child: Padding(
+              // Room so the last dot / goal label isn't clipped at the edge.
+              padding: EdgeInsets.only(right: scrollable ? 24.w : 0),
+              child: chart,
+            ),
           ),
         );
         if (!scrollable) return sized;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SingleChildScrollView(
-              key: key,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              child: sized,
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: SingleChildScrollView(
+                key: key,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: sized,
+              ),
             ),
             SizedBox(height: 8.h),
             Center(
