@@ -15,11 +15,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyARsvQopPIJ0jKuN2FYheG-siSm7EG6Kcc',
-    appId: '1:395401843957:ios:287f2682ea7406b8d721bc',
-    messagingSenderId: '395401843957',
-    projectId: 'bmi-calculator-cae46',
-    storageBucket: 'bmi-calculator-cae46.firebasestorage.app',
+    apiKey: 'AIzaSyCB0cKtuto6RQCDor_gthYSPMOAqbpQseI',
+    appId: '1:981423509330:ios:ed6b0f8a12f79b75a4348b',
+    messagingSenderId: '981423509330',
+    projectId: 'bmi-calculator-ifunsol',
+    storageBucket: 'bmi-calculator-ifunsol.firebasestorage.app',
     iosBundleId:
         'com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app',
   );

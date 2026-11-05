@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:io' show Platform;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -73,8 +75,8 @@ class NotificationService {
       _handleNotificationTap(initialMessage);
     }
 
-    // ── 8. Get FCM token ──
-    await _fetchAndLogToken();
+    // ── 8. Get FCM token (not awaited: must not delay app startup) ──
+    unawaited(_fetchAndLogToken());
 
     // Listen for token refresh
     _messaging.onTokenRefresh.listen((newToken) {
@@ -104,6 +106,9 @@ class NotificationService {
       } catch (e) {
         log('Error scheduling local notifications: $e');
       }
+      // The token fetched at startup predates the permission (on iOS it fails
+      // until APNs has registered), so fetch it again now.
+      await _fetchAndLogToken();
     }
     return settings;
   }
@@ -111,6 +116,21 @@ class NotificationService {
   /// Fetch the FCM token and log it.
   Future<String?> _fetchAndLogToken() async {
     try {
+      if (Platform.isIOS) {
+        // getToken() throws apns-token-not-set until APNs has registered.
+        String? apns = await _messaging.getAPNSToken();
+        for (var i = 0; apns == null && i < 10; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+          apns = await _messaging.getAPNSToken();
+        }
+        if (apns == null) {
+          log(
+            'APNs token not available yet. Check the Push Notifications '
+            'capability, the provisioning profile and the APNs key in Firebase.',
+          );
+          return null;
+        }
+      }
       final token = await _messaging.getToken();
       log('FCM Token: $token');
       return token;
