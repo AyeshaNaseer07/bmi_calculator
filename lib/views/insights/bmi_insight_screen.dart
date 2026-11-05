@@ -261,7 +261,7 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
       isTablet(context) ? SingleChildScrollView(child: child) : child;
 
   Widget _tipsArea(BuildContext context, Widget tips) => isTablet(context)
-      ? SizedBox(height: 420.h, child: tips)
+      ? SizedBox(height: 470.h, child: tips)
       : Expanded(child: tips);
 
   Widget _buildHero(_Variant v) {
@@ -743,7 +743,8 @@ class _TipCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(14.w),
+        // Narrower side padding = wider room for the title and subtitle.
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.w),
         decoration: BoxDecoration(
           color: AppPalette.surface,
           borderRadius: BorderRadius.circular(20.r),
@@ -773,16 +774,22 @@ class _TipCard extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                   SizedBox(height: 10.h),
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: AppPalette.textPrimary,
-                      fontSize: 14.50.sp,
-                      fontFamily: 'Plus Jakarta Sans',
-                      fontWeight: FontWeight.w700,
-                      height: 1.38,
+                  // One line, using the card's full width. Only if a title is
+                  // still too long does it shrink slightly (never "..." or wrap).
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: TextStyle(
+                        color: AppPalette.textPrimary,
+                        fontSize: 18.sp,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w700,
+                        height: 1.38,
+                      ),
                     ),
                   ),
                   SizedBox(height: 4.h),
