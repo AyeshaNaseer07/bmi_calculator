@@ -34,6 +34,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
   bool _fromOnboarding = false;
+  Worker? _premiumWatch;
+  bool _purchaseHandled = false;
+  bool _restoring = false;
 
   static const Color _green = Color(0xFF0AA37D);
 
@@ -55,6 +58,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
     _selectedPlan = _appController.remoteConfigService.defaultPlan(
       PaywallType.onboarding,
     );
+    // Premium can turn on from the store's own update even when purchase()
+    // didn't report success, so the paywall reacts to the status itself.
+    _premiumWatch = ever<bool>(_appController.isPremium, (premium) {
+      if (premium && !_restoring) _onPurchased();
+    });
     _initCrossDelay();
     _loadPrices();
     InterstitialAdManager.instance.load(_crossAdPlacement);
@@ -83,6 +91,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   @override
   void dispose() {
+    _premiumWatch?.dispose();
     _crossDelayTimer?.cancel();
     super.dispose();
   }
@@ -146,24 +155,34 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
     // Cancelled or failed: stay on the paywall.
     if (!success) return;
+    await _onPurchased();
+  }
+
+  /// Thank-you dialog, then leave the paywall. Runs once, from whichever
+  /// reports the purchase first (purchase() or the premium status).
+  Future<void> _onPurchased() async {
+    if (_purchaseHandled) return;
+    _purchaseHandled = true;
     _appController.completeOnboarding();
     await PremiumCongratsDialog.show();
-    if (!mounted) return;
     Get.offAllNamed(AppRoutes.home);
   }
 
   Future<void> _onRestore() async {
     if (_isLoading) return;
     setState(() => _isLoading = true);
+    _restoring = true;
     bool restored = false;
     try {
       restored = await _appController.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
+    _restoring = false;
     if (!mounted) return;
     setState(() => _isLoading = false);
     if (restored) {
+      _purchaseHandled = true;
       await PremiumCongratsDialog.show(isRestore: true);
       _leavePaywall();
     } else {

@@ -677,7 +677,7 @@ class _DoneButtonHandOverlay extends StatelessWidget {
         final center = centerOf();
         if (center == null) return const SizedBox.shrink();
         final left = center.dx - 26.w;
-        final top = center.dy - 26.h + floatY.value;
+        final top = center.dy - 16.h + floatY.value;
 
         return Positioned(
           left: left,

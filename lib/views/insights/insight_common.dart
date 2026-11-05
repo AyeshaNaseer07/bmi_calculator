@@ -145,8 +145,14 @@ class AssetOrPlaceholder extends StatelessWidget {
 class InsightHeader extends StatelessWidget {
   final String title;
   final IconData? titleIcon;
+  final Widget? trailing;
 
-  const InsightHeader({super.key, required this.title, this.titleIcon});
+  const InsightHeader({
+    super.key,
+    required this.title,
+    this.titleIcon,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +197,11 @@ class InsightHeader extends StatelessWidget {
                 ),
               ),
             ),
+            if (trailing != null)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: trailing!,
+              ),
           ],
         ),
       ),
@@ -204,6 +215,7 @@ class InsightScaffold extends StatelessWidget {
   final IconData? titleIcon;
   final Widget body;
   final Widget? bottom;
+  final Widget? trailing;
   final bool scroll;
 
   const InsightScaffold({
@@ -212,6 +224,7 @@ class InsightScaffold extends StatelessWidget {
     required this.body,
     this.titleIcon,
     this.bottom,
+    this.trailing,
     this.scroll = true,
   });
 
@@ -223,7 +236,11 @@ class InsightScaffold extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              InsightHeader(title: title, titleIcon: titleIcon),
+              InsightHeader(
+                title: title,
+                titleIcon: titleIcon,
+                trailing: trailing,
+              ),
               Expanded(
                 child: scroll
                     ? SingleChildScrollView(
@@ -665,4 +682,83 @@ class ProBadge extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Progress / insights chart icon resembling vertical bars with an upward trend line.
+class ProgressChartIcon extends StatelessWidget {
+  final double size;
+  final Color? color;
+
+  const ProgressChartIcon({
+    super.key,
+    this.size = 20,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = color ?? kGreenDark;
+    return SizedBox(
+      width: size,
+      height: size * 0.78,
+      child: CustomPaint(
+        painter: _ProgressChartIconPainter(color: c),
+      ),
+    );
+  }
+}
+
+class _ProgressChartIconPainter extends CustomPainter {
+  final Color color;
+
+  const _ProgressChartIconPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Upward trend line
+    final linePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = (w * 0.10).clamp(1.8, 2.8)
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final path = Path()
+      ..moveTo(w * 0.12, h * 0.58)
+      ..lineTo(w * 0.40, h * 0.22)
+      ..lineTo(w * 0.58, h * 0.38)
+      ..lineTo(w * 0.88, h * 0.06);
+
+    canvas.drawPath(path, linePaint);
+
+    // 4 vertical bars
+    final barPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = (w * 0.09).clamp(1.8, 2.6)
+      ..strokeCap = StrokeCap.round;
+
+    final bottomY = h * 0.94;
+    final bars = [
+      (w * 0.20, h * 0.74),
+      (w * 0.38, h * 0.58),
+      (w * 0.56, h * 0.52),
+      (w * 0.74, h * 0.46),
+    ];
+
+    for (final bar in bars) {
+      canvas.drawLine(
+        Offset(bar.$1, bar.$2),
+        Offset(bar.$1, bottomY),
+        barPaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ProgressChartIconPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

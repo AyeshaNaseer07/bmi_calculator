@@ -35,6 +35,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   bool _loading = false;
   bool _showCloseButton = false;
   Timer? _crossDelayTimer;
+  Worker? _premiumWatch;
+  bool _purchaseHandled = false;
+  bool _restoring = false;
 
   @override
   void initState() {
@@ -50,6 +53,11 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
         if (mounted) setState(() => _showCloseButton = true);
       });
     }
+    // Premium can turn on from the store's own update even when purchase()
+    // didn't report success, so the paywall reacts to the status itself.
+    _premiumWatch = ever<bool>(_app.isPremium, (premium) {
+      if (premium && !_restoring) _onPurchased();
+    });
     _loadPrices();
   }
 
@@ -60,6 +68,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
 
   @override
   void dispose() {
+    _premiumWatch?.dispose();
     _crossDelayTimer?.cancel();
     super.dispose();
   }
@@ -104,11 +113,18 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     }
     if (!mounted) return;
     setState(() => _loading = false);
-    if (ok) {
-      await PremiumCongratsDialog.show();
-      Get.back();
-      widget.onUnlocked?.call();
-    }
+    if (ok) await _onPurchased();
+  }
+
+  /// Thank-you dialog, then leave the paywall. Runs once, from whichever
+  /// reports the purchase first (purchase() or the premium status).
+  Future<void> _onPurchased() async {
+    if (_purchaseHandled) return;
+    _purchaseHandled = true;
+    final onUnlocked = widget.onUnlocked;
+    await PremiumCongratsDialog.show();
+    Get.back();
+    onUnlocked?.call();
   }
 
   void _close() {
@@ -130,15 +146,18 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   Future<void> _restore() async {
     if (_loading) return;
     setState(() => _loading = true);
+    _restoring = true;
     bool restored = false;
     try {
       restored = await _app.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
+    _restoring = false;
     if (!mounted) return;
     setState(() => _loading = false);
     if (restored) {
+      _purchaseHandled = true;
       await PremiumCongratsDialog.show(isRestore: true);
       Get.back();
       widget.onUnlocked?.call();

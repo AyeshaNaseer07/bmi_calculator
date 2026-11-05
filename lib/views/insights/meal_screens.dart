@@ -28,18 +28,55 @@ class DailyMealPlanScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 2.h),
-          Text(
-            'meal_planner'.tr,
-            style: TextStyle(
-              color: AppPalette.textPrimary,
-              fontSize: 18.sp,
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: FontWeight.w600,
-              height: 1.33,
-              letterSpacing: -0.18,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  'meal_planner'.tr,
+                  style: TextStyle(
+                    color: AppPalette.textPrimary,
+                    fontSize: 18.sp,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w600,
+                    height: 1.33,
+                    letterSpacing: -0.18,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Tooltip(
+                message: 'your_progress'.tr,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => Get.to(() => const MealProgressScreen()),
+                  child: Container(
+                    width: 36.w,
+                    height: 36.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppPalette.surface,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFD5F2E8),
+                        width: 1.2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0x1F33D2AB),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ProgressChartIcon(size: 20.w, color: _kDeep),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 8.h),
           const _TargetBanner(),

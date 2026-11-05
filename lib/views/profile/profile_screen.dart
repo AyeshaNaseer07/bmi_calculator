@@ -47,9 +47,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<void> shareApp([BuildContext? context]) async {
-    final storeUrl = Platform.isAndroid
-        ? AppStrings.playStoreUrl
-        : AppStrings.appStoreUrl;
+    const storeUrl = AppStrings.appStoreUrl;
     await ShareHelper.shareText(
       '${'check_out_this_bmi_calculator_app'.tr}\n\n$storeUrl',
       subject: 'app_name'.tr,
@@ -448,7 +446,9 @@ class ProfileScreen extends StatelessWidget {
 
                 SizedBox(height: 10.h),
                 // Account List Card
-                Expanded(
+                // Wraps its rows (they keep a natural height whether or not the
+                // premium card is above); scrolls only if the screen is short.
+                Flexible(
                   child: Container(
                     width: double.infinity,
                     decoration: ShapeDecoration(
@@ -471,22 +471,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(8.0.r),
-                      // Rows stretch to fill the card when there's room; on
-                      // short screens (or with the premium card shown) they
-                      // keep their natural height and the list scrolls.
-                      child: LayoutBuilder(
-                        builder: (context, constraints) =>
-                            SingleChildScrollView(
-                              physics: const ClampingScrollPhysics(),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight: constraints.maxHeight,
-                                ),
-                                child: IntrinsicHeight(
-                                  child: _accountRows(context),
-                                ),
-                              ),
-                            ),
+                      child: SingleChildScrollView(
+                        physics: const ClampingScrollPhysics(),
+                        child: _accountRows(context),
                       ),
                     ),
                   ),
@@ -576,63 +563,61 @@ class ProfileScreen extends StatelessWidget {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 4.h),
-          color: Colors.transparent,
-          child: Row(
-            children: [
-              Container(
-                width: 38.w,
-                height: 38.w,
-                alignment: Alignment.center,
-                decoration: ShapeDecoration(
-                  color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
-                  shape: OvalBorder(),
-                ),
-                child: Icon(icon, color: const Color(0xFF33D2AB), size: 18.sp),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        color: Colors.transparent,
+        child: Row(
+          children: [
+            Container(
+              width: 38.w,
+              height: 38.w,
+              alignment: Alignment.center,
+              decoration: ShapeDecoration(
+                color: const Color(0xFF33D2AB).withValues(alpha: 0.15),
+                shape: OvalBorder(),
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: AppPalette.textPrimary,
-                        fontSize: 12.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
-                      ),
+              child: Icon(icon, color: const Color(0xFF33D2AB), size: 18.sp),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: AppPalette.textPrimary,
+                      fontSize: 12.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
                     ),
-                    SizedBox(height: 1.h),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: AppPalette.textPrimary,
-                        fontSize: 11.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  SizedBox(height: 1.h),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: AppPalette.textPrimary,
+                      fontSize: 11.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              // CupertinoIcons don't mirror on their own.
-              MirrorOnRtl(
-                child: Icon(
-                  CupertinoIcons.chevron_right,
-                  size: 14.sp,
-                  color: AppPalette.textPrimary,
-                ),
+            ),
+            // CupertinoIcons don't mirror on their own.
+            MirrorOnRtl(
+              child: Icon(
+                CupertinoIcons.chevron_right,
+                size: 14.sp,
+                color: AppPalette.textPrimary,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -145,16 +144,40 @@ class SubscriptionService {
     );
     if (!started) return _Outcome.failed;
     final result = _purchase!.future;
-    // iOS returns once StoreKit is done; its update can trail the reply.
-    if (Platform.isIOS) {
-      return result.timeout(
-        const Duration(seconds: 5),
-        onTimeout: () async => (await _activeProductIds()).contains(id)
-            ? _Outcome.purchased
-            : _Outcome.failed,
-      );
-    }
+    // iOS returns once StoreKit is done, but the purchase stream's update can
+    // trail the reply (or never arrive). So the stream is raced against
+    // StoreKit's own entitlement state, and whichever answers first wins.
+    if (Platform.isIOS) return _iosOutcome(id, result);
     return result;
+  }
+
+  Future<_Outcome> _iosOutcome(String id, Future<_Outcome> fromStream) {
+    final done = Completer<_Outcome>();
+    void finish(_Outcome outcome) {
+      if (!done.isCompleted) done.complete(outcome);
+    }
+
+    fromStream.then(finish);
+    unawaited(() async {
+      for (var i = 0; i < 10 && !done.isCompleted; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+        if (done.isCompleted) return;
+        final status = await PlatformCode.getSubscriptionStatus([id]);
+        debugPrint('Entitlement after purchase ($id): $status');
+        if (status == 'active') return finish(_Outcome.purchased);
+      }
+      if (done.isCompleted) return;
+      try {
+        finish(
+          (await _activeProductIds()).contains(id)
+              ? _Outcome.purchased
+              : _Outcome.failed,
+        );
+      } catch (_) {
+        finish(_Outcome.failed);
+      }
+    }());
+    return done.future;
   }
 
   Future<void> _onPurchaseUpdates(List<PurchaseDetails> updates) async {
@@ -203,19 +226,6 @@ class SubscriptionService {
       _queryActiveProductIds().whenComplete(() => _entitlementCheck = null);
 
   Future<Set<String>> _queryActiveProductIds() async {
-    if (Platform.isAndroid) {
-      final response = await _iap
-          .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>()
-          .queryPastPurchases();
-      if (response.error != null) throw response.error!;
-      final owned = response.pastPurchases.where(
-        (p) => p.status == PurchaseStatus.purchased,
-      );
-      for (final p in owned) {
-        if (p.pendingCompletePurchase) unawaited(_complete(p));
-      }
-      return owned.map((p) => p.productID).toSet();
-    }
     // StoreKit 2 replays Transaction.currentEntitlements on the purchase
     // stream as restored purchases, without a sign-in prompt.
     final restored = _restored = <String>{};
