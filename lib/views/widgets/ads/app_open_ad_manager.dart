@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart'
+    show AppState, AppStateEventNotifier;
 
 import '../../../controllers/app_controller.dart';
 import '../../../core/routes/app_routes.dart';
@@ -17,11 +20,17 @@ class AppOpenAdManager with WidgetsBindingObserver {
   static final AppOpenAdManager instance = AppOpenAdManager._();
 
   /// How long a [skipNextResume] request stays valid.
-  static const Duration _skipWindow = Duration(minutes: 10);
+  static const Duration _skipWindow = Duration(seconds: 6);
 
   /// How long after a return an ad is still owed: it shows as soon as one is
   /// ready inside this window, then it is dropped rather than popping up late.
   static const Duration _lateShowWindow = Duration(seconds: 8);
+
+  /// A return this soon after a full-screen ad closed gets no app open ad.
+  static const Duration _recentlyClosedWindow = Duration(milliseconds: 1500);
+
+  /// After a real return, wait this long to be sure the user stayed.
+  static const Duration _returnSettle = Duration(milliseconds: 400);
 
   /// A load that never reports back is treated as failed after this long.
   static const Duration _loadTimeout = Duration(seconds: 20);
@@ -38,8 +47,17 @@ class AppOpenAdManager with WidgetsBindingObserver {
   bool _started = false;
   bool _isLoading = false;
   bool _isShowing = false;
-  bool _wentToBackground = false;
   DateTime? _skipRequestedAt;
+
+  // One "episode" = one real trip to the background and back.
+  bool _episodeActive = false;
+  bool _episodeEligible = false;
+  DateTime? _backgroundAt;
+  DateTime? _lastAdClosedAt;
+
+  // iOS: real background/foreground from the SDK's app-state notifier.
+  bool _realStateAvailable = false;
+  StreamSubscription<AppState>? _realStateSub;
   DateTime? _showDueUntil;
   bool _showRetried = false;
   int _retryAttempt = 0;
@@ -105,6 +123,7 @@ class AppOpenAdManager with WidgetsBindingObserver {
           );
           _showTimer?.cancel();
           _isShowing = false;
+          _lastAdClosedAt = DateTime.now();
           // The return is still owed an ad: try once more with a fresh one.
           if (!_showRetried) {
             _showRetried = true;
@@ -119,6 +138,7 @@ class AppOpenAdManager with WidgetsBindingObserver {
           debugPrint('[AppOpenAd] hidden, loading the next one');
           _showTimer?.cancel();
           _isShowing = false;
+          _lastAdClosedAt = DateTime.now();
           _load(fresh: true);
         },
         onAdRevenuePaidCallback: (ad) =>
@@ -126,8 +146,13 @@ class AppOpenAdManager with WidgetsBindingObserver {
       ),
     );
     WidgetsBinding.instance.addObserver(this);
+    _listenToRealAppState();
     _load();
   }
+
+  /// Tell the manager a full-screen ad (e.g. an interstitial) just closed, so
+  /// the return that follows isn't mistaken for coming back from background.
+  void noteFullScreenAdClosed() => _lastAdClosedAt = DateTime.now();
 
   /// Call before deliberately sending the user out of the app (tapping an
   /// ad, opening mail or a web page) so coming back doesn't show an ad.
@@ -138,33 +163,126 @@ class AppOpenAdManager with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.resumed) {
       debugPrint(
-        '[AppOpenAd] lifecycle ${state.name} (adShowing: $_isShowing, '
+        '[AppOpenAd] flutter lifecycle ${state.name} (adShowing: $_isShowing, '
         'interShowing: ${InterstitialAdManager.instance.isShowing}, '
-        'wasInBackground: $_wentToBackground, loading: $_isLoading)',
+        'episode: $_episodeActive, realState: $_realStateAvailable)',
       );
     }
-    // Only a real trip to the background counts. System dialogs just make the
-    // app "inactive", and on Android our own full-screen ads pause it, so a
-    // pause while one of those is up is ignored.
+    // iOS: Flutter reports paused/resumed whenever a native full-screen view
+    // (an ad, a system sheet) covers the app although it never left the
+    // foreground. Those false events are what made every other return get no
+    // app open ad, so on iOS the real background/foreground come from the
+    // SDK's app-state notifier instead (see _listenToRealAppState).
+    if (Platform.isIOS && _realStateAvailable) return;
     if (state == AppLifecycleState.paused) {
       if (_isShowing || InterstitialAdManager.instance.isShowing) return;
-      _wentToBackground = true;
-      // Have the next ad ready (or on its way) before the user comes back.
-      _load();
-    } else if (state == AppLifecycleState.resumed && _wentToBackground) {
-      _wentToBackground = false;
-      _onForeground();
+      _onBackground('flutter_lifecycle');
+    } else if (state == AppLifecycleState.resumed) {
+      _onForeground('flutter_lifecycle');
     }
   }
 
-  Future<void> _onForeground() async {
+  void _listenToRealAppState() {
+    if (!Platform.isIOS || _realStateSub != null) return;
+    try {
+      _realStateSub = AppStateEventNotifier.appStateStream.listen(
+        (event) {
+          debugPrint('[AppOpenAd] real app state: $event');
+          if (event == AppState.foreground) {
+            _onForeground('app_state');
+          } else if (event == AppState.background) {
+            _onBackground('app_state');
+          }
+        },
+        onError: (Object e) {
+          debugPrint('[AppOpenAd] app state stream error: $e');
+          _realStateAvailable = false;
+        },
+      );
+      _realStateAvailable = true;
+      unawaited(
+        AppStateEventNotifier.startListening()
+            .timeout(const Duration(milliseconds: 500), onTimeout: () {})
+            .catchError((Object e) {
+              debugPrint('[AppOpenAd] app state listening failed: $e');
+              _realStateAvailable = false;
+            }),
+      );
+    } catch (e) {
+      debugPrint('[AppOpenAd] app state notifier unavailable: $e');
+      _realStateAvailable = false;
+    }
+  }
+
+  void _onBackground(String source) {
+    final eligibleNow =
+        !_isShowing && !InterstitialAdManager.instance.isShowing;
+    if (!_episodeActive) {
+      _episodeActive = true;
+      _backgroundAt = DateTime.now();
+      _episodeEligible = eligibleNow;
+      // A skip request only counts if it was made just before leaving the
+      // app. Older ones (e.g. a click that opened an in-app store sheet and
+      // never left the app) are stale and must not swallow this return.
+      final req = _skipRequestedAt;
+      if (req != null && _backgroundAt!.difference(req) > _skipWindow) {
+        _skipRequestedAt = null;
+      }
+      debugPrint(
+        '[AppOpenAd] app backgrounded (source: $source, eligible: $eligibleNow)',
+      );
+      // Have the next ad ready (or on its way) before the user comes back.
+      // While an ad is still up, its dismissal loads the next one.
+      if (!_isShowing) _load();
+    } else {
+      _episodeEligible = _episodeEligible && eligibleNow;
+    }
+  }
+
+  Future<void> _onForeground(String source) async {
+    if (!_episodeActive) {
+      debugPrint('[AppOpenAd] foreground without background ignored ($source)');
+      return;
+    }
+    final start = _backgroundAt;
+    final closedAt = _lastAdClosedAt;
+    final adClosedDuringEpisode =
+        start != null && closedAt != null && closedAt.isAfter(start);
+    final eligible = _episodeEligible && !adClosedDuringEpisode;
+    _episodeActive = false;
+    _episodeEligible = false;
+    _backgroundAt = null;
+
     final skipAt = _skipRequestedAt;
     _skipRequestedAt = null;
-    if (skipAt != null && DateTime.now().difference(skipAt) < _skipWindow) {
+    if (skipAt != null) {
       debugPrint('[AppOpenAd] skipped: user left the app on purpose');
       return;
     }
+    if (!eligible) {
+      debugPrint(
+        '[AppOpenAd] skipped: not a plain return '
+        '(adClosedDuringEpisode: $adClosedDuringEpisode, source: $source)',
+      );
+      return;
+    }
+    debugPrint('[AppOpenAd] real return from background ($source)');
+    await Future<void>.delayed(_returnSettle);
+    if (_episodeActive) {
+      debugPrint('[AppOpenAd] skipped: went back to the background');
+      return;
+    }
+    await _showForReturn();
+  }
+
+  Future<void> _showForReturn() async {
     if (!_canShowNow()) return;
+    final closedAt = _lastAdClosedAt;
+    if (closedAt != null &&
+        DateTime.now().difference(closedAt) < _recentlyClosedWindow) {
+      debugPrint('[AppOpenAd] skipped: an ad was just dismissed');
+      return;
+    }
 
     // This return is owed an ad. Show it now if one is ready; otherwise it
     // shows the moment one finishes loading (also after a failed load is
@@ -216,9 +334,8 @@ class AppOpenAdManager with WidgetsBindingObserver {
       reason = 'another ad is showing';
     } else if (_blockedRoutes.contains(Get.currentRoute)) {
       reason = 'on ${Get.currentRoute}';
-    } else if (WidgetsBinding.instance.lifecycleState !=
-        AppLifecycleState.resumed) {
-      reason = 'app not in the foreground';
+    } else if (_episodeActive) {
+      reason = 'app is in the background';
     }
     if (reason != null) debugPrint('[AppOpenAd] skipped: $reason');
     return reason == null;

@@ -198,6 +198,8 @@ class InterstitialAdManager {
   /// The ad is gone; moves on now if that hasn't already happened behind it.
   void _finish() {
     _showing = false;
+    // So the return that follows isn't mistaken for coming back from background.
+    AppOpenAdManager.instance.noteFullScreenAdClosed();
     _runDone();
   }
 
