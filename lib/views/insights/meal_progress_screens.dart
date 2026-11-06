@@ -386,20 +386,22 @@ class MealProgressScreen extends StatelessWidget {
           'final_stretch_phase'.tr,
         ];
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
               children: [
                 Expanded(
-                  child: Text(
-                    'consistent_nourishment_balance'.tr,
-                    style: bodyStyle(13.5, color: AppPalette.textBody),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  child: SizedBox(
+                    width: 200.w,
+                    child: Text(
+                      'Consistent nourishment &\nbalance',
+                      style: bodyStyle(13.5, color: AppPalette.textBody),
+                    ),
                   ),
                 ),
-                SizedBox(width: 8.w),
                 Flexible(
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -423,7 +425,7 @@ class MealProgressScreen extends StatelessWidget {
                               color: _kDeep,
                               weight: FontWeight.w800,
                             ),
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
