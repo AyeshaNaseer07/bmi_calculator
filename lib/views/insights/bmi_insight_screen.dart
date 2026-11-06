@@ -256,9 +256,11 @@ class _BmiInsightScreenState extends State<BmiInsightScreen> {
   }
 
   /// iPad: the screen scrolls and the tips get a fixed, roomy height so the
-  /// larger cards are never clipped. Phones keep the original fill layout.
-  Widget _wrapScroll(BuildContext context, Widget child) =>
-      isTablet(context) ? SingleChildScrollView(child: child) : child;
+  /// larger cards are never clipped. Phones keep the original fill layout;
+  /// short phones (iPhone SE) keep it too, but scroll.
+  Widget _wrapScroll(BuildContext context, Widget child) => isTablet(context)
+      ? SingleChildScrollView(child: child)
+      : ScrollOnShortPhones(child: child);
 
   Widget _tipsArea(BuildContext context, Widget tips) => isTablet(context)
       ? SizedBox(height: 470.h, child: tips)

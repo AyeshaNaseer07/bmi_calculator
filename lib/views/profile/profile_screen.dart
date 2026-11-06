@@ -16,6 +16,7 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/utils/open_url.dart';
+import '../../core/utils/responsive.dart';
 import '../../core/utils/share_helper.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
@@ -96,7 +97,9 @@ class ProfileScreen extends StatelessWidget {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-            child: Column(
+            child: _pageScroll(
+              context,
+              Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // User Info Card
@@ -448,8 +451,9 @@ class ProfileScreen extends StatelessWidget {
                 // Account List Card
                 // Wraps its rows (they keep a natural height whether or not the
                 // premium card is above); scrolls only if the screen is short.
-                Flexible(
-                  child: Container(
+                _fillUnlessShort(
+                  context,
+                  Container(
                     width: double.infinity,
                     decoration: ShapeDecoration(
                       color: AppPalette.surface,
@@ -471,20 +475,37 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(8.0.r),
-                      child: SingleChildScrollView(
-                        physics: const ClampingScrollPhysics(),
-                        child: _accountRows(context),
-                      ),
+                      child: isShortPhone(context)
+                          ? _accountRows(context)
+                          : SingleChildScrollView(
+                              physics: const ClampingScrollPhysics(),
+                              child: _accountRows(context),
+                            ),
                     ),
                   ),
                 ),
               ],
+            ),
             ),
           ),
         ),
       ),
     );
   }
+
+  /// Short phones (iPhone SE): the whole page scrolls, rather than only the
+  /// account list inside it. Other phones keep the original layout.
+  Widget _pageScroll(BuildContext context, Widget page) => isShortPhone(context)
+      ? SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: page,
+        )
+      : page;
+
+  /// The account card fills the leftover height (and scrolls inside) on
+  /// normal phones; on short phones it keeps its natural height instead.
+  Widget _fillUnlessShort(BuildContext context, Widget card) =>
+      isShortPhone(context) ? card : Flexible(child: card);
 
   Widget _accountRows(BuildContext context) {
     return Column(

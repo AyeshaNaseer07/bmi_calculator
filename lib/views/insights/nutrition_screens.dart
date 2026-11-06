@@ -323,118 +323,121 @@ class EatVegetablesScreen extends StatelessWidget {
     return InsightScaffold(
       title: 'eat_more_vegetables'.tr,
       scroll: false,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 869 / 569,
-                child: Image.asset(
-                  AppAssets.photoVegetables,
-                  fit: BoxFit.contain,
+      // Fills the screen on normal phones; scrolls on short ones (iPhone SE).
+      body: ScrollOnShortPhones(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: 869 / 569,
+                  child: Image.asset(
+                    AppAssets.photoVegetables,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 8.h),
-          Center(
-            child: Text(
-              'add_more_color_and_fiber_to'.tr,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12.5.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
+            SizedBox(height: 8.h),
+            Center(
+              child: Text(
+                'add_more_color_and_fiber_to'.tr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12.5.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              'why_vegetables_matter'.tr,
+              style: _section,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            'why_vegetables_matter'.tr,
-            style: _section,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(height: 10.h),
-          _why(
-            AppAssets.tipRichInFiber,
-            'rich_in_fiber'.tr,
-            'fiber_helps_you_feel_full_and'.tr,
-          ),
-          _why(
-            AppAssets.tipFullOfNutrients,
-            'full_of_nutrients'.tr,
-            'vegetables_provide_vitamins_and_minerals'.tr,
-          ),
-          _why(
-            AppAssets.tipAddMoreColor,
-            'add_more_color'.tr,
-            'choose_different_vegetables_for_variety'.tr,
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            'try_this_today'.tr,
-            style: _section,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(height: 10.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            decoration: _cardDeco,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10.r),
-                      child: Image.asset(
-                        AppAssets.tipSimpleMeal,
-                        width: 58.w,
-                        height: 58.w,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'simple_meal'.tr,
-                            style: _title(16.5),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 3.h),
-                          Text(
-                            'half_plate_of_vegetables_quarter_protein'.tr,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: _sub,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  'start_by_adding_vegetables_to_one'.tr,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: _sub.copyWith(color: AppPalette.textBody),
-                ),
-              ],
+            SizedBox(height: 10.h),
+            _why(
+              AppAssets.tipRichInFiber,
+              'rich_in_fiber'.tr,
+              'fiber_helps_you_feel_full_and'.tr,
             ),
-          ),
-        ],
+            _why(
+              AppAssets.tipFullOfNutrients,
+              'full_of_nutrients'.tr,
+              'vegetables_provide_vitamins_and_minerals'.tr,
+            ),
+            _why(
+              AppAssets.tipAddMoreColor,
+              'add_more_color'.tr,
+              'choose_different_vegetables_for_variety'.tr,
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              'try_this_today'.tr,
+              style: _section,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 10.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+              decoration: _cardDeco,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.r),
+                        child: Image.asset(
+                          AppAssets.tipSimpleMeal,
+                          width: 58.w,
+                          height: 58.w,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'simple_meal'.tr,
+                              style: _title(16.5),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 3.h),
+                            Text(
+                              'half_plate_of_vegetables_quarter_protein'.tr,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: _sub,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    'start_by_adding_vegetables_to_one'.tr,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: _sub.copyWith(color: AppPalette.textBody),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

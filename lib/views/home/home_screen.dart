@@ -115,115 +115,119 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Main Screen Content
             SafeArea(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 18.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 4.h),
-                        _buildTopBar(),
-                        SizedBox(height: 28.h),
-                        Obx(() {
-                          final hasData = bmiController.bmiHistory.isNotEmpty;
-                          return _buildGreeting(hasData, profileController);
-                        }),
-                        SizedBox(height: 20.h),
-                      ],
+              // Both the empty and the calculated state: normal phones keep
+              // the fill layout, short ones (iPhone SE) scroll.
+              child: ScrollOnShortPhones(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 18.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 4.h),
+                          _buildTopBar(),
+                          SizedBox(height: 28.h),
+                          Obx(() {
+                            final hasData = bmiController.bmiHistory.isNotEmpty;
+                            return _buildGreeting(hasData, profileController);
+                          }),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // Content
-                  Expanded(
-                    child: Obx(() {
-                      final hasData = bmiController.bmiHistory.isNotEmpty;
-                      final latest = bmiController.latestRecord.value;
+                    // Content
+                    Expanded(
+                      child: Obx(() {
+                        final hasData = bmiController.bmiHistory.isNotEmpty;
+                        final latest = bmiController.latestRecord.value;
 
-                      if (!hasData || latest == null) {
-                        final isPremium =
-                            Get.find<AppController>().isPremium.value;
+                        if (!hasData || latest == null) {
+                          final isPremium =
+                              Get.find<AppController>().isPremium.value;
+                          return Padding(
+                            // Bottom clears the nav bar's raised + button.
+                            padding: EdgeInsets.fromLTRB(
+                              18.w,
+                              2.h,
+                              18.w,
+                              // Premium: extra room so the centred card sits
+                              // above the nav bar's overlap, not on it.
+                              isPremium ? 145.h : 24.h,
+                            ),
+                            child: Column(
+                              // Premium users have no ads card below, so centre
+                              // the BMI card in the free space.
+                              mainAxisAlignment: isPremium
+                                  ? MainAxisAlignment.center
+                                  : MainAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width -
+                                          36.w,
+                                      child: _buildEmptyBmiCard(),
+                                    ),
+                                  ),
+                                ),
+                                if (!isPremium) ...[
+                                  SizedBox(height: 16.h),
+                                  const _RemoveAdsCard(),
+                                ],
+                              ],
+                            ),
+                          );
+                        }
+
                         return Padding(
-                          // Bottom clears the nav bar's raised + button.
-                          padding: EdgeInsets.fromLTRB(
-                            18.w,
-                            2.h,
-                            18.w,
-                            // Premium: extra room so the centred card sits
-                            // above the nav bar's overlap, not on it.
-                            isPremium ? 145.h : 24.h,
+                          padding: EdgeInsets.only(
+                            left: 18.w,
+                            right: 18.w,
+                            top: 2.h,
+                            bottom: 6.h,
                           ),
                           child: Column(
-                            // Premium users have no ads card below, so centre
-                            // the BMI card in the free space.
-                            mainAxisAlignment: isPremium
-                                ? MainAxisAlignment.center
-                                : MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Flexible(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width -
-                                        36.w,
-                                    child: _buildEmptyBmiCard(),
+                              // Main BMI Card
+                              _buildActiveBmiCard(latest),
+                              SizedBox(height: 8.h),
+
+                              // Quick Parameters Pills (Weight, Height, Age, Gender)
+                              _buildParameterPills(latest, bmiController),
+                              SizedBox(height: 8.h),
+
+                              // BMI Categories Row (scales down to fit if space is tight)
+                              // Heading sits outside the scaled-down block so it
+                              // stays on the page's left edge on iPad.
+                              _buildCategoriesHeading(),
+                              SizedBox(height: 10.h),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.topCenter,
+                                    child: SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width -
+                                          36.w,
+                                      child: _buildBmiCategories(latest.category),
+                                    ),
                                   ),
                                 ),
                               ),
-                              if (!isPremium) ...[
-                                SizedBox(height: 16.h),
-                                const _RemoveAdsCard(),
-                              ],
                             ],
                           ),
                         );
-                      }
-
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 18.w,
-                          right: 18.w,
-                          top: 2.h,
-                          bottom: 6.h,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Main BMI Card
-                            _buildActiveBmiCard(latest),
-                            SizedBox(height: 8.h),
-
-                            // Quick Parameters Pills (Weight, Height, Age, Gender)
-                            _buildParameterPills(latest, bmiController),
-                            SizedBox(height: 8.h),
-
-                            // BMI Categories Row (scales down to fit if space is tight)
-                            // Heading sits outside the scaled-down block so it
-                            // stays on the page's left edge on iPad.
-                            _buildCategoriesHeading(),
-                            SizedBox(height: 10.h),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  alignment: Alignment.topCenter,
-                                  child: SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width -
-                                        36.w,
-                                    child: _buildBmiCategories(latest.category),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                ],
+                      }),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
