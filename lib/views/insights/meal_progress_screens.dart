@@ -397,7 +397,7 @@ class MealProgressScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 200.w,
                     child: Text(
-                      'Consistent nourishment &\nbalance',
+                      'consistent_nourishment_balance'.tr,
                       style: bodyStyle(13.5, color: AppPalette.textBody),
                     ),
                   ),
