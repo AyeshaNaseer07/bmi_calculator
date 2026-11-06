@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI 计算器提醒",
   "notification_channel_description": "定时的健康和体重追踪提醒",
   "no_product_found": "未找到产品",
-  "check_internet_connection": "请检查您的网络连接。"
+  "check_internet_connection": "请检查您的网络连接。",
+  "already_subscribed_title": "您已是高级会员",
+  "already_subscribed_message": "您已有有效订阅，因此我们已恢复您的高级会员权限。\n不会再次扣费。",
+  "purchase_pending_title": "购买待处理",
+  "purchase_pending_message": "您的购买正在等待批准。批准后将解锁高级会员。",
+  "purchase_failed_title": "购买失败",
+  "purchase_failed_message": "出了点问题，请重试。",
+  "restore_failed_message": "无法连接 App Store。请检查网络连接后重试。"
 }

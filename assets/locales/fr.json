@@ -976,5 +976,12 @@
   "notification_channel_name": "Rappels du Calculateur d'IMC",
   "notification_channel_description": "Rappels programmés de santé et de suivi du poids",
   "no_product_found": "Aucun produit trouvé",
-  "check_internet_connection": "Vérifiez votre connexion internet."
+  "check_internet_connection": "Vérifiez votre connexion internet.",
+  "already_subscribed_title": "Vous êtes déjà Premium",
+  "already_subscribed_message": "Vous avez déjà un abonnement actif, nous avons donc restauré votre accès Premium.\nAucun nouveau paiement n'a été effectué.",
+  "purchase_pending_title": "Achat en attente",
+  "purchase_pending_message": "Votre achat est en attente d'approbation. Premium sera débloqué une fois approuvé.",
+  "purchase_failed_title": "Échec de l'achat",
+  "purchase_failed_message": "Une erreur s'est produite. Veuillez réessayer.",
+  "restore_failed_message": "Impossible de joindre l'App Store. Vérifiez votre connexion et réessayez."
 }

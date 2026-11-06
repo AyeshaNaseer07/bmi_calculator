@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI कैलकुलेटर रिमाइंडर",
   "notification_channel_description": "सेहत और वज़न ट्रैकिंग के निर्धारित रिमाइंडर",
   "no_product_found": "कोई प्रोडक्ट नहीं मिला",
-  "check_internet_connection": "कृपया अपना इंटरनेट कनेक्शन जाँचें।"
+  "check_internet_connection": "कृपया अपना इंटरनेट कनेक्शन जाँचें।",
+  "already_subscribed_title": "आप पहले से प्रीमियम हैं",
+  "already_subscribed_message": "आपकी सदस्यता पहले से सक्रिय है, इसलिए हमने आपका प्रीमियम एक्सेस बहाल कर दिया है।\nआपसे दोबारा शुल्क नहीं लिया गया।",
+  "purchase_pending_title": "खरीदारी लंबित",
+  "purchase_pending_message": "आपकी खरीदारी स्वीकृति की प्रतीक्षा में है। स्वीकृत होते ही प्रीमियम अनलॉक हो जाएगा।",
+  "purchase_failed_title": "खरीदारी विफल",
+  "purchase_failed_message": "कुछ गलत हो गया। कृपया फिर से प्रयास करें।",
+  "restore_failed_message": "App Store से कनेक्ट नहीं हो सका। कृपया अपना कनेक्शन जांचें और फिर से प्रयास करें।"
 }

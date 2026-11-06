@@ -976,5 +976,12 @@
   "notification_channel_name": "Напоминания BMI Calculator",
   "notification_channel_description": "Запланированные напоминания для отслеживания здоровья и веса",
   "no_product_found": "Продукт не найден",
-  "check_internet_connection": "Проверьте подключение к интернету."
+  "check_internet_connection": "Проверьте подключение к интернету.",
+  "already_subscribed_title": "У вас уже есть Premium",
+  "already_subscribed_message": "У вас уже есть активная подписка, поэтому мы восстановили доступ к Premium.\nПовторная оплата не взималась.",
+  "purchase_pending_title": "Покупка ожидает",
+  "purchase_pending_message": "Покупка ожидает одобрения. Premium откроется после одобрения.",
+  "purchase_failed_title": "Ошибка покупки",
+  "purchase_failed_message": "Что-то пошло не так. Попробуйте ещё раз.",
+  "restore_failed_message": "Не удалось подключиться к App Store. Проверьте соединение и попробуйте снова."
 }

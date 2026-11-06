@@ -976,5 +976,12 @@
   "notification_channel_name": "Lembretes da Calculadora de IMC",
   "notification_channel_description": "Lembretes programados para acompanhar a saúde e o peso",
   "no_product_found": "Nenhum produto encontrado",
-  "check_internet_connection": "Verifique sua conexão com a internet."
+  "check_internet_connection": "Verifique sua conexão com a internet.",
+  "already_subscribed_title": "Você já é Premium",
+  "already_subscribed_message": "Você já tem uma assinatura ativa, então restauramos seu acesso Premium.\nVocê não foi cobrado novamente.",
+  "purchase_pending_title": "Compra pendente",
+  "purchase_pending_message": "Sua compra está aguardando aprovação. O Premium será desbloqueado após a aprovação.",
+  "purchase_failed_title": "Falha na compra",
+  "purchase_failed_message": "Algo deu errado. Tente novamente.",
+  "restore_failed_message": "Não foi possível conectar à App Store. Verifique sua conexão e tente novamente."
 }

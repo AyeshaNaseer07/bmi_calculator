@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI計算機のリマインダー",
   "notification_channel_description": "健康管理と体重記録の定期リマインダー",
   "no_product_found": "商品が見つかりません",
-  "check_internet_connection": "インターネット接続を確認してください。"
+  "check_internet_connection": "インターネット接続を確認してください。",
+  "already_subscribed_title": "すでにプレミアムです",
+  "already_subscribed_message": "有効なサブスクリプションがあるため、プレミアムを復元しました。\n再度請求されることはありません。",
+  "purchase_pending_title": "購入保留中",
+  "purchase_pending_message": "購入は承認待ちです。承認されるとプレミアムが有効になります。",
+  "purchase_failed_title": "購入に失敗しました",
+  "purchase_failed_message": "問題が発生しました。もう一度お試しください。",
+  "restore_failed_message": "App Storeに接続できませんでした。接続を確認して、もう一度お試しください。"
 }

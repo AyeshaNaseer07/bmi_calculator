@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI کیلکولیٹر کی یاددہانیاں",
   "notification_channel_description": "صحت اور وزن کی ٹریکنگ کے لیے مقررہ یاددہانیاں",
   "no_product_found": "کوئی پروڈکٹ نہیں ملا",
-  "check_internet_connection": "براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں۔"
+  "check_internet_connection": "براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں۔",
+  "already_subscribed_title": "آپ پہلے سے پریمیم ہیں",
+  "already_subscribed_message": "آپ کی سبسکرپشن پہلے سے فعال ہے، اس لیے آپ کی پریمیم رسائی بحال کر دی گئی ہے۔\nآپ سے دوبارہ رقم نہیں لی گئی۔",
+  "purchase_pending_title": "خریداری زیرِ التوا",
+  "purchase_pending_message": "آپ کی خریداری منظوری کی منتظر ہے۔ منظوری کے بعد پریمیم کھل جائے گا۔",
+  "purchase_failed_title": "خریداری ناکام",
+  "purchase_failed_message": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔",
+  "restore_failed_message": "ایپ اسٹور سے رابطہ نہیں ہو سکا۔ براہ کرم اپنا کنکشن چیک کر کے دوبارہ کوشش کریں۔"
 }

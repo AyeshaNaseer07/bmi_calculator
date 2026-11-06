@@ -976,5 +976,12 @@
   "notification_channel_name": "Promemoria del Calcolatore BMI",
   "notification_channel_description": "Promemoria programmati per salute e monitoraggio del peso",
   "no_product_found": "Nessun prodotto trovato",
-  "check_internet_connection": "Controlla la tua connessione a internet."
+  "check_internet_connection": "Controlla la tua connessione a internet.",
+  "already_subscribed_title": "Sei già Premium",
+  "already_subscribed_message": "Hai già un abbonamento attivo, quindi abbiamo ripristinato il tuo accesso Premium.\nNon ti è stato addebitato nulla.",
+  "purchase_pending_title": "Acquisto in sospeso",
+  "purchase_pending_message": "Il tuo acquisto è in attesa di approvazione. Premium verrà sbloccato una volta approvato.",
+  "purchase_failed_title": "Acquisto non riuscito",
+  "purchase_failed_message": "Qualcosa è andato storto. Riprova.",
+  "restore_failed_message": "Impossibile raggiungere l'App Store. Controlla la connessione e riprova."
 }

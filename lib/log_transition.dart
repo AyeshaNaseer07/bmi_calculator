@@ -23,6 +23,25 @@ class PlatformCode {
     }
   }
 
+  /// Finishes all unfinished StoreKit 2 transactions. Returns how many.
+  static Future<int> finishUnfinishedTransactions() async {
+    try {
+      return await _channel.invokeMethod<int>('finishUnfinishedTransactions') ??
+          0;
+    } catch (e) {
+      log("⚠️ Failed to finish unfinished transactions: $e");
+      return 0;
+    }
+  }
+
+  /// [onChanged] runs whenever StoreKit reports a transaction update
+  /// (refund, revocation, renewal, expiry) while the app is running.
+  static void listenForEntitlementChanges(void Function() onChanged) {
+    _channel.setMethodCallHandler((call) async {
+      if (call.method == 'entitlementsChanged') onChanged();
+    });
+  }
+
   static Future<void> logTransactionToFirebase({
     required String txt,
     String? transactionId,

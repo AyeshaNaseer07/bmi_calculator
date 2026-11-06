@@ -976,5 +976,12 @@
   "notification_channel_name": "VKİ Hesaplayıcı Hatırlatmaları",
   "notification_channel_description": "Planlanmış sağlık ve kilo takibi hatırlatmaları",
   "no_product_found": "Ürün bulunamadı",
-  "check_internet_connection": "Lütfen internet bağlantınızı kontrol edin."
+  "check_internet_connection": "Lütfen internet bağlantınızı kontrol edin.",
+  "already_subscribed_title": "Zaten Premium'sunuz",
+  "already_subscribed_message": "Zaten aktif bir aboneliğiniz var, bu yüzden Premium erişiminizi geri yükledik.\nTekrar ücret alınmadı.",
+  "purchase_pending_title": "Satın alma beklemede",
+  "purchase_pending_message": "Satın alma işleminiz onay bekliyor. Onaylandığında Premium açılacak.",
+  "purchase_failed_title": "Satın alma başarısız",
+  "purchase_failed_message": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+  "restore_failed_message": "App Store'a ulaşılamadı. Lütfen bağlantınızı kontrol edip tekrar deneyin."
 }

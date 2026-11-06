@@ -36,7 +36,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   bool _fromOnboarding = false;
   Worker? _premiumWatch;
   bool _purchaseHandled = false;
-  bool _restoring = false;
+
+  /// True while Continue/Restore is running and handling its own result.
+  bool _inFlow = false;
 
   static const Color _green = Color(0xFF0AA37D);
 
@@ -61,7 +63,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
     // Premium can turn on from the store's own update even when purchase()
     // didn't report success, so the paywall reacts to the status itself.
     _premiumWatch = ever<bool>(_appController.isPremium, (premium) {
-      if (premium && !_restoring) _onPurchased();
+      // Only for late Ask to Buy approvals; Continue/Restore handle their
+      // own results.
+      if (premium && !_inFlow) _onPurchased();
     });
     _initCrossDelay();
     _loadPrices();
@@ -133,6 +137,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       }
     }
     setState(() => _isLoading = true);
+    _inFlow = true;
 
     final selectedProductId = _appController.remoteConfigService.getProductId(
       _selectedPlan,
@@ -140,9 +145,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
     debugPrint('Subscribing with remote product ID: $selectedProductId');
 
-    bool success = false;
+    var result = PremiumPurchaseResult.failed;
     try {
-      success = await _appController.upgradeToPremium(
+      result = await _appController.upgradeToPremium(
         _selectedPlan,
         PaywallType.onboarding,
       );
@@ -153,9 +158,23 @@ class _PaywallScreenState extends State<PaywallScreen> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    // Cancelled or failed: stay on the paywall.
-    if (!success) return;
-    await _onPurchased();
+    switch (result) {
+      case PremiumPurchaseResult.purchased:
+        await _onPurchased();
+      case PremiumPurchaseResult.alreadySubscribed:
+        // Apple's "already subscribed" sheet was skipped; premium restored.
+        _purchaseHandled = true;
+        await PremiumCongratsDialog.show(alreadySubscribed: true);
+        _leavePaywall();
+      case PremiumPurchaseResult.pending:
+        _inFlow = false;
+        Get.snackbar('purchase_pending_title'.tr, 'purchase_pending_message'.tr);
+      case PremiumPurchaseResult.cancelled:
+        _inFlow = false;
+      case PremiumPurchaseResult.failed:
+        _inFlow = false;
+        Get.snackbar('purchase_failed_title'.tr, 'purchase_failed_message'.tr);
+    }
   }
 
   /// Thank-you dialog, then leave the paywall. Runs once, from whichever
@@ -171,22 +190,26 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Future<void> _onRestore() async {
     if (_isLoading) return;
     setState(() => _isLoading = true);
-    _restoring = true;
-    bool restored = false;
+    _inFlow = true;
+    var result = PremiumRestoreResult.failed;
     try {
-      restored = await _appController.restorePurchases();
+      result = await _appController.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
-    _restoring = false;
     if (!mounted) return;
     setState(() => _isLoading = false);
-    if (restored) {
-      _purchaseHandled = true;
-      await PremiumCongratsDialog.show(isRestore: true);
-      _leavePaywall();
-    } else {
-      Get.snackbar('restore'.tr, 'no_previous_purchase_found'.tr);
+    switch (result) {
+      case PremiumRestoreResult.restored:
+        _purchaseHandled = true;
+        await PremiumCongratsDialog.show(isRestore: true);
+        _leavePaywall();
+      case PremiumRestoreResult.nothingToRestore:
+        _inFlow = false;
+        Get.snackbar('restore'.tr, 'no_previous_purchase_found'.tr);
+      case PremiumRestoreResult.failed:
+        _inFlow = false;
+        Get.snackbar('restore'.tr, 'restore_failed_message'.tr);
     }
   }
 

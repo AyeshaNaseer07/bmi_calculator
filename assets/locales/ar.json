@@ -976,5 +976,12 @@
   "notification_channel_name": "تذكيرات حاسبة BMI",
   "notification_channel_description": "تذكيرات مجدولة لتتبع الصحة والوزن",
   "no_product_found": "لم يتم العثور على منتج",
-  "check_internet_connection": "يرجى التحقق من اتصالك بالإنترنت."
+  "check_internet_connection": "يرجى التحقق من اتصالك بالإنترنت.",
+  "already_subscribed_title": "أنت مشترك بالفعل",
+  "already_subscribed_message": "لديك اشتراك نشط بالفعل، لذلك استعدنا وصولك إلى الميزات المميزة.\nلم يتم خصم أي مبلغ مرة أخرى.",
+  "purchase_pending_title": "الشراء قيد الانتظار",
+  "purchase_pending_message": "عملية الشراء بانتظار الموافقة. سيتم فتح الميزات المميزة بعد الموافقة.",
+  "purchase_failed_title": "فشل الشراء",
+  "purchase_failed_message": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "restore_failed_message": "تعذّر الاتصال بمتجر App Store. يرجى التحقق من الاتصال والمحاولة مرة أخرى."
 }

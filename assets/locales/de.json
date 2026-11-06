@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI-Rechner Erinnerungen",
   "notification_channel_description": "Geplante Erinnerungen zur Gesundheits- und Gewichtsverfolgung",
   "no_product_found": "Kein Produkt gefunden",
-  "check_internet_connection": "Bitte überprüfe deine Internetverbindung."
+  "check_internet_connection": "Bitte überprüfe deine Internetverbindung.",
+  "already_subscribed_title": "Du bist bereits Premium",
+  "already_subscribed_message": "Du hast bereits ein aktives Abo, daher haben wir deinen Premium-Zugang wiederhergestellt.\nEs wurde nichts erneut berechnet.",
+  "purchase_pending_title": "Kauf ausstehend",
+  "purchase_pending_message": "Dein Kauf wartet auf Genehmigung. Premium wird freigeschaltet, sobald er genehmigt ist.",
+  "purchase_failed_title": "Kauf fehlgeschlagen",
+  "purchase_failed_message": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+  "restore_failed_message": "Der App Store ist nicht erreichbar. Bitte prüfe deine Verbindung und versuche es erneut."
 }

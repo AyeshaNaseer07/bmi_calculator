@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI-kalkylatorns påminnelser",
   "notification_channel_description": "Schemalagda påminnelser om hälsa och viktregistrering",
   "no_product_found": "Ingen produkt hittades",
-  "check_internet_connection": "Kontrollera din internetanslutning."
+  "check_internet_connection": "Kontrollera din internetanslutning.",
+  "already_subscribed_title": "Du är redan Premium",
+  "already_subscribed_message": "Du har redan en aktiv prenumeration, så vi har återställt din Premium-åtkomst.\nDu debiterades inte igen.",
+  "purchase_pending_title": "Köp väntar",
+  "purchase_pending_message": "Ditt köp väntar på godkännande. Premium låses upp när det har godkänts.",
+  "purchase_failed_title": "Köpet misslyckades",
+  "purchase_failed_message": "Något gick fel. Försök igen.",
+  "restore_failed_message": "Kunde inte nå App Store. Kontrollera din anslutning och försök igen."
 }

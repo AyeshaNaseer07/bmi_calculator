@@ -37,7 +37,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   Timer? _crossDelayTimer;
   Worker? _premiumWatch;
   bool _purchaseHandled = false;
-  bool _restoring = false;
+
+  /// True while Continue/Restore is running and handling its own result.
+  bool _inFlow = false;
 
   @override
   void initState() {
@@ -56,7 +58,9 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
     // Premium can turn on from the store's own update even when purchase()
     // didn't report success, so the paywall reacts to the status itself.
     _premiumWatch = ever<bool>(_app.isPremium, (premium) {
-      if (premium && !_restoring) _onPurchased();
+      // Only for late Ask to Buy approvals; Continue/Restore handle their
+      // own results.
+      if (premium && !_inFlow) _onPurchased();
     });
     _loadPrices();
   }
@@ -105,15 +109,33 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
       }
     }
     setState(() => _loading = true);
-    bool ok = false;
+    _inFlow = true;
+    var result = PremiumPurchaseResult.failed;
     try {
-      ok = await _app.upgradeToPremium(_plan, PaywallType.week);
+      result = await _app.upgradeToPremium(_plan, PaywallType.week);
     } catch (e) {
       debugPrint('Subscription error: $e');
     }
     if (!mounted) return;
     setState(() => _loading = false);
-    if (ok) await _onPurchased();
+    switch (result) {
+      case PremiumPurchaseResult.purchased:
+        await _onPurchased();
+      case PremiumPurchaseResult.alreadySubscribed:
+        // Apple's "already subscribed" sheet was skipped; premium restored.
+        _purchaseHandled = true;
+        await PremiumCongratsDialog.show(alreadySubscribed: true);
+        Get.back();
+        widget.onUnlocked?.call();
+      case PremiumPurchaseResult.pending:
+        _inFlow = false;
+        Get.snackbar('purchase_pending_title'.tr, 'purchase_pending_message'.tr);
+      case PremiumPurchaseResult.cancelled:
+        _inFlow = false;
+      case PremiumPurchaseResult.failed:
+        _inFlow = false;
+        Get.snackbar('purchase_failed_title'.tr, 'purchase_failed_message'.tr);
+    }
   }
 
   /// Thank-you dialog, then leave the paywall. Runs once, from whichever
@@ -146,23 +168,27 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
   Future<void> _restore() async {
     if (_loading) return;
     setState(() => _loading = true);
-    _restoring = true;
-    bool restored = false;
+    _inFlow = true;
+    var result = PremiumRestoreResult.failed;
     try {
-      restored = await _app.restorePurchases();
+      result = await _app.restorePurchases();
     } catch (e) {
       debugPrint('Restore error: $e');
     }
-    _restoring = false;
     if (!mounted) return;
     setState(() => _loading = false);
-    if (restored) {
-      _purchaseHandled = true;
-      await PremiumCongratsDialog.show(isRestore: true);
-      Get.back();
-      widget.onUnlocked?.call();
-    } else {
-      Get.snackbar('restore'.tr, 'no_previous_purchase_found'.tr);
+    switch (result) {
+      case PremiumRestoreResult.restored:
+        _purchaseHandled = true;
+        await PremiumCongratsDialog.show(isRestore: true);
+        Get.back();
+        widget.onUnlocked?.call();
+      case PremiumRestoreResult.nothingToRestore:
+        _inFlow = false;
+        Get.snackbar('restore'.tr, 'no_previous_purchase_found'.tr);
+      case PremiumRestoreResult.failed:
+        _inFlow = false;
+        Get.snackbar('restore'.tr, 'restore_failed_message'.tr);
     }
   }
 

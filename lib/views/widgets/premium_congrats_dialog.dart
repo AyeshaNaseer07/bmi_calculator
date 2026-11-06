@@ -10,12 +10,26 @@ import '../../core/theme/app_palette.dart';
 class PremiumCongratsDialog extends StatelessWidget {
   final bool isRestore;
 
-  const PremiumCongratsDialog({super.key, this.isRestore = false});
+  /// Continue was tapped while the Apple ID already had an active
+  /// subscription: premium was restored without a new charge.
+  final bool alreadySubscribed;
+
+  const PremiumCongratsDialog({
+    super.key,
+    this.isRestore = false,
+    this.alreadySubscribed = false,
+  });
 
   /// Completes when the user taps Continue.
-  static Future<void> show({bool isRestore = false}) {
+  static Future<void> show({
+    bool isRestore = false,
+    bool alreadySubscribed = false,
+  }) {
     return Get.dialog<void>(
-      PremiumCongratsDialog(isRestore: isRestore),
+      PremiumCongratsDialog(
+        isRestore: isRestore,
+        alreadySubscribed: alreadySubscribed,
+      ),
       barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.5),
     );
@@ -71,7 +85,11 @@ class PremiumCongratsDialog extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               Text(
-                isRestore ? 'purchases_restored'.tr : 'youre_premium_now'.tr,
+                alreadySubscribed
+                    ? 'already_subscribed_title'.tr
+                    : isRestore
+                    ? 'purchases_restored'.tr
+                    : 'youre_premium_now'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppPalette.textPrimary,
@@ -85,7 +103,9 @@ class PremiumCongratsDialog extends StatelessWidget {
               ),
               SizedBox(height: 8.h),
               Text(
-                isRestore
+                alreadySubscribed
+                    ? 'already_subscribed_message'.tr
+                    : isRestore
                     ? 'purchase_restored_message'.tr
                     : 'premium_now_message'.tr,
                 textAlign: TextAlign.center,

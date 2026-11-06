@@ -976,5 +976,12 @@
   "notification_channel_name": "Recordatorios de Calculadora de IMC",
   "notification_channel_description": "Recordatorios programados de seguimiento de salud y peso",
   "no_product_found": "No se encontró ningún producto",
-  "check_internet_connection": "Comprueba tu conexión a internet."
+  "check_internet_connection": "Comprueba tu conexión a internet.",
+  "already_subscribed_title": "Ya eres Premium",
+  "already_subscribed_message": "Ya tienes una suscripción activa, así que hemos restaurado tu acceso Premium.\nNo se te ha cobrado de nuevo.",
+  "purchase_pending_title": "Compra pendiente",
+  "purchase_pending_message": "Tu compra está pendiente de aprobación. Premium se desbloqueará cuando se apruebe.",
+  "purchase_failed_title": "La compra falló",
+  "purchase_failed_message": "Algo salió mal. Inténtalo de nuevo.",
+  "restore_failed_message": "No se pudo conectar con la App Store. Revisa tu conexión e inténtalo de nuevo."
 }

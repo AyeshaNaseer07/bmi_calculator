@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show AppLifecycleListener;
+import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:get/get.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -49,9 +49,11 @@ class AppController extends GetxController {
 
     subscriptionService.onChanged = (premium) => isPremium.value = premium;
     subscriptionService.start();
-    subscriptionVerified = subscriptionService.verifyWithStore();
+    // Only turns premium off for expired/refunded subs: at launch and
+    // whenever the app comes back to the foreground.
+    subscriptionVerified = subscriptionService.checkExpiry();
     _lifecycle = AppLifecycleListener(
-      onResume: () => subscriptionService.verifyWithStore(),
+      onResume: () => subscriptionService.checkExpiry(),
     );
 
     if (isRemoteNotificationEnabled) {
@@ -94,7 +96,7 @@ class AppController extends GetxController {
     _storage.setNotificationsEnabled(enabled);
   }
 
-  Future<bool> upgradeToPremium(
+  Future<PremiumPurchaseResult> upgradeToPremium(
     SubscriptionPlan plan,
     PaywallType paywall,
   ) async {
@@ -105,10 +107,10 @@ class AppController extends GetxController {
       'product_id': remoteProductId,
     };
     AnalyticsService.log(AnalyticsService.purchaseStart, params);
-    return subscriptionService.purchase(plan, productId: remoteProductId);
+    return subscriptionService.purchase(remoteProductId);
   }
 
-  Future<bool> restorePurchases() => subscriptionService.restorePurchases();
+  Future<PremiumRestoreResult> restorePurchases() => subscriptionService.restore();
 
   void completeOnboarding() {
     onboardingSeen.value = true;

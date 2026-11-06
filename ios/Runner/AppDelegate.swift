@@ -22,6 +22,7 @@ import FirebaseAnalytics
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
   private var transactionChannel: FlutterMethodChannel?
+  private var transactionUpdatesTask: Task<Void, Never>?
 
   private func setupTransactionChannel(messenger: FlutterBinaryMessenger) {
     let transactionChannel = FlutterMethodChannel(
@@ -56,6 +57,15 @@ import FirebaseAnalytics
           ))
         }
 
+      } else if call.method == "finishUnfinishedTransactions" {
+        if #available(iOS 15.0, *) {
+          Task {
+            result(await self.finishUnfinishedTransactions())
+          }
+        } else {
+          result(0)
+        }
+
       } else if call.method == "getSubscriptionStatus" {
         guard let productIds = call.arguments as? [String] else {
           result(FlutterError(
@@ -75,6 +85,41 @@ import FirebaseAnalytics
 
       } else {
         result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
+  /// Finishes every verified unfinished transaction. Premium is decided from
+  /// `Transaction.currentEntitlements`, which still includes finished
+  /// transactions, so this is always safe. An unfinished transaction for a
+  /// product blocks buying it again ("storekit_duplicate_product_object").
+  @available(iOS 15.0, *)
+  func finishUnfinishedTransactions() async -> Int {
+    var count = 0
+    for await result in Transaction.unfinished {
+      if case .verified(let transaction) = result {
+        await transaction.finish()
+        count += 1
+        print("[IAP] finished unfinished transaction \(transaction.id) (\(transaction.productID))")
+      }
+    }
+    return count
+  }
+
+  /// Refunds, revocations, renewals and expiries arrive here while the app is
+  /// running. Dart re-checks the entitlement when told.
+  @available(iOS 15.0, *)
+  func listenForTransactionUpdates() {
+    transactionUpdatesTask?.cancel()
+    transactionUpdatesTask = Task { [weak self] in
+      for await result in Transaction.updates {
+        if case .verified(let transaction) = result {
+          print("[IAP] transaction update \(transaction.productID) revoked=\(transaction.revocationDate != nil)")
+          await transaction.finish()
+        }
+        await MainActor.run {
+          self?.transactionChannel?.invokeMethod("entitlementsChanged", arguments: nil)
+        }
       }
     }
   }
@@ -159,6 +204,9 @@ import FirebaseAnalytics
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     setupTransactionChannel(messenger: engineBridge.applicationRegistrar.messenger())
+    if #available(iOS 15.0, *) {
+      listenForTransactionUpdates()
+    }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "MaxNativeAdPlugin") {
       MaxNativeAdPlugin.register(with: registrar)
     }

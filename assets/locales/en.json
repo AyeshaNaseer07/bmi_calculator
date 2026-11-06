@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI Calculator Reminders",
   "notification_channel_description": "Scheduled health and weight tracking reminders",
   "no_product_found": "No product found",
-  "check_internet_connection": "Please check your internet connection."
+  "check_internet_connection": "Please check your internet connection.",
+  "already_subscribed_title": "You're Already Premium",
+  "already_subscribed_message": "You already have an active subscription, so we've restored your Premium access.\nYou weren't charged again.",
+  "purchase_pending_title": "Purchase Pending",
+  "purchase_pending_message": "Your purchase is waiting for approval. Premium will unlock once it's approved.",
+  "purchase_failed_title": "Purchase Failed",
+  "purchase_failed_message": "Something went wrong. Please try again.",
+  "restore_failed_message": "Couldn't reach the App Store. Please check your connection and try again."
 }

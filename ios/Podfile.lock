@@ -127,9 +127,13 @@ PODS:
     - AppMetricaLogSwift (= 6.7.0)
   - appsflyer_sdk (6.17.7):
     - appsflyer_sdk/Core (= 6.17.7)
+    - appsflyer_sdk/PurchaseConnector (= 6.17.7)
   - appsflyer_sdk/Core (6.17.7):
     - AppsFlyerFramework (= 6.17.7)
     - Flutter
+  - appsflyer_sdk/PurchaseConnector (6.17.7):
+    - Flutter
+    - PurchaseConnector (= 6.17.7)
   - AppsFlyerFramework (6.17.7):
     - AppsFlyerFramework/Main (= 6.17.7)
   - AppsFlyerFramework/Main (6.17.7)
@@ -369,6 +373,10 @@ PODS:
   - PromisesObjC (2.4.1)
   - PromisesSwift (2.4.1):
     - PromisesObjC (= 2.4.1)
+  - PurchaseConnector (6.17.7):
+    - PurchaseConnector/Main (= 6.17.7)
+  - PurchaseConnector/Main (6.17.7):
+    - AppsFlyerFramework (= 6.17.7)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -488,6 +496,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PromisesSwift
+    - PurchaseConnector
     - UnityAds
     - UnityCoherenceLib
     - VungleAds
@@ -568,7 +577,7 @@ SPEC CHECKSUMS:
   AppMetricaProtobufUtils: 07b4b3a8fb46893c5802ff77a48d74b71cb27b55
   AppMetricaStorageUtils: c1148b73b0376dceaa2519817283e01523d488a2
   AppMetricaSynchronization: 95008c50199fe81d3cb3ea989a1c32f3588dcfef
-  appsflyer_sdk: 01d0cd834fe2fffd7f2372ab38690f7483587720
+  appsflyer_sdk: 09fed05fe9c4beac4954191f13d9b4185fb89fc3
   AppsFlyerFramework: ae7caf1688348f2d7a742037bd4fc6966d39d362
   BigoADS: 77e52c0881e33b1edd4893c40c7c0d118f06d88c
   ChartboostSDK: a0a62eeaf756b7315ed53608eb21dcb41c6dcd36
@@ -612,6 +621,7 @@ SPEC CHECKSUMS:
   permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   PromisesSwift: 217dea0fd5d2ad65222a109c48698add13cc1c5b
+  PurchaseConnector: a5314b19fe4eb10401229a0be420f81412f600b6
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   UnityAds: caaccd3367f77a9a64b061404c5cc8eb2df20103
@@ -621,6 +631,6 @@ SPEC CHECKSUMS:
   webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
   YandexMobileAds: c1fc595860945630cc0ed0ebed1fa23ab6c5ce17
 
-PODFILE CHECKSUM: 737ca304a4e5e3a6c1317634c0ea0c9f36c92df7
+PODFILE CHECKSUM: 285e7e9f5c2d671ae85f6dc8ab6520e7b2fddd08
 
 COCOAPODS: 1.17.0

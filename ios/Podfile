@@ -1,6 +1,10 @@
 # Uncomment this line to define a global platform for your project
 platform :ios, '15.0'
 
+# Includes the AppsFlyer Purchase Connector native module
+# (fixes MissingPluginException on channel af-purchase-connector).
+$AppsFlyerPurchaseConnector = true
+
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 

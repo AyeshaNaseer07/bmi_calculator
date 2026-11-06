@@ -976,5 +976,12 @@
   "notification_channel_name": "BMI Calculator-herinneringen",
   "notification_channel_description": "Geplande herinneringen om je gezondheid en gewicht bij te houden",
   "no_product_found": "Geen product gevonden",
-  "check_internet_connection": "Controleer je internetverbinding."
+  "check_internet_connection": "Controleer je internetverbinding.",
+  "already_subscribed_title": "Je bent al Premium",
+  "already_subscribed_message": "Je hebt al een actief abonnement, dus we hebben je Premium-toegang hersteld.\nEr is niets opnieuw in rekening gebracht.",
+  "purchase_pending_title": "Aankoop in behandeling",
+  "purchase_pending_message": "Je aankoop wacht op goedkeuring. Premium wordt ontgrendeld zodra deze is goedgekeurd.",
+  "purchase_failed_title": "Aankoop mislukt",
+  "purchase_failed_message": "Er is iets misgegaan. Probeer het opnieuw.",
+  "restore_failed_message": "Kan de App Store niet bereiken. Controleer je verbinding en probeer het opnieuw."
 }
