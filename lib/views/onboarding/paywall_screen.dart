@@ -168,7 +168,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
         _leavePaywall();
       case PremiumPurchaseResult.pending:
         _inFlow = false;
-        Get.snackbar('purchase_pending_title'.tr, 'purchase_pending_message'.tr);
+        Get.snackbar(
+          'purchase_pending_title'.tr,
+          'purchase_pending_message'.tr,
+        );
       case PremiumPurchaseResult.cancelled:
         _inFlow = false;
       case PremiumPurchaseResult.failed:
