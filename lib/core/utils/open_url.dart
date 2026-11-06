@@ -1,13 +1,11 @@
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/services/logger_service.dart';
-import '../../views/widgets/ads/app_open_ad_manager.dart';
 
 Future<void> openUrl(String url) async {
   final uri = Uri.parse(url);
   try {
     if (await canLaunchUrl(uri)) {
-      AppOpenAdManager.instance.skipNextResume();
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       AppLogger.e('Could not launch $url');

@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../log_transition.dart';
 import '../models/remote_model.dart';
 import 'price_service.dart';
+import 'remote_config_service.dart';
 import 'storage_service.dart';
 
 enum SubscriptionPlan { weekly, monthly, yearly }
@@ -26,7 +27,12 @@ class SubscriptionService {
   StreamSubscription<List<PurchaseDetails>>? _purchaseUpdates;
   Completer<_Outcome>? _purchase;
   String? _purchaseProductId;
+
+  /// Product ids StoreKit replayed as restored while a restore or an
+  /// entitlement check is running; null otherwise.
   Set<String>? _restored;
+  DateTime? _lastRestoredEventAt;
+  bool _restoring = false;
   Future<Set<String>>? _entitlementCheck;
   String? _installId;
 
@@ -49,18 +55,26 @@ class SubscriptionService {
 
   /// Null if the store couldn't be reached; the stored status is kept then.
   Future<bool?> verifyWithStore() async {
+    // A purchase or restore in progress decides the status itself.
+    if (_purchase != null || _restoring) return null;
     if (!await _isLinked()) {
       await _setPremium(false);
       return false;
     }
-    // A purchase in progress decides the status itself.
-    if (_purchase != null) return null;
     try {
-      if (Platform.isIOS && await _storeDeniesEntitlement()) {
-        await _setPremium(false);
-        return false;
+      if (Platform.isIOS) {
+        // StoreKit's own entitlement state is authoritative and needs no
+        // timing luck, unlike the purchase stream below.
+        final status = await _storeStatus();
+        if (_purchase != null || _restoring) return null;
+        if (status == 'active') {
+          await _setPremium(true);
+          return true;
+        }
       }
       final active = (await _activeProductIds()).isNotEmpty;
+      // A purchase or restore started meanwhile and owns the status now.
+      if (_purchase != null || _restoring) return null;
       await _setPremium(active);
       return active;
     } catch (e) {
@@ -108,17 +122,26 @@ class SubscriptionService {
   }
 
   /// The only way a purchase made before a reinstall unlocks premium again.
+  ///
+  /// Asks StoreKit for the entitlement directly first, then replays the
+  /// purchase history through the purchase stream and waits for it to
+  /// settle, and only then falls back to `sync()` (which may ask for the
+  /// Apple ID password). Any restored product unlocks premium.
   Future<bool> restorePurchases() async {
+    if (_restoring) return false;
+    _restoring = true;
+    final seen = _restored = <String>{};
     try {
-      var active = await _activeProductIds();
-      if (active.isEmpty && Platform.isIOS) {
+      var active = await _restoreCheck(seen);
+      if (!active && Platform.isIOS) {
         // Asks for the Apple ID password, so only on the user's tap.
         await _iap
             .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>()
             .sync();
-        active = await _activeProductIds();
+        active = await _restoreCheck(seen);
       }
-      if (active.isEmpty) return false;
+      debugPrint('Restore result: active=$active, restored=$seen');
+      if (!active) return false;
       await _link();
       await _setPremium(true);
       return true;
@@ -126,8 +149,20 @@ class SubscriptionService {
       debugPrint('Restore error: $e');
       return false;
     } finally {
+      if (identical(_restored, seen)) _restored = null;
+      _restoring = false;
       unawaited(PriceService.refreshTrialEligibility());
     }
+  }
+
+  Future<bool> _restoreCheck(Set<String> seen) async {
+    if (Platform.isIOS) {
+      final status = await _storeStatus();
+      if (status == 'active') return true;
+    }
+    await _iap.restorePurchases();
+    await _waitForRestoredEvents(seen, minWait: const Duration(seconds: 3));
+    return seen.isNotEmpty;
   }
 
   Future<_Outcome> _buy(String id) async {
@@ -190,10 +225,13 @@ class SubscriptionService {
           _purchase != null && p.productID == _purchaseProductId;
       switch (p.status) {
         case PurchaseStatus.restored:
-          _restored?.add(p.productID);
+          _noteRestored(p.productID);
         case PurchaseStatus.purchased:
           if (isOwnPurchase) {
             _finishPurchase(_Outcome.purchased);
+          } else if (_restoring) {
+            // Replayed history can arrive as "purchased" during a restore.
+            _noteRestored(p.productID);
           } else {
             // Renewal, refund, Ask to Buy approval: re-read the entitlements.
             unawaited(verifyWithStore());
@@ -205,6 +243,12 @@ class SubscriptionService {
           if (isOwnPurchase) _finishPurchase(_Outcome.failed);
       }
     }
+  }
+
+  void _noteRestored(String productId) {
+    debugPrint('Restored product from store: $productId');
+    _restored?.add(productId);
+    _lastRestoredEventAt = DateTime.now();
   }
 
   void _finishPurchase(_Outcome outcome) {
@@ -228,13 +272,38 @@ class SubscriptionService {
   Future<Set<String>> _queryActiveProductIds() async {
     // StoreKit 2 replays Transaction.currentEntitlements on the purchase
     // stream as restored purchases, without a sign-in prompt.
-    final restored = _restored = <String>{};
+    final owner = _restored == null;
+    final restored = _restored ??= <String>{};
     try {
       await _iap.restorePurchases();
-      await Future<void>.delayed(const Duration(milliseconds: 500));
-      return restored;
+      await _waitForRestoredEvents(restored);
+      return {...restored};
     } finally {
-      _restored = null;
+      if (owner && identical(_restored, restored)) _restored = null;
+    }
+  }
+
+  /// StoreKit gives no "restore finished" signal, so wait until restored
+  /// purchases have arrived and then stopped coming. With none at all, give
+  /// up after [minWait].
+  Future<void> _waitForRestoredEvents(
+    Set<String> seen, {
+    Duration minWait = const Duration(milliseconds: 1500),
+  }) async {
+    const quiet = Duration(milliseconds: 800);
+    const maxWait = Duration(seconds: 8);
+    final started = DateTime.now();
+    _lastRestoredEventAt = null;
+    while (true) {
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+      final now = DateTime.now();
+      final elapsed = now.difference(started);
+      if (elapsed >= maxWait) return;
+      if (seen.isEmpty) {
+        if (elapsed >= minWait) return;
+      } else if (now.difference(_lastRestoredEventAt ?? started) >= quiet) {
+        return;
+      }
     }
   }
 
@@ -243,13 +312,34 @@ class SubscriptionService {
     RemoteModel.defaultYearlyProductId,
   ];
 
-  /// True only when the App Store says the entitlement was refunded,
-  /// revoked or lapsed. Unknown / none results never revoke.
-  Future<bool> _storeDeniesEntitlement() async {
-    final ids = {..._knownProductIds, ?_purchaseProductId}.toList();
-    final status = await PlatformCode.getSubscriptionStatus(ids);
+  /// Every product id this app can sell: the defaults, whatever Remote
+  /// Config currently names for each paywall, and the one being bought.
+  Set<String> _candidateProductIds() {
+    final ids = <String>{..._knownProductIds, ?_purchaseProductId};
+    try {
+      final rc = RemoteConfigService.to;
+      for (final paywall in PaywallType.values) {
+        for (final plan in [
+          SubscriptionPlan.monthly,
+          SubscriptionPlan.yearly,
+        ]) {
+          ids.add(rc.getProductId(plan, paywall).trim());
+        }
+      }
+    } catch (_) {
+      // Remote Config not ready yet: the defaults still cover the common case.
+    }
+    return ids..remove('');
+  }
+
+  /// StoreKit 2 entitlement for any of this app's products: `active`,
+  /// `revoked`, `expired`, `none` or `unknown`.
+  Future<String> _storeStatus() async {
+    final status = await PlatformCode.getSubscriptionStatus(
+      _candidateProductIds().toList(),
+    );
     debugPrint('Store entitlement status: $status');
-    return status == 'revoked' || status == 'expired';
+    return status;
   }
 
   Future<void> _setPremium(bool premium) async {
