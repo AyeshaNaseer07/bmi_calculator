@@ -91,8 +91,8 @@ class HealthInsightController extends GetxController {
     }
     hasInsights.value = true;
     AnalyticsService.log(AnalyticsService.insightsGenerated, {
-      'goal': selectedGoal.value.toString(),
-      'activity': selectedActivity.value.toString(),
+      'goal': selectedGoal.value?.name,
+      'activity': selectedActivity.value?.name,
     });
   }
 

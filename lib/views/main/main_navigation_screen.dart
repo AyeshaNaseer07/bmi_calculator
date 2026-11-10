@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/routes/app_routes.dart';
+import '../../data/services/analytics_service.dart';
 import '../history/history_screen.dart';
 import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
@@ -35,9 +36,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     HistoryScreen(showBackButton: false),
   ];
 
+  // Screen names for the tabs above (same order). Home is logged by the route
+  // observer when the shell is pushed.
+  static const _tabScreenNames = [
+    'home',
+    'profile',
+    'weight-tracking',
+    'history',
+  ];
+
   void _selectTab(int index) {
     if (index == _currentIndex) return;
     setState(() => _currentIndex = index);
+    AnalyticsService.logScreen(_tabScreenNames[index]);
     _tabFade.forward(from: 0);
   }
 

@@ -103,8 +103,8 @@ class AppController extends GetxController {
     final remoteProductId = remoteConfigService.getProductId(plan, paywall);
     final params = {
       'plan': plan.name,
-      'paywall': paywall.name,
-      'product_id': remoteProductId,
+      'type': paywall.name,
+      'product': remoteProductId,
     };
     AnalyticsService.log(AnalyticsService.purchaseStart, params);
     return subscriptionService.purchase(remoteProductId);

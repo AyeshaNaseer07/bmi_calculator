@@ -105,8 +105,8 @@ class WeightTrackerController extends GetxController {
     await _storage.addWeightRecord(newRecord);
     weightHistory.add(newRecord);
     AnalyticsService.log(AnalyticsService.weightLogged, {
-      'has_note': note != null && note.isNotEmpty,
-      'has_goal': goalWeight > 0,
+      'note': note != null && note.isNotEmpty,
+      'goal': goalWeight > 0,
     });
     currentWeight.value = weight;
     // Update goal weight if provided

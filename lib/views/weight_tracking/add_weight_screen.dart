@@ -200,8 +200,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         child: Center(
           child: Lottie.asset(
             AppAssets.weightTrackingLottie,
-            width: 380.w,
-            height: 380.w,
+            width: 500.w,
+            height: 500.w,
           ),
         ),
       ),

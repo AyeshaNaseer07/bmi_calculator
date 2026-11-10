@@ -151,9 +151,9 @@ class BMIController extends GetxController {
     bmiHistory.insert(0, record);
     latestRecord.value = record;
     AnalyticsService.log(AnalyticsService.bmiCalculated, {
-      'category': category.toString(),
+      'category': category.name,
       'gender': record.gender,
-      'activity': record.activity.toString(),
+      'activity': record.activity.name,
     });
 
     final profile = _storage.getUserProfile();

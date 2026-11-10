@@ -49,6 +49,34 @@ class AnalyticsService {
     } catch (e) {
       debugPrint('Analytics screen "$name" skipped: $e');
     }
+    if (_noCustomScreenEvent.contains(name)) return;
+    await log(screenEventName(name));
+  }
+
+  /// Screens that only get Firebase's built-in `screen_view`, no custom event.
+  static const _noCustomScreenEvent = {
+    'language-selection',
+    'onboarding',
+    'paywall',
+    'bmi-calculator',
+    'add-weight',
+    'health-insights',
+  };
+
+  /// Custom per-screen event name, e.g. `language-selection` ->
+  /// `language_selection_view`, `EatVegetablesScreen` -> `eat_vegetables_view`.
+  /// Firebase allows only letters, digits and underscores (max 40 chars).
+  static String screenEventName(String screen) {
+    var s = screen
+        .replaceAllMapped(RegExp(r'(?<=[a-z0-9])([A-Z])'), (m) => '_${m[1]}')
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+    if (s.endsWith('_screen')) s = s.substring(0, s.length - 7);
+    if (s.isEmpty || !RegExp(r'^[a-z]').hasMatch(s)) s = 's_$s';
+    const suffix = '_view';
+    if (s.length + suffix.length > 40) s = s.substring(0, 40 - suffix.length);
+    return '$s$suffix';
   }
 }
 
