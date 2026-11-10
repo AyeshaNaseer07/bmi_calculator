@@ -186,10 +186,8 @@ import FirebaseAnalytics
 
   @available(iOS 15.0, *)
   private func logPurchase(_ transaction: Transaction) {
-    Analytics.logEvent(AnalyticsEventPurchase, parameters: [
-      AnalyticsParameterItemID: transaction.productID,
-      AnalyticsParameterTransactionID: String(transaction.id),
-    ])
+    // StoreKit 2 transaction logging for Google Ads / Firebase conversion measurement.
+    Analytics.logTransaction(transaction)
   }
 
   override func application(
