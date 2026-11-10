@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
@@ -52,7 +53,7 @@ class DailyMealPlanScreen extends StatelessWidget {
                 message: 'your_progress'.tr,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => Get.to(() => const MealProgressScreen()),
+                  onTap: () => Get.to(() => const StatsLoadingScreen()),
                   child: Container(
                     width: 36.w,
                     height: 36.w,
@@ -87,6 +88,38 @@ class DailyMealPlanScreen extends StatelessWidget {
           SizedBox(height: 10.h),
           TipBanner(text: 'remember_portions'.tr),
         ],
+      ),
+    );
+  }
+}
+
+/// Brief stats animation shown before the progress screen.
+class StatsLoadingScreen extends StatefulWidget {
+  const StatsLoadingScreen();
+
+  @override
+  State<StatsLoadingScreen> createState() => _StatsLoadingScreenState();
+}
+
+class _StatsLoadingScreenState extends State<StatsLoadingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 1400), () {
+      if (mounted) Get.off(() => const MealProgressScreen());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Lottie.asset(
+          AppAssets.statsLottie,
+          width: 360.w,
+          height: 360.w,
+        ),
       ),
     );
   }

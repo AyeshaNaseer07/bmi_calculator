@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../controllers/weight_tracker_controller.dart';
 import '../../core/constants/app_colors.dart';
@@ -182,7 +183,38 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     } catch (_) {}
 
     await _controller.addWeight(current, DateTime.now(), goalWeight: goal);
-    Get.back();
+    if (!mounted) return;
+    // Brief animation, then close it and this screen to land on the
+    // weight tracking page.
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: AppPalette.surface,
+      transitionDuration: const Duration(milliseconds: 350),
+      transitionBuilder: (_, anim, _, child) => FadeTransition(
+        opacity: CurvedAnimation(parent: anim, curve: Curves.easeInOut),
+        child: child,
+      ),
+      pageBuilder: (_, _, _) => PopScope(
+        canPop: false,
+        child: Center(
+          child: Lottie.asset(
+            AppAssets.weightTrackingLottie,
+            width: 380.w,
+            height: 380.w,
+          ),
+        ),
+      ),
+    );
+    await Future.delayed(const Duration(milliseconds: 3000));
+    if (!mounted) return;
+    // Remove this screen silently from underneath the animation overlay,
+    // then fade the overlay out so the tracking page is revealed smoothly
+    // (popping both would flash the add screen in between).
+    final nav = Navigator.of(context);
+    final route = ModalRoute.of(context);
+    if (route != null) nav.removeRoute(route);
+    nav.pop();
     Get.snackbar(
       'saved'.tr,
       'weight_record_saved_successfully'.tr,

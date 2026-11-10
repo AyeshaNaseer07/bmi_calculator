@@ -3,6 +3,14 @@ abstract class AppAssets {
 
   static const String _lottiesBase = 'assets/lotties';
 
+  // ── Lotties / Animations ──
+  static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
+  static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
+  static const String foodCompleteLottie = '$_lottiesBase/food_complete.json';
+  static const String statsLottie = '$_lottiesBase/stats.json';
+  static const String weightTrackingLottie =
+      '$_lottiesBase/weight_tracking.json';
+
   // ── Images ──
   static const String appBg = '$_imagesBase/bg.webp';
   static const String splashLogo = '$_imagesBase/splash_logo.webp';
@@ -48,7 +56,6 @@ abstract class AppAssets {
   static const String preIcon3 = '$_imagesBase/pre_icon3.webp';
   static const String preIcon4 = '$_imagesBase/pre_icon4.webp';
   static const String preIcon5 = '$_imagesBase/pre_icon5.webp';
-
 
   // ── Bottom Nav ──
   static const String navHome = '$_imagesBase/nav_1.webp';
@@ -106,11 +113,6 @@ abstract class AppAssets {
   static const String happyHealth = '$_imagesBase/happy_health.webp';
   static const String eatHealthy = '$_imagesBase/eat_healthy.webp';
   static const String stayHydrated = '$_imagesBase/stay_hydrated.webp';
-
-  // ── Lotties / Animations ──
-  static const String loadingGaugeGif = '$_lottiesBase/loading_gauge.gif';
-  static const String premiumLottie = '$_lottiesBase/premium_lottie.json';
-  static const String foodCompleteLottie = '$_lottiesBase/food_complete.json';
 
   // ── BMI insight / tips flow ──
   static const String insightNormal = '$_imagesBase/normal_bmi.webp';

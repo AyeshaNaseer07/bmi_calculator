@@ -102,7 +102,7 @@ class MealCompletedScreen extends StatelessWidget {
           color: Colors.white,
           size: 20.sp,
         ),
-        onPressed: () => Get.off(() => const MealProgressScreen()),
+        onPressed: () => Get.off(() => const StatsLoadingScreen()),
       ),
       body: Column(
         children: [
