@@ -1,7 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+
+bool get _isSupported => Platform.isIOS || Platform.isAndroid;
+
+const String _viewType = 'max_native_ad_view';
 
 enum MaxNativeAdState { idle, loading, loaded, failed }
 
@@ -37,7 +44,7 @@ class MaxNativeAd {
 
   /// Starts loading the ad, ideally a screen or two before it is shown
   void preload(String adUnitId) {
-    if (!Platform.isIOS || isLoadingOrLoaded) return;
+    if (!_isSupported || isLoadingOrLoaded) return;
     _listen();
 
     _adUnitId = adUnitId;
@@ -53,7 +60,7 @@ class MaxNativeAd {
   /// Releases the ad once its screen is done with it
   void destroy() {
     state.value = MaxNativeAdState.idle;
-    if (!Platform.isIOS) return;
+    if (!_isSupported) return;
     _channel.invokeMethod('destroy', {'placement': placement}).catchError((e) {
       debugPrint('[MaxNativeAd] ($placement) destroy failed: $e');
     });
@@ -103,19 +110,45 @@ class MaxNativeAdView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isIOS) return const SizedBox.shrink();
+    if (!_isSupported) return const SizedBox.shrink();
     return ValueListenableBuilder<MaxNativeAdState>(
       valueListenable: ad.state,
       builder: (context, state, _) {
         if (state != MaxNativeAdState.loaded) return const SizedBox.shrink();
+        if (Platform.isAndroid) return _buildAndroidView(context);
         return UiKitView(
           // A new key per ad, so a reloaded ad gets a fresh native view
           key: ObjectKey(ad),
-          viewType: 'max_native_ad_view',
+          viewType: _viewType,
           creationParams: {'placement': ad.placement},
           creationParamsCodec: const StandardMessageCodec(),
         );
       },
+    );
+  }
+
+  Widget _buildAndroidView(BuildContext context) {
+    final direction = Directionality.of(context);
+    return PlatformViewLink(
+      // A new key per ad, so a reloaded ad gets a fresh native view
+      key: ObjectKey(ad),
+      viewType: _viewType,
+      surfaceFactory: (context, controller) => AndroidViewSurface(
+        controller: controller as AndroidViewController,
+        gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+        hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+      ),
+      onCreatePlatformView: (params) =>
+          PlatformViewsService.initExpensiveAndroidView(
+              id: params.id,
+              viewType: _viewType,
+              layoutDirection: direction,
+              creationParams: {'placement': ad.placement},
+              creationParamsCodec: const StandardMessageCodec(),
+              onFocus: () => params.onFocusChanged(true),
+            )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create(),
     );
   }
 }

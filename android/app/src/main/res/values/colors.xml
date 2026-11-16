@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- iOS LaunchScreen.storyboard background -->
+    <color name="splash_background">#FFFFFF</color>
+    <!-- App teal (AppColors.primaryTeal) -->
+    <color name="notification_accent">#09B389</color>
+    <!-- The iOS icon artwork sits on white -->
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

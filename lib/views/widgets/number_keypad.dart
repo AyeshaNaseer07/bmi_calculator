@@ -20,7 +20,6 @@ class NumberKeypadTarget {
   });
 }
 
-/// Set by the focused field; [NumberKeypadHost] shows the keypad while set.
 final ValueNotifier<NumberKeypadTarget?> numberKeypadTarget = ValueNotifier(
   null,
 );
@@ -30,12 +29,7 @@ class NumberKeypadBinding {
   final FocusNode focus;
   final bool allowDecimal;
   final int? maxLength;
-
-  /// Keypad OK; defaults to ending editing.
   final VoidCallback? onOk;
-
-  /// Called after each keypad edit (keypad edits don't fire
-  /// `TextField.onChanged`).
   final ValueChanged<String>? onChanged;
 
   NumberKeypadBinding({
@@ -49,7 +43,9 @@ class NumberKeypadBinding {
     focus.addListener(_onFocusChange);
   }
 
-  static bool get isEnabled => defaultTargetPlatform == TargetPlatform.iOS;
+  static bool get isEnabled =>
+      defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.android;
 
   /// For the field's `keyboardType`: none while the app keypad types instead.
   TextInputType get keyboardType => isEnabled
@@ -140,7 +136,15 @@ class NumberKeypadHost extends StatelessWidget {
       valueListenable: numberKeypadTarget,
       builder: (context, target, _) {
         if (target == null) return const SizedBox.shrink();
-        return TextFieldTapRegion(child: _NumberKeypad(target: target));
+        final keypad = TextFieldTapRegion(child: _NumberKeypad(target: target));
+        if (defaultTargetPlatform != TargetPlatform.android) return keypad;
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: keypad,
+        );
       },
     );
   }

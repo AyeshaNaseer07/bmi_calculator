@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
+import '../core/constants/app_colors.dart';
 import 'local_notification_scheduler.dart';
 
 /// Top-level function required for background/terminated FCM messages.
@@ -40,8 +41,10 @@ class NotificationService {
       requestSoundPermission: false,
     );
 
+    // Android tints the small icon white, so it must be single-colour
+    // (iOS shows the app icon by itself).
     const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      '@drawable/ic_stat_notification',
     );
 
     const initSettings = InitializationSettings(
@@ -175,6 +178,7 @@ class NotificationService {
       channelDescription: 'important_updates_and_health_reminders'.tr,
       importance: Importance.max,
       priority: Priority.high,
+      color: AppColors.primaryTeal,
     );
 
     final details = NotificationDetails(

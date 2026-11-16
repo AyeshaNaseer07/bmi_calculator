@@ -9,6 +9,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'package:get/get.dart';
 
+import '../core/constants/app_colors.dart';
 import '../data/models/remote_model.dart';
 import '../data/services/remote_config_service.dart';
 
@@ -35,6 +36,7 @@ class LocalNotificationScheduler {
       channelDescription: 'notification_channel_description'.tr,
       importance: Importance.max,
       priority: Priority.high,
+      color: AppColors.primaryTeal,
     ),
   );
 

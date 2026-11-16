@@ -20,7 +20,7 @@ class QuickActionsService {
   String? _pendingShortcut;
 
   void initialize() {
-    if (!Platform.isIOS) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
 
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'onShortcut') {

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Native ad card, matching ios/Runner/MaxNativeAdPlugin.swift.
+     Positions come from NativeAdCardLayout; sizes are in dp (= iOS points).
+     Text sizes are in dp, not sp, because the iOS card uses fixed point sizes
+     and the card has a fixed height. -->
+<com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app.ads.NativeAdCardLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_native_ad_card">
+
+    <!-- The network shows its media fitted (not cropped) inside this view -->
+    <FrameLayout
+        android:id="@+id/native_ad_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/native_ad_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/native_ad_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textAlignment="viewStart"
+        android:textColor="#1A1A1A"
+        android:textSize="17dp"
+        android:textStyle="bold" />
+
+    <!-- "Ad" badge leads the description, level with its first line -->
+    <TextView
+        android:id="@+id/native_ad_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_native_ad_badge"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="Ad"
+        android:textColor="#404040"
+        android:textSize="9dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/native_ad_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="2"
+        android:textAlignment="viewStart"
+        android:textColor="#737373"
+        android:textSize="13dp" />
+
+    <Button
+        android:id="@+id/native_ad_cta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_native_ad_cta"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textColor="@color/native_ad_cta_text"
+        android:textSize="17dp"
+        android:textStyle="bold" />
+
+    <!-- AdChoices goes here, inset from the rounded corner -->
+    <FrameLayout
+        android:id="@+id/native_ad_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app.ads.NativeAdCardLayout>

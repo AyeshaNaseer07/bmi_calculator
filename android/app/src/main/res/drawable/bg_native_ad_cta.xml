@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App CTA blue (#1B92D6), pill: half the 50dp height -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#1B92D6" />
+    <corners android:radius="25dp" />
+</shape>

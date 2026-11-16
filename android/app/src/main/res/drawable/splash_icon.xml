@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+ system splash icon. An icon without a background is drawn in a
+     288dp box (visible inside a 192dp circle); a 29% inset leaves the launch
+     image at ~120dp, the size the iOS launch screen shows it at, and keeps
+     its corners inside the circle. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/launch_image"
+    android:inset="29%" />

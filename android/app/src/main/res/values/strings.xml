@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same as CFBundleDisplayName in ios/Runner/Info.plist -->
+    <string name="app_name">Bmi Calculator</string>
+
+    <!-- Same titles as UIApplicationShortcutItems in ios/Runner/Info.plist -->
+    <string name="shortcut_calculate_bmi">Calculate BMI</string>
+    <string name="shortcut_track_progress">Track Progress</string>
+    <string name="shortcut_history">History</string>
+</resources>

@@ -39,7 +39,7 @@ class NativeAds {
       : remoteModel;
 
   static bool isEnabled(NativeAdPlacement placement) {
-    if (!Platform.isIOS) return false;
+    if (!Platform.isIOS && !Platform.isAndroid) return false;
     try {
       if (Get.isRegistered<AppController>()) {
         if (Get.find<AppController>().isPremium.value) return false;

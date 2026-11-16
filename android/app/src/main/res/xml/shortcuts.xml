@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press launcher shortcuts: the Android version of the iOS home-screen
+     quick actions (UIApplicationShortcutItems), same ids and order. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_calculate_bmi"
+        android:shortcutId="calculate_bmi"
+        android:shortcutShortLabel="@string/shortcut_calculate_bmi">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app.ShortcutActivity"
+            android:targetPackage="com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app">
+            <extra android:name="shortcut_type" android:value="calculate_bmi" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_track_progress"
+        android:shortcutId="track_progress"
+        android:shortcutShortLabel="@string/shortcut_track_progress">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app.ShortcutActivity"
+            android:targetPackage="com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app">
+            <extra android:name="shortcut_type" android:value="track_progress" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_history"
+        android:shortcutId="history"
+        android:shortcutShortLabel="@string/shortcut_history">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app.ShortcutActivity"
+            android:targetPackage="com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app">
+            <extra android:name="shortcut_type" android:value="history" />
+        </intent>
+    </shortcut>
+</shortcuts>

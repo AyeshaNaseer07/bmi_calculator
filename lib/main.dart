@@ -19,6 +19,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // Draw under transparent system bars, like iOS.
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(AppTheme.systemOverlayStyle);
   await _waitUntilAppActive();
   await showCMP();
 
@@ -116,12 +119,15 @@ class BMIApp extends StatelessWidget {
           navigatorObservers: [appRouteObserver, AnalyticsRouteObserver()],
           defaultTransition: Transition.cupertino,
           builder: (context, child) {
-            Widget content = GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-              },
-              child: child,
+            Widget content = ScrollConfiguration(
+              behavior: const AppScrollBehavior(),
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: child,
+              ),
             );
 
             final mq = MediaQuery.of(context);
