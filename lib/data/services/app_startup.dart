@@ -12,6 +12,7 @@ import '../../views/widgets/ads/app_open_ad_manager.dart';
 import '../../views/widgets/ads/applovin_sdk.dart';
 import '../../views/widgets/ads/interstitial_ad_manager.dart';
 import '../../views/widgets/ads/native_ad_card.dart';
+import 'analytics_service.dart';
 import 'logger_service.dart';
 import 'price_service.dart';
 import 'quick_actions_service.dart';
@@ -84,6 +85,8 @@ class AppStartup {
 
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+      // Release analytics events queued since launch (e.g. the splash view).
+      AnalyticsService.markFirebaseReady();
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
       await RemoteConfig.initialize()
@@ -96,6 +99,9 @@ class AppStartup {
       log("Firebase initialization complete");
     } catch (e) {
       log("Error initializing Firebase: $e");
+    } finally {
+      // Also on failure, so queued calls run (and are skipped) instead of waiting.
+      AnalyticsService.markFirebaseReady();
     }
   }
 }

@@ -456,18 +456,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             }
 
             if (!hasRecords) {
-              return Padding(
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-                child: LayoutBuilder(
-                  builder: (context, constraints) => FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.topCenter,
-                    child: SizedBox(
-                      width: constraints.maxWidth,
-                      child: _buildEmptyHistorySection(),
-                    ),
-                  ),
-                ),
+                child: _buildEmptyHistorySection(),
               );
             }
 
@@ -475,7 +467,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (hasRecords) ...[
                     CustomCard(
@@ -931,61 +923,65 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     // Active Date Filter Chip
                     if (_selectedDate != null) ...[
                       SizedBox(height: 10.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppPalette.surfaceMint,
-                          borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(
-                            color: AppPalette.mintBorder,
-                            width: 1.w,
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              CupertinoIcons.calendar,
-                              size: 13.sp,
-                              color: const Color(0xFF0F766E),
+                          decoration: BoxDecoration(
+                            color: AppPalette.surfaceMint,
+                            borderRadius: BorderRadius.circular(8.r),
+                            border: Border.all(
+                              color: AppPalette.mintBorder,
+                              width: 1.w,
                             ),
-                            SizedBox(width: 6.w),
-                            Flexible(
-                              child: Text(
-                                'date_filter'.trParams({
-                                  'date': DateFormat('dd MMM yyyy')
-                                      .format(_selectedDate!),
-                                }),
-                                style: TextStyle(
-                                  color: const Color(0xFF0F766E),
-                                  fontSize: 12.sp,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                CupertinoIcons.calendar,
+                                size: 13.sp,
+                                color: const Color(0xFF0F766E),
                               ),
-                            ),
-                            SizedBox(width: 8.w),
-                            GestureDetector(
-                              onTap: () => setState(() => _selectedDate = null),
-                              child: Container(
-                                padding: EdgeInsets.all(2.r),
-                                decoration: BoxDecoration(
-                                  color: AppPalette.surface,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.close_rounded,
-                                  size: 12.sp,
-                                  color: const Color(0xFF0F766E),
+                              SizedBox(width: 6.w),
+                              Flexible(
+                                child: Text(
+                                  'date_filter'.trParams({
+                                    'date': DateFormat('dd MMM yyyy')
+                                        .format(_selectedDate!),
+                                  }),
+                                  style: TextStyle(
+                                    color: const Color(0xFF0F766E),
+                                    fontSize: 12.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 8.w),
+                              GestureDetector(
+                                onTap: () =>
+                                    setState(() => _selectedDate = null),
+                                child: Container(
+                                  padding: EdgeInsets.all(2.r),
+                                  decoration: BoxDecoration(
+                                    color: AppPalette.surface,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.close_rounded,
+                                    size: 12.sp,
+                                    color: const Color(0xFF0F766E),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -1396,7 +1392,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildEmptyHistorySection() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Unlock Premium Banner
         Obx(

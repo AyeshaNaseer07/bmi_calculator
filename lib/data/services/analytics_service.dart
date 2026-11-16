@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
 
@@ -15,8 +17,23 @@ class AnalyticsService {
   static const languageChanged = 'language_changed';
   static const profilePhotoUpdated = 'profile_photo_updated';
   static const recordsDeleted = 'history_records_deleted';
+  static final Completer<void> _firebaseReady = Completer<void>();
+
+  /// Called by AppStartup once Firebase.initializeApp has finished (or failed).
+  static void markFirebaseReady() {
+    if (!_firebaseReady.isCompleted) _firebaseReady.complete();
+  }
+
+  /// Never wait forever if startup never gets that far.
+  static Future<void> _whenReady() => _firebaseReady.isCompleted
+      ? Future<void>.value()
+      : _firebaseReady.future.timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {},
+        );
 
   static Future<void> log(String name, [Map<String, Object?>? params]) async {
+    await _whenReady();
     try {
       final clean = <String, Object>{
         for (final e in (params ?? const <String, Object?>{}).entries)
@@ -32,6 +49,7 @@ class AnalyticsService {
   }
 
   static Future<void> setUserProperty(String name, String? value) async {
+    await _whenReady();
     try {
       await FirebaseAnalytics.instance.setUserProperty(
         name: name,
@@ -44,6 +62,7 @@ class AnalyticsService {
 
   static Future<void> logScreen(String? name) async {
     if (name == null || name.isEmpty) return;
+    await _whenReady();
     try {
       await FirebaseAnalytics.instance.logScreenView(screenName: name);
     } catch (e) {

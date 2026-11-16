@@ -216,7 +216,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width:
                                           MediaQuery.of(context).size.width -
                                           36.w,
-                                      child: _buildBmiCategories(latest.category),
+                                      child: _buildBmiCategories(
+                                        latest.category,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1077,9 +1079,8 @@ class _RemoveAdsCard extends StatelessWidget {
                                     maxLines: 1,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 19.sp,
-                                      fontFamily: 'Instrument Sans',
-                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
@@ -1095,8 +1096,7 @@ class _RemoveAdsCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.82),
-                          fontSize: 12.sp,
-                          fontFamily: 'Instrument Sans',
+                          fontSize: 10.sp,
                           height: 1.35,
                         ),
                       ),
