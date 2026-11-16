@@ -11,7 +11,6 @@ import '../../../controllers/app_controller.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
-import '../../../main.dart';
 import 'applovin_sdk.dart';
 import 'interstitial_ad_manager.dart';
 
@@ -19,43 +18,30 @@ class AppOpenAdManager with WidgetsBindingObserver {
   AppOpenAdManager._();
   static final AppOpenAdManager instance = AppOpenAdManager._();
 
-  /// How long a [skipNextResume] request stays valid.
   static const Duration _skipWindow = Duration(seconds: 6);
 
-  /// How long after a return an ad is still owed: it shows as soon as one is
-  /// ready inside this window, then it is dropped rather than popping up late.
   static const Duration _lateShowWindow = Duration(seconds: 8);
 
-  /// A return this soon after a full-screen ad closed gets no app open ad.
   static const Duration _recentlyClosedWindow = Duration(milliseconds: 1500);
 
-  /// After a real return, wait this long to be sure the user stayed.
   static const Duration _returnSettle = Duration(milliseconds: 400);
 
-  /// A load that never reports back is treated as failed after this long.
   static const Duration _loadTimeout = Duration(seconds: 20);
 
-  /// If a requested show never reports displayed or failed, stop waiting.
   static const Duration _showTimeout = Duration(seconds: 6);
 
-  /// Longest pause between retries of a failed load.
   static const Duration _maxRetryDelay = Duration(seconds: 30);
 
-  /// Screens where an ad on return would get in the way.
   static const Set<String> _blockedRoutes = {AppRoutes.splash};
 
   bool _started = false;
   bool _isLoading = false;
   bool _isShowing = false;
   DateTime? _skipRequestedAt;
-
-  // One "episode" = one real trip to the background and back.
   bool _episodeActive = false;
   bool _episodeEligible = false;
   DateTime? _backgroundAt;
   DateTime? _lastAdClosedAt;
-
-  // iOS: real background/foreground from the SDK's app-state notifier.
   bool _realStateAvailable = false;
   StreamSubscription<AppState>? _realStateSub;
   DateTime? _showDueUntil;
@@ -63,7 +49,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
   int _retryAttempt = 0;
   Timer? _retryTimer;
   Timer? _showTimer;
-
   Timer? _loadWatchdog;
   DateTime? _loadStartedAt;
 
@@ -90,8 +75,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
     return RemoteModel.defaultAppOpenAdId;
   }
 
-  /// Call once at startup, after Remote Config, AppController and
-  /// [AppLovinSdk.initialize].
   void start() {
     if (_started) return;
     _started = true;
@@ -124,7 +107,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
           _showTimer?.cancel();
           _isShowing = false;
           _lastAdClosedAt = DateTime.now();
-          // The return is still owed an ad: try once more with a fresh one.
           if (!_showRetried) {
             _showRetried = true;
             _showDueUntil = DateTime.now().add(_lateShowWindow);
@@ -132,8 +114,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
           _load(fresh: true);
         },
         onAdClickedCallback: (_) => skipNextResume(),
-        // The shown ad is used up; always fetch a new one, even if MAX still
-        // briefly reports one as ready.
         onAdHiddenCallback: (_) {
           debugPrint('[AppOpenAd] hidden, loading the next one');
           _showTimer?.cancel();
@@ -141,8 +121,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
           _lastAdClosedAt = DateTime.now();
           _load(fresh: true);
         },
-        onAdRevenuePaidCallback: (ad) =>
-            logMaxAdRevenue(ad, adType: 'AppOpenAd'),
       ),
     );
     WidgetsBinding.instance.addObserver(this);
@@ -150,12 +128,7 @@ class AppOpenAdManager with WidgetsBindingObserver {
     _load();
   }
 
-  /// Tell the manager a full-screen ad (e.g. an interstitial) just closed, so
-  /// the return that follows isn't mistaken for coming back from background.
   void noteFullScreenAdClosed() => _lastAdClosedAt = DateTime.now();
-
-  /// Call before deliberately sending the user out of the app (tapping an
-  /// ad, opening mail or a web page) so coming back doesn't show an ad.
   void skipNextResume() => _skipRequestedAt = DateTime.now();
 
   @override
@@ -168,11 +141,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
         'episode: $_episodeActive, realState: $_realStateAvailable)',
       );
     }
-    // iOS: Flutter reports paused/resumed whenever a native full-screen view
-    // (an ad, a system sheet) covers the app although it never left the
-    // foreground. Those false events are what made every other return get no
-    // app open ad, so on iOS the real background/foreground come from the
-    // SDK's app-state notifier instead (see _listenToRealAppState).
     if (Platform.isIOS && _realStateAvailable) return;
     if (state == AppLifecycleState.paused) {
       if (_isShowing || InterstitialAdManager.instance.isShowing) return;
@@ -221,9 +189,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
       _episodeActive = true;
       _backgroundAt = DateTime.now();
       _episodeEligible = eligibleNow;
-      // A skip request only counts if it was made just before leaving the
-      // app. Older ones (e.g. a click that opened an in-app store sheet and
-      // never left the app) are stale and must not swallow this return.
       final req = _skipRequestedAt;
       if (req != null && _backgroundAt!.difference(req) > _skipWindow) {
         _skipRequestedAt = null;
@@ -231,8 +196,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
       debugPrint(
         '[AppOpenAd] app backgrounded (source: $source, eligible: $eligibleNow)',
       );
-      // Have the next ad ready (or on its way) before the user comes back.
-      // While an ad is still up, its dismissal loads the next one.
       if (!_isShowing) _load();
     } else {
       _episodeEligible = _episodeEligible && eligibleNow;
@@ -284,9 +247,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
       return;
     }
 
-    // This return is owed an ad. Show it now if one is ready; otherwise it
-    // shows the moment one finishes loading (also after a failed load is
-    // retried), as long as that happens within [_lateShowWindow].
     _showRetried = false;
     _showDueUntil = DateTime.now().add(_lateShowWindow);
     final readyNow = await _isReady();
@@ -300,7 +260,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
     }
   }
 
-  /// Shows the ad if this return is still owed one and one is ready.
   Future<void> _showIfDue() async {
     final due = _showDueUntil;
     if (due == null) return;
@@ -314,7 +273,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
     _showDueUntil = null;
     debugPrint('[AppOpenAd] showing');
     _isShowing = true;
-    // Never stay "showing" forever if MAX reports neither displayed nor failed.
     _showTimer?.cancel();
     _showTimer = Timer(_showTimeout, () {
       if (!_isShowing) return;
@@ -325,7 +283,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
     AppLovinMAX.showAppOpenAd(_adUnitId);
   }
 
-  /// Whether an ad may appear right now; logs the reason when not.
   bool _canShowNow() {
     String? reason;
     if (!_isEnabled) {
@@ -350,8 +307,6 @@ class AppOpenAdManager with WidgetsBindingObserver {
     }
   }
 
-  /// After a failed load (no fill, network), try again with a growing pause
-  /// so an ad is ready for the next return instead of every other one.
   void _scheduleRetry() {
     _retryTimer?.cancel();
     if (!_isEnabled) return;
@@ -368,16 +323,11 @@ class AppOpenAdManager with WidgetsBindingObserver {
     _loadWatchdog?.cancel();
   }
 
-  /// Starts loading the next ad. A plain call does nothing while a load is
-  /// already running. With [fresh] (right after an ad was shown or failed) it
-  /// always asks MAX for a new ad, even if a load seems to be running or MAX
-  /// still reports the used ad as ready, so every dismissal gets a new ad.
   Future<void> _load({bool fresh = false}) async {
     if (!_isEnabled) return;
     if (_isLoading && !fresh) return;
     _isLoading = true;
     _loadStartedAt = DateTime.now();
-    // A load that never reports back would block every later one.
     _loadWatchdog?.cancel();
     _loadWatchdog = Timer(_loadTimeout, () {
       if (!_isLoading) return;

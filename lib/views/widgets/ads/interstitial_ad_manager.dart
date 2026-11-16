@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import '../../../controllers/app_controller.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
-import '../../../main.dart';
 import 'app_open_ad_manager.dart';
 import 'applovin_sdk.dart';
 
@@ -132,8 +131,6 @@ class InterstitialAdManager {
         // Leaving for the advertiser shouldn't trigger an app open ad on return.
         onAdClickedCallback: (_) => AppOpenAdManager.instance.skipNextResume(),
         onAdHiddenCallback: (_) => _finish(),
-        onAdRevenuePaidCallback: (ad) =>
-            logMaxAdRevenue(ad, adType: 'InterstitialAd'),
       ),
     );
   }
@@ -161,10 +158,6 @@ class InterstitialAdManager {
     }
   }
 
-  /// Shows the ad for [placement] if one is ready, then calls [onDone] once
-  /// it's closed, or straight away if there's nothing to show.
-  ///
-  /// With [waitFor], an ad that is still loading gets that long to finish.
   Future<void> show(
     InterstitialPlacement placement, {
     required VoidCallback onDone,

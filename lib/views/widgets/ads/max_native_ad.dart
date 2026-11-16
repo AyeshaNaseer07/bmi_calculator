@@ -20,7 +20,7 @@ class MaxNativeAd {
 
   String? get adUnitId => _adUnitId;
 
-  /// Called for each paid impression, e.g. to log revenue to AppsFlyer/Adjust
+  /// Called for each paid impression, e.g. to log revenue
   static void Function(MaxNativeAd ad, String networkName, double revenue)?
   onRevenuePaid;
 

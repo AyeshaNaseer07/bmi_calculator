@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
-import 'package:applovin_max/applovin_max.dart';
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:bmi_calculator/core/constants/app_contants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'core/routes/app_pages.dart';
 import 'core/theme/app_palette.dart';
@@ -24,9 +20,6 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _waitUntilAppActive();
-  final PermissionStatus status = await Permission.appTrackingTransparency
-      .request();
-  debugPrint('ATT status: $status');
   await showCMP();
 
   final storageService = await StorageService().init();
@@ -55,52 +48,6 @@ Future<void> _waitUntilAppActive() async {
   );
   await active.future.timeout(const Duration(seconds: 3), onTimeout: () {});
   listener.dispose();
-}
-
-String getDeviceCountry() {
-  try {
-    final locale = ui.PlatformDispatcher.instance.locale;
-    return locale.countryCode ?? "";
-  } catch (e) {
-    return "";
-  }
-}
-
-/// Sends an AppLovin MAX impression's revenue (in USD) to AppsFlyer.
-void logMaxAdRevenue(MaxAd ad, {required String adType}) => logAdRevenue(
-  networkName: ad.networkName,
-  revenue: ad.revenue,
-  adUnitId: ad.adUnitId,
-  adType: adType,
-);
-
-/// Same as [logMaxAdRevenue], for ads that don't come as a [MaxAd] (the
-/// natively rendered native ads).
-void logAdRevenue({
-  required String networkName,
-  required double revenue,
-  required String adUnitId,
-  required String adType,
-}) {
-  try {
-    appsflyerSdk?.logAdRevenue(
-      AdRevenueData(
-        monetizationNetwork: networkName,
-        mediationNetwork: AFMediationNetwork.applovinMax.value,
-        currencyIso4217Code: 'USD',
-        revenue: revenue,
-        additionalParameters: {
-          "country": getDeviceCountry(),
-          "adUnit": adUnitId,
-          "adType": adType,
-        },
-      ),
-    );
-    debugPrint("✅ logMaxAdRevenue: $adType $revenue USD");
-  } catch (e, stackTrace) {
-    debugPrint("❌ logMaxAdRevenue failed: $e");
-    debugPrint("📌 Stack trace: $stackTrace");
-  }
 }
 
 const Size _phoneDesignSize = Size(375, 812);

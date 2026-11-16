@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.funsoltechnologies.bmi.calculator.fat.weightloss.tracker.app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

@@ -48,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<void> shareApp([BuildContext? context]) async {
-    const storeUrl = AppStrings.appStoreUrl;
+    const storeUrl = AppStrings.playStoreUrl;
     await ShareHelper.shareText(
       '${'check_out_this_bmi_calculator_app'.tr}\n\n$storeUrl',
       subject: 'app_name'.tr,
@@ -100,392 +100,393 @@ class ProfileScreen extends StatelessWidget {
             child: _pageScroll(
               context,
               Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // User Info Card
-                Obx(() {
-                  final name = profileController.userProfile.value.displayName;
-                  final displayName = name.isNotEmpty ? name : 'guest_user'.tr;
-                  final tagline = name.isNotEmpty
-                      ? 'manage_your_health_profile'.tr
-                      : 'start_your_health_journey_by_adding'.tr;
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // User Info Card
+                  Obx(() {
+                    final name =
+                        profileController.userProfile.value.displayName;
+                    final displayName = name.isNotEmpty
+                        ? name
+                        : 'guest_user'.tr;
+                    final tagline = name.isNotEmpty
+                        ? 'manage_your_health_profile'.tr
+                        : 'start_your_health_journey_by_adding'.tr;
 
-                  return CustomCard(
-                    borderRadius: 20.r,
-                    padding: EdgeInsets.all(16.w),
-                    child: Row(
-                      children: [
-                        // Avatar with edit icon badge
-                        GestureDetector(
-                          onTap: () => profileController.isUploading.value
-                              ? null
-                              : profileController.pickProfileImage(),
-                          child: Obx(() {
-                            final imgPath =
-                                profileController.profileImagePath.value;
-                            final uploading =
-                                profileController.isUploading.value;
-                            return Stack(
-                              children: [
-                                Container(
-                                  width: 56.w,
-                                  height: 56.h,
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFF33D2AB)
-                                        .withValues(alpha: 0.21),
-                                    shape: OvalBorder(),
-                                  ),
-                                  child: imgPath != null
-                                      ? ClipOval(
-                                          child: Image.file(
-                                            File(imgPath),
-                                            width: 56.w,
-                                            height: 56.h,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : Icon(
-                                          CupertinoIcons.person,
-                                          color: const Color(0xFF33D2AB),
-                                          size: 28.sp,
-                                        ),
-                                ),
-                                // Loading overlay
-                                if (uploading)
-                                  Positioned.fill(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.black.withValues(
-                                          alpha: 0.35,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: CupertinoActivityIndicator(
-                                          color: Colors.white,
-                                          radius: 10.r,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    width: 23.w,
-                                    height: 23.h,
+                    return CustomCard(
+                      borderRadius: 20.r,
+                      padding: EdgeInsets.all(16.w),
+                      child: Row(
+                        children: [
+                          // Avatar with edit icon badge
+                          GestureDetector(
+                            onTap: () => profileController.isUploading.value
+                                ? null
+                                : profileController.pickProfileImage(),
+                            child: Obx(() {
+                              final imgPath =
+                                  profileController.profileImagePath.value;
+                              final uploading =
+                                  profileController.isUploading.value;
+                              return Stack(
+                                children: [
+                                  Container(
+                                    width: 56.w,
+                                    height: 56.h,
                                     decoration: ShapeDecoration(
                                       color: const Color(0xFF33D2AB)
-                                          .withValues(alpha: 0.8),
-                                      shape: OvalBorder(
-                                        side: BorderSide(
-                                          width: 1,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                          .withValues(alpha: 0.21),
+                                      shape: OvalBorder(),
                                     ),
-                                    child: Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Colors.white,
-                                      size: 10.sp,
-                                    ),
+                                    child: imgPath != null
+                                        ? ClipOval(
+                                            child: Image.file(
+                                              File(imgPath),
+                                              width: 56.w,
+                                              height: 56.h,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Icon(
+                                            CupertinoIcons.person,
+                                            color: const Color(0xFF33D2AB),
+                                            size: 28.sp,
+                                          ),
                                   ),
-                                ),
-                              ],
-                            );
-                          }),
-                        ),
-                        SizedBox(width: 14.w),
-
-                        // Name and Tagline
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => _showEditProfileBottomSheet(
-                              context,
-                              profileController,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      displayName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppPalette.textPrimary,
-                                        fontSize: 16.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    // Edit Profile Pill
-                                    GestureDetector(
-                                      onTap: () => _showEditProfileBottomSheet(
-                                        context,
-                                        profileController,
-                                      ),
+                                  // Loading overlay
+                                  if (uploading)
+                                    Positioned.fill(
                                       child: Container(
-                                        width: 24.w,
-                                        height: 24.h,
-                                        decoration: ShapeDecoration(
-                                          color: const Color(0xFF33D2AB)
-                                              .withValues(alpha: 0.2),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              30,
-                                            ),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black.withValues(
+                                            alpha: 0.35,
                                           ),
                                         ),
-                                        child: Icon(
-                                          Icons.edit_outlined,
-                                          size: 14.sp,
-                                          color: const Color(0xFF33D2AB)
-                                              .withValues(alpha: 0.82),
+                                        child: Center(
+                                          child: CupertinoActivityIndicator(
+                                            color: Colors.white,
+                                            radius: 10.r,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                                SizedBox(height: 2.h),
-                                Text(
-                                  tagline,
-                                  style: TextStyle(
-                                    color: AppPalette.textPrimary.withValues(
-                                      alpha: 0.82,
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      width: 23.w,
+                                      height: 23.h,
+                                      decoration: ShapeDecoration(
+                                        color: const Color(0xFF33D2AB)
+                                            .withValues(alpha: 0.8),
+                                        shape: OvalBorder(
+                                          side: BorderSide(
+                                            width: 1,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.camera_alt_outlined,
+                                        color: Colors.white,
+                                        size: 10.sp,
+                                      ),
                                     ),
-                                    fontSize: 11.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w400,
                                   ),
-                                ),
+                                ],
+                              );
+                            }),
+                          ),
+                          SizedBox(width: 14.w),
+
+                          // Name and Tagline
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => _showEditProfileBottomSheet(
+                                context,
+                                profileController,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        displayName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: AppPalette.textPrimary,
+                                          fontSize: 16.sp,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      // Edit Profile Pill
+                                      GestureDetector(
+                                        onTap: () =>
+                                            _showEditProfileBottomSheet(
+                                              context,
+                                              profileController,
+                                            ),
+                                        child: Container(
+                                          width: 24.w,
+                                          height: 24.h,
+                                          decoration: ShapeDecoration(
+                                            color: const Color(0xFF33D2AB)
+                                                .withValues(alpha: 0.2),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.edit_outlined,
+                                            size: 14.sp,
+                                            color: const Color(0xFF33D2AB)
+                                                .withValues(alpha: 0.82),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    tagline,
+                                    style: TextStyle(
+                                      color: AppPalette.textPrimary.withValues(
+                                        alpha: 0.82,
+                                      ),
+                                      fontSize: 11.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  Obx(() {
+                    if (appController.isPremium.value) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: EdgeInsets.only(top: 10.h),
+                      child: GestureDetector(
+                        onTap: () => Get.toNamed(AppRoutes.paywall),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF064E3B),
+                                Color(0xFF0B8F6F),
+                                Color(0xFF2FD1A6),
                               ],
+                              stops: [0.0, 0.55, 1.0],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-                Obx(() {
-                  if (appController.isPremium.value) {
-                    return const SizedBox.shrink();
-                  }
-                  return Padding(
-                    padding: EdgeInsets.only(top: 10.h),
-                    child: GestureDetector(
-                      onTap: () => Get.toNamed(AppRoutes.paywall),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.r),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xFF064E3B),
-                              Color(0xFF0B8F6F),
-                              Color(0xFF2FD1A6),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF09B389)
+                                    .withValues(alpha: 0.35),
+                                blurRadius: 18,
+                                offset: const Offset(0, 8),
+                              ),
                             ],
-                            stops: [0.0, 0.55, 1.0],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF09B389)
-                                  .withValues(alpha: 0.35),
-                              blurRadius: 18,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24.r),
-                          child: Stack(
-                            children: [
-                              // Soft decorative glows.
-                              Positioned(
-                                right: -30.w,
-                                top: -40.h,
-                                child: Container(
-                                  width: 130.w,
-                                  height: 130.w,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withValues(alpha: 0.10),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: -24.w,
-                                bottom: -46.h,
-                                child: Container(
-                                  width: 110.w,
-                                  height: 110.w,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: const Color(0xFFFFD54F)
-                                        .withValues(alpha: 0.14),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(18.r),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 52.w,
-                                      height: 52.w,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.18,
-                                        ),
-                                        border: Border.all(
-                                          color: const Color(0xFFFFE082),
-                                          width: 1.4,
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.all(11.w),
-                                      child: Image.asset(
-                                        AppAssets.premiumCrown,
-                                        fit: BoxFit.contain,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24.r),
+                            child: Stack(
+                              children: [
+                                // Soft decorative glows.
+                                Positioned(
+                                  right: -30.w,
+                                  top: -40.h,
+                                  child: Container(
+                                    width: 130.w,
+                                    height: 130.w,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.10,
                                       ),
                                     ),
-                                    SizedBox(width: 14.w),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'unlock_premium'.tr,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 15.sp,
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Positioned(
+                                  left: -24.w,
+                                  bottom: -46.h,
+                                  child: Container(
+                                    width: 110.w,
+                                    height: 110.w,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: const Color(0xFFFFD54F)
+                                          .withValues(alpha: 0.14),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(18.r),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 52.w,
+                                        height: 52.w,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white.withValues(
+                                            alpha: 0.18,
                                           ),
-                                          SizedBox(height: 3.h),
-                                          Text(
-                                            'get_advanced_insights_reports_more_2'
-                                                .tr,
-                                            style: TextStyle(
-                                              color: Colors.white.withValues(
-                                                alpha: 0.88,
+                                          border: Border.all(
+                                            color: const Color(0xFFFFE082),
+                                            width: 1.4,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.all(11.w),
+                                        child: Image.asset(
+                                          AppAssets.premiumCrown,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                      SizedBox(width: 14.w),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'unlock_premium'.tr,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 15.sp,
                                               ),
-                                              fontSize: 10.5.sp,
-                                              height: 1.25,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          20.r,
-                                        ),
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color(0xFFFFE27A),
-                                            Color(0xFFFFB300),
+                                            SizedBox(height: 3.h),
+                                            Text(
+                                              'get_advanced_insights_reports_more_2'
+                                                  .tr,
+                                              style: TextStyle(
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.88,
+                                                ),
+                                                fontSize: 10.5.sp,
+                                                height: 1.25,
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(0xFFFFB300)
-                                                .withValues(alpha: 0.45),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 3),
-                                          ),
-                                        ],
                                       ),
-                                      child: ElevatedButton(
-                                        onPressed: () =>
-                                            Get.toNamed(AppRoutes.paywall),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          foregroundColor: const Color(
-                                            0xFF5A3A00,
+                                      SizedBox(width: 8.w),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            20.r,
                                           ),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              20.r,
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFFFFE27A),
+                                              Color(0xFFFFB300),
+                                            ],
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(0xFFFFB300)
+                                                  .withValues(alpha: 0.45),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ElevatedButton(
+                                          onPressed: () =>
+                                              Get.toNamed(AppRoutes.paywall),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            foregroundColor: const Color(
+                                              0xFF5A3A00,
+                                            ),
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.r),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 14.w,
+                                              vertical: 9.h,
                                             ),
                                           ),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 14.w,
-                                            vertical: 9.h,
+                                          child: Text(
+                                            'go_premium'.tr,
+                                            style: TextStyle(
+                                              fontSize: 11.sp,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
-                                        child: Text(
-                                          'go_premium'.tr,
-                                          style: TextStyle(
-                                            fontSize: 11.sp,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
 
-                SizedBox(height: 10.h),
-                // Account List Card
-                // Wraps its rows (they keep a natural height whether or not the
-                // premium card is above); scrolls only if the screen is short.
-                _fillUnlessShort(
-                  context,
-                  Container(
-                    width: double.infinity,
-                    decoration: ShapeDecoration(
-                      color: AppPalette.surface,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 0.25,
-                          color: const Color(0xFF33D2AB),
+                  SizedBox(height: 10.h),
+                  _fillUnlessShort(
+                    context,
+                    Container(
+                      width: double.infinity,
+                      decoration: ShapeDecoration(
+                        color: AppPalette.surface,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 0.25,
+                            color: const Color(0xFF33D2AB),
+                          ),
+                          borderRadius: BorderRadius.circular(14.r),
                         ),
-                        borderRadius: BorderRadius.circular(14.r),
+                        shadows: [
+                          BoxShadow(
+                            color: const Color(0x3A33D2AB),
+                            blurRadius: 6.80,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          ),
+                        ],
                       ),
-                      shadows: [
-                        BoxShadow(
-                          color: const Color(0x3A33D2AB),
-                          blurRadius: 6.80,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0.r),
-                      child: isShortPhone(context)
-                          ? _accountRows(context)
-                          : SingleChildScrollView(
-                              physics: const ClampingScrollPhysics(),
-                              child: _accountRows(context),
-                            ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0.r),
+                        child: isShortPhone(context)
+                            ? _accountRows(context)
+                            : SingleChildScrollView(
+                                physics: const ClampingScrollPhysics(),
+                                child: _accountRows(context),
+                              ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
           ),
         ),
@@ -493,8 +494,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Short phones (iPhone SE): the whole page scrolls, rather than only the
-  /// account list inside it. Other phones keep the original layout.
   Widget _pageScroll(BuildContext context, Widget page) => isShortPhone(context)
       ? SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -502,8 +501,6 @@ class ProfileScreen extends StatelessWidget {
         )
       : page;
 
-  /// The account card fills the leftover height (and scrolls inside) on
-  /// normal phones; on short phones it keeps its natural height instead.
   Widget _fillUnlessShort(BuildContext context, Widget card) =>
       isShortPhone(context) ? card : Flexible(child: card);
 
@@ -769,8 +766,6 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                     focusNode: _focusNode,
                     autofocus: true,
                     textCapitalization: TextCapitalization.words,
-                    // Max 20 characters (letters, spaces, numbers, symbols);
-                    // no counter, so the layout is unchanged.
                     inputFormatters: [LengthLimitingTextInputFormatter(20)],
                     textInputAction: TextInputAction.done,
                     onTapOutside: (_) => _focusNode.unfocus(),

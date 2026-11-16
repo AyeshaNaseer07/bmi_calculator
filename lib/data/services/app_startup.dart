@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
-import '../../core/constants/app_contants.dart';
 import '../../notifications/notification_service.dart';
 import '../../views/widgets/ads/app_open_ad_manager.dart';
 import '../../views/widgets/ads/applovin_sdk.dart';
@@ -16,7 +14,6 @@ import '../../views/widgets/ads/interstitial_ad_manager.dart';
 import '../../views/widgets/ads/native_ad_card.dart';
 import 'logger_service.dart';
 import 'price_service.dart';
-import 'purchase_connector.dart';
 import 'quick_actions_service.dart';
 import 'remote_config_service.dart';
 import 'storage_service.dart';
@@ -31,30 +28,6 @@ class AppStartup {
 
     await _initializeFirebase();
 
-    AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
-      afDevKey: "HpMZN7qSFkAnYvUMpVMhBP",
-      appId: "6812737379",
-      showDebug: kDebugMode,
-      timeToWaitForATTUserAuthorization: 30,
-      manualStart: false,
-      disableAdvertisingIdentifier: false,
-      disableCollectASA: false,
-    );
-    appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-    await appsflyerSdk?.initSdk(
-      registerConversionDataCallback: true,
-      registerOnAppOpenAttributionCallback: true,
-      registerOnDeepLinkingCallback: true,
-    );
-
-    PurchaseManager.instance
-        .initialize()
-        .then((_) {
-          log("PurchaseManager initialized successfully.");
-        })
-        .catchError((error) {
-          log("Error initializing PurchaseManager: $error");
-        });
     try {
       await NotificationService.instance.initialize();
     } catch (e) {

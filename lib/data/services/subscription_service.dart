@@ -1,27 +1,18 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
-import '../../log_transition.dart';
 import '../models/remote_model.dart';
 import 'price_service.dart';
 import 'remote_config_service.dart';
 import 'storage_service.dart';
 
-/// Paywall plan slots. `monthly` is the weekly slot (kept for Remote Config
-/// and PriceService compatibility).
 enum SubscriptionPlan { weekly, monthly, yearly }
 
-/// What happened after the user tapped Continue on a paywall.
 enum PremiumPurchaseResult {
-  /// New purchase completed: show the congrats dialog.
   purchased,
-
-  /// The Apple ID already had an active subscription. No store sheet was
-  /// shown and nothing was charged; premium was restored instead.
   alreadySubscribed,
 
   /// Waiting on Ask to Buy / SCA. Premium unlocks later by itself.
@@ -37,20 +28,9 @@ enum PremiumPurchaseResult {
 /// What happened after the user tapped Restore.
 enum PremiumRestoreResult { restored, nothingToRestore, failed }
 
-/// StoreKit 2 entitlement state from the native side.
+/// Google Play entitlement state, read from Play Billing.
 enum _Entitlement { active, inactive, unknown }
 
-/// iOS purchase flow.
-///
-/// Rules:
-/// * Premium is only switched ON by an explicit user action: Continue
-///   (purchase or "already subscribed" restore) or Restore. A reinstall
-///   therefore goes through splash → onboarding → paywall as normal.
-/// * Premium is switched OFF at launch when StoreKit says the subscription
-///   expired, was refunded or doesn't exist for this Apple ID.
-/// * Before opening the store sheet, Continue checks StoreKit 2's current
-///   entitlements. If already subscribed, Apple's "You're already
-///   subscribed" sheet is skipped and premium is restored in-app.
 class SubscriptionService {
   final StorageService _storage;
 
@@ -67,9 +47,6 @@ class SubscriptionService {
   final Set<String> _awaitingApproval = {};
 
   bool _busy = false;
-
-  /// True while a purchase or restore is running. Paywalls use this to
-  /// ignore premium changes they caused themselves.
   bool get isBusy => _busy;
 
   /// Called whenever the stored premium status changes.
@@ -84,12 +61,6 @@ class SubscriptionService {
       _onUpdates,
       onError: (Object e) => debugPrint('[IAP] stream error: $e'),
     );
-    // Refunds / revocations / expiries while the app is open (including
-    // Xcode → Debug → StoreKit → Manage Transactions → Refund).
-    PlatformCode.listenForEntitlementChanges(() {
-      debugPrint('[IAP] StoreKit transaction update → re-checking');
-      unawaited(checkExpiry());
-    });
   }
 
   void dispose() {
@@ -97,13 +68,7 @@ class SubscriptionService {
     _sub = null;
   }
 
-  /// Turns premium OFF if the subscription is gone (expired, refunded,
-  /// revoked). Runs at launch, on resume and on every StoreKit update.
-  /// Never turns premium ON (that needs Continue or Restore).
   Future<void> checkExpiry() async {
-    // Clears stuck transactions (e.g. a refunded one) so the product can be
-    // bought again.
-    await PlatformCode.finishUnfinishedTransactions();
     if (!isPremium || _busy) return;
     final state = await _entitlement();
     if (_busy) return;
@@ -119,16 +84,14 @@ class SubscriptionService {
     if (_busy) return PremiumPurchaseResult.failed;
     _busy = true;
     try {
-      // 1. Already subscribed on this Apple ID? Restore instead of buying.
+      // 1. Already subscribed on this Google account? Restore instead of buying.
       if (await _entitlement() == _Entitlement.active) {
         debugPrint('[IAP] already subscribed → restoring, no store sheet');
         await _setPremium(true);
         return PremiumPurchaseResult.alreadySubscribed;
       }
 
-      // 2. Normal purchase. Finish leftovers first, otherwise StoreKit
-      //    rejects it with "storekit_duplicate_product_object".
-      await PlatformCode.finishUnfinishedTransactions();
+      // 2. Normal purchase.
       final product = await PriceService.fetchProduct(productId);
       if (product == null) {
         debugPrint('[IAP] product not found: $productId');
@@ -144,8 +107,6 @@ class SubscriptionService {
 
       var result = await _waitForPurchase(productId);
 
-      // The store can report an error when the user was in fact subscribed
-      // (e.g. signed in to a different Apple ID mid-flow). Trust StoreKit.
       if (result == PremiumPurchaseResult.failed &&
           await _entitlement() == _Entitlement.active) {
         await _setPremium(true);
@@ -155,7 +116,6 @@ class SubscriptionService {
       switch (result) {
         case PremiumPurchaseResult.purchased:
           await _setPremium(true);
-          unawaited(PlatformCode.logTransactionToFirebase(txt: productId));
         case PremiumPurchaseResult.pending:
           _awaitingApproval.add(productId);
         default:
@@ -173,31 +133,9 @@ class SubscriptionService {
     }
   }
 
-  /// Waits for the purchase stream, but also polls StoreKit 2 because the
-  /// stream event can arrive late or not at all on iOS.
-  Future<PremiumPurchaseResult> _waitForPurchase(String productId) {
-    final done = Completer<PremiumPurchaseResult>();
-    void finish(PremiumPurchaseResult r) {
-      if (!done.isCompleted) done.complete(r);
-    }
-
-    _buying!.future.then(finish);
-
-    if (Platform.isIOS) {
-      unawaited(() async {
-        // Poll every 2s for up to 3 minutes (the store sheet stays open as
-        // long as the user needs). If nothing ever answers, give up.
-        for (var i = 0; i < 90 && !done.isCompleted; i++) {
-          await Future<void>.delayed(const Duration(seconds: 2));
-          if (done.isCompleted) return;
-          final status = await PlatformCode.getSubscriptionStatus([productId]);
-          if (status == 'active') return finish(PremiumPurchaseResult.purchased);
-        }
-        finish(PremiumPurchaseResult.failed);
-      }());
-    }
-    return done.future;
-  }
+  /// Waits for the purchase stream to report the outcome.
+  Future<PremiumPurchaseResult> _waitForPurchase(String productId) =>
+      _buying!.future;
 
   // ───────────────────────── restore ─────────────────────────
 
@@ -205,26 +143,13 @@ class SubscriptionService {
     if (_busy) return PremiumRestoreResult.failed;
     _busy = true;
     try {
-      // 1. StoreKit 2 entitlements: no sign-in prompt.
+      // 1. Play Billing purchases: no sign-in prompt.
       var state = await _entitlement();
 
       // 2. Replay transactions, then check again.
       if (state != _Entitlement.active) {
         await _iap.restorePurchases();
         await Future<void>.delayed(const Duration(milliseconds: 800));
-        state = await _entitlement();
-      }
-
-      // 3. Force a sync with the App Store (may ask for the Apple ID
-      //    password; fine because the user tapped Restore).
-      if (state != _Entitlement.active && Platform.isIOS) {
-        try {
-          await _iap
-              .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>()
-              .sync();
-        } catch (e) {
-          debugPrint('[IAP] sync failed/cancelled: $e');
-        }
         state = await _entitlement();
       }
 
@@ -250,8 +175,6 @@ class SubscriptionService {
 
   Future<void> _onUpdates(List<PurchaseDetails> updates) async {
     for (final p in updates) {
-      // Pending/cancelled updates carry no transaction id (purchaseID is
-      // null) and completing them throws a null-check error.
       if (p.pendingCompletePurchase && p.purchaseID != null) {
         unawaited(_complete(p));
       }
@@ -298,19 +221,24 @@ class SubscriptionService {
 
   // ───────────────────────── helpers ─────────────────────────
 
-  /// StoreKit 2 `Transaction.currentEntitlements` for any of this app's
-  /// products, read natively (no sign-in prompt, works offline from cache).
+  /// Active purchases of this app's products according to Play Billing.
   Future<_Entitlement> _entitlement() async {
-    if (!Platform.isIOS) return _Entitlement.unknown;
-    final status = await PlatformCode.getSubscriptionStatus(
-      _productIds().toList(),
-    );
-    debugPrint('[IAP] entitlement: $status');
-    return switch (status) {
-      'active' => _Entitlement.active,
-      'expired' || 'revoked' || 'none' => _Entitlement.inactive,
-      _ => _Entitlement.unknown,
-    };
+    try {
+      final addition = _iap
+          .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>();
+      final response = await addition.queryPastPurchases();
+      if (response.error != null) return _Entitlement.unknown;
+      final ids = _productIds();
+      final active = response.pastPurchases.any(
+        (p) =>
+            ids.contains(p.productID) && p.status == PurchaseStatus.purchased,
+      );
+      debugPrint('[IAP] entitlement active: $active');
+      return active ? _Entitlement.active : _Entitlement.inactive;
+    } catch (e) {
+      debugPrint('[IAP] entitlement check failed: $e');
+      return _Entitlement.unknown;
+    }
   }
 
   /// Defaults plus whatever Remote Config names on either paywall.

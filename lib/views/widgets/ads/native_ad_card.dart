@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../../../controllers/app_controller.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
-import '../../../main.dart';
 import 'ad_logger.dart';
 import 'ad_shimmer.dart';
 import 'app_open_ad_manager.dart';
@@ -123,14 +122,6 @@ class NativeAds {
     if (_callbacksSet) return;
     _callbacksSet = true;
     MaxNativeAd.onAdClicked = (_) => AppOpenAdManager.instance.skipNextResume();
-    MaxNativeAd.onRevenuePaid = (ad, networkName, revenue) => logAdRevenue(
-      networkName: networkName,
-      revenue: revenue,
-      adUnitId: ad.adUnitId ?? '',
-      adType: ad == of(NativeAdPlacement.fullScreen)
-          ? 'FullScreenNativeAd'
-          : 'MediumNativeAd',
-    );
   }
 }
 

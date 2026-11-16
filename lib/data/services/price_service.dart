@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
-import 'package:in_app_purchase_storekit/store_kit_2_wrappers.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 import 'localization_service.dart';
 import 'remote_config_service.dart';
@@ -73,8 +73,6 @@ class PriceService {
   static final Map<PaywallType, Future<Map<SubscriptionPlan, PlanPrice>>>
   _inFlight = {};
 
-  /// Prices for whichever of this paywall's current product ids are loaded.
-  /// Keyed by product id, so a wrong id never borrows another product's price.
   static Map<SubscriptionPlan, PlanPrice> cached(PaywallType paywall) =>
       _pricesFor(RemoteConfigService.to, paywall);
 
@@ -122,8 +120,7 @@ class PriceService {
         for (final slot in [SubscriptionPlan.monthly, SubscriptionPlan.yearly])
           rc.getProductId(slot, paywall).trim(),
       }..remove('');
-      // Each id is queried on its own: one invalid id must not affect the
-      // others. Already-loaded ids are not fetched again.
+
       await Future.wait(
         ids.where((id) => !_products.containsKey(id)).map(fetchProduct),
       );
@@ -188,38 +185,39 @@ class PriceService {
     }
   }
 
-  static ProductDetails _pick(List<ProductDetails> options) => options.first;
+  static ProductDetails _pick(List<ProductDetails> options) => options
+      .firstWhere((o) => _trialPhase(o) != null, orElse: () => options.first);
 
   static PlanPrice _price(ProductDetails p) {
     return PlanPrice(p.rawPrice, p.currencyCode, p.price);
   }
 
-  /// ISO 8601, e.g. P1M.
-  static String? _subscriptionPeriod(ProductDetails? p) {
-    if (p is AppStoreProduct2Details) {
-      final period = p.sk2Product.subscription?.subscriptionPeriod;
-      if (period != null) return _iso(period);
+  static List<PricingPhaseWrapper> _phases(ProductDetails? p) {
+    if (p is! GooglePlayProductDetails) return const [];
+    final index = p.subscriptionIndex;
+    final offers = p.productDetails.subscriptionOfferDetails;
+    if (index == null || offers == null || index >= offers.length) {
+      return const [];
+    }
+    return offers[index].pricingPhases;
+  }
+
+  static PricingPhaseWrapper? _trialPhase(ProductDetails? p) {
+    for (final phase in _phases(p)) {
+      if (phase.priceAmountMicros == 0) return phase;
     }
     return null;
   }
 
-  static String _iso(SK2SubscriptionPeriod period) =>
-      'P${period.value}${period.unit.name[0].toUpperCase()}';
+  /// ISO 8601 period of the paid, recurring phase, e.g. P1M.
+  static String? _subscriptionPeriod(ProductDetails? p) {
+    final phases = _phases(p).where((ph) => ph.priceAmountMicros > 0);
+    return phases.isEmpty ? null : phases.last.billingPeriod;
+  }
 
   static Future<void> refreshTrialEligibility() async {
-    final products = Map<String, ProductDetails>.of(_products);
-    if (products.isEmpty) return;
-    try {
-      final ids = products.keys.toList();
-      final eligible = await Future.wait(
-        ids.map(SK2Product.isIntroductoryOfferEligible),
-      ).timeout(const Duration(seconds: 10));
-      trialEligibility.addAll({
-        for (var i = 0; i < ids.length; i++) ids[i]: eligible[i],
-      });
-    } catch (e) {
-      debugPrint('Trial eligibility check failed: $e');
-      trialEligibility.addAll({for (final id in products.keys) id: false});
+    for (final entry in _products.entries) {
+      trialEligibility[entry.key] = _trialPhase(entry.value) != null;
     }
   }
 
@@ -254,21 +252,11 @@ class PriceService {
   }
 
   static String? getFreeTrialPeriod(ProductDetails? p) {
-    String? period;
-    var cycles = 1;
-    if (p is AppStoreProduct2Details) {
-      final intro = p.sk2Product.subscription?.promotionalOffers
-          .where(
-            (o) =>
-                o.type == SK2SubscriptionOfferType.introductory &&
-                o.paymentMode == SK2SubscriptionOfferPaymentMode.freeTrial,
-          )
-          .firstOrNull;
-      if (intro == null) return null;
-      period = _iso(intro.period);
-      cycles = intro.periodCount;
-    }
-    final match = RegExp(r'^P(\d+)([DWMY])$').firstMatch(period ?? '');
+    final trial = _trialPhase(p);
+    if (trial == null) return null;
+    final period = trial.billingPeriod;
+    final cycles = trial.billingCycleCount;
+    final match = RegExp(r'^P(\d+)([DWMY])$').firstMatch(period);
     if (match == null) return null;
     final unit = switch (match.group(2)) {
       'D' => 'day',
