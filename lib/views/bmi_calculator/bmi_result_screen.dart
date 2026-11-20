@@ -220,7 +220,6 @@ class BMIResultScreen extends StatelessWidget {
                             imageAsset: AppAssets.weighticon,
                             value: record.weightDisplay,
                             label: 'weight'.tr,
-                            showUnderline: true,
                           ),
                           _buildDetailDivider(),
                           _buildDetailColumn(
@@ -391,7 +390,6 @@ ${record.category.feedbackMessage}
     required String imageAsset,
     required String value,
     required String label,
-    bool showUnderline = false,
   }) {
     return Column(
       children: [
