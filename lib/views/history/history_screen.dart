@@ -456,18 +456,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
             }
 
             if (!hasRecords) {
-              return Padding(
+              // Same full-width layout as the records view and other pages;
+              // scrolls on short screens instead of shrinking the content.
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-                child: LayoutBuilder(
-                  builder: (context, constraints) => FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.topCenter,
-                    child: SizedBox(
-                      width: constraints.maxWidth,
-                      child: _buildEmptyHistorySection(),
-                    ),
-                  ),
-                ),
+                child: _buildEmptyHistorySection(),
               );
             }
 
@@ -1626,7 +1620,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: _buildBannerCircle(96.w, 0.07),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 18.h),
+                padding: EdgeInsets.fromLTRB(8.w, 18.h, 8.w, 18.h),
                 child: Row(
                   children: [
                     Container(
@@ -1691,7 +1685,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     SizedBox(width: 10.w),
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
+                        horizontal: 6.w,
                         vertical: 9.h,
                       ),
                       decoration: BoxDecoration(
