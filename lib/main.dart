@@ -21,6 +21,7 @@ import 'data/services/analytics_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding.instance.deferFirstFrame();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _waitUntilAppActive();
