@@ -22,11 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
-
-  /// Splash screen wait — was 10s, trimmed down so the app feels snappier.
   static const int _splashSeconds = 3;
-
-  /// Extra time the splash interstitial gets to load once the splash is done.
   static const Duration _splashAdWait = Duration(seconds: 4);
 
   @override
@@ -41,13 +37,41 @@ class _SplashScreenState extends State<SplashScreen>
     _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
     );
+  }
 
+  bool _imagesRequested = false;
+  bool _firstFrameAllowed = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_imagesRequested) return;
+    _imagesRequested = true;
+    _precacheThenReveal();
+  }
+
+  Future<void> _precacheThenReveal() async {
+    try {
+      await Future.wait([
+        precacheImage(const AssetImage(AppAssets.appBg), context),
+        precacheImage(const AssetImage(AppAssets.splashBg), context),
+        precacheImage(const AssetImage(AppAssets.splashLogo), context),
+      ]).timeout(const Duration(seconds: 2));
+    } catch (_) {
+      // Show the splash anyway rather than stay on the launch screen.
+    }
+    _allowFirstFrame();
+    if (!mounted) return;
     _progressController.forward();
     _startUp();
   }
 
-  /// Starts Firebase, the SDKs and the ads, then moves on once that's done
-  /// and the splash has shown for at least [_splashSeconds].
+  void _allowFirstFrame() {
+    if (_firstFrameAllowed) return;
+    _firstFrameAllowed = true;
+    WidgetsBinding.instance.allowFirstFrame();
+  }
+
   Future<void> _startUp() async {
     await Future.wait([
       AppStartup.run(),
@@ -77,6 +101,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    _allowFirstFrame();
     _progressController.dispose();
     super.dispose();
   }
