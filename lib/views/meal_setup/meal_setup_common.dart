@@ -12,6 +12,7 @@ import '../../core/theme/app_palette.dart';
 import '../../core/utils/rtl.dart';
 import '../../data/models/user_profile_model.dart';
 import '../widgets/animated_cta_button.dart';
+import '../widgets/custom_app_bar.dart';
 import '../../core/constants/app_colors.dart';
 
 // ── Design tokens (Personalized Meal Plan developer kit) ──
@@ -69,7 +70,6 @@ abstract class MealSetupAssets {
   static const String icLifestyle = '$_img/ic_3d_lifestyle_info.png';
 
   // Vector icons.
-  static const String backArrow = '$_ic/ms_back_arrow.svg';
   static const String cardArrow = '$_ic/ms_card_arrow_right.svg';
   static const String whiteArrow = '$_ic/ms_arrow_right_white.svg';
   static const String badgeRequired = '$_ic/ms_badge_required_check.svg';
@@ -181,7 +181,7 @@ class SetupScaffold extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 12.h),
+                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 0.h),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [bottom, ?footer],
@@ -198,7 +198,7 @@ class SetupScaffold extends StatelessWidget {
   Widget _titleLine(String text, Color color) => FittedBox(
     fit: BoxFit.scaleDown,
     alignment: AlignmentDirectional.centerStart,
-    child: Text(text, maxLines: 1, style: msTitle(28, color: color)),
+    child: Text(text, maxLines: 1, style: msTitle(24, color: color)),
   );
 
   Widget _header() {
@@ -219,7 +219,7 @@ class SetupScaffold extends StatelessWidget {
           ),
         ),
         ConstrainedBox(
-          constraints: BoxConstraints(minHeight: heroH - 8.h),
+          constraints: BoxConstraints(minHeight: heroH - 20.h),
           child: Padding(
             padding: EdgeInsetsDirectional.only(
               start: 4.w,
@@ -237,16 +237,14 @@ class SetupScaffold extends StatelessWidget {
                     ],
                   ],
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 6.h),
                 _titleLine(titleTop, kMsNavy),
                 if (titleBottom.isNotEmpty) _titleLine(titleBottom, kMsGreen),
                 SizedBox(height: 8.h),
                 Text(
                   subtitle,
-                  style: msBody(14, color: kMsSubtitle, height: 1.35),
+                  style: msBody(12, color: kMsSubtitle, height: 1.35),
                 ),
-                SizedBox(height: 14.h),
-                SetupProgressDots(step: step),
               ],
             ),
           ),
@@ -256,7 +254,7 @@ class SetupScaffold extends StatelessWidget {
   }
 }
 
-/// Mint circle back button from the kit.
+/// Back button: the app-wide [AppBackIcon] artwork.
 class SetupBackCircle extends StatelessWidget {
   const SetupBackCircle({super.key});
 
@@ -268,22 +266,7 @@ class SetupBackCircle extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => Get.back(),
-        child: Container(
-          width: 42.w,
-          height: 42.w,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: kMsMint,
-            shape: BoxShape.circle,
-          ),
-          child: MirrorOnRtl(
-            child: SvgPicture.asset(
-              MealSetupAssets.backArrow,
-              width: 22.w,
-              height: 22.w,
-            ),
-          ),
-        ),
+        child: const AppBackIcon(),
       ),
     );
   }

@@ -6,7 +6,6 @@ import 'package:lottie/lottie.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/responsive.dart';
-import '../../core/constants/app_colors.dart';
 
 const Color _kActiveNavColor = Color(0xFF2EC4B6);
 
@@ -105,7 +104,34 @@ class MainBottomNavBar extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: onAddTap,
-                child: _AddButtonLottie(width: 576.w, height: 76.w),
+                child: Lottie.asset(
+                  AppAssets.navAddLottie,
+                  // Square, so the tap area is only the + button and doesn't
+                  // cover (and steal taps from) the other nav items.
+                  width: 76.w,
+                  height: 76.w,
+                  fit: BoxFit.contain,
+                  repeat: true,
+                  // Circles in the nav's teal (#2EC4B6) instead of the
+                  // file's own colours; the white + stays as it is.
+                  delegates: LottieDelegates(
+                    values: [
+                      for (final layer in _addCircleLayers)
+                        ValueDelegate.color([
+                          layer,
+                          '**',
+                        ], value: _kActiveNavColor),
+                    ],
+                  ),
+                  errorBuilder: (_, _, _) => ClipOval(
+                    child: Image.asset(
+                      AppAssets.navAdd,
+                      fit: BoxFit.cover,
+                      width: 52.w,
+                      height: 52.w,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -158,79 +184,6 @@ class MainBottomNavBar extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// The animated + button, coloured like the app's CTA buttons
-/// ([AppColors.ctaGradient], teal → blue) instead of the file's own
-/// colours. A Lottie colour delegate can only apply one flat colour, so the
-/// circles are drawn through a gradient mask and the white + is drawn on top
-/// unchanged; one controller keeps both copies in step.
-class _AddButtonLottie extends StatefulWidget {
-  final double width;
-  final double height;
-  const _AddButtonLottie({required this.width, required this.height});
-
-  @override
-  State<_AddButtonLottie> createState() => _AddButtonLottieState();
-}
-
-class _AddButtonLottieState extends State<_AddButtonLottie>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(vsync: this);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onLoaded(LottieComposition composition) {
-    if (_controller.duration != null) return;
-    _controller
-      ..duration = composition.duration
-      ..repeat();
-  }
-
-  Widget _lottie({required bool circles}) => Lottie.asset(
-    AppAssets.navAddLottie,
-    controller: _controller,
-    onLoaded: _onLoaded,
-    width: widget.width,
-    height: widget.height,
-    fit: BoxFit.contain,
-    // Each copy hides the other copy's layers.
-    delegates: LottieDelegates(
-      values: [
-        for (final layer in circles ? const ['jia'] : _addCircleLayers)
-          ValueDelegate.opacity([layer, '**'], value: 0),
-      ],
-    ),
-    errorBuilder: (_, _, _) => circles
-        ? ClipOval(
-            child: Image.asset(
-              AppAssets.navAdd,
-              fit: BoxFit.cover,
-              width: 52.w,
-              height: 52.w,
-            ),
-          )
-        : const SizedBox.shrink(),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        ShaderMask(
-          blendMode: BlendMode.srcIn,
-          shaderCallback: AppColors.ctaGradient.createShader,
-          child: _lottie(circles: true),
-        ),
-        _lottie(circles: false),
-      ],
     );
   }
 }

@@ -97,13 +97,13 @@ class _SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.only(bottom: 6.h),
       child: Semantics(
         button: true,
         label: '$title. $subtitle',
         child: SetupCard(
           onTap: () => MealSetupFlow.openStep(step),
-          padding: EdgeInsetsDirectional.fromSTEB(12.w, 12.h, 14.w, 12.h),
+          padding: EdgeInsetsDirectional.fromSTEB(12.w, 10.h, 12.w, 10.h),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: 68.h),
             child: Row(
