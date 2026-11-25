@@ -109,7 +109,6 @@ class WeightTrackerController extends GetxController {
       'goal': goalWeight > 0,
     });
     currentWeight.value = weight;
-    // Update goal weight if provided
     if (goalWeight > 0) {
       this.goalWeight.value = goalWeight;
       final profile = _storage.getUserProfile();
@@ -120,7 +119,6 @@ class WeightTrackerController extends GetxController {
     _recalculateProgress();
   }
 
-  // Chart window: past slots, the current one, then empty future slots.
   static const int _monthsBack = 4;
   static const int _monthsAhead = 2;
   static const int _yearsBack = 3;
@@ -233,10 +231,6 @@ class WeightTrackerController extends GetxController {
     }
   }
 
-  /// The goal is a plan for one period: this week (Mon-Sun), the month the
-  /// goal was entered in through the next month, or the year it was entered
-  /// in through the next year. The goal is entered with a weight, so the
-  /// latest record's date anchors the plan.
   List<FlSpot> getGoalSpots() {
     final goal = goalWeight.value;
     if (goal <= 0) return [];
@@ -277,7 +271,6 @@ class WeightTrackerController extends GetxController {
     final now = DateTime.now();
 
     if (tf == 'week') {
-      // Always return all 7 days so the chart spans Mon–Sun (maxX = 6)
       return [
         'mon'.tr,
         'tue'.tr,
@@ -288,7 +281,6 @@ class WeightTrackerController extends GetxController {
         'sun'.tr,
       ];
     } else if (tf == 'month') {
-      // 4 months back, the current month and 2 ahead (e.g. Jul..Jan in Nov).
       final List<String> labels = [];
       for (int i = _monthsBack; i >= -_monthsAhead; i--) {
         final d = DateTime(now.year, now.month - i, 1);
@@ -296,7 +288,6 @@ class WeightTrackerController extends GetxController {
       }
       return labels;
     } else {
-      // 3 years back, the current year and 1 ahead (e.g. 2023..2027 in 2026).
       final List<String> labels = [];
       for (int i = _yearsBack; i >= -_yearsAhead; i--) {
         labels.add((now.year - i).toString());

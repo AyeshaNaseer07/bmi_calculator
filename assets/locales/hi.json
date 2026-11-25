@@ -983,5 +983,18 @@
   "purchase_pending_message": "आपकी खरीदारी स्वीकृति की प्रतीक्षा में है। स्वीकृत होते ही प्रीमियम अनलॉक हो जाएगा।",
   "purchase_failed_title": "खरीदारी विफल",
   "purchase_failed_message": "कुछ गलत हो गया। कृपया फिर से प्रयास करें।",
-  "restore_failed_message": "App Store से कनेक्ट नहीं हो सका। कृपया अपना कनेक्शन जांचें और फिर से प्रयास करें।"
+  "restore_failed_message": "App Store से कनेक्ट नहीं हो सका। कृपया अपना कनेक्शन जांचें और फिर से प्रयास करें।",
+  "bmi_in_underweight_range": "आपका BMI कम वज़न की श्रेणी में है!",
+  "bmi_in_normal_range": "आपका BMI सामान्य श्रेणी में है!",
+  "bmi_in_overweight_range": "आपका BMI अधिक वज़न की श्रेणी में है!",
+  "bmi_in_obese_range": "आपका BMI मोटापे की श्रेणी में है!",
+  "your_personalized_meal_plan": "आपका पर्सनल मील प्लान",
+  "meal_plan_based_on_profile": "आपके BMI, उम्र, गतिविधि स्तर और स्वास्थ्य लक्ष्यों के आधार पर।",
+  "view_your_meal_plan": "अपना मील प्लान देखें",
+  "your_health_profile": "आपकी हेल्थ प्रोफ़ाइल",
+  "view_profile": "प्रोफ़ाइल देखें",
+  "goal_short_lose": "घटाएँ",
+  "goal_short_build": "बनाएँ",
+  "goal_short_maintain": "बनाए रखें",
+  "goal_short_improve": "सुधारें"
 }

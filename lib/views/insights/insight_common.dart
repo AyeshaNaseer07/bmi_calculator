@@ -689,11 +689,7 @@ class ProgressChartIcon extends StatelessWidget {
   final double size;
   final Color? color;
 
-  const ProgressChartIcon({
-    super.key,
-    this.size = 20,
-    this.color,
-  });
+  const ProgressChartIcon({super.key, this.size = 20, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -701,9 +697,7 @@ class ProgressChartIcon extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size * 0.78,
-      child: CustomPaint(
-        painter: _ProgressChartIconPainter(color: c),
-      ),
+      child: CustomPaint(painter: _ProgressChartIconPainter(color: c)),
     );
   }
 }

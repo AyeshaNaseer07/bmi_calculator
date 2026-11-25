@@ -95,7 +95,7 @@ class DailyMealPlanScreen extends StatelessWidget {
 
 /// Brief stats animation shown before the progress screen.
 class StatsLoadingScreen extends StatefulWidget {
-  const StatsLoadingScreen();
+  const StatsLoadingScreen({super.key});
 
   @override
   State<StatsLoadingScreen> createState() => _StatsLoadingScreenState();
@@ -115,11 +115,7 @@ class _StatsLoadingScreenState extends State<StatsLoadingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Lottie.asset(
-          AppAssets.statsLottie,
-          width: 360.w,
-          height: 360.w,
-        ),
+        child: Lottie.asset(AppAssets.statsLottie, width: 360.w, height: 360.w),
       ),
     );
   }

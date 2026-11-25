@@ -3,15 +3,14 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../controllers/bmi_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_assets.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
@@ -20,6 +19,7 @@ import '../../notifications/notification_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/app_background.dart';
 import '../insights/bmi_insight_screen.dart';
+import '../insights/nutrition_screens.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
@@ -130,7 +130,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(height: 28.h),
                           Obx(() {
                             final hasData = bmiController.bmiHistory.isNotEmpty;
-                            return _buildGreeting(hasData, profileController);
+                            return _buildGreeting(
+                              hasData,
+                              profileController,
+                              bmiController.latestRecord.value?.category,
+                            );
                           }),
                           SizedBox(height: 20.h),
                         ],
@@ -183,45 +187,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
 
+                        final profile = profileController.userProfile.value;
                         return Padding(
-                          padding: EdgeInsets.only(
-                            left: 18.w,
-                            right: 18.w,
-                            top: 2.h,
-                            bottom: 6.h,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Main BMI Card
-                              _buildActiveBmiCard(latest),
-                              SizedBox(height: 8.h),
-
-                              // Quick Parameters Pills (Weight, Height, Age, Gender)
-                              _buildParameterPills(latest, bmiController),
-                              SizedBox(height: 8.h),
-
-                              // BMI Categories Row (scales down to fit if space is tight)
-                              // Heading sits outside the scaled-down block so it
-                              // stays on the page's left edge on iPad.
-                              _buildCategoriesHeading(),
-                              SizedBox(height: 10.h),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: Alignment.topCenter,
-                                    child: SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width -
-                                          36.w,
-                                      child: _buildBmiCategories(latest.category),
-                                    ),
-                                  ),
-                                ),
+                          padding: EdgeInsets.fromLTRB(16.w, 6.h, 16.w, 8.h),
+                          // Scales down rather than overflowing on short
+                          // screens.
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.topCenter,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width - 32.w,
+                                child: _buildDashboard(latest, profile),
                               ),
-                            ],
+                            ),
                           ),
                         );
                       }),
@@ -238,34 +218,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTopBar() {
     final ProfileController profileController = Get.find<ProfileController>();
+    final size = 48.w;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => Get.toNamed(AppRoutes.profile),
-          child: Container(
-            width: 38.w,
-            height: 38.w,
-            alignment: AlignmentDirectional.centerStart,
+        Semantics(
+          button: true,
+          label: 'profile'.tr,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => Get.toNamed(AppRoutes.profile),
             child: Obx(() {
               final imgPath = profileController.profileImagePath.value;
-              if (imgPath != null) {
-                return ClipOval(
-                  child: Image.file(
-                    File(imgPath),
-                    width: 34.w,
-                    height: 34.w,
-                    fit: BoxFit.cover,
-                  ),
-                );
-              }
-              return Image.asset(
-                AppAssets.profileIcon,
-                width: 38.w,
-                height: 38.w,
-                fit: BoxFit.contain,
+              return Container(
+                width: size,
+                height: size,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9F5EC),
+                ),
+                child: imgPath != null
+                    ? ClipOval(
+                        child: Image.file(
+                          File(imgPath),
+                          width: size,
+                          height: size,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : _tintedSvg(AppAssets.dashProfile, 24.w, _navy),
               );
             }),
           ),
@@ -273,23 +256,27 @@ class _HomeScreenState extends State<HomeScreen> {
         Obx(() {
           final appController = Get.find<AppController>();
           if (appController.isPremium.value) {
-            return SizedBox(width: 36.w, height: 36.w);
+            return SizedBox(width: size, height: size);
           }
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => Get.toNamed(AppRoutes.paywall),
-            child: Container(
-              width: 38.w,
-              height: 38.w,
-              alignment: AlignmentDirectional.centerEnd,
-              child: Transform.translate(
-                offset: Offset(0, -3.5.w),
-                child: Lottie.asset(
-                  AppAssets.premiumLottie,
-                  width: 38.w,
-                  height: 38.w,
-                  fit: BoxFit.contain,
-                  alignment: AlignmentDirectional.centerEnd,
+          return Semantics(
+            button: true,
+            label: 'upgrade_to_premium'.tr,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Get.toNamed(AppRoutes.paywall),
+              child: Container(
+                width: 38.w,
+                height: 38.w,
+                alignment: AlignmentDirectional.centerEnd,
+                child: Transform.translate(
+                  offset: Offset(0, -3.5.w),
+                  child: Lottie.asset(
+                    AppAssets.premiumLottie,
+                    width: 38.w,
+                    height: 38.w,
+                    fit: BoxFit.contain,
+                    alignment: AlignmentDirectional.centerEnd,
+                  ),
                 ),
               ),
             ),
@@ -299,15 +286,35 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGreeting(bool hasData, ProfileController profileController) {
+  String _categoryHeadline(BMICategory category) {
+    switch (category) {
+      case BMICategory.underweight:
+        return 'bmi_in_underweight_range'.tr;
+      case BMICategory.normal:
+        return 'bmi_in_normal_range'.tr;
+      case BMICategory.overweight:
+        return 'bmi_in_overweight_range'.tr;
+      case BMICategory.obese:
+        return 'bmi_in_obese_range'.tr;
+    }
+  }
+
+  Widget _buildGreeting(
+    bool hasData,
+    ProfileController profileController,
+    BMICategory? category,
+  ) {
     final userName = profileController.userProfile.value.homeDisplayName;
     final greeting = userName.isNotEmpty
         ? 'hello_name'.trParams({'name': '\u2068$userName\u2069'})
         : 'hello_guest'.tr;
+    // Calculated state uses the dashboard design: navy, larger type and a
+    // category headline.
+    final dashboard = hasData && category != null;
 
     return ConstrainedBox(
       // Keeps long names and long translations clear of the avatar art.
-      constraints: BoxConstraints(maxWidth: 260.w),
+      constraints: BoxConstraints(maxWidth: dashboard ? 215.w : 260.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -324,32 +331,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     greeting,
                     maxLines: 1,
                     style: TextStyle(
-                      color: const Color(0xFF63C9B7),
-                      fontSize: 24.sp,
-                      fontFamily: 'Instrument Sans',
-
+                      color: dashboard ? _navy : const Color(0xFF63C9B7),
+                      fontSize: dashboard ? 28.sp : 24.sp,
+                      fontFamily: dashboard ? 'Outfit' : 'Instrument Sans',
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
               ),
               SizedBox(width: 8.w),
-              Text('👋', style: TextStyle(fontSize: 24.sp)),
+              Text('👋', style: TextStyle(fontSize: dashboard ? 26.sp : 24.sp)),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: dashboard ? 10.h : 8.h),
           SizedBox(
-            width: 240.w,
+            width: dashboard ? null : 240.w,
             child: Text(
-              hasData
-                  ? 'lets_track_your_health_today'.tr
+              dashboard
+                  ? _categoryHeadline(category)
                   : 'welcome_lets_begin_your_health_journey'.tr,
-              style: TextStyle(
-                color: AppPalette.textSecondary,
-                fontSize: 12.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-              ),
+              style: dashboard
+                  ? TextStyle(
+                      color: _navy,
+                      fontSize: 15.sp,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w500,
+                    )
+                  : TextStyle(
+                      color: AppPalette.textSecondary,
+                      fontSize: 12.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -414,546 +427,388 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildActiveBmiCard(BMIRecord record) {
-    final isToday = DateUtils.isSameDay(record.date, DateTime.now());
-    final formattedTime = isToday
-        ? 'today_at'.trParams({
-            'time': DateFormat('h:mm a').format(record.date),
-          })
-        : DateFormat('MMM d, h:mm a').format(record.date);
-    // Tablets get a larger gauge and chip so the card isn't mostly empty.
-    final tablet = isTablet(context);
+  // ── Calculated state (BMI dashboard design) ──
 
+  static const Color _navy = Color(0xFF1D2B3A);
+  static const Color _mint = Color(0xFF17B890);
+  static const Color _mintDeep = Color(0xFF0E7C5B);
+  static const Color _muted = Color(0xFF64748B);
+
+  /// Gauge card, meal plan card and health profile card.
+  Widget _buildDashboard(BMIRecord record, UserProfile profile) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Main Gauge Card
-        CustomCard(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          borderRadius: 22.r,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Row: "Your BMI" + Last Updated
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _buildBmiSummaryCard(record),
+        SizedBox(height: 14.h),
+        _buildMealPlanCard(),
+        SizedBox(height: 14.h),
+        _buildHealthProfileCard(record, profile),
+      ],
+    );
+  }
+
+  Widget _buildBmiSummaryCard(BMIRecord record) {
+    final color = record.category.color;
+    return CustomCard(
+      padding: EdgeInsets.fromLTRB(18.w, 14.h, 14.w, 12.h),
+      borderRadius: 24.r,
+      onTap: () => Get.to(() => BmiInsightScreen(record: record)),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Expanded(
+              flex: 11,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Text(
-                      'your_bmi'.tr,
-                      style: TextStyle(
-                        color: AppPalette.textPrimary,
-                        fontSize: 18.sp,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  Text(
+                    'your_bmi'.tr,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 20.sp,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'last_updated'.tr,
-                        style: TextStyle(
-                          color: const Color(0xFF96ADB0),
-                          fontSize: 10.sp,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        formattedTime,
-                        style: TextStyle(
-                          color: AppPalette.textPrimary,
-                          fontSize: 10.sp,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 8.h),
+                  Center(
+                    child: BMIGaugeWidget(
+                      bmiValue: record.bmiValue,
+                      size: 155.w,
+                      showLabels: true,
+                    ),
                   ),
                 ],
               ),
-
-              // Gauge
-              Center(
-                child: BMIGaugeWidget(
-                  bmiValue: record.bmiValue,
-                  size: tablet ? 215.w : 170.w,
-                  showLabels: true,
-                ),
-              ),
-              SizedBox(height: 2.h),
-
-              // Value, Category badge & View History
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              child: Container(width: 1, color: const Color(0xFFE2E8F0)),
+            ),
+            Expanded(
+              flex: 9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    record.bmiValue.toStringAsFixed(1),
-                    style: TextStyle(
-                      color: record.category.color,
-                      fontSize: tablet ? 40.sp : 36.sp,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w800,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      record.bmiValue.toStringAsFixed(1),
+                      style: TextStyle(
+                        color: color,
+                        fontSize: 48.sp,
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w800,
+                        height: 1.05,
+                      ),
                     ),
                   ),
-                  Flexible(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 6.w),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 14.w,
-                        vertical: tablet ? 6.h : 4.h,
-                      ),
-                      decoration: ShapeDecoration(
-                        color: record.category.color.withValues(alpha: 0.12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.r),
-                        ),
-                      ),
+                  SizedBox(height: 10.h),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 7.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
                       child: Text(
                         record.category.label,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: record.category.color,
-                          fontSize: tablet ? 14.sp : 12.sp,
-                          fontFamily: 'Inter',
+                          color: Color.lerp(color, Colors.black, 0.25),
+                          fontSize: 16.sp,
+                          fontFamily: 'Outfit',
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => Get.toNamed(AppRoutes.history),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: tablet ? 12.w : 8.w,
-                        vertical: tablet ? 8.h : 6.h,
-                      ),
-                      decoration: ShapeDecoration(
-                        color: AppPalette.surfaceMuted,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.r),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMealPlanCard() {
+    return CustomCard(
+      padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 14.h),
+      borderRadius: 24.r,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(AppAssets.dashMeal, width: 30.w, height: 30.w),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text(
+                        'your_personalized_meal_plan'.tr,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: _navy,
+                          fontSize: 16.sp,
+                          fontFamily: 'Outfit',
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(
-                            AppAssets.viewHistory,
-                            width: tablet ? 13.w : 10.w,
-                            height: tablet ? 13.w : 10.w,
-                          ),
-                          SizedBox(width: 4.w),
-                          Flexible(
-                            child: Text(
-                              'view_history'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textPrimary,
-                                fontSize: tablet ? 11.sp : 9.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
+                    ),
+                    SizedBox(height: 3.h),
+                    Text(
+                      'meal_plan_based_on_profile'.tr,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: _muted,
+                        fontSize: 11.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.3,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-        SizedBox(height: 12.h),
-
-        // Health Feedback Banner
-        _FeedbackBanner(record: record),
-      ],
-    );
-  }
-
-  Widget _buildParameterPills(BMIRecord record, BMIController controller) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-      decoration: BoxDecoration(
-        color: AppPalette.surface,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppPalette.surfaceMint),
-        boxShadow: AppColors.cardShadow,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildParamItem(
-            imageAsset: AppAssets.weighticon,
-            value: record.weightDisplay,
-            label: 'weight'.tr,
-            onTapUpdate: () => Get.toNamed(AppRoutes.addWeight),
-          ),
-          _buildDivider(),
-          _buildParamItem(
-            imageAsset: AppAssets.heighticon,
-            value: record.heightDisplay,
-            label: 'height'.tr,
-            onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
-          ),
-          _buildDivider(),
-          _buildParamItem(
-            imageAsset: AppAssets.ageicon,
-            value: 'age_yrs'.trParams({'age': '${record.age}'}),
-            label: 'age'.tr,
-            onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
-          ),
-          _buildDivider(),
-          _buildParamItem(
-            imageAsset: AppAssets.gendericon,
-            value: record.gender.trim().toLowerCase().tr,
-            label: 'gender'.tr,
-            onTapUpdate: () => Get.toNamed(AppRoutes.bmiCalculator),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildParamItem({
-    required String imageAsset,
-    required String value,
-    required String label,
-    required VoidCallback onTapUpdate,
-  }) {
-    return Column(
-      children: [
-        Image.asset(imageAsset, width: 39.w, height: 39.w),
-        SizedBox(height: 6.h),
-        Text(
-          value,
-          style: TextStyle(
-            color: AppPalette.textPrimary,
-            fontSize: 12.sp,
-            fontFamily: 'Outfit',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        SizedBox(height: 2.h),
-        Text(
-          label,
-          style: TextStyle(
-            color: AppPalette.textSecondary,
-            fontSize: 11.sp,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        SizedBox(height: 4.h),
-      ],
-    );
-  }
-
-  Widget _buildDivider() {
-    return Container(height: 44.h, width: 1.w, color: AppPalette.surfaceMuted);
-  }
-
-  Widget _buildCategoriesHeading() {
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: 'bmi'.tr,
-            style: TextStyle(
-              color: AppPalette.textPrimary,
-              fontSize: 20.sp,
-              fontFamily: 'Outfit',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          TextSpan(
-            text: 'categories'.tr,
-            style: TextStyle(
-              color: const Color(0xFF09B389),
-              fontSize: 20.sp,
-              fontFamily: 'Outfit',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBmiCategories(BMICategory currentCategory) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildCategoryBadge(
-                'underweight_18_5'.tr,
-                currentCategory == BMICategory.underweight,
-                inactiveBg: const Color(0xFFCDEBF8),
-                activeBg: AppColors.underweight,
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: _buildCategoryBadge(
-                'normal_18_5_24_9'.tr,
-                currentCategory == BMICategory.normal,
-                inactiveBg: const Color(0xFFC0ECE6),
-                activeBg: AppColors.normal,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          children: [
-            Expanded(
-              child: _buildCategoryBadge(
-                'overweight_25_29_9'.tr,
-                currentCategory == BMICategory.overweight,
-                inactiveBg: const Color(0xFFFEDFC1),
-                activeBg: AppColors.overweight,
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: _buildCategoryBadge(
-                'obese_30_34_9'.tr,
-                currentCategory == BMICategory.obese,
-                inactiveBg: const Color(0xFFFFB1B2),
-                activeBg: AppColors.obese,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategoryBadge(
-    String text,
-    bool isCurrent, {
-    required Color inactiveBg,
-    required Color activeBg,
-  }) {
-    return Container(
-      height: 40.h,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        // Pastel fills are light-only; dark mode tints with the category colour.
-        color: isCurrent ? activeBg : inactiveBg,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 12.sp,
-          fontFamily: 'Outfit',
-          fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
-          color: isCurrent ? Colors.white : AppPalette.textPrimary,
-        ),
-      ),
-    );
-  }
-}
-
-class _FeedbackBanner extends StatefulWidget {
-  final BMIRecord record;
-
-  const _FeedbackBanner({required this.record});
-
-  @override
-  State<_FeedbackBanner> createState() => _FeedbackBannerState();
-}
-
-class _FeedbackBannerState extends State<_FeedbackBanner>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2400),
-  );
-  bool _pressed = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Honour the system "reduce motion" setting.
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _controller.stop();
-      _controller.value = 0;
-    } else if (!_controller.isAnimating) {
-      _controller.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _setPressed(bool v) {
-    if (_pressed != v) setState(() => _pressed = v);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final category = widget.record.category;
-    final still = MediaQuery.disableAnimationsOf(context);
-    // Larger banner on tablets so the category message reads at a glance.
-    final tablet = isTablet(context);
-
-    final message = Text(
-      category.feedbackMessage,
-      style: TextStyle(
-        color: AppPalette.textPrimary,
-        fontSize: tablet ? 15.sp : 12.sp,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w400,
-        height: 1.40,
-      ),
-    );
-
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: still ? 1 : 0, end: 1),
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeOutCubic,
-      builder: (context, t, child) => Opacity(
-        opacity: t,
-        child: Transform.translate(
-          offset: Offset(0, 10.h * (1 - t)),
-          child: child,
-        ),
-      ),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: (_) => _setPressed(true),
-        onTapUp: (_) => _setPressed(false),
-        onTapCancel: () => _setPressed(false),
-        onTap: () => Get.to(() => BmiInsightScreen(record: widget.record)),
-        child: AnimatedScale(
-          scale: _pressed ? 0.97 : 1,
-          duration: const Duration(milliseconds: 120),
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, _) {
-              final t = _controller.value;
-              // 0 → 1 → 0 once per cycle.
-              final pulse = 0.5 - 0.5 * math.cos(t * 2 * math.pi);
-              // Shine crosses during the first half, then rests.
-              final shine = (t / 0.5).clamp(0.0, 1.0);
-              final radius = BorderRadius.circular(16.r);
-
-              return Transform.scale(
-                scale: 1 + 0.015 * pulse,
-                child: Container(
-                  width: double.infinity,
-                  constraints: BoxConstraints(minHeight: tablet ? 64.h : 48.h),
-                  decoration: BoxDecoration(
-                    // Pastel fills are light-only; dark mode tints with the category colour.
-                    color: category.feedbackBackground,
-                    borderRadius: radius,
-                    border: Border.all(
-                      color: category.color.withValues(
-                        alpha: 0.15 + 0.45 * pulse,
+          SizedBox(height: 12.h),
+          Semantics(
+            button: true,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: EatBalancedMealsScreen.openMealPlan,
+              child: Container(
+                height: 44.h,
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.r),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFC8F3E2), Color(0xFFDDF8EC)],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _tintedSvg(AppAssets.dashCrown, 20.w, _mintDeep),
+                    SizedBox(width: 10.w),
+                    Flexible(
+                      child: Text(
+                        'view_your_meal_plan'.tr,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: _mintDeep,
+                          fontSize: 15.sp,
+                          fontFamily: 'Outfit',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                      width: 1.2,
                     ),
-                    boxShadow: [
-                      ...AppColors.cardShadow,
-                      BoxShadow(
-                        color: category.color.withValues(alpha: 0.45 * pulse),
-                        blurRadius: (8 + 14 * pulse).r,
-                        spreadRadius: 1.5 * pulse,
-                        offset: Offset(0, 3.h),
+                    SizedBox(width: 10.w),
+                    MirrorOnRtl(
+                      child: _tintedSvg(
+                        AppAssets.dashArrowRight,
+                        18.w,
+                        _mintDeep,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHealthProfileCard(BMIRecord record, UserProfile profile) {
+    final weight = record.weightDisplay.replaceFirst(RegExp(r'\.0(?=\s)'), '');
+    final stats = <(String, String, String)>[
+      (AppAssets.dashAge, 'age'.tr, '${record.age}'),
+      (
+        AppAssets.dashGender,
+        'gender'.tr,
+        record.gender.trim().toLowerCase().tr,
+      ),
+      (AppAssets.dashWeight, 'weight'.tr, weight),
+      (AppAssets.dashHeight, 'height'.tr, record.heightDisplay),
+      (AppAssets.dashGoal, 'goal'.tr, _goalShort(profile.healthGoal)),
+    ];
+
+    return CustomCard(
+      padding: EdgeInsets.fromLTRB(14.w, 12.h, 12.w, 14.h),
+      borderRadius: 24.r,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 32.w,
+                height: 32.w,
+                padding: EdgeInsets.all(7.w),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFE3F7F0),
+                ),
+                child: _tintedSvg(AppAssets.dashProfile, 18.w, _mint),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Text(
+                  'your_health_profile'.tr,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 16.sp,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => Get.toNamed(AppRoutes.profile),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF2FBF7),
+                    borderRadius: BorderRadius.circular(30.r),
+                    border: Border.all(color: const Color(0xFFBDEBDC)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'view_profile'.tr,
+                        style: TextStyle(
+                          color: _mint,
+                          fontSize: 12.sp,
+                          fontFamily: 'Outfit',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      MirrorOnRtl(
+                        child: _tintedSvg(
+                          AppAssets.dashArrowRight,
+                          14.w,
+                          _mint,
+                        ),
                       ),
                     ],
                   ),
-                  child: ClipRRect(
-                    borderRadius: radius,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final width = constraints.maxWidth;
-                        final bandWidth = width * 0.3;
-                        return Stack(
-                          children: [
-                            if (shine < 1)
-                              Positioned(
-                                top: 0,
-                                bottom: 0,
-                                width: bandWidth,
-                                left: -bandWidth + (width + bandWidth) * shine,
-                                child: IgnorePointer(
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: const Alignment(-1, -0.4),
-                                        end: const Alignment(1, 0.4),
-                                        colors: [
-                                          Colors.white.withValues(alpha: 0),
-                                          Colors.white.withValues(alpha: 0.7),
-                                          Colors.white.withValues(alpha: 0),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: tablet ? 18.w : 14.w,
-                                vertical: tablet ? 16.h : 10.h,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  category.buildFeedbackIcon(
-                                    size: tablet ? 32.w : 24.w,
-                                  ),
-                                  SizedBox(width: tablet ? 14.w : 10.w),
-                                  Expanded(child: message),
-                                  SizedBox(width: 6.w),
-                                  // Arrow nudges forward with the pulse.
-                                  Transform.translate(
-                                    offset: Offset(
-                                      7.w * pulse * dirSign(context),
-                                      0,
-                                    ),
-                                    child: MirrorOnRtl(
-                                      child: Image.asset(
-                                        AppAssets.ageForward,
-                                        height: tablet ? 20.h : 16.h,
-                                        width: tablet ? 20.w : 16.w,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
                 ),
-              );
-            },
+              ),
+            ],
           ),
-        ),
+          SizedBox(height: 12.h),
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                for (var i = 0; i < stats.length; i++) ...[
+                  if (i > 0)
+                    Container(
+                      width: 1,
+                      margin: EdgeInsets.symmetric(vertical: 2.h),
+                      color: const Color(0xFFE2E8F0),
+                    ),
+                  Expanded(
+                    child: _buildStat(stats[i].$1, stats[i].$2, stats[i].$3),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildStat(String icon, String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 3.w),
+      child: Column(
+        children: [
+          SvgPicture.asset(icon, width: 24.w, height: 24.w),
+          SizedBox(height: 6.h),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              style: TextStyle(
+                color: _muted,
+                fontSize: 12.sp,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          SizedBox(height: 2.h),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              maxLines: 1,
+              style: TextStyle(
+                color: _navy,
+                fontSize: 14.sp,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _goalShort(HealthGoal? goal) {
+    switch (goal) {
+      case HealthGoal.loseWeight:
+        return 'goal_short_lose'.tr;
+      case HealthGoal.buildMuscle:
+        return 'goal_short_build'.tr;
+      case HealthGoal.maintainWeight:
+        return 'goal_short_maintain'.tr;
+      case HealthGoal.improveHealth:
+        return 'goal_short_improve'.tr;
+      case null:
+        return '—';
+    }
+  }
+
+  Widget _tintedSvg(String asset, double size, Color color) {
+    return SvgPicture.asset(
+      asset,
+      width: size,
+      height: size,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
     );
   }
 }

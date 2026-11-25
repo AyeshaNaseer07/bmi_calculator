@@ -26,7 +26,6 @@ class MealPlanController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Restore persisted meal progress.
     final saved = _storage.getEatenMeals();
     if (saved.isNotEmpty) eaten.addAll(saved);
   }
@@ -48,7 +47,6 @@ class MealPlanController extends GetxController {
 
   void markEaten(String key) {
     eaten.add(key);
-    // Persist immediately so progress survives app restarts.
     _storage.saveEatenMeals(eaten.toSet());
   }
 

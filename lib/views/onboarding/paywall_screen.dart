@@ -50,9 +50,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   void initState() {
     super.initState();
-    AnalyticsService.log(AnalyticsService.paywallView, {
-      'type': 'onboarding',
-    });
+    AnalyticsService.log(AnalyticsService.paywallView, {'type': 'onboarding'});
     final args = Get.arguments;
     if (args is Map && args['fromOnboarding'] == true) {
       _fromOnboarding = true;
@@ -107,9 +105,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   void _onClose() {
     // Can't leave while a purchase or restore is in progress.
     if (_isLoading) return;
-    AnalyticsService.log(AnalyticsService.paywallClose, {
-      'type': 'onboarding',
-    });
+    AnalyticsService.log(AnalyticsService.paywallClose, {'type': 'onboarding'});
     InterstitialAdManager.instance.show(
       _crossAdPlacement,
       onDone: _leavePaywall,

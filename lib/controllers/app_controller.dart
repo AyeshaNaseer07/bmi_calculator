@@ -49,8 +49,6 @@ class AppController extends GetxController {
 
     subscriptionService.onChanged = (premium) => isPremium.value = premium;
     subscriptionService.start();
-    // Only turns premium off for expired/refunded subs: at launch and
-    // whenever the app comes back to the foreground.
     subscriptionVerified = subscriptionService.checkExpiry();
     _lifecycle = AppLifecycleListener(
       onResume: () => subscriptionService.checkExpiry(),
@@ -110,7 +108,8 @@ class AppController extends GetxController {
     return subscriptionService.purchase(remoteProductId);
   }
 
-  Future<PremiumRestoreResult> restorePurchases() => subscriptionService.restore();
+  Future<PremiumRestoreResult> restorePurchases() =>
+      subscriptionService.restore();
 
   void completeOnboarding() {
     onboardingSeen.value = true;

@@ -1,6 +1,7 @@
 import 'package:bmi_calculator/core/constants/app_assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -220,7 +221,6 @@ class BMIResultScreen extends StatelessWidget {
                             imageAsset: AppAssets.weighticon,
                             value: record.weightDisplay,
                             label: 'weight'.tr,
-                            showUnderline: true,
                           ),
                           _buildDetailDivider(),
                           _buildDetailColumn(
@@ -391,7 +391,6 @@ ${record.category.feedbackMessage}
     required String imageAsset,
     required String value,
     required String label,
-    bool showUnderline = false,
   }) {
     return Column(
       children: [

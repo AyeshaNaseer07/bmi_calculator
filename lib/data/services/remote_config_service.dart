@@ -350,7 +350,6 @@ class RemoteConfig {
     }();
   }
 
-  /// Applies values published while the app is open, without a relaunch.
   static void listenForUpdates() {
     _updates ??= remoteConfig.onConfigUpdated.listen(
       (update) async {

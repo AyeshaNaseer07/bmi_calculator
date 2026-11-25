@@ -35,7 +35,6 @@ class QuickActionsService {
   }
 
   Future<void> _checkInitialShortcut() async {
-    // The native channel may not be registered yet on cold start; retry.
     for (var i = 0; i < 20; i++) {
       try {
         final initial = await _channel.invokeMethod<String>(
@@ -54,7 +53,6 @@ class QuickActionsService {
   }
 
   void handleShortcut(String type) {
-    // If the app is currently on the splash screen or context isn't ready yet, defer it
     if (Get.currentRoute == AppRoutes.splash || Get.key.currentState == null) {
       _pendingShortcut = type;
       return;
@@ -64,7 +62,6 @@ class QuickActionsService {
     _navigate(type);
   }
 
-  /// Call this when the app arrives at HomeScreen to consume any cold-start shortcut
   void consumePendingAction() {
     if (_pendingShortcut != null) {
       final shortcut = _pendingShortcut!;

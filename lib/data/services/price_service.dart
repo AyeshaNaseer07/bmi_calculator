@@ -52,8 +52,6 @@ class PlanOffer {
   final String productId;
   final ProductDetails? product;
   final PlanType type;
-
-  /// Null when the store didn't return this product.
   final PlanPrice? price;
 
   const PlanOffer({
@@ -73,8 +71,6 @@ class PriceService {
   static final Map<PaywallType, Future<Map<SubscriptionPlan, PlanPrice>>>
   _inFlight = {};
 
-  /// Prices for whichever of this paywall's current product ids are loaded.
-  /// Keyed by product id, so a wrong id never borrows another product's price.
   static Map<SubscriptionPlan, PlanPrice> cached(PaywallType paywall) =>
       _pricesFor(RemoteConfigService.to, paywall);
 
@@ -96,7 +92,6 @@ class PriceService {
     }
   }
 
-  /// Concurrent callers share one fetch.
   static Future<Map<SubscriptionPlan, PlanPrice>> load(
     RemoteConfigService rc,
     PaywallType paywall,
@@ -122,8 +117,6 @@ class PriceService {
         for (final slot in [SubscriptionPlan.monthly, SubscriptionPlan.yearly])
           rc.getProductId(slot, paywall).trim(),
       }..remove('');
-      // Each id is queried on its own: one invalid id must not affect the
-      // others. Already-loaded ids are not fetched again.
       await Future.wait(
         ids.where((id) => !_products.containsKey(id)).map(fetchProduct),
       );
@@ -156,7 +149,6 @@ class PriceService {
     );
   }
 
-  /// Never throws; an unknown or failing id simply yields null.
   static Future<ProductDetails?> fetchProduct(String productId) async {
     if (productId.isEmpty) return null;
     if (!_products.containsKey(productId)) {
@@ -194,7 +186,6 @@ class PriceService {
     return PlanPrice(p.rawPrice, p.currencyCode, p.price);
   }
 
-  /// ISO 8601, e.g. P1M.
   static String? _subscriptionPeriod(ProductDetails? p) {
     if (p is AppStoreProduct2Details) {
       final period = p.sk2Product.subscription?.subscriptionPeriod;
@@ -223,7 +214,6 @@ class PriceService {
     }
   }
 
-  /// 1. The store's subscription period, 2. the product id, 3. [fallback].
   static PlanType getPlanType(
     ProductDetails? p, {
     required String productId,

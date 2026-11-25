@@ -16,6 +16,9 @@ export 'meal_screens.dart';
 class EatBalancedMealsScreen extends StatelessWidget {
   const EatBalancedMealsScreen({super.key});
 
+  /// Opens the meal plan, or the soft paywall first for free users.
+  static void openMealPlan() => _openMealPlan();
+
   static void _openMealPlan() {
     if (Get.find<AppController>().isPremium.value) {
       Get.to(() => const DailyMealPlanScreen());

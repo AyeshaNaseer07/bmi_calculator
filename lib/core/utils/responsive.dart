@@ -16,20 +16,13 @@ EdgeInsets phoneWidthDialogInset(BuildContext context, double inset) {
   );
 }
 
-/// Screen height the layouts are designed around (iPhone X / 12 mini class).
 const double kReferencePhoneHeight = 812;
 
-/// iPhone SE class phones (and phones in landscape): short enough that a
-/// screen designed for [kReferencePhoneHeight] gets squeezed or clipped.
 bool isShortPhone(BuildContext context) {
   final size = MediaQuery.sizeOf(context);
   return size.shortestSide < 600 && size.height < 700;
 }
 
-/// Keeps [child]'s layout exactly as is on normal phones and tablets. On
-/// short phones the child is laid out with the height it would have on a
-/// [kReferencePhoneHeight] phone (so `Expanded`, `Spacer` and `FittedBox`
-/// inside it keep working) and the whole thing scrolls.
 class ScrollOnShortPhones extends StatelessWidget {
   final Widget child;
 

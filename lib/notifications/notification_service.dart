@@ -106,8 +106,6 @@ class NotificationService {
       } catch (e) {
         log('Error scheduling local notifications: $e');
       }
-      // The token fetched at startup predates the permission (on iOS it fails
-      // until APNs has registered), so fetch it again now.
       await _fetchAndLogToken();
     }
     return settings;

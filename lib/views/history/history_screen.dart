@@ -456,8 +456,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             }
 
             if (!hasRecords) {
-              // Same full-width layout as the records view and other pages;
-              // scrolls on short screens instead of shrinking the content.
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),

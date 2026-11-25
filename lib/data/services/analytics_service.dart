@@ -53,7 +53,6 @@ class AnalyticsService {
     await log(screenEventName(name));
   }
 
-  /// Screens that only get Firebase's built-in `screen_view`, no custom event.
   static const _noCustomScreenEvent = {
     'language-selection',
     'onboarding',
@@ -63,9 +62,6 @@ class AnalyticsService {
     'health-insights',
   };
 
-  /// Custom per-screen event name, e.g. `language-selection` ->
-  /// `language_selection_view`, `EatVegetablesScreen` -> `eat_vegetables_view`.
-  /// Firebase allows only letters, digits and underscores (max 40 chars).
   static String screenEventName(String screen) {
     var s = screen
         .replaceAllMapped(RegExp(r'(?<=[a-z0-9])([A-Z])'), (m) => '_${m[1]}')
@@ -80,11 +76,9 @@ class AnalyticsService {
   }
 }
 
-/// Logs a `screen_view` for every named GetX route push / pop-back.
 class AnalyticsRouteObserver extends NavigatorObserver {
   String? _name(Route<dynamic>? r) {
     final n = r?.settings.name;
-    // Skip dialogs, sheets and unnamed routes.
     if (r is! PageRoute || n == null || n.isEmpty) return null;
     return n.startsWith('/') && n.length > 1 ? n.substring(1) : n;
   }

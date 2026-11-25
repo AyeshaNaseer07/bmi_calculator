@@ -20,6 +20,18 @@ abstract class AppAssets {
   static const String weekPro = '$_imagesBase/week_pro.webp';
   static const String wreathLeft = '$_imagesBase/wreath_left.webp';
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
+  // ── Home dashboard (SVG icons from the BMI dashboard developer kit) ──
+  static const String _dashIcons = 'assets/icons';
+  static const String dashArrowRight = '$_dashIcons/ic_arrow_right.svg';
+  static const String dashCrown = '$_dashIcons/ic_crown_pro.svg';
+  static const String dashMeal = '$_dashIcons/ic_meal_utensils.svg';
+  static const String dashProfile = '$_dashIcons/ic_profile_outline.svg';
+  static const String dashAge = '$_dashIcons/ic_stat_age.svg';
+  static const String dashGender = '$_dashIcons/ic_stat_gender.svg';
+  static const String dashWeight = '$_dashIcons/ic_stat_weight.svg';
+  static const String dashHeight = '$_dashIcons/ic_stat_height.svg';
+  static const String dashGoal = '$_dashIcons/ic_stat_goal.svg';
+
   static const String homeAvatar = '$_imagesBase/home_img.webp';
   static const String homeAvatarDefault = '$_imagesBase/home_avatar.webp';
   static const String homeMale = '$_imagesBase/home_male.webp';

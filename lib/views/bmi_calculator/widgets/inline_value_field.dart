@@ -68,8 +68,6 @@ class _InlineValueFieldState extends State<InlineValueField> {
   @override
   void didUpdateWidget(covariant InlineValueField old) {
     super.didUpdateWidget(old);
-    // Keep the text in sync with slider / unit changes, but never while the
-    // user is typing in this field.
     if (!_focus.hasFocus) {
       final t = _format(widget.value);
       if (_text.text != t) _text.text = t;
@@ -98,7 +96,6 @@ class _InlineValueFieldState extends State<InlineValueField> {
     }
   }
 
-  /// Edit icon: focus the field with a blinking cursor after the value.
   void _startEditing() {
     _focus.requestFocus();
     _text.selection = TextSelection.collapsed(offset: _text.text.length);
@@ -136,7 +133,6 @@ class _InlineValueFieldState extends State<InlineValueField> {
             style: style,
             cursorColor: _green,
             showCursor: true,
-            // On iOS the app keypad types instead of the system keyboard.
             keyboardType: _keypad.keyboardType,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
@@ -174,8 +170,6 @@ class _InlineValueFieldState extends State<InlineValueField> {
         ),
         if (widget.showEdit) ...[
           SizedBox(width: 8.w),
-          // Part of the field, so tapping it while editing doesn't first
-          // count as a tap outside and drop focus.
           TextFieldTapRegion(
             child: GestureDetector(
               onTap: _startEditing,
