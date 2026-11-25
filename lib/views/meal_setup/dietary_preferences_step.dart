@@ -58,7 +58,6 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
       titleBottom: 'ms_preferences'.tr,
       subtitle: 'ms_dietary_subtitle'.tr,
       hero: MealSetupAssets.diet,
-      heroEmoji: '🍽️',
       body: Column(
         children: [
           _section(

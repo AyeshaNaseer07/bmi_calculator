@@ -67,7 +67,6 @@ class _LifestyleStepState extends State<LifestyleStep> {
       titleBottom: 'ms_information'.tr,
       subtitle: 'ms_lifestyle_subtitle'.tr,
       hero: MealSetupAssets.lifestyle,
-      heroEmoji: '💧',
       body: Column(
         children: [
           _section(

@@ -54,7 +54,6 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
       titleBottom: 'ms_allergies'.tr,
       subtitle: 'ms_allergies_subtitle'.tr,
       hero: MealSetupAssets.allergies,
-      heroEmoji: '🥜',
       body: Column(
         children: [
           for (final o in MealSetupOptions.allergies) _row(o),

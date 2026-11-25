@@ -21,7 +21,6 @@ class MealPlanSetupScreen extends StatelessWidget {
       titleBottom: 'ms_meal_plan'.tr,
       subtitle: 'ms_overview_subtitle'.tr,
       hero: MealSetupAssets.overview,
-      heroEmoji: '🥗',
       body: Obx(() {
         final done = c.completedSteps.toSet();
         return Column(

@@ -45,12 +45,9 @@ abstract class MealSetupAssets {
   static const String allergies = 'allergies';
   static const String diet = 'diet';
   static const String lifestyle = 'lifestyle';
-  static String hero(String screen, Gender? gender) =>
-      '$_img/hero_${screen}_${gender == Gender.male ? 'male' : 'female'}.png';
 
-  /// Null for other screens.
-  static String? homeArt(String screen, Gender? gender) {
-    if (screen != overview && screen != health) return null;
+  /// Hero avatar — the same home art on every screen, picked by gender.
+  static String homeArt(Gender? gender) {
     return switch (gender) {
       Gender.female => AppAssets.homeImgFemale,
       Gender.male => AppAssets.homeAvatar,
@@ -131,7 +128,6 @@ class SetupScaffold extends StatelessWidget {
 
   /// One of the [MealSetupAssets] hero ids.
   final String hero;
-  final String heroEmoji;
   final Widget body;
   final Widget bottom;
   final Widget? footer;
@@ -143,7 +139,6 @@ class SetupScaffold extends StatelessWidget {
     required this.titleBottom,
     required this.subtitle,
     required this.hero,
-    required this.heroEmoji,
     required this.body,
     required this.bottom,
     this.showStepChip = true,
@@ -203,12 +198,7 @@ class SetupScaffold extends StatelessWidget {
         PositionedDirectional(
           top: -8.h,
           end: -16.w,
-          child: SetupHero(
-            screen: hero,
-            emoji: heroEmoji,
-            width: heroW,
-            height: heroH,
-          ),
+          child: SetupHero(screen: hero, width: heroW, height: heroH),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(minHeight: heroH - 20.h),
@@ -223,10 +213,7 @@ class SetupScaffold extends StatelessWidget {
                 Row(
                   children: [
                     const SetupBackCircle(),
-                    if (showStepChip && step > 0) ...[
-                      SizedBox(width: 10.w),
-                      Flexible(child: SetupStepChip(step: step)),
-                    ],
+                    if (showStepChip && step > 0) ...[],
                   ],
                 ),
                 SizedBox(height: 12.h),
@@ -266,14 +253,12 @@ class SetupBackCircle extends StatelessWidget {
 
 class SetupHero extends StatelessWidget {
   final String screen;
-  final String emoji;
   final double width;
   final double height;
 
   const SetupHero({
     super.key,
     required this.screen,
-    required this.emoji,
     required this.width,
     required this.height,
   });
@@ -284,8 +269,7 @@ class SetupHero extends StatelessWidget {
     return ExcludeSemantics(
       child: Obx(() {
         final gender = MealSetupController.to.gender.value;
-        final homeArt = MealSetupAssets.homeArt(screen, gender);
-        final asset = homeArt ?? MealSetupAssets.hero(screen, gender);
+        final homeArt = MealSetupAssets.homeArt(gender);
         return ShaderMask(
           blendMode: BlendMode.dstIn,
           shaderCallback: (r) => LinearGradient(
@@ -302,17 +286,7 @@ class SetupHero extends StatelessWidget {
               colors: [Colors.black, Colors.black, Colors.transparent],
               stops: [0, 0.84, 1],
             ).createShader(r),
-            child: homeArt != null
-                ? _homeArtCrop(homeArt)
-                : Image.asset(
-                    asset,
-                    key: ValueKey(asset),
-                    width: width,
-                    height: height,
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter,
-                    errorBuilder: (_, _, _) => _placeholder(),
-                  ),
+            child: _homeArtCrop(homeArt),
           ),
         );
       }),
@@ -348,50 +322,7 @@ class SetupHero extends StatelessWidget {
     ),
   );
 
-  Widget _placeholder() => SizedBox(
-    width: width,
-    height: height,
-    child: Align(
-      alignment: AlignmentDirectional.centerEnd,
-      child: Container(
-        width: height * 0.8,
-        height: height * 0.8,
-        margin: EdgeInsetsDirectional.only(end: 20.w),
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFEFFBF6), Color(0xFFCBEFDF)],
-          ),
-        ),
-        child: Text(emoji, style: TextStyle(fontSize: 54.sp)),
-      ),
-    ),
-  );
-}
-
-class SetupStepChip extends StatelessWidget {
-  final int step;
-  const SetupStepChip({super.key, required this.step});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
-      decoration: BoxDecoration(
-        color: kMsStepChipBg,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Text(
-        'ms_step_x_of_y'.trParams({'x': '$step', 'y': '5'}),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: msBody(13, color: kMsGreen, weight: FontWeight.w600),
-      ),
-    );
-  }
+  Widget _placeholder() => SizedBox(width: width, height: height);
 }
 
 class SetupProgressDots extends StatelessWidget {

@@ -106,7 +106,6 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
       titleBottom: 'ms_health_title_bottom'.tr,
       subtitle: 'ms_health_profile_subtitle'.tr,
       hero: MealSetupAssets.health,
-      heroEmoji: '📏',
       body: Column(
         children: [
           _row(
@@ -134,7 +133,7 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
               () => Row(
                 children: [
                   for (final (i, g) in Gender.values.indexed) ...[
-                    if (i > 0) SizedBox(width: 5.w),
+                    if (i > 0) SizedBox(width: 7.w),
                     Expanded(
                       child: _GenderChip(
                         gender: g,
@@ -236,11 +235,11 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
     int controlFlex = 6,
   }) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 11.h),
+      padding: EdgeInsets.only(bottom: 6.h),
       child: SetupCard(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+        padding: EdgeInsetsDirectional.fromSTEB(12.w, 10.h, 12.w, 10.h),
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: 62.h),
+          constraints: BoxConstraints(minHeight: 60.h),
           child: Row(
             children: [
               ExcludeSemantics(
@@ -301,8 +300,8 @@ class _GenderChip extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          height: 40.h,
-          padding: EdgeInsets.symmetric(horizontal: 6.w),
+          height: 54.h,
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
           decoration: BoxDecoration(
             // Unselected chips sit on a light grey fill (reference design)
             color: selected ? kMsMint : const Color(0xFFF4F6F8),
@@ -314,7 +313,9 @@ class _GenderChip extends StatelessWidget {
           ),
           child: FittedBox(
             fit: BoxFit.scaleDown,
-            child: Row(
+            // Icon stacked above the label so each word gets the chip's
+            // full width instead of being squeezed beside the icon.
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SvgPicture.asset(
@@ -323,11 +324,11 @@ class _GenderChip extends StatelessWidget {
                   height: 18.w,
                   colorFilter: ColorFilter.mode(fg, BlendMode.srcIn),
                 ),
-                SizedBox(width: 4.w),
+                SizedBox(height: 4.h),
                 Text(
                   gender.displayName,
                   maxLines: 1,
-                  style: msBody(13, color: fg, weight: FontWeight.w600),
+                  style: msBody(12.5, color: fg, weight: FontWeight.w600),
                 ),
               ],
             ),

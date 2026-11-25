@@ -55,7 +55,6 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
       titleBottom: 'ms_conditions'.tr,
       subtitle: 'ms_medical_subtitle'.tr,
       hero: MealSetupAssets.medical,
-      heroEmoji: '📋',
       body: Column(
         children: [
           for (int i = 0; i < options.length; i += 2)
