@@ -248,13 +248,13 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
                   borderRadius: BorderRadius.circular(14.r),
                   child: Image.asset(
                     icon,
-                    width: 58.w,
+                    width: 52.w,
                     height: 58.w / 1.38,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 6.w),
               Expanded(
                 flex: 5,
                 child: SetupCardTitle(
@@ -263,7 +263,7 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
                   titleSize: 16,
                 ),
               ),
-              SizedBox(width: 8.w),
+              SizedBox(width: 6.w),
               Expanded(flex: controlFlex, child: control),
             ],
           ),

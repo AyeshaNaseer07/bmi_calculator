@@ -49,6 +49,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  # iOS plugins come from CocoaPods only. Mixing Swift Package Manager
+  # (Firebase, google_mobile_ads) with CocoaPods (AppLovin adapters) linked
+  # GoogleUtilities and the Google Mobile Ads SDK into the app twice.
+  config:
+    enable-swift-package-manager: false
+
   assets:
     - assets/images/
     - assets/images/meals/
