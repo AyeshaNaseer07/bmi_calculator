@@ -20,6 +20,7 @@ import '../../data/services/subscription_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/premium_congrats_dialog.dart';
+import '../../core/constants/app_colors.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -514,9 +515,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                 _offer(_selectedPlan).product,
                                 PaywallType.onboarding,
                               ),
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
-                              ),
+                              gradient: AppColors.ctaGradient,
                               borderRadius: BorderRadius.circular(28.r),
                               height: 52.h,
                               isLoading: _isLoading,

@@ -11,6 +11,7 @@ import '../../controllers/app_controller.dart';
 import '../../controllers/bmi_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/bmi_record_model.dart';
 import '../../data/models/user_profile_model.dart';
@@ -135,7 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               bmiController.latestRecord.value?.category,
                             );
                           }),
-                          SizedBox(height: 20.h),
                         ],
                       ),
                     ),
@@ -187,21 +187,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
 
                         final profile = profileController.userProfile.value;
-                        return Padding(
-                          padding: EdgeInsets.fromLTRB(16.w, 2.h, 16.w, 18.h),
-                          // Scales down rather than overflowing on short
-                          // screens.
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.topCenter,
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width - 32.w,
-                                child: _buildDashboard(latest, profile),
-                              ),
-                            ),
-                          ),
+                        // Same margins and full width as the other pages;
+                        // scrolls instead of shrinking when it doesn't fit.
+                        return SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 14.h),
+                          child: _buildDashboard(latest, profile),
                         );
                       }),
                     ),
@@ -410,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 18.w,
               height: 18.w,
             ),
-            solidColor: const Color(0xFF00BD8E),
+            gradient: AppColors.ctaGradient,
             borderRadius: BorderRadius.circular(26.r),
             height: 48.h,
             textStyle: TextStyle(
@@ -460,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBmiSummaryCard(BMIRecord record) {
     final color = record.category.color;
     return CustomCard(
-      padding: EdgeInsets.fromLTRB(18.w, 16.h, 18.w, 14.h),
+      padding: EdgeInsets.fromLTRB(18.w, 14.h, 18.w, 12.h),
       borderRadius: 24.r,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -480,11 +471,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Center(
             child: BMIGaugeWidget(
               bmiValue: record.bmiValue,
-              size: 180.w,
+              size: 160.w,
               showLabels: true,
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 6.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -496,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     record.bmiValue.toStringAsFixed(1),
                     style: TextStyle(
                       color: color,
-                      fontSize: 44.sp,
+                      fontSize: 40.sp,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w800,
                       height: 1.0,
@@ -506,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Spacer(),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.14),
                   borderRadius: BorderRadius.circular(16.r),
@@ -524,7 +515,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 10.h),
           Semantics(
             container: true,
             label: 'categories'.tr,
@@ -622,47 +613,39 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           SizedBox(height: 12.h),
-          Semantics(
-            button: true,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: EatBalancedMealsScreen.openMealPlan,
-              child: Container(
-                height: 44.h,
-                padding: EdgeInsets.symmetric(horizontal: 14.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.r),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFC8F3E2), Color(0xFFDDF8EC)],
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _tintedSvg(AppAssets.dashCrown, 20.w, _mintDeep),
-                    SizedBox(width: 10.w),
-                    Flexible(
-                      child: Text(
-                        'Unlock Personalized Meals',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: _mintDeep,
-                          fontSize: 15.sp,
-                          fontFamily: 'Outfit',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10.w),
-                    MirrorOnRtl(
-                      child: _tintedSvg(
-                        AppAssets.dashArrowRight,
-                        18.w,
-                        _mintDeep,
-                      ),
-                    ),
+          _AnimatedUnlockPill(
+            onTap: EatBalancedMealsScreen.openMealPlan,
+            leading: _tintedSvg(AppAssets.dashCrown, 20.w, _mintDeep),
+            label: Text(
+              'Unlock Personalized Meals',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: _mintDeep,
+                fontSize: 15.sp,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            // Animated arrow, tinted to the app theme colour.
+            trailing: MirrorOnRtl(
+              child: Lottie.asset(
+                AppAssets.forwardArrowLottie,
+                width: 26.w,
+                height: 26.w,
+                fit: BoxFit.contain,
+                animate: !MediaQuery.disableAnimationsOf(context),
+                delegates: LottieDelegates(
+                  values: [
+                    ValueDelegate.color(const [
+                      '**',
+                    ], value: AppColors.primaryTeal),
                   ],
+                ),
+                errorBuilder: (_, _, _) => _tintedSvg(
+                  AppAssets.dashArrowRight,
+                  18.w,
+                  AppColors.primaryTeal,
                 ),
               ),
             ),
@@ -1147,6 +1130,159 @@ class _UpgradeButtonState extends State<_UpgradeButton>
           ),
         );
       },
+    );
+  }
+}
+
+/// Mint "Unlock Personalized Meals" pill with a gentle breathing pulse, a
+/// periodic light sweep and a press-down. Stays still when
+/// the system asks for reduced motion.
+class _AnimatedUnlockPill extends StatefulWidget {
+  final VoidCallback onTap;
+  final Widget leading;
+  final Widget label;
+  final Widget trailing;
+
+  const _AnimatedUnlockPill({
+    required this.onTap,
+    required this.leading,
+    required this.label,
+    required this.trailing,
+  });
+
+  @override
+  State<_AnimatedUnlockPill> createState() => _AnimatedUnlockPillState();
+}
+
+class _AnimatedUnlockPillState extends State<_AnimatedUnlockPill>
+    with TickerProviderStateMixin {
+  // Pulse + arrow nudge, back and forth.
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  );
+  // Light sweep: crosses in the first 55%, then pauses.
+  late final AnimationController _sweep = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 3000),
+  );
+  bool _pressed = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _pulse.stop();
+      _sweep.stop();
+    } else {
+      if (!_pulse.isAnimating) _pulse.repeat(reverse: true);
+      if (!_sweep.isAnimating) _sweep.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    _sweep.dispose();
+    super.dispose();
+  }
+
+  void _setPressed(bool v) {
+    if (_pressed != v) setState(() => _pressed = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(30.r);
+    final pulse = CurvedAnimation(parent: _pulse, curve: Curves.easeInOutSine);
+    final sweep = CurvedAnimation(
+      parent: _sweep,
+      curve: const Interval(0, 0.55, curve: Curves.easeInOutCubic),
+    );
+
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: widget.onTap,
+        onTapDown: (_) => _setPressed(true),
+        onTapUp: (_) => _setPressed(false),
+        onTapCancel: () => _setPressed(false),
+        child: AnimatedBuilder(
+          animation: pulse,
+          builder: (context, child) => Transform.scale(
+            scale: _pressed ? 0.97 : 1 + 0.02 * pulse.value,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: radius,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF17B890)
+                        .withValues(alpha: 0.10 + 0.14 * pulse.value),
+                    blurRadius: 8.r + 6.r * pulse.value,
+                    offset: Offset(0, 3.h),
+                  ),
+                ],
+              ),
+              child: child,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: radius,
+            child: Stack(
+              children: [
+                Container(
+                  height: 44.h,
+                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFFC8F3E2), Color(0xFFDDF8EC)],
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      widget.leading,
+                      SizedBox(width: 10.w),
+                      Flexible(child: widget.label),
+                      SizedBox(width: 10.w),
+                      // The arrow animates itself (Lottie), so no nudge here.
+                      widget.trailing,
+                    ],
+                  ),
+                ),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: AnimatedBuilder(
+                      animation: sweep,
+                      builder: (context, _) {
+                        if (_sweep.value > 0.55) return const SizedBox.shrink();
+                        final x = -1.6 + 3.2 * sweep.value;
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment(x - 0.6, -1),
+                              end: Alignment(x + 0.6, 1),
+                              stops: const [0, 0.4, 0.5, 0.6, 1],
+                              colors: [
+                                Colors.white.withValues(alpha: 0),
+                                Colors.white.withValues(alpha: 0.08),
+                                Colors.white.withValues(alpha: 0.55),
+                                Colors.white.withValues(alpha: 0.08),
+                                Colors.white.withValues(alpha: 0),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

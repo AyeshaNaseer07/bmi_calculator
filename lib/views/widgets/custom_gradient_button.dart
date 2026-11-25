@@ -8,10 +8,6 @@ import '../../core/constants/app_typography.dart';
 import '../../core/utils/responsive.dart';
 
 /// The same left-to-right teal-to-blue fill as [AppAssets.btnRectangle].
-const LinearGradient _kBtnRectangleGradient = LinearGradient(
-  colors: [Color(0xFF33D3AB), Color(0xFF128ADB)],
-);
-
 class CustomGradientButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -173,7 +169,7 @@ class CustomGradientButton extends StatelessWidget {
           image == AppAssets.btnRectangle &&
           isTablet(context);
       final effectiveGradient = useImageGradient
-          ? _kBtnRectangleGradient
+          ? AppColors.ctaGradient
           : gradient;
       buttonContent = Container(
         height: effectiveHeight,

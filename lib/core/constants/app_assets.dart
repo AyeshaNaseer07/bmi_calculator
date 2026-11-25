@@ -9,6 +9,8 @@ abstract class AppAssets {
   static const String foodCompleteLottie = '$_lottiesBase/food_complete.json';
   static const String statsLottie = '$_lottiesBase/stats.json';
   static const String navAddLottie = '$_lottiesBase/bmi_home.json';
+  static const String forwardArrowLottie =
+      '$_lottiesBase/forward_arrow.json';
   static const String weightTrackingLottie =
       '$_lottiesBase/weight_tracking.json';
 

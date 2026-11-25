@@ -19,6 +19,7 @@ import 'dialogs/calculating_dialog.dart';
 import 'widgets/inline_value_field.dart';
 import '../widgets/number_keypad.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/constants/app_colors.dart';
 
 class BMICalculatorScreen extends StatefulWidget {
   const BMICalculatorScreen({super.key});
@@ -555,7 +556,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                           width: 18.w,
                           height: 18.w,
                         ),
-                        solidColor: const Color(0xFF00BD8E),
+                        gradient: AppColors.ctaGradient,
                         borderRadius: BorderRadius.circular(26.r),
                         height: 48.h,
                         textStyle: TextStyle(

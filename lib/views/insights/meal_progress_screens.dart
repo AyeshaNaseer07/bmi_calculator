@@ -11,6 +11,7 @@ import '../widgets/animated_cta_button.dart';
 import 'insight_common.dart';
 import 'meal_screens.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/constants/app_colors.dart';
 
 Color get _kDeep => const Color(0xFF006B4E);
 Color get _kTrack => const Color(0xFFE3E8FB);
@@ -87,9 +88,7 @@ class MealCompletedScreen extends StatelessWidget {
         text: 'view_your_progress'.tr,
         height: 52.h,
         borderRadius: BorderRadius.circular(28.r),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1BD19E), Color(0xFF0AA37D)],
-        ),
+        gradient: AppColors.ctaGradient,
         textStyle: TextStyle(
           color: Colors.white,
           fontSize: 16.sp,

@@ -12,6 +12,7 @@ import '../../core/theme/app_palette.dart';
 import '../../core/utils/rtl.dart';
 import '../../data/models/user_profile_model.dart';
 import '../widgets/animated_cta_button.dart';
+import '../../core/constants/app_colors.dart';
 
 // ── Design tokens (Personalized Meal Plan developer kit) ──
 const Color kMsBg = Color(0xFFF3FAF8);
@@ -30,8 +31,6 @@ const Color kMsStepChipBg = Color(0xFFDFF5EC);
 const Color kMsPlaceholder = Color(0xFF94A3B8);
 const Color kMsBlue = Color(0xFF1D63B8);
 const Color kMsBlueSoft = Color(0xFFE3F1FD);
-const Color kMsCtaStart = Color(0xFF2AD89B);
-const Color kMsCtaEnd = Color(0xFF12A883);
 
 /// Images and icons for the setup flow.
 abstract class MealSetupAssets {
@@ -970,11 +969,7 @@ class SetupCta extends StatelessWidget {
         enableShimmer: enabled,
         enableArrowNudge: enabled,
         borderRadius: BorderRadius.circular((height / 2).h),
-        gradient: const LinearGradient(
-          colors: [kMsCtaStart, kMsCtaEnd],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
+        gradient: AppColors.ctaGradient,
         textStyle: TextStyle(
           color: Colors.white,
           fontSize: fontSize.sp,

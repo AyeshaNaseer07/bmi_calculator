@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../core/constants/app_assets.dart';
 import 'animated_cta_button.dart';
 import '../../core/utils/rtl.dart';
+import '../../core/constants/app_colors.dart';
 
 class NextButton extends StatefulWidget {
   final VoidCallback onNext;
@@ -34,11 +35,7 @@ class _NextButtonState extends State<NextButton> {
       width: 112.w,
       height: 42.h,
       borderRadius: BorderRadius.circular(24.r),
-      gradient: const LinearGradient(
-        colors: [Color(0xFF24CCA7), Color(0xFF168EE2)],
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-      ),
+      gradient: AppColors.ctaGradient,
       textStyle: TextStyle(
         color: Colors.white,
         fontSize: 16.sp,
