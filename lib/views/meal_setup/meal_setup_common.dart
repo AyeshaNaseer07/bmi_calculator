@@ -45,14 +45,9 @@ abstract class MealSetupAssets {
   static const String allergies = 'allergies';
   static const String diet = 'diet';
   static const String lifestyle = 'lifestyle';
-
-  /// Hero for [screen] matching the user's gender: male gets the male
-  /// avatar, everyone else the female one.
   static String hero(String screen, Gender? gender) =>
       '$_img/hero_${screen}_${gender == Gender.male ? 'male' : 'female'}.png';
 
-  /// The overview and Health Profile screens reuse the home screen's
-  /// background avatar for [gender] (couple art while gender is unknown).
   /// Null for other screens.
   static String? homeArt(String screen, Gender? gender) {
     if (screen != overview && screen != health) return null;
@@ -126,10 +121,6 @@ TextStyle msBody(
   height: height,
 );
 
-/// Page frame shared by the overview and the five steps: back button,
-/// optional "Step x of 5" chip, two-tone title, subtitle, progress dots,
-/// gender-matched hero illustration, scrollable body and a pinned bottom
-/// action.
 class SetupScaffold extends StatelessWidget {
   /// 0 for the overview, 1–5 for the steps.
   final int step;
@@ -171,8 +162,6 @@ class SetupScaffold extends StatelessWidget {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  // Scrolls only when the content is taller than the screen;
-                  // pages that fit stay still (no drag or bounce).
                   physics: const ClampingScrollPhysics(),
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
@@ -275,9 +264,6 @@ class SetupBackCircle extends StatelessWidget {
   }
 }
 
-/// Gender-matched hero illustration. Its inner edge and bottom fade into
-/// the page so the title and subtitle can sit over it. Shows an emoji
-/// placeholder while an avatar isn't in the project yet.
 class SetupHero extends StatelessWidget {
   final String screen;
   final String emoji;
@@ -333,10 +319,6 @@ class SetupHero extends StatelessWidget {
     );
   }
 
-  /// Home art is a full-screen (1125×2436) background with the avatar in
-  /// its top-right corner. Zooms in so roughly the right 780px × top 655px
-  /// of the image (the avatar and its glow) fills the hero box. The crop is
-  /// about the image's own content, so it's topRight in RTL as well.
   static const double _homeArtZoom = 1125 / 780;
 
   /// How far the avatar is raised inside the hero box (in .h units).
@@ -351,8 +333,6 @@ class SetupHero extends StatelessWidget {
         minWidth: width * _homeArtZoom,
         maxWidth: width * _homeArtZoom,
         maxHeight: double.infinity,
-        // Lifts the avatar a little; the empty glow above its head is
-        // what gets clipped.
         child: Transform.translate(
           offset: Offset(0, -_homeArtLift.h),
           child: Image.asset(
@@ -414,8 +394,6 @@ class SetupStepChip extends StatelessWidget {
   }
 }
 
-/// Overview: four loose dots, first one active (as in the kit).
-/// Steps: five dots joined by a line, filled up to [step].
 class SetupProgressDots extends StatelessWidget {
   final int step;
   const SetupProgressDots({super.key, required this.step});
@@ -930,8 +908,6 @@ class SetupDropdown<T> extends StatelessWidget {
   }
 }
 
-/// Gradient pill button with a trailing arrow and, by default, the
-/// little sparkle strokes either side (as in the kit).
 class SetupCta extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -1079,8 +1055,6 @@ class SetupBackButton extends StatelessWidget {
   }
 }
 
-/// "None of the above" row: green check badge, title + subtitle and a
-/// trailing checkbox; turns mint with a green border when selected.
 class SetupNoneBanner extends StatelessWidget {
   final String title;
   final String subtitle;

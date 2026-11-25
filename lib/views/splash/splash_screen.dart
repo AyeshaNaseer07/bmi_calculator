@@ -101,8 +101,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  /// Opens the language screen once its native ad has loaded (or given up),
-  /// so the ad is there when the screen appears rather than loading late.
   Future<void> _openLanguage() async {
     await NativeAds.waitForLoad(
       NativeAdPlacement.language,
@@ -128,11 +126,6 @@ class _SplashScreenState extends State<SplashScreen>
           fit: StackFit.expand,
           children: [
             // — Full Screen Background —
-            // The art is phone-shaped with its waves along the bottom. Kept
-            // at full width on the wider tablet canvas it grows taller than
-            // the screen and pushes the waves off the bottom, so tablets
-            // stretch it to the screen height instead (bottom trimmed the
-            // way a phone trims it).
             Positioned(
               left: -5.w,
               right: -5.w,

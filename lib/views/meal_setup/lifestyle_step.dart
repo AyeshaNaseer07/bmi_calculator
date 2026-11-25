@@ -236,8 +236,6 @@ class _LifestyleStepState extends State<LifestyleStep> {
     );
   }
 
-  /// Card: icon tile, title + subtitle, then [child] under the title, or
-  /// [fullWidth] spanning the whole card below the header.
   Widget _section({
     required String icon,
     required String title,
@@ -293,9 +291,6 @@ class _LifestyleStepState extends State<LifestyleStep> {
   }
 }
 
-/// Rounded option from the Lifestyle kit: grey fill when idle, mint with a
-/// green border and check circle when selected. With [checkbox] it always
-/// shows a leading box (meal timing).
 class _OptionTile extends StatelessWidget {
   final String label;
   final String? sub;

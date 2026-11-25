@@ -9,9 +9,6 @@ import '../../core/theme/app_palette.dart';
 
 class PremiumCongratsDialog extends StatelessWidget {
   final bool isRestore;
-
-  /// Continue was tapped while the Apple ID already had an active
-  /// subscription: premium was restored without a new charge.
   final bool alreadySubscribed;
 
   const PremiumCongratsDialog({

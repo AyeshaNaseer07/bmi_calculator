@@ -161,10 +161,6 @@ class InterstitialAdManager {
     }
   }
 
-  /// Shows the ad for [placement] if one is ready, then calls [onDone] once
-  /// it's closed, or straight away if there's nothing to show.
-  ///
-  /// With [waitFor], an ad that is still loading gets that long to finish.
   Future<void> show(
     InterstitialPlacement placement, {
     required VoidCallback onDone,

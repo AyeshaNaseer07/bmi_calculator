@@ -76,8 +76,6 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     );
   }
 
-  /// First time the form is empty (hints only); after a save it opens with
-  /// the values the user saved last, which they can still edit.
   void _prefillFromLastEntry() {
     final last = Get.find<StorageService>().getLastWeightEntry();
     if (last == null) return;
@@ -184,8 +182,6 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
     await _controller.addWeight(current, DateTime.now(), goalWeight: goal);
     if (!mounted) return;
-    // Brief animation, then close it and this screen to land on the
-    // weight tracking page.
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -208,9 +204,6 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     );
     await Future.delayed(const Duration(milliseconds: 3000));
     if (!mounted) return;
-    // Remove this screen silently from underneath the animation overlay,
-    // then fade the overlay out so the tracking page is revealed smoothly
-    // (popping both would flash the add screen in between).
     final nav = Navigator.of(context);
     final route = ModalRoute.of(context);
     if (route != null) nav.removeRoute(route);

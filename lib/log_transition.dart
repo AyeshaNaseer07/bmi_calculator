@@ -7,9 +7,6 @@ class PlatformCode {
 
   static const _channel = MethodChannel("bmi.calculator/log_transaction");
   static final Set<String> _loggedTransactionIds = {};
-
-  /// StoreKit 2 entitlement state for [productIds]: `active`, `revoked`,
-  /// `expired`, `none` or `unknown`. Returns `unknown` on any failure.
   static Future<String> getSubscriptionStatus(List<String> productIds) async {
     try {
       final result = await _channel.invokeMethod<String>(
@@ -34,8 +31,6 @@ class PlatformCode {
     }
   }
 
-  /// [onChanged] runs whenever StoreKit reports a transaction update
-  /// (refund, revocation, renewal, expiry) while the app is running.
   static void listenForEntitlementChanges(void Function() onChanged) {
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'entitlementsChanged') onChanged();

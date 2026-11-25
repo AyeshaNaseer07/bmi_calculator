@@ -36,8 +36,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     HistoryScreen(showBackButton: false),
   ];
 
-  // Screen names for the tabs above (same order). Home is logged by the route
-  // observer when the shell is pushed.
   static const _tabScreenNames = [
     'home',
     'profile',

@@ -497,8 +497,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Short phones (iPhone SE): the whole page scrolls, rather than only the
-  /// account list inside it. Other phones keep the original layout.
   Widget _pageScroll(BuildContext context, Widget page) => isShortPhone(context)
       ? SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -506,8 +504,6 @@ class ProfileScreen extends StatelessWidget {
         )
       : page;
 
-  /// The account card fills the leftover height (and scrolls inside) on
-  /// normal phones; on short phones it keeps its natural height instead.
   Widget _fillUnlessShort(BuildContext context, Widget card) =>
       isShortPhone(context) ? card : Flexible(child: card);
 
@@ -773,8 +769,6 @@ class _EditProfileBottomSheetState extends State<_EditProfileBottomSheet> {
                     focusNode: _focusNode,
                     autofocus: true,
                     textCapitalization: TextCapitalization.words,
-                    // Max 20 characters (letters, spaces, numbers, symbols);
-                    // no counter, so the layout is unchanged.
                     inputFormatters: [LengthLimitingTextInputFormatter(20)],
                     textInputAction: TextInputAction.done,
                     onTapOutside: (_) => _focusNode.unfocus(),

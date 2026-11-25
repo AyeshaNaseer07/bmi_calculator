@@ -60,11 +60,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     _selectedPlan = _appController.remoteConfigService.defaultPlan(
       PaywallType.onboarding,
     );
-    // Premium can turn on from the store's own update even when purchase()
-    // didn't report success, so the paywall reacts to the status itself.
     _premiumWatch = ever<bool>(_appController.isPremium, (premium) {
-      // Only for late Ask to Buy approvals; Continue/Restore handle their
-      // own results.
       if (premium && !_inFlow) _onPurchased();
     });
     _initCrossDelay();
@@ -178,8 +174,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
   }
 
-  /// Thank-you dialog, then leave the paywall. Runs once, from whichever
-  /// reports the purchase first (purchase() or the premium status).
   Future<void> _onPurchased() async {
     if (_purchaseHandled) return;
     _purchaseHandled = true;
@@ -270,9 +264,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     ),
                     SizedBox(height: 6.h),
 
-                    // Title with wreaths
-                    // Locked to LTR so the wreaths don't swap sides in RTL
-                    // languages; the title text keeps the real direction.
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: Row(

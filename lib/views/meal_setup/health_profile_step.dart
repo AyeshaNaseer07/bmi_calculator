@@ -243,8 +243,6 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
           constraints: BoxConstraints(minHeight: 62.h),
           child: Row(
             children: [
-              // Every icon shares one mint tile (artwork centred on a
-              // uniform background), rounded here for an identical container.
               ExcludeSemantics(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14.r),

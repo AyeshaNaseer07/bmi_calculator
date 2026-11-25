@@ -507,8 +507,6 @@ class WeightTrackingScreen extends StatelessWidget {
                                         LineChartBarData(
                                           spots: goalSpots,
                                           isCurved: false,
-                                          // Softened so it doesn't compete
-                                          // with the weight line.
                                           color: const Color(0xFFF97316)
                                               .withValues(alpha: 0.25),
                                           barWidth: 1.8.w,
@@ -523,8 +521,6 @@ class WeightTrackingScreen extends StatelessWidget {
                                                   barData,
                                                   index,
                                                 ) {
-                                                  // Only show a small label at the
-                                                  // right end of the goal line
                                                   if (index ==
                                                       goalSpots.length - 1) {
                                                     return _GoalLabelPainter(
@@ -605,10 +601,6 @@ class WeightTrackingScreen extends StatelessWidget {
         final double available = constraints.maxWidth;
         final double chartWidth = math.max(available, pointCount * minSpacing);
         final bool scrollable = chartWidth > available + 1;
-        // The plot is always drawn left to right (time runs left to right, and
-        // fl_chart isn't RTL-aware). In RTL the scroll view would otherwise
-        // start at the right edge, where the chart has no inset, clipping the
-        // first point and its label.
         final Widget sized = Directionality(
           textDirection: TextDirection.ltr,
           child: SizedBox(

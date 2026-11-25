@@ -12,24 +12,13 @@ import 'meal_setup_common.dart';
 import 'medical_conditions_step.dart';
 
 /// Navigation for: overview → 5 steps → 1 Week Meal Plan.
-///
-/// Every route in the flow is named `/meal-…` so finishing can pop the
-/// whole flow (and any earlier plan screen) in one go.
 abstract class MealSetupFlow {
   static const String overviewRoute = '/meal-setup';
   static const String planRoute = '/meal-plan';
   static String stepRoute(int step) => '/meal-setup-step-$step';
-
-  /// Steps that must be finished before the plan is built.
-  /// Every step is mandatory.
   static const List<int> requiredSteps = [1, 2, 3, 4, 5];
-
-  /// Entry point from "View your meal plan": setup the first time,
-  /// the plan itself once setup is done.
   static void openPlanOrSetup() {
     final c = MealSetupController.to;
-    // Answers saved before every field became mandatory send the user
-    // back through setup to fill the gaps.
     final allValid = requiredSteps.every(c.isStepValid);
     if (c.isComplete.value && allValid) {
       openPlan();
@@ -103,8 +92,6 @@ abstract class MealSetupFlow {
   }
 }
 
-/// One selectable answer: stored [key], translated [label], optional
-/// [sub] line and [emoji] icon.
 class SetupOption {
   final String key;
   final String label;

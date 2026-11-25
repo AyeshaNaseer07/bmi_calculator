@@ -41,12 +41,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentIndex = 0;
   bool _bmiAdAvailable = true;
 
-  // 4 steps:
-  // 0: BMI Calculator with Bottom Native Ad
-  // 1: Full-Screen Native Ad
-  // 2: Weight Tracking
-  // 3: Health Insights
-
   late final bool _showFullScreenAd = _resolveShowFullScreenAd();
 
   bool _resolveShowFullScreenAd() {
@@ -105,7 +99,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
               children: [
                 // Page 0: with bottom native ad when it loads, otherwise the
-                // same full layout as the other content slides.
                 if (_bmiAdAvailable)
                   _buildBmiAdSlide()
                 else
@@ -392,8 +385,6 @@ class _AnimatedGradientNextButtonState
     return AnimatedCtaButton(
       text: 'next'.tr,
       backgroundImage: AppAssets.btnRectangle,
-      // iPad: fully rounded like the other buttons in the app (a fixed .r
-      // radius looks square on the taller tablet button).
       borderRadius: BorderRadius.circular(isTablet(context) ? 999 : 12.r),
       trailingIcon: MirrorOnRtl(
         child: Image.asset(
