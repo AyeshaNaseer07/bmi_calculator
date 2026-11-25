@@ -6,9 +6,9 @@ import '../../controllers/app_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/utils/responsive.dart';
 import '../onboarding/soft_paywall_screen.dart';
+import '../meal_setup/meal_setup_flow.dart';
 import '../widgets/premium_feature_dialog.dart';
 import 'insight_common.dart';
-import 'meal_screens.dart';
 import '../../core/theme/app_palette.dart';
 
 export 'meal_screens.dart';
@@ -16,17 +16,15 @@ export 'meal_screens.dart';
 class EatBalancedMealsScreen extends StatelessWidget {
   const EatBalancedMealsScreen({super.key});
 
-  /// Opens the meal plan, or the soft paywall first for free users.
   static void openMealPlan() => _openMealPlan();
-
   static void _openMealPlan() {
     if (Get.find<AppController>().isPremium.value) {
-      Get.to(() => const DailyMealPlanScreen());
+      MealSetupFlow.openPlanOrSetup();
       return;
     }
     Get.to(
       () => SoftPaywallScreen(
-        onUnlocked: () => Get.to(() => const DailyMealPlanScreen()),
+        onUnlocked: MealSetupFlow.openPlanOrSetup,
         onDismissed: () {
           Future.delayed(const Duration(milliseconds: 300), () {
             PremiumFeatureDialog.show(

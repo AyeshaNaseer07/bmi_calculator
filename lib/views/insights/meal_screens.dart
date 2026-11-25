@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
+import '../meal_setup/meal_setup_flow.dart';
 import 'insight_common.dart';
 import 'meal_plan_data.dart';
 import 'meal_progress_screens.dart';
@@ -25,6 +26,24 @@ class DailyMealPlanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return InsightScaffold(
       title: 'n_1_week_meal_plan'.tr,
+      trailing: Tooltip(
+        message: 'ms_edit_preferences'.tr,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: MealSetupFlow.openSetup,
+          child: Container(
+            width: 36.w,
+            height: 36.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppPalette.surface,
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFFD5F2E8), width: 1.2),
+            ),
+            child: Icon(Icons.tune_rounded, size: 20.w, color: _kDeep),
+          ),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

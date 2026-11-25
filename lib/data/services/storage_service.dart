@@ -23,6 +23,7 @@ class StorageService {
   static const String _keyWaterGlassesDay = 'water_glasses_day';
   static const String _keyEatenMeals = 'eaten_meals';
   static const String _keyDoneActivities = 'done_activities';
+  static const String _keyMealSetup = 'meal_setup';
 
   late SharedPreferences _prefs;
 
@@ -193,4 +194,19 @@ class StorageService {
   /// Persists the full set of completed activity keys.
   Future<void> saveDoneActivities(Set<String> keys) =>
       _prefs.setStringList(_keyDoneActivities, keys.toList());
+
+  // ── Meal plan setup answers ──
+
+  Map<String, dynamic>? getMealSetup() {
+    final raw = _prefs.getString(_keyMealSetup);
+    if (raw == null) return null;
+    try {
+      return jsonDecode(raw) as Map<String, dynamic>;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> saveMealSetup(Map<String, dynamic> data) =>
+      _prefs.setString(_keyMealSetup, jsonEncode(data));
 }

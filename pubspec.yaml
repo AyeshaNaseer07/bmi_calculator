@@ -54,6 +54,7 @@ flutter:
     - assets/images/
     - assets/images/meals/
     - assets/images/badges/
+    - assets/images/meal_setup/
     - assets/lotties/
     - assets/icons/
     - assets/locales/
