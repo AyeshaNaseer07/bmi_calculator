@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         final profile = profileController.userProfile.value;
                         return Padding(
-                          padding: EdgeInsets.fromLTRB(16.w, 6.h, 16.w, 8.h),
+                          padding: EdgeInsets.fromLTRB(16.w, 2.h, 16.w, 18.h),
                           // Scales down rather than overflowing on short
                           // screens.
                           child: Align(
@@ -476,7 +476,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 2.h),
           Center(
             child: BMIGaugeWidget(
               bmiValue: record.bmiValue,
@@ -486,6 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 10.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
                 child: FittedBox(
@@ -503,7 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              SizedBox(width: 14.w),
+              Spacer(),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
                 decoration: BoxDecoration(
@@ -527,11 +528,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Semantics(
             container: true,
             label: 'categories'.tr,
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 14.w,
-              runSpacing: 6.h,
-              children: [for (final c in BMICategory.values) _bmiLegendItem(c)],
+            // One line: shrinks uniformly if it doesn't fit, never wraps.
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 12.w,
+                children: [
+                  for (final c in BMICategory.values) _bmiLegendItem(c),
+                ],
+              ),
             ),
           ),
         ],

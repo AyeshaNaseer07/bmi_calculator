@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/meal_setup_controller.dart';
+import '../../core/constants/app_assets.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/rtl.dart';
 import '../../data/models/user_profile_model.dart';
@@ -49,6 +50,17 @@ abstract class MealSetupAssets {
   /// avatar, everyone else the female one.
   static String hero(String screen, Gender? gender) =>
       '$_img/hero_${screen}_${gender == Gender.male ? 'male' : 'female'}.png';
+
+  /// The overview screen reuses the home screen's background avatar for
+  /// [gender] (couple art while gender is unknown). Null for other screens.
+  static String? homeArt(String screen, Gender? gender) {
+    if (screen != overview) return null;
+    return switch (gender) {
+      Gender.female => AppAssets.homeImgFemale,
+      Gender.male => AppAssets.homeAvatar,
+      _ => AppAssets.homeAvatarDefault,
+    };
+  }
 
   // 3D section icons (mint tile baked in).
   static const String icHealthProfile = '$_img/ic_3d_health_profile.png';
@@ -165,11 +177,7 @@ class SetupScaffold extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _header(),
-                      SizedBox(height: 14.h),
-                      body,
-                    ],
+                    children: [_header(), body],
                   ),
                 ),
               ),
@@ -304,10 +312,9 @@ class SetupHero extends StatelessWidget {
     final dir = Directionality.of(context);
     return ExcludeSemantics(
       child: Obx(() {
-        final asset = MealSetupAssets.hero(
-          screen,
-          MealSetupController.to.gender.value,
-        );
+        final gender = MealSetupController.to.gender.value;
+        final homeArt = MealSetupAssets.homeArt(screen, gender);
+        final asset = homeArt ?? MealSetupAssets.hero(screen, gender);
         return ShaderMask(
           blendMode: BlendMode.dstIn,
           shaderCallback: (r) => LinearGradient(
@@ -324,20 +331,49 @@ class SetupHero extends StatelessWidget {
               colors: [Colors.black, Colors.black, Colors.transparent],
               stops: [0, 0.84, 1],
             ).createShader(r),
-            child: Image.asset(
-              asset,
-              key: ValueKey(asset),
-              width: width,
-              height: height,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-              errorBuilder: (_, _, _) => _placeholder(),
-            ),
+            child: homeArt != null
+                ? _homeArtCrop(homeArt)
+                : Image.asset(
+                    asset,
+                    key: ValueKey(asset),
+                    width: width,
+                    height: height,
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                    errorBuilder: (_, _, _) => _placeholder(),
+                  ),
           ),
         );
       }),
     );
   }
+
+  /// Home art is a full-screen (1125×2436) background with the avatar in
+  /// its top-right corner. Zooms in so roughly the right 780px × top 655px
+  /// of the image (the avatar and its glow) fills the hero box. The crop is
+  /// about the image's own content, so it's topRight in RTL as well.
+  static const double _homeArtZoom = 1125 / 780;
+
+  Widget _homeArtCrop(String asset) => ClipRect(
+    child: SizedBox(
+      width: width,
+      height: height,
+      child: OverflowBox(
+        alignment: Alignment.topRight,
+        minWidth: width * _homeArtZoom,
+        maxWidth: width * _homeArtZoom,
+        maxHeight: double.infinity,
+        child: Image.asset(
+          asset,
+          key: ValueKey(asset),
+          width: width * _homeArtZoom,
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.topRight,
+          errorBuilder: (_, _, _) => _placeholder(),
+        ),
+      ),
+    ),
+  );
 
   Widget _placeholder() => SizedBox(
     width: width,
@@ -399,21 +435,7 @@ class SetupProgressDots extends StatelessWidget {
       return ExcludeSemantics(
         child: Padding(
           padding: EdgeInsetsDirectional.only(start: 2.w),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (int i = 0; i < 4; i++)
-                Container(
-                  width: 10.w,
-                  height: 10.w,
-                  margin: EdgeInsetsDirectional.only(end: 8.w),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: i == 0 ? kMsGreen : _off,
-                  ),
-                ),
-            ],
-          ),
+          child: Row(mainAxisSize: MainAxisSize.min),
         ),
       );
     }
@@ -544,9 +566,6 @@ class SetupIconTile extends StatelessWidget {
   }
 }
 
-/// Kit checkbox: rounded grey square that fills green when checked — as a
-/// check circle (medical kit) or, with [square], a rounded square
-/// (food allergies kit).
 class SetupCheckBox extends StatelessWidget {
   final bool checked;
   final double size;
