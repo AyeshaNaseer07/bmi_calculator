@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../core/constants/app_assets.dart';
+import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/responsive.dart';
 
 const Color _kActiveNavColor = Color(0xFF2EC4B6);
+
+/// Circle layers in `bmi_home.json` (the + itself is layer `jia`).
+const List<String> _addCircleLayers = ['oo', 'o11', 'o12', 'o13'];
 
 class MainBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -100,12 +105,30 @@ class MainBottomNavBar extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: onAddTap,
-                child: ClipOval(
-                  child: Image.asset(
-                    AppAssets.navAdd,
-                    fit: BoxFit.cover,
-                    width: 52.w,
-                    height: 52.h,
+                child: Lottie.asset(
+                  AppAssets.navAddLottie,
+                  width: 56.w,
+                  height: 56.w,
+                  fit: BoxFit.contain,
+                  repeat: true,
+                  // Lotties ship with their own colours; always tint them
+                  // to the app theme's primary colour.
+                  delegates: LottieDelegates(
+                    values: [
+                      for (final layer in _addCircleLayers)
+                        ValueDelegate.color([
+                          layer,
+                          '**',
+                        ], value: AppColors.primaryTeal),
+                    ],
+                  ),
+                  errorBuilder: (_, _, _) => ClipOval(
+                    child: Image.asset(
+                      AppAssets.navAdd,
+                      fit: BoxFit.cover,
+                      width: 52.w,
+                      height: 52.w,
+                    ),
                   ),
                 ),
               ),
