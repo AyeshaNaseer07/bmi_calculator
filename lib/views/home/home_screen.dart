@@ -115,8 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Main Screen Content
             SafeArea(
-              // Both the empty and the calculated state: normal phones keep
-              // the fill layout, short ones (iPhone SE) scroll.
               child: ScrollOnShortPhones(
                 child: Column(
                   children: [
@@ -150,18 +148,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           final isPremium =
                               Get.find<AppController>().isPremium.value;
                           return Padding(
-                            // Bottom clears the nav bar's raised + button.
                             padding: EdgeInsets.fromLTRB(
                               18.w,
                               2.h,
                               18.w,
-                              // Premium: extra room so the centred card sits
-                              // above the nav bar's overlap, not on it.
                               isPremium ? 145.h : 24.h,
                             ),
                             child: Column(
-                              // Premium users have no ads card below, so centre
-                              // the BMI card in the free space.
                               mainAxisAlignment: isPremium
                                   ? MainAxisAlignment.center
                                   : MainAxisAlignment.start,
@@ -187,8 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
 
                         final profile = profileController.userProfile.value;
-                        // Same margins and full width as the other pages;
-                        // scrolls instead of shrinking when it doesn't fit.
                         return SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
                           padding: EdgeInsets.fromLTRB(18.w, 2.h, 18.w, 14.h),
@@ -298,8 +289,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final greeting = userName.isNotEmpty
         ? 'hello_name'.trParams({'name': '\u2068$userName\u2069'})
         : 'hello_guest'.tr;
-    // Calculated state uses the dashboard design: navy, larger type and a
-    // category headline.
     final dashboard = hasData && category != null;
 
     return ConstrainedBox(
@@ -311,8 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
           // Greeting Text Section
           Row(
             children: [
-              // Scales down rather than truncating, so long translations
-              // and names stay fully readable.
               Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
@@ -447,8 +434,6 @@ class _HomeScreenState extends State<HomeScreen> {
     BMICategory.obese: Color(0xFFFF2020),
   };
 
-  /// "Your BMI" card: title, gauge, value and category pill, with the
-  /// gauge colour legend in a row along the bottom.
   Widget _buildBmiSummaryCard(BMIRecord record) {
     final color = record.category.color;
     return CustomCard(
@@ -543,8 +528,8 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 20.w,
-          height: 9.w,
+          width: 16.w,
+          height: 9.h,
           decoration: BoxDecoration(
             color: _gaugeColors[c],
             borderRadius: BorderRadius.circular(5.r),
@@ -678,16 +663,6 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Row(
             children: [
-              // Container(
-              //   width: 32.w,
-              //   height: 32.w,
-              //   padding: EdgeInsets.all(7.w),
-              //   decoration: const BoxDecoration(
-              //     shape: BoxShape.circle,
-              //     color: Color(0xFFE3F7F0),
-              //   ),
-              //   child: _tintedSvg(AppAssets.dashProfile, 18.w, _mint),
-              // ),
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
@@ -703,43 +678,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(width: 8.w),
-              // GestureDetector(
-              //   behavior: HitTestBehavior.opaque,
-              //   onTap: () => Get.toNamed(AppRoutes.profile),
-              //   child: Container(
-              //     padding: EdgeInsets.symmetric(
-              //       horizontal: 12.w,
-              //       vertical: 6.h,
-              //     ),
-              //     decoration: BoxDecoration(
-              //       color: const Color(0xFFF2FBF7),
-              //       borderRadius: BorderRadius.circular(30.r),
-              //       border: Border.all(color: const Color(0xFFBDEBDC)),
-              //     ),
-              //     child: Row(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: [
-              //         Text(
-              //           'view_profile'.tr,
-              //           style: TextStyle(
-              //             color: _mint,
-              //             fontSize: 12.sp,
-              //             fontFamily: 'Outfit',
-              //             fontWeight: FontWeight.w600,
-              //           ),
-              //         ),
-              //         SizedBox(width: 4.w),
-              //         MirrorOnRtl(
-              //           child: _tintedSvg(
-              //             AppAssets.dashArrowRight,
-              //             14.w,
-              //             _mint,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           SizedBox(height: 12.h),
@@ -1135,9 +1073,6 @@ class _UpgradeButtonState extends State<_UpgradeButton>
   }
 }
 
-/// Mint "Unlock Personalized Meals" pill with a gentle breathing pulse, a
-/// periodic light sweep and a press-down. Stays still when
-/// the system asks for reduced motion.
 class _AnimatedUnlockPill extends StatefulWidget {
   final VoidCallback onTap;
   final Widget leading;

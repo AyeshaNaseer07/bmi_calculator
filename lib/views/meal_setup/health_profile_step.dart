@@ -243,8 +243,20 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
           constraints: BoxConstraints(minHeight: 62.h),
           child: Row(
             children: [
-              SetupIconTile(image: icon, size: 60),
-              SizedBox(width: 10.w),
+              // Every icon shares one mint tile (artwork centred on a
+              // uniform background), rounded here for an identical container.
+              ExcludeSemantics(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14.r),
+                  child: Image.asset(
+                    icon,
+                    width: 58.w,
+                    height: 58.w / 1.38,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
               Expanded(
                 flex: 5,
                 child: SetupCardTitle(
@@ -294,7 +306,8 @@ class _GenderChip extends StatelessWidget {
           height: 40.h,
           padding: EdgeInsets.symmetric(horizontal: 6.w),
           decoration: BoxDecoration(
-            color: selected ? kMsMint : Colors.white,
+            // Unselected chips sit on a light grey fill (reference design)
+            color: selected ? kMsMint : const Color(0xFFF4F6F8),
             borderRadius: BorderRadius.circular(14.r),
             border: Border.all(
               color: selected ? kMsGreen : kMsChipBorder,

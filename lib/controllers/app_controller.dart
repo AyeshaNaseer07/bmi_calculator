@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:get/get.dart';
 
-
 import '../data/models/user_profile_model.dart';
 import '../data/services/localization_service.dart';
 import '../data/services/remote_config_service.dart';
@@ -52,9 +51,6 @@ class AppController extends GetxController {
     _lifecycle = AppLifecycleListener(
       onResume: () => subscriptionService.checkExpiry(),
     );
-
-    // The notification permission is asked on the Home screen (see
-    // HomeScreen.initState), not at startup over the language screen.
   }
 
   @override

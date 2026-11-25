@@ -8,8 +8,6 @@ import 'bmi_controller.dart';
 import 'meal_plan_controller.dart';
 import 'profile_controller.dart';
 
-/// Answers from the "Personalized Meal Plan" setup flow
-/// (health profile → medical → allergies → diet → lifestyle).
 class MealSetupController extends GetxController {
   static MealSetupController get to => Get.isRegistered<MealSetupController>()
       ? Get.find<MealSetupController>()
@@ -78,9 +76,6 @@ class MealSetupController extends GetxController {
       validWeight(weightKg.value) &&
       goal.value != null &&
       activity.value != null;
-
-  /// Every field on every step is mandatory. Lists accept a "none" answer
-  /// so users without conditions/allergies/dislikes can still continue.
 
   bool get medicalValid =>
       noConditions.value ||

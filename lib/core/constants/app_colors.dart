@@ -14,7 +14,6 @@ abstract class AppColors {
   );
 
   /// The app's CTA button colours (teal → blue), matching `btn.webp`.
-  /// Use for every primary call-to-action.
   static const LinearGradient ctaGradient = LinearGradient(
     colors: [Color(0xFF33D3AB), Color(0xFF128ADB)],
     begin: Alignment.centerLeft,
