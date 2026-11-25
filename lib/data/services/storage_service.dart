@@ -12,17 +12,13 @@ class StorageService {
   static const String _keyUnitSystem = 'unit_system';
   static const String _keyNotifications = 'notifications_enabled';
   static const String _keyIsPremium = 'is_premium';
-  static const String _keyPremiumInstallId = 'premium_install_id';
   static const String _keyUserProfile = 'user_profile';
   static const String _keyBmiHistory = 'bmi_history';
   static const String _keyWeightHistory = 'weight_history';
   static const String _keyProfileImagePath = 'profile_image_path';
   static const String _keyRemoteButtonText = 'rc_button_text';
   static const String _keyLastWeightEntry = 'last_weight_entry';
-  static const String _keyWaterGlasses = 'water_glasses';
-  static const String _keyWaterGlassesDay = 'water_glasses_day';
   static const String _keyEatenMeals = 'eaten_meals';
-  static const String _keyDoneActivities = 'done_activities';
   static const String _keyMealSetup = 'meal_setup';
 
   late SharedPreferences _prefs;
@@ -65,11 +61,6 @@ class StorageService {
   Future<void> setIsPremium(bool premium) =>
       _prefs.setBool(_keyIsPremium, premium);
 
-  String? getPremiumInstallId() => _prefs.getString(_keyPremiumInstallId);
-  Future<void> setPremiumInstallId(String? id) => id == null
-      ? _prefs.remove(_keyPremiumInstallId)
-      : _prefs.setString(_keyPremiumInstallId, id);
-
   // ── Profile Image ──
   String? getProfileImagePath() => _prefs.getString(_keyProfileImagePath);
   Future<void> setProfileImagePath(String path) =>
@@ -87,18 +78,6 @@ class StorageService {
 
   Future<void> setLastWeightEntry(Map<String, dynamic> entry) =>
       _prefs.setString(_keyLastWeightEntry, jsonEncode(entry));
-
-  static String _dayKey(DateTime d) => '${d.year}-${d.month}-${d.day}';
-
-  int getWaterGlasses(DateTime day) {
-    if (_prefs.getString(_keyWaterGlassesDay) != _dayKey(day)) return 0;
-    return _prefs.getInt(_keyWaterGlasses) ?? 0;
-  }
-
-  Future<void> setWaterGlasses(DateTime day, int glasses) async {
-    await _prefs.setString(_keyWaterGlassesDay, _dayKey(day));
-    await _prefs.setInt(_keyWaterGlasses, glasses);
-  }
 
   // ── User Profile ──
   bool hasUserProfile() => _prefs.getString(_keyUserProfile) != null;
@@ -182,18 +161,6 @@ class StorageService {
   /// Persists the full set of eaten meal keys.
   Future<void> saveEatenMeals(Set<String> keys) =>
       _prefs.setStringList(_keyEatenMeals, keys.toList());
-
-  // ── Activity Plan Progress ──
-
-  /// Returns the persisted set of completed activity keys.
-  Set<String> getDoneActivities() {
-    final raw = _prefs.getStringList(_keyDoneActivities);
-    return raw?.toSet() ?? {};
-  }
-
-  /// Persists the full set of completed activity keys.
-  Future<void> saveDoneActivities(Set<String> keys) =>
-      _prefs.setStringList(_keyDoneActivities, keys.toList());
 
   // ── Meal plan setup answers ──
 

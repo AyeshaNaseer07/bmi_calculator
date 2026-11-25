@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:get/get.dart';
 
-import 'package:permission_handler/permission_handler.dart';
 
 import '../data/models/user_profile_model.dart';
 import '../data/services/localization_service.dart';
@@ -54,9 +53,8 @@ class AppController extends GetxController {
       onResume: () => subscriptionService.checkExpiry(),
     );
 
-    if (isRemoteNotificationEnabled) {
-      _checkLocalNotificationPermission();
-    }
+    // The notification permission is asked on the Home screen (see
+    // HomeScreen.initState), not at startup over the language screen.
   }
 
   @override
@@ -64,15 +62,6 @@ class AppController extends GetxController {
     _lifecycle?.dispose();
     subscriptionService.dispose();
     super.onClose();
-  }
-
-  Future<void> _checkLocalNotificationPermission() async {
-    try {
-      final status = await Permission.notification.status;
-      if (status.isDenied) {
-        await Permission.notification.request();
-      }
-    } catch (_) {}
   }
 
   void changeLanguage(String code) {

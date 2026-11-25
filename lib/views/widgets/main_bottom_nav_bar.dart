@@ -101,14 +101,14 @@ class MainBottomNavBar extends StatelessWidget {
 
             // Raised center "+" button
             Positioned(
-              top: -15,
+              top: -28,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: onAddTap,
                 child: Lottie.asset(
                   AppAssets.navAddLottie,
-                  width: 56.w,
-                  height: 56.w,
+                  width: 576.w,
+                  height: 76.w,
                   fit: BoxFit.contain,
                   repeat: true,
                   // Lotties ship with their own colours; always tint them

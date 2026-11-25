@@ -80,16 +80,10 @@ abstract class AppAssets {
   static const String premiumBg = '$_imagesBase/premium_bg.webp';
   static const String preCross = '$_imagesBase/pre_cross.webp';
   static const String preDown = '$_imagesBase/pre_download.webp';
-  static const String sleepIcon = '$_imagesBase/sleep_icon.webp';
-  static const String regSchedule = '$_imagesBase/reg_schedule.webp';
-  static const String limitScreen = '$_imagesBase/limit_screen.webp';
-  static const String avoidCaffine = '$_imagesBase/avoid_caffine.webp';
   static const String bestValueCrown = '$_imagesBase/best_value_crown.webp';
-  static const String profileIcon = '$_imagesBase/profile.webp';
   static const String bmiCalIcon = '$_imagesBase/bmi_cal_bg.webp';
   static const String ageBack = '$_imagesBase/age_back.webp';
   static const String ageForward = '$_imagesBase/age_forward.webp';
-  static const String viewHistory = '$_imagesBase/view_his.webp';
   static const String hearticon = '$_imagesBase/heart.webp';
   static const String shieldicon = '$_imagesBase/shield.webp';
   static const String weighticon = '$_imagesBase/weight.webp';
@@ -128,16 +122,7 @@ abstract class AppAssets {
   static const String stayHydrated = '$_imagesBase/stay_hydrated.webp';
 
   // ── BMI insight / tips flow ──
-  static const String insightNormal = '$_imagesBase/normal_bmi.webp';
-  static const String insightUnder = '$_imagesBase/below_bmi.webp';
-  static const String insightOver = '$_imagesBase/above_bmi.webp';
-  static const String insightObese = '$_imagesBase/obese_bmi.webp';
-  static const String insightRise = '$_imagesBase/rise_bmi.webp';
   static const String tipMeals = '$_imagesBase/balance_meal.webp';
-  static const String tipHydrated = '$_imagesBase/water.webp';
-  static const String tipActive = '$_imagesBase/active.webp';
-  static const String tipSleep = '$_imagesBase/sleep.webp';
-  static const String mealIcon = '$_imagesBase/meal.webp';
   static const String leafIcon = '$_imagesBase/leaf.webp';
   static const String tipDailyMealPlan = '$_imagesBase/1_week.webp';
   static const String tipPortionControl = '$_imagesBase/control_pro.webp';
@@ -164,30 +149,5 @@ abstract class AppAssets {
 
   // ── Meal plan / hydration / activity screens ──
   static const String flowerIcon = '$_imagesBase/flower.webp';
-  static const String waterHero = '$_imagesBase/hydrated.webp';
-  static const String waterEnergy = '$_imagesBase/your_energy.webp';
-  static const String waterSkin = '$_imagesBase/good_skin.webp';
-  static const String waterGoalBanner = '$_imagesBase/daily_goal.webp';
-  static const String waterBoostIcon = '$_imagesBase/boost.webp';
-  static const String waterSupportIcon = '$_imagesBase/support.webp';
-  static const String waterGoodIcon = '$_imagesBase/good.webp';
-  static const String waterDailyIcon = '$_imagesBase/daily.webp';
-  static const String waterMorningIcon = '$_imagesBase/your_morning.webp';
-  static const String waterThroughDayIcon = '$_imagesBase/drink_day.webp';
-  static const String waterListenBodyIcon = '$_imagesBase/listen_body.webp';
-  static const String pulseIcon = '$_imagesBase/activity.webp';
-  static const String moonIcon = '$_imagesBase/star.webp';
-  static const String brainIcon = '$_imagesBase/brain.webp';
   static const String tipBulbIcon = '$_imagesBase/tip.webp';
-  static const String glassEmpty = '$_imagesBase/empty_glass.webp';
-  static const String glassFull = '$_imagesBase/half_glass.webp';
-  static const String activeHero = '$_imagesBase/active_stay.webp';
-  static const String digestionIcon = '$_imagesBase/fock.webp';
-  static const String regularityIcon = '$_imagesBase/reg.webp';
-  static const String absorptionIcon = '$_imagesBase/absorb.webp';
-  static const String skinHealthIcon = '$_imagesBase/skin.webp';
-  static const String healthyHabitsIcon = '$_imagesBase/habit.webp';
-  static const String easyWalkIcon = '$_imagesBase/easy_walk.webp';
-  static const String stretchBreakIcon = '$_imagesBase/stretch_break.webp';
-  static const String dailyMovementIcon = '$_imagesBase/daily_movement.webp';
 }

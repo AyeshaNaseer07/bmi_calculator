@@ -18,7 +18,6 @@ import '../../data/services/quick_actions_service.dart';
 import '../../notifications/notification_service.dart';
 import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/app_background.dart';
-import '../insights/bmi_insight_screen.dart';
 import '../insights/nutrition_screens.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
@@ -456,174 +455,115 @@ class _HomeScreenState extends State<HomeScreen> {
     BMICategory.obese: Color(0xFFFF2020),
   };
 
-  /// Plain numeric ranges, so they read the same in every language.
-  static String _rangeOf(BMICategory c) => switch (c) {
-    BMICategory.underweight => '< 18.5',
-    BMICategory.normal => '18.5 – 24.9',
-    BMICategory.overweight => '25 – 29.9',
-    BMICategory.obese => '≥ 30',
-  };
-
-  /// "Your BMI" card: title, gauge, value and category pill on the left;
-  /// a divider; then the gauge colour legend down the right side.
+  /// "Your BMI" card: title, gauge, value and category pill, with the
+  /// gauge colour legend in a row along the bottom.
   Widget _buildBmiSummaryCard(BMIRecord record) {
     final color = record.category.color;
     return CustomCard(
-      padding: EdgeInsets.fromLTRB(18.w, 16.h, 14.w, 16.h),
+      padding: EdgeInsets.fromLTRB(18.w, 16.h, 18.w, 14.h),
       borderRadius: 24.r,
-      onTap: () => Get.to(() => BmiInsightScreen(record: record)),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 12,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'your_bmi'.tr,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 22.sp,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 6.h),
-                  Center(
-                    child: BMIGaugeWidget(
-                      bmiValue: record.bmiValue,
-                      size: 165.w,
-                      showLabels: true,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text(
-                            record.bmiValue.toStringAsFixed(1),
-                            style: TextStyle(
-                              color: color,
-                              fontSize: 44.sp,
-                              fontFamily: 'Outfit',
-                              fontWeight: FontWeight.w800,
-                              height: 1.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 18.w,
-                          vertical: 10.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.14),
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        child: Text(
-                          record.category.label,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Color.lerp(color, Colors.black, 0.1),
-                            fontSize: 16.sp,
-                            fontFamily: 'Outfit',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-              child: Container(width: 1, color: const Color(0xFFE2E8F0)),
-            ),
-            Expanded(
-              flex: 8,
-              child: Semantics(
-                container: true,
-                label: 'categories'.tr,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    for (final c in BMICategory.values)
-                      _bmiLegendItem(c, current: c == record.category),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Legend row: gauge colour dot, category name and BMI range. The
-  /// user's own category sits on a tinted panel.
-  Widget _bmiLegendItem(BMICategory c, {required bool current}) {
-    final dot = _gaugeColors[c]!;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsetsDirectional.fromSTEB(10.w, 7.h, 6.w, 7.h),
-      decoration: BoxDecoration(
-        color: current ? dot.withValues(alpha: 0.12) : Colors.transparent,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 4.h),
-            child: Container(
-              width: 10.w,
-              height: 10.w,
-              decoration: BoxDecoration(color: dot, shape: BoxShape.circle),
+          Text(
+            'your_bmi'.tr,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: _navy,
+              fontSize: 22.sp,
+              fontFamily: 'Outfit',
+              fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  c.label,
+          SizedBox(height: 6.h),
+          Center(
+            child: BMIGaugeWidget(
+              bmiValue: record.bmiValue,
+              size: 180.w,
+              showLabels: true,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Row(
+            children: [
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    record.bmiValue.toStringAsFixed(1),
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 44.sp,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w800,
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 14.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Text(
+                  record.category.label,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: _navy,
-                    fontSize: 13.5.sp,
+                    color: Color.lerp(color, Colors.black, 0.1),
+                    fontSize: 16.sp,
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: 1.h),
-                Text(
-                  _rangeOf(c),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: _muted,
-                    fontSize: 11.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+              ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Semantics(
+            container: true,
+            label: 'categories'.tr,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 14.w,
+              runSpacing: 6.h,
+              children: [for (final c in BMICategory.values) _bmiLegendItem(c)],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  /// Chart-style legend entry: rounded colour swatch + category name.
+  Widget _bmiLegendItem(BMICategory c) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 20.w,
+          height: 9.w,
+          decoration: BoxDecoration(
+            color: _gaugeColors[c],
+            borderRadius: BorderRadius.circular(5.r),
+          ),
+        ),
+        SizedBox(width: 5.w),
+        Text(
+          c.label,
+          maxLines: 1,
+          style: TextStyle(
+            color: _muted,
+            fontSize: 12.sp,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 
