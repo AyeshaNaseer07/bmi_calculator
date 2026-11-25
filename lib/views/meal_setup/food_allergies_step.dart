@@ -18,17 +18,32 @@ class FoodAllergiesStep extends StatefulWidget {
 class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
   final c = MealSetupController.to;
   late final TextEditingController _other;
+  late final Worker _clearOther;
 
   @override
   void initState() {
     super.initState();
     _other = TextEditingController(text: c.otherAllergy.value);
+    // "No food allergies" clears the typed allergy.
+    _clearOther = ever<String>(c.otherAllergy, (v) {
+      if (v.isEmpty && _other.text.isNotEmpty) _other.clear();
+    });
   }
 
   @override
   void dispose() {
+    _clearOther.dispose();
     _other.dispose();
     super.dispose();
+  }
+
+  void _next() {
+    FocusScope.of(context).unfocus();
+    if (!c.allergiesValid) {
+      showSetupHint('ms_fill_allergies'.tr);
+      return;
+    }
+    MealSetupFlow.next(3);
   }
 
   @override
@@ -83,20 +98,29 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
                     hintSize: 14,
                     radius: 20,
                     maxLength: 80,
-                    onChanged: (v) => c.otherAllergy.value = v,
+                    onChanged: c.setOtherAllergy,
                   ),
                 ),
               ],
             ),
           ),
+          SizedBox(height: 10.h),
+          Obx(
+            () => SetupNoneBanner(
+              title: 'ms_no_food_allergies'.tr,
+              subtitle: 'ms_no_food_allergies_sub'.tr,
+              selected: c.noAllergies.value,
+              onTap: c.toggleNoAllergies,
+            ),
+          ),
         ],
       ),
-      bottom: SetupCta(
-        text: 'next'.tr,
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-          MealSetupFlow.next(3);
-        },
+      bottom: Obx(
+        () => SetupCta(
+          text: 'next'.tr,
+          enabled: c.allergiesValid,
+          onPressed: _next,
+        ),
       ),
     );
   }

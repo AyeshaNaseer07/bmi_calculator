@@ -18,17 +18,36 @@ class DietaryPreferencesStep extends StatefulWidget {
 class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
   final c = MealSetupController.to;
   late final TextEditingController _otherFoods;
+  late final Worker _clearOther;
 
   @override
   void initState() {
     super.initState();
     _otherFoods = TextEditingController(text: c.otherDislikes.value);
+    // Choosing "None" clears the typed foods.
+    _clearOther = ever<String>(c.otherDislikes, (v) {
+      if (v.isEmpty && _otherFoods.text.isNotEmpty) _otherFoods.clear();
+    });
   }
 
   @override
   void dispose() {
+    _clearOther.dispose();
     _otherFoods.dispose();
     super.dispose();
+  }
+
+  void _next() {
+    FocusScope.of(context).unfocus();
+    if (!c.dietValid) {
+      final needsOther =
+          c.dislikes.contains('other') && c.otherDislikes.value.trim().isEmpty;
+      showSetupHint(
+        needsOther ? 'ms_fill_other_dislike'.tr : 'ms_fill_diet'.tr,
+      );
+      return;
+    }
+    MealSetupFlow.next(4);
   }
 
   @override
@@ -92,7 +111,7 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
                       height: 15.w,
                     ),
                   ),
-                  onChanged: (v) => c.otherDislikes.value = v,
+                  onChanged: c.setOtherDislikes,
                 ),
               ],
             ),
@@ -117,12 +136,8 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
           ),
         ],
       ),
-      bottom: SetupCta(
-        text: 'next'.tr,
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-          MealSetupFlow.next(4);
-        },
+      bottom: Obx(
+        () => SetupCta(text: 'next'.tr, enabled: c.dietValid, onPressed: _next),
       ),
     );
   }

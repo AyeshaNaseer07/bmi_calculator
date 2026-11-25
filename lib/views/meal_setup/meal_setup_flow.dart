@@ -21,13 +21,17 @@ abstract class MealSetupFlow {
   static String stepRoute(int step) => '/meal-setup-step-$step';
 
   /// Steps that must be finished before the plan is built.
-  static const List<int> requiredSteps = [1, 2, 3];
+  /// Every step is mandatory.
+  static const List<int> requiredSteps = [1, 2, 3, 4, 5];
 
   /// Entry point from "View your meal plan": setup the first time,
   /// the plan itself once setup is done.
   static void openPlanOrSetup() {
     final c = MealSetupController.to;
-    if (c.isComplete.value) {
+    // Answers saved before every field became mandatory send the user
+    // back through setup to fill the gaps.
+    final allValid = requiredSteps.every(c.isStepValid);
+    if (c.isComplete.value && allValid) {
       openPlan();
     } else {
       openSetup();
@@ -59,7 +63,7 @@ abstract class MealSetupFlow {
   static void continueFromOverview() {
     final c = MealSetupController.to;
     for (int s = 1; s <= MealSetupController.totalSteps; s++) {
-      if (!c.completedSteps.contains(s)) {
+      if (!c.completedSteps.contains(s) || !c.isStepValid(s)) {
         openStep(s);
         return;
       }
@@ -69,7 +73,13 @@ abstract class MealSetupFlow {
 
   /// Saves [step] and moves on to the next one (or builds the plan).
   static void next(int step) {
-    MealSetupController.to.completeStep(step);
+    final c = MealSetupController.to;
+    // Safety net: each page also blocks its own button.
+    if (!c.isStepValid(step)) {
+      showSetupHint('ms_fill_all_fields'.tr);
+      return;
+    }
+    c.completeStep(step);
     if (step < MealSetupController.totalSteps) {
       openStep(step + 1);
     } else {
@@ -80,7 +90,7 @@ abstract class MealSetupFlow {
   static Future<void> finish() async {
     final c = MealSetupController.to;
     final missing = requiredSteps.firstWhereOrNull(
-      (s) => !c.completedSteps.contains(s),
+      (s) => !c.completedSteps.contains(s) || !c.isStepValid(s),
     );
     if (missing != null) {
       showSetupHint('ms_finish_required_steps'.tr);
@@ -218,6 +228,7 @@ abstract class MealSetupOptions {
     SetupOption('spicy', 'ms_spicy_food'),
     SetupOption('vegetables', 'ms_vegetables'),
     SetupOption('other', 'other'),
+    SetupOption(MealSetupController.noDislikesKey, 'ms_none'),
   ];
 
   static const mealsPerDay = [

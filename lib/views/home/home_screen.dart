@@ -430,7 +430,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Calculated state (BMI dashboard design) ──
 
   static const Color _navy = Color(0xFF1D2B3A);
-  static const Color _mint = Color(0xFF17B890);
   static const Color _mintDeep = Color(0xFF0E7C5B);
   static const Color _muted = Color(0xFF64748B);
 
@@ -449,17 +448,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Gauge segment colours (match the `guagae.webp` arc), by category.
+  static const Map<BMICategory, Color> _gaugeColors = {
+    BMICategory.underweight: Color(0xFF5EC2EA),
+    BMICategory.normal: Color(0xFF36D3AB),
+    BMICategory.overweight: Color(0xFFFF8C00),
+    BMICategory.obese: Color(0xFFFF2020),
+  };
+
+  /// Plain numeric ranges, so they read the same in every language.
+  static String _rangeOf(BMICategory c) => switch (c) {
+    BMICategory.underweight => '< 18.5',
+    BMICategory.normal => '18.5 – 24.9',
+    BMICategory.overweight => '25 – 29.9',
+    BMICategory.obese => '≥ 30',
+  };
+
+  /// "Your BMI" card: title, gauge, value and category pill on the left;
+  /// a divider; then the gauge colour legend down the right side.
   Widget _buildBmiSummaryCard(BMIRecord record) {
     final color = record.category.color;
     return CustomCard(
-      padding: EdgeInsets.fromLTRB(18.w, 14.h, 14.w, 12.h),
+      padding: EdgeInsets.fromLTRB(18.w, 16.h, 14.w, 16.h),
       borderRadius: 24.r,
       onTap: () => Get.to(() => BmiInsightScreen(record: record)),
       child: IntrinsicHeight(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 11,
+              flex: 12,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -469,74 +487,142 @@ class _HomeScreenState extends State<HomeScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: _navy,
-                      fontSize: 20.sp,
+                      fontSize: 22.sp,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 6.h),
                   Center(
                     child: BMIGaugeWidget(
                       bmiValue: record.bmiValue,
-                      size: 155.w,
+                      size: 165.w,
                       showLabels: true,
                     ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(
+                            record.bmiValue.toStringAsFixed(1),
+                            style: TextStyle(
+                              color: color,
+                              fontSize: 44.sp,
+                              fontFamily: 'Outfit',
+                              fontWeight: FontWeight.w800,
+                              height: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 18.w,
+                          vertical: 10.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Text(
+                          record.category.label,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Color.lerp(color, Colors.black, 0.1),
+                            fontSize: 16.sp,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
               child: Container(width: 1, color: const Color(0xFFE2E8F0)),
             ),
             Expanded(
-              flex: 9,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      record.bmiValue.toStringAsFixed(1),
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 48.sp,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w800,
-                        height: 1.05,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 7.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(30.r),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        record.category.label,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Color.lerp(color, Colors.black, 0.25),
-                          fontSize: 16.sp,
-                          fontFamily: 'Outfit',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              flex: 8,
+              child: Semantics(
+                container: true,
+                label: 'categories'.tr,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    for (final c in BMICategory.values)
+                      _bmiLegendItem(c, current: c == record.category),
+                  ],
+                ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Legend row: gauge colour dot, category name and BMI range. The
+  /// user's own category sits on a tinted panel.
+  Widget _bmiLegendItem(BMICategory c, {required bool current}) {
+    final dot = _gaugeColors[c]!;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsetsDirectional.fromSTEB(10.w, 7.h, 6.w, 7.h),
+      decoration: BoxDecoration(
+        color: current ? dot.withValues(alpha: 0.12) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 4.h),
+            child: Container(
+              width: 10.w,
+              height: 10.w,
+              decoration: BoxDecoration(color: dot, shape: BoxShape.circle),
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  c.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 13.5.sp,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Text(
+                  _rangeOf(c),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: _muted,
+                    fontSize: 11.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -561,11 +647,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.scaleDown,
                       alignment: AlignmentDirectional.centerStart,
                       child: Text(
-                        'your_personalized_meal_plan'.tr,
+                        'Meal Plan to Maintain Weight',
                         maxLines: 1,
                         style: TextStyle(
                           color: _navy,
-                          fontSize: 16.sp,
+                          fontSize: 17.sp,
                           fontFamily: 'Outfit',
                           fontWeight: FontWeight.w700,
                         ),
@@ -611,7 +697,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(width: 10.w),
                     Flexible(
                       child: Text(
-                        'view_your_meal_plan'.tr,
+                        'Unlock Personalized Meals',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -662,16 +748,16 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Row(
             children: [
-              Container(
-                width: 32.w,
-                height: 32.w,
-                padding: EdgeInsets.all(7.w),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFE3F7F0),
-                ),
-                child: _tintedSvg(AppAssets.dashProfile, 18.w, _mint),
-              ),
+              // Container(
+              //   width: 32.w,
+              //   height: 32.w,
+              //   padding: EdgeInsets.all(7.w),
+              //   decoration: const BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     color: Color(0xFFE3F7F0),
+              //   ),
+              //   child: _tintedSvg(AppAssets.dashProfile, 18.w, _mint),
+              // ),
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
@@ -680,50 +766,50 @@ class _HomeScreenState extends State<HomeScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: _navy,
-                    fontSize: 16.sp,
+                    fontSize: 18.sp,
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               SizedBox(width: 8.w),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => Get.toNamed(AppRoutes.profile),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF2FBF7),
-                    borderRadius: BorderRadius.circular(30.r),
-                    border: Border.all(color: const Color(0xFFBDEBDC)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'view_profile'.tr,
-                        style: TextStyle(
-                          color: _mint,
-                          fontSize: 12.sp,
-                          fontFamily: 'Outfit',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      MirrorOnRtl(
-                        child: _tintedSvg(
-                          AppAssets.dashArrowRight,
-                          14.w,
-                          _mint,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   behavior: HitTestBehavior.opaque,
+              //   onTap: () => Get.toNamed(AppRoutes.profile),
+              //   child: Container(
+              //     padding: EdgeInsets.symmetric(
+              //       horizontal: 12.w,
+              //       vertical: 6.h,
+              //     ),
+              //     decoration: BoxDecoration(
+              //       color: const Color(0xFFF2FBF7),
+              //       borderRadius: BorderRadius.circular(30.r),
+              //       border: Border.all(color: const Color(0xFFBDEBDC)),
+              //     ),
+              //     child: Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       children: [
+              //         Text(
+              //           'view_profile'.tr,
+              //           style: TextStyle(
+              //             color: _mint,
+              //             fontSize: 12.sp,
+              //             fontFamily: 'Outfit',
+              //             fontWeight: FontWeight.w600,
+              //           ),
+              //         ),
+              //         SizedBox(width: 4.w),
+              //         MirrorOnRtl(
+              //           child: _tintedSvg(
+              //             AppAssets.dashArrowRight,
+              //             14.w,
+              //             _mint,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           SizedBox(height: 12.h),

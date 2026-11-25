@@ -1071,6 +1071,84 @@ class SetupBackButton extends StatelessWidget {
   }
 }
 
+/// "None of the above" row: green check badge, title + subtitle and a
+/// trailing checkbox; turns mint with a green border when selected.
+class SetupNoneBanner extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const SetupNoneBanner({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsetsDirectional.fromSTEB(14.w, 12.h, 14.w, 12.h),
+          decoration: BoxDecoration(
+            color: selected ? kMsMint : Colors.white,
+            borderRadius: BorderRadius.circular(18.r),
+            border: Border.all(
+              color: selected ? kMsGreen : kMsBorder,
+              width: selected ? 1.4 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                MealSetupAssets.checkActive,
+                width: 38.w,
+                height: 38.w,
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: msBody(
+                        13.5,
+                        color: kMsNavy,
+                        weight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: msBody(
+                        10.5,
+                        color: kMsTextSecondary,
+                        height: 1.25,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8.w),
+              SetupCheckBox(checked: selected, size: 26),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Card heading: title + subtitle.
 class SetupCardTitle extends StatelessWidget {
   final String title;

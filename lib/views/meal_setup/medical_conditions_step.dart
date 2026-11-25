@@ -110,53 +110,14 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
             ),
           ),
           SizedBox(height: 9.h),
-          Obx(() {
-            final on = c.noConditions.value;
-            return Semantics(
-              button: true,
-              selected: on,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: c.toggleNoConditions,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsetsDirectional.fromSTEB(
-                    14.w,
-                    12.h,
-                    14.w,
-                    12.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: on ? kMsMint : Colors.white,
-                    borderRadius: BorderRadius.circular(18.r),
-                    border: Border.all(
-                      color: on ? kMsGreen : kMsBorder,
-                      width: on ? 1.4 : 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        MealSetupAssets.checkActive,
-                        width: 38.w,
-                        height: 38.w,
-                      ),
-                      SizedBox(width: 14.w),
-                      Expanded(
-                        child: _label(
-                          'ms_none_of_the_above'.tr,
-                          'ms_no_medical_conditions'.tr,
-                          size: 13.5,
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      SetupCheckBox(checked: on, size: 26),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
+          Obx(
+            () => SetupNoneBanner(
+              title: 'ms_none_of_the_above'.tr,
+              subtitle: 'ms_no_medical_conditions'.tr,
+              selected: c.noConditions.value,
+              onTap: c.toggleNoConditions,
+            ),
+          ),
         ],
       ),
       bottom: Row(

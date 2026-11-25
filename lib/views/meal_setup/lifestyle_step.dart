@@ -48,8 +48,12 @@ class _LifestyleStepState extends State<LifestyleStep> {
 
   Future<void> _complete() async {
     if (_finishing) return;
-    _finishing = true;
     FocusScope.of(context).unfocus();
+    if (!c.lifestyleValid) {
+      showSetupHint('ms_fill_lifestyle'.tr);
+      return;
+    }
+    _finishing = true;
     c.completeStep(5);
     await MealSetupFlow.finish();
     _finishing = false;
@@ -143,13 +147,18 @@ class _LifestyleStepState extends State<LifestyleStep> {
           _section(
             icon: MealSetupAssets.secNotes,
             title: 'ms_additional_notes'.tr,
-            titleSuffix: 'ms_optional'.tr,
             subtitle: 'ms_additional_notes_hint'.tr,
             child: _notesBox(),
           ),
         ],
       ),
-      bottom: SetupCta(text: 'ms_complete_setup'.tr, onPressed: _complete),
+      bottom: Obx(
+        () => SetupCta(
+          text: 'ms_complete_setup'.tr,
+          enabled: c.lifestyleValid,
+          onPressed: _complete,
+        ),
+      ),
       footer: Padding(
         padding: EdgeInsets.only(top: 10.h),
         child: Row(

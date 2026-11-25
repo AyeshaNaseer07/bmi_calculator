@@ -55,7 +55,7 @@ class MealPlanSetupScreen extends StatelessWidget {
               image: MealSetupAssets.icDiet,
               title: 'ms_dietary_preferences'.tr,
               subtitle: 'ms_dietary_preferences_desc'.tr,
-              required: false,
+              required: true,
               done: done.contains(4),
             ),
             _SectionCard(
@@ -63,7 +63,7 @@ class MealPlanSetupScreen extends StatelessWidget {
               image: MealSetupAssets.icLifestyle,
               title: 'ms_lifestyle_info'.tr,
               subtitle: 'ms_lifestyle_info_desc'.tr,
-              required: false,
+              required: true,
               done: done.contains(5),
             ),
           ],
