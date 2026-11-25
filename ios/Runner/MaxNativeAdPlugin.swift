@@ -231,10 +231,11 @@ final class MaxNativeAdPlatformView: NSObject, FlutterPlatformView {
         bodyLabel.numberOfLines = 2
         bodyLabel.lineBreakMode = .byTruncatingTail
 
-        let callToActionButton = UIButton(type: .system)
+        // Same teal-to-blue gradient as every CTA in the app
+        let callToActionButton = AppGradientButton(type: .custom)
         callToActionButton.tag = callToActionTag
-        callToActionButton.backgroundColor = UIColor(red: 0x1B / 255.0, green: 0x92 / 255.0, blue: 0xD6 / 255.0, alpha: 1.0) // app CTA blue (#1B92D6)
         callToActionButton.setTitleColor(.white, for: .normal)
+        callToActionButton.setTitleColor(UIColor.white.withAlphaComponent(0.8), for: .highlighted)
         callToActionButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         callToActionButton.layer.cornerRadius = 25 // pill: half the 50pt height
         callToActionButton.layer.masksToBounds = true
@@ -298,5 +299,38 @@ final class MaxNativeAdPlatformView: NSObject, FlutterPlatformView {
         adView.bindViews(with: binder)
 
         return adView
+    }
+}
+
+/// Button filled with the app's CTA gradient: #33D3AB → #128ADB, left to
+/// right. Matches `_kBtnRectangleGradient` in
+/// lib/views/widgets/custom_gradient_button.dart and the btn.webp asset.
+/// The gradient is the button's own layer, so it resizes with Auto Layout.
+final class AppGradientButton: UIButton {
+    override class var layerClass: AnyClass { CAGradientLayer.self }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureGradient()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureGradient()
+    }
+
+    private func configureGradient() {
+        guard let gradient = layer as? CAGradientLayer else { return }
+        gradient.colors = [
+            UIColor(red: 0x33 / 255.0, green: 0xD3 / 255.0, blue: 0xAB / 255.0, alpha: 1.0).cgColor,
+            UIColor(red: 0x12 / 255.0, green: 0x8A / 255.0, blue: 0xDB / 255.0, alpha: 1.0).cgColor,
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+    }
+
+    // Dim slightly while pressed, like the app's buttons
+    override var isHighlighted: Bool {
+        didSet { alpha = isHighlighted ? 0.85 : 1.0 }
     }
 }
