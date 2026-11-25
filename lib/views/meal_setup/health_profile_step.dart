@@ -101,8 +101,9 @@ class _HealthProfileStepState extends State<HealthProfileStep> {
     return SetupScaffold(
       step: 1,
       showStepChip: false,
-      titleTop: 'ms_health_profile'.tr,
-      titleBottom: '',
+      // Two-tone title like the overview: navy "Health", green "Profile".
+      titleTop: 'ms_health_title_top'.tr,
+      titleBottom: 'ms_health_title_bottom'.tr,
       subtitle: 'ms_health_profile_subtitle'.tr,
       hero: MealSetupAssets.health,
       heroEmoji: '📏',

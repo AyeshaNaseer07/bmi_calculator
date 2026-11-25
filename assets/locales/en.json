@@ -1006,6 +1006,8 @@
   "ms_step_x_of_y": "Step @x of @y",
   "ms_almost_there": "Almost there",
   "ms_health_profile": "Health Profile",
+  "ms_health_title_top": "Health",
+  "ms_health_title_bottom": "Profile",
   "ms_health_profile_desc": "Age, gender, height, weight and goals",
   "ms_medical_conditions": "Medical Conditions",
   "ms_medical_conditions_desc": "Diabetes, blood pressure, thyroid etc.",

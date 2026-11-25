@@ -51,10 +51,11 @@ abstract class MealSetupAssets {
   static String hero(String screen, Gender? gender) =>
       '$_img/hero_${screen}_${gender == Gender.male ? 'male' : 'female'}.png';
 
-  /// The overview screen reuses the home screen's background avatar for
-  /// [gender] (couple art while gender is unknown). Null for other screens.
+  /// The overview and Health Profile screens reuse the home screen's
+  /// background avatar for [gender] (couple art while gender is unknown).
+  /// Null for other screens.
   static String? homeArt(String screen, Gender? gender) {
-    if (screen != overview) return null;
+    if (screen != overview && screen != health) return null;
     return switch (gender) {
       Gender.female => AppAssets.homeImgFemale,
       Gender.male => AppAssets.homeAvatar,
@@ -170,7 +171,9 @@ class SetupScaffold extends StatelessWidget {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  // Scrolls only when the content is taller than the screen;
+                  // pages that fit stay still (no drag or bounce).
+                  physics: const ClampingScrollPhysics(),
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
                   padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
@@ -198,7 +201,7 @@ class SetupScaffold extends StatelessWidget {
   Widget _titleLine(String text, Color color) => FittedBox(
     fit: BoxFit.scaleDown,
     alignment: AlignmentDirectional.centerStart,
-    child: Text(text, maxLines: 1, style: msTitle(24, color: color)),
+    child: Text(text, maxLines: 1, style: msTitle(26, color: color)),
   );
 
   Widget _header() {
@@ -237,7 +240,7 @@ class SetupScaffold extends StatelessWidget {
                     ],
                   ],
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 12.h),
                 _titleLine(titleTop, kMsNavy),
                 if (titleBottom.isNotEmpty) _titleLine(titleBottom, kMsGreen),
                 SizedBox(height: 8.h),
@@ -336,6 +339,9 @@ class SetupHero extends StatelessWidget {
   /// about the image's own content, so it's topRight in RTL as well.
   static const double _homeArtZoom = 1125 / 780;
 
+  /// How far the avatar is raised inside the hero box (in .h units).
+  static const double _homeArtLift = 15;
+
   Widget _homeArtCrop(String asset) => ClipRect(
     child: SizedBox(
       width: width,
@@ -345,13 +351,18 @@ class SetupHero extends StatelessWidget {
         minWidth: width * _homeArtZoom,
         maxWidth: width * _homeArtZoom,
         maxHeight: double.infinity,
-        child: Image.asset(
-          asset,
-          key: ValueKey(asset),
-          width: width * _homeArtZoom,
-          fit: BoxFit.fitWidth,
-          alignment: Alignment.topRight,
-          errorBuilder: (_, _, _) => _placeholder(),
+        // Lifts the avatar a little; the empty glow above its head is
+        // what gets clipped.
+        child: Transform.translate(
+          offset: Offset(0, -_homeArtLift.h),
+          child: Image.asset(
+            asset,
+            key: ValueKey(asset),
+            width: width * _homeArtZoom,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topRight,
+            errorBuilder: (_, _, _) => _placeholder(),
+          ),
         ),
       ),
     ),
