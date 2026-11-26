@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "\"Diğer\"i seçtin, lütfen sevmediğin yiyecekleri yaz.",
   "ms_fill_lifestyle": "Lütfen tüm soruları yanıtla. Ek notlar isteğe bağlıdır.",
   "home_meal_plan_title": "Kiloyu Korumak İçin Beslenme Planı",
-  "unlock_personalized_meals": "Kişiye Özel Öğünlerin Kilidini Aç"
+  "unlock_personalized_meals": "Kişiye Özel Öğünlerin Kilidini Aç",
+  "snack": "Ara Öğün",
+  "morning_snack": "Kuşluk Ara Öğünü",
+  "afternoon_snack": "İkindi Ara Öğünü",
+  "milestone_snack": "Harika! Ara öğününü yaptın ve öğünler arasında enerjini korudun."
 }

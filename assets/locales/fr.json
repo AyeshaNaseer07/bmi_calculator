@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Vous avez choisi « Autre » : veuillez saisir les aliments que vous n'aimez pas.",
   "ms_fill_lifestyle": "Veuillez répondre à toutes les questions. Les remarques supplémentaires sont facultatives.",
   "home_meal_plan_title": "Plan de repas pour maintenir votre poids",
-  "unlock_personalized_meals": "Débloquer les repas personnalisés"
+  "unlock_personalized_meals": "Débloquer les repas personnalisés",
+  "snack": "Collation",
+  "morning_snack": "Collation du matin",
+  "afternoon_snack": "Goûter",
+  "milestone_snack": "Bravo ! Vous avez pris votre collation et gardé votre énergie entre les repas."
 }

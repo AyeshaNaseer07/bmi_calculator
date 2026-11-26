@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Hai scelto \"Altro\": scrivi i cibi che non ti piacciono.",
   "ms_fill_lifestyle": "Rispondi a tutte le domande. Le note aggiuntive sono facoltative.",
   "home_meal_plan_title": "Piano alimentare per mantenere il peso",
-  "unlock_personalized_meals": "Sblocca pasti personalizzati"
+  "unlock_personalized_meals": "Sblocca pasti personalizzati",
+  "snack": "Spuntino",
+  "morning_snack": "Spuntino di metà mattina",
+  "afternoon_snack": "Merenda",
+  "milestone_snack": "Ottimo! Hai fatto il tuo spuntino e mantenuto l’energia tra un pasto e l’altro."
 }

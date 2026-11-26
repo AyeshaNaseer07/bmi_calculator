@@ -37,8 +37,11 @@ class MealCompletedScreen extends StatelessWidget {
   String get _milestone {
     switch (meal.slotKey) {
       case 'breakfast':
+      case 'morning_snack':
         return 'morning_milestone'.tr;
       case 'lunch':
+      case 'snack':
+      case 'afternoon_snack':
         return 'midday_milestone'.tr;
       default:
         return 'evening_milestone'.tr;
@@ -51,6 +54,10 @@ class MealCompletedScreen extends StatelessWidget {
         return 'milestone_breakfast'.tr;
       case 'lunch':
         return 'milestone_lunch'.tr;
+      case 'morning_snack':
+      case 'snack':
+      case 'afternoon_snack':
+        return 'milestone_snack'.tr;
       default:
         return 'milestone_dinner'.tr;
     }
@@ -153,8 +160,9 @@ class MealCompletedScreen extends StatelessWidget {
           ),
           SizedBox(height: 18.h),
           Obx(() {
-            final done = c.eatenOnDay(meal.day).clamp(0, 3);
-            final pct = (done / 3 * 100).round();
+            final perDay = c.mealsPerDay;
+            final done = c.eatenOnDay(meal.day).clamp(0, perDay);
+            final pct = (done / perDay * 100).round();
             return Container(
               padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 16.h),
               decoration: _mintCard(r: 26),
@@ -238,10 +246,10 @@ class MealCompletedScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              (3 - done == 1
+                              (perDay - done == 1
                                       ? 'meals_remaining_one'
                                       : 'meals_remaining_many')
-                                  .trParams({'count': '${3 - done}'}),
+                                  .trParams({'count': '${perDay - done}'}),
                               style: bodyStyle(13, color: AppPalette.textBody),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -294,15 +302,18 @@ class MealCompletedScreen extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(5.r),
                     child: LinearProgressIndicator(
-                      value: done / 3,
+                      value: done / perDay,
                       minHeight: 8.h,
                       backgroundColor: _kTrack,
                       valueColor: AlwaysStoppedAnimation(_kDeep),
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // Wraps when a day has 4–5 meals.
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 10.w,
+                    runSpacing: 6.h,
                     children: [
                       for (final m in c.mealsFor(meal.day) ?? const [])
                         _legend(m.slot, c.isEaten(m.key)),
@@ -381,7 +392,7 @@ class MealProgressScreen extends StatelessWidget {
       title: 'your_progress'.tr,
       body: Obx(() {
         final totalDays = c.totalDays;
-        final totalMeals = totalDays * 3;
+        final totalMeals = totalDays * c.mealsPerDay;
         final pct = (c.eatenInPlan / totalMeals * 100).round();
         final cur = c.currentDay;
         final streak = c.streak;

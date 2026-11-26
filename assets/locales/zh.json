@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "你选择了“其他”，请输入你不喜欢的食物。",
   "ms_fill_lifestyle": "请回答所有问题。补充说明为选填。",
   "home_meal_plan_title": "保持体重饮食计划",
-  "unlock_personalized_meals": "解锁个性化餐食"
+  "unlock_personalized_meals": "解锁个性化餐食",
+  "snack": "加餐",
+  "morning_snack": "上午加餐",
+  "afternoon_snack": "下午加餐",
+  "milestone_snack": "真棒！你吃了加餐，在两餐之间保持了充沛的精力。"
 }

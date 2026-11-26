@@ -135,10 +135,20 @@ String _badgeFor(String photo) {
 const _slots = ['breakfast', 'lunch', 'dinner'];
 const _slotTimes = {
   'breakfast': ('8:00', 'am'),
+  'morning_snack': ('10:30', 'am'),
   'lunch': ('1:00', 'pm'),
+  'snack': ('4:00', 'pm'),
+  'afternoon_snack': ('4:00', 'pm'),
   'dinner': ('7:00', 'pm'),
 };
-const _slotPrepMinutes = {'breakfast': 10, 'lunch': 15, 'dinner': 25};
+const _slotPrepMinutes = {
+  'breakfast': 10,
+  'morning_snack': 5,
+  'lunch': 15,
+  'snack': 5,
+  'afternoon_snack': 5,
+  'dinner': 25,
+};
 
 class MealInfo {
   final String key;
@@ -266,11 +276,12 @@ class MealPlanData {
     String keyPrefix,
     int day,
     List<AiMeal> meals, {
+    List<String> slots = _slots,
     int targetKcal = 0,
   }) {
     final info = _cats[cat]!;
     final raw = [
-      for (final m in meals.take(3))
+      for (final m in meals.take(slots.length))
         RawMeal(
           m.name,
           m.blurb,
@@ -293,7 +304,7 @@ class MealPlanData {
           cat,
           info,
           day,
-          _slots[i],
+          slots[i],
           raw[i],
           dayTotal,
           scale,
@@ -367,7 +378,7 @@ class MealPlanData {
     String? photo,
   }) {
     final key = '${keyPrefix ?? cat.name}_d${day}_$slot';
-    final (clock, period) = _slotTimes[slot]!;
+    final (clock, period) = _slotTimes[slot] ?? _slotTimes['lunch']!;
     photo ??= kMealPhotoOverrides[key] ?? _mealPhotos[r.name] ?? _fallbackPhoto;
     return MealInfo(
       key: key,
@@ -382,7 +393,7 @@ class MealPlanData {
       tag: r.tag.tr,
       tagIcon: info.tagIcon,
       time: '$clock ${period.tr}',
-      prep: 'min_prep'.trParams({'min': '${_slotPrepMinutes[slot]}'}),
+      prep: 'min_prep'.trParams({'min': '${_slotPrepMinutes[slot] ?? 15}'}),
       chips: [
         r.tag,
         ...info.chips.where((c) => c != r.tag).take(2),

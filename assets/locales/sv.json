@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Du valde \"Annat\" – skriv den mat du inte gillar.",
   "ms_fill_lifestyle": "Svara på alla frågor. Övriga anteckningar är valfria.",
   "home_meal_plan_title": "Måltidsplan för att behålla vikten",
-  "unlock_personalized_meals": "Lås upp personliga måltider"
+  "unlock_personalized_meals": "Lås upp personliga måltider",
+  "snack": "Mellanmål",
+  "morning_snack": "Förmiddagsmellanmål",
+  "afternoon_snack": "Eftermiddagsmellanmål",
+  "milestone_snack": "Snyggt! Du har ätit ditt mellanmål och håller energin uppe mellan måltiderna."
 }

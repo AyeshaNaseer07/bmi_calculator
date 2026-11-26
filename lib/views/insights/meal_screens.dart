@@ -336,7 +336,7 @@ class _WeekSelectorState extends State<_WeekSelector> {
   Widget _chip(MealPlanController c, int week, bool selected, Key? key) {
     final first = (week - 1) * 7 + 1;
     final done = [for (int d = first; d < first + 7; d++) c.eatenOnDay(d)]
-        .every((n) => n == 3);
+        .every((n) => n >= c.mealsPerDay);
     return GestureDetector(
       key: key,
       behavior: HitTestBehavior.opaque,
@@ -389,7 +389,7 @@ class _DayMeals extends StatelessWidget {
 
   Widget _dayChip(MealPlanController c, int d) {
     final selected = c.selectedDay.value == d;
-    final done = c.eatenOnDay(d) == 3;
+    final done = c.eatenOnDay(d) >= c.mealsPerDay;
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,

@@ -99,6 +99,7 @@ class MealPlanController extends GetxController {
         signature: request.signature,
         createdAt: DateTime.now(),
         totalWeeks: request.totalWeeks,
+        slots: request.slots,
       );
       selectedDay.value = 1;
     }
@@ -111,6 +112,12 @@ class MealPlanController extends GetxController {
   bool get isAiPlan => aiPlan.value != null;
   int get totalDays => aiPlan.value?.totalDays ?? MealPlanData.days;
   int get totalWeeks => aiPlan.value?.totalWeeks ?? 1;
+
+  /// Meal slots of each day: the AI plan's, or the built-in three.
+  List<String> get slots => aiPlan.value?.slots ?? AiMealPlan.standardSlots;
+
+  /// Meals in one plan day (2–5 for an AI plan, 3 for the built-in plan).
+  int get mealsPerDay => slots.length;
 
   /// Prefix of every meal key in the active plan.
   String get keyPrefix {
@@ -125,12 +132,13 @@ class MealPlanController extends GetxController {
       return MealPlanData.mealsFor(category, day, targetKcal: targetKcal);
     }
     final meals = plan.mealsForDay(day);
-    if (meals == null || meals.length < 3) return null;
+    if (meals == null || meals.length < plan.slots.length) return null;
     return MealPlanData.aiMealsFor(
       category,
       keyPrefix,
       day,
       meals,
+      slots: plan.slots,
       targetKcal: targetKcal,
     );
   }
@@ -260,13 +268,13 @@ class MealPlanController extends GetxController {
 
   int get daysCompleted =>
       [for (int d = 1; d <= totalDays; d++) eatenOnDay(d)]
-          .where((n) => n == 3)
+          .where((n) => n >= mealsPerDay)
           .length;
 
   int get streak {
     int s = 0;
     for (int d = 1; d <= totalDays; d++) {
-      if (eatenOnDay(d) == 3) {
+      if (eatenOnDay(d) >= mealsPerDay) {
         s++;
       } else {
         break;
@@ -277,7 +285,7 @@ class MealPlanController extends GetxController {
 
   int get currentDay {
     for (int d = 1; d <= totalDays; d++) {
-      if (eatenOnDay(d) < 3) return d;
+      if (eatenOnDay(d) < mealsPerDay) return d;
     }
     return totalDays;
   }

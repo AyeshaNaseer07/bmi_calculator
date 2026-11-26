@@ -160,7 +160,10 @@ class _MealCookingLoaderState extends State<MealCookingLoader>
         ('🚫', 'cook_leaving_out'.trParams({'item': a})),
       for (final x in conditions)
         ('❤️', 'cook_condition'.trParams({'condition': x})),
-      ('🍲', 'cook_simmering'.trParams({'count': '21'})),
+      (
+        '🍲',
+        'cook_simmering'.trParams({'count': '${7 * (r?.slots.length ?? 3)}'}),
+      ),
       ('🥄', 'cook_tasting'.tr),
       ('🍽️', 'cook_plating'.trParams({'week': week})),
     ];

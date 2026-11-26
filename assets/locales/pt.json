@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Escolheste \"Outro\": escreve os alimentos de que não gostas.",
   "ms_fill_lifestyle": "Responde a todas as perguntas. As notas adicionais são opcionais.",
   "home_meal_plan_title": "Plano alimentar para manter o peso",
-  "unlock_personalized_meals": "Desbloqueia refeições personalizadas"
+  "unlock_personalized_meals": "Desbloqueia refeições personalizadas",
+  "snack": "Lanche",
+  "morning_snack": "Lanche da manhã",
+  "afternoon_snack": "Lanche da tarde",
+  "milestone_snack": "Boa! Comeste o teu lanche e mantiveste a energia entre as refeições."
 }

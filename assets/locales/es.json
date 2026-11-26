@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Elegiste «Otro»: escribe los alimentos que no te gustan.",
   "ms_fill_lifestyle": "Responde todas las preguntas. Las notas adicionales son opcionales.",
   "home_meal_plan_title": "Plan de comidas para mantener el peso",
-  "unlock_personalized_meals": "Desbloquea comidas personalizadas"
+  "unlock_personalized_meals": "Desbloquea comidas personalizadas",
+  "snack": "Tentempié",
+  "morning_snack": "Tentempié de media mañana",
+  "afternoon_snack": "Merienda",
+  "milestone_snack": "¡Genial! Has tomado tu tentempié y mantienes tu energía entre comidas."
 }

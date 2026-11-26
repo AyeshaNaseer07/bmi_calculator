@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Du hast „Andere“ gewählt – bitte gib die Lebensmittel ein, die du nicht magst.",
   "ms_fill_lifestyle": "Bitte beantworte alle Fragen. Zusätzliche Hinweise sind optional.",
   "home_meal_plan_title": "Ernährungsplan zum Gewicht halten",
-  "unlock_personalized_meals": "Persönliche Mahlzeiten freischalten"
+  "unlock_personalized_meals": "Persönliche Mahlzeiten freischalten",
+  "snack": "Snack",
+  "morning_snack": "Vormittagssnack",
+  "afternoon_snack": "Nachmittagssnack",
+  "milestone_snack": "Super! Du hast deinen Snack gegessen und bleibst zwischen den Mahlzeiten voller Energie."
 }

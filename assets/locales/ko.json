@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "\"기타\"를 선택하셨어요. 싫어하는 음식을 입력해 주세요.",
   "ms_fill_lifestyle": "모든 질문에 답해 주세요. 추가 메모는 선택 사항입니다.",
   "home_meal_plan_title": "체중 유지를 위한 식단 플랜",
-  "unlock_personalized_meals": "나만의 식단 잠금 해제"
+  "unlock_personalized_meals": "나만의 식단 잠금 해제",
+  "snack": "간식",
+  "morning_snack": "오전 간식",
+  "afternoon_snack": "오후 간식",
+  "milestone_snack": "좋아요! 간식을 먹고 식사 사이에도 에너지를 유지했어요."
 }

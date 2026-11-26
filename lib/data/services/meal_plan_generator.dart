@@ -1,5 +1,29 @@
 import '../models/ai_meal_plan_model.dart';
 
+/// The meals of one plan day, from the "Meals per day" answer.
+abstract class MealSlots {
+  static const List<String> standard = ['breakfast', 'lunch', 'dinner'];
+
+  /// Slot keys in eating order. "None" (or no answer) keeps the standard
+  /// three meals. Two meals skip breakfast for late eaters, lunch otherwise.
+  static List<String> of(String mealsPerDay, {String mealTiming = ''}) =>
+      switch (mealsPerDay) {
+        '2' when mealTiming == 'late' => const ['lunch', 'dinner'],
+        '2' => const ['breakfast', 'dinner'],
+        '4' => const ['breakfast', 'lunch', 'snack', 'dinner'],
+        '5_plus' => const [
+          'breakfast',
+          'morning_snack',
+          'lunch',
+          'afternoon_snack',
+          'dinner',
+        ],
+        _ => standard,
+      };
+
+  static bool isSnack(String slot) => slot.endsWith('snack');
+}
+
 /// Everything a generator needs to write one week of a long meal plan.
 class MealPlanRequest {
   /// Week being generated (1-based) and the plan's total length.
@@ -25,6 +49,9 @@ class MealPlanRequest {
   final String water;
   final String mealTiming;
   final String notes;
+
+  /// "Meals per day" answer: `2`, `3`, `4`, `5_plus` or `none`.
+  final String mealsPerDay;
 
   /// English name of the language the meals should be written in.
   final String language;
@@ -57,6 +84,7 @@ class MealPlanRequest {
     required this.water,
     required this.mealTiming,
     required this.notes,
+    this.mealsPerDay = '',
     required this.language,
     required this.avoidNames,
     required this.photoKeys,
@@ -89,11 +117,17 @@ class MealPlanRequest {
     water: water,
     mealTiming: mealTiming,
     notes: notes,
+    mealsPerDay: mealsPerDay,
     language: language ?? this.language,
     avoidNames: avoidNames ?? this.avoidNames,
     photoKeys: photoKeys,
   );
 
+  /// Meal slots of every day in this plan.
+  List<String> get slots => MealSlots.of(mealsPerDay, mealTiming: mealTiming);
+
+  // The slots only join the signature when they differ from the standard
+  // three, so plans made before this answer was used are kept.
   String get signature => [
     targetKcal,
     bmiCategory,
@@ -114,6 +148,7 @@ class MealPlanRequest {
     water,
     mealTiming,
     notes.trim(),
+    if (slots.length != 3) 'meals=${slots.join(',')}',
   ].join('|');
 }
 
@@ -137,6 +172,6 @@ class MealPlanException implements Exception {
 
 /// Source of generated meal weeks. Gemini today; the backend API later.
 abstract class MealPlanGenerator {
-  /// Returns exactly 7 days of `[breakfast, lunch, dinner]`.
+  /// Returns exactly 7 days, each with one meal per [MealPlanRequest.slots].
   Future<List<List<AiMeal>>> generateWeek(MealPlanRequest request);
 }

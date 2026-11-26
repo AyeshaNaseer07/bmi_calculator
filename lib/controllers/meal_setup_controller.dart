@@ -283,6 +283,7 @@ class MealSetupController extends GetxController {
       water: water.value ?? '',
       mealTiming: mealTiming.value ?? '',
       notes: notes.value,
+      mealsPerDay: mealsPerDay.value ?? '',
       language: 'English',
       avoidNames: const [],
       photoKeys: MealPlanData.photoKeys,

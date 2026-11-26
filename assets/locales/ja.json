@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "「その他」を選んだ場合は、苦手な食べ物を入力してください。",
   "ms_fill_lifestyle": "すべての質問に答えてください。その他のメモは任意です。",
   "home_meal_plan_title": "体重キープのための食事プラン",
-  "unlock_personalized_meals": "あなた専用の食事を解除"
+  "unlock_personalized_meals": "あなた専用の食事を解除",
+  "snack": "間食",
+  "morning_snack": "午前の間食",
+  "afternoon_snack": "午後の間食",
+  "milestone_snack": "いいですね！間食をとって、食事の合間もエネルギーをキープできました。"
 }

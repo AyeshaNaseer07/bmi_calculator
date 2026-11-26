@@ -61,11 +61,17 @@ class AiMealPlan {
   final int totalWeeks;
   final Map<int, List<List<AiMeal>>> weeks;
 
+  /// Meal slot keys of every day, in order (e.g. breakfast, lunch, dinner).
+  final List<String> slots;
+
+  static const List<String> standardSlots = ['breakfast', 'lunch', 'dinner'];
+
   AiMealPlan({
     required this.id,
     required this.signature,
     required this.createdAt,
     required this.totalWeeks,
+    this.slots = standardSlots,
     Map<int, List<List<AiMeal>>>? weeks,
   }) : weeks = weeks ?? {};
 
@@ -94,6 +100,7 @@ class AiMealPlan {
     'signature': signature,
     'createdAt': createdAt.toIso8601String(),
     'totalWeeks': totalWeeks,
+    'slots': slots,
     'weeks': {
       for (final e in weeks.entries)
         '${e.key}': [
@@ -122,6 +129,9 @@ class AiMealPlan {
       createdAt:
           DateTime.tryParse(j['createdAt'] as String? ?? '') ?? DateTime.now(),
       totalWeeks: (j['totalWeeks'] as num?)?.toInt() ?? 1,
+      // Plans saved before meals per day was used have three meals.
+      slots:
+          (j['slots'] as List?)?.whereType<String>().toList() ?? standardSlots,
       weeks: weeks,
     );
   }

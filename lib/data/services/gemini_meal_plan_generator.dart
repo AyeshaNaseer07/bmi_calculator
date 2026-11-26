@@ -93,7 +93,7 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
       'generationConfig': {
         'temperature': 0.9,
         'responseMimeType': 'application/json',
-        'responseSchema': _schema(r.photoKeys),
+        'responseSchema': _schema(r.photoKeys, r.slots),
       },
     });
 
@@ -141,7 +141,7 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
     if (text.trim().isEmpty) {
       throw const MealPlanException('Empty response');
     }
-    return _parseWeek(text, r.photoKeys.toSet());
+    return _parseWeek(text, r.photoKeys.toSet(), r.slots);
   }
 
   static String _errorMessage(String body) {
@@ -154,9 +154,11 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
 
   // ── Parsing + checks ──
 
-  static const _slots = ['breakfast', 'lunch', 'dinner'];
-
-  static List<List<AiMeal>> _parseWeek(String text, Set<String> photoKeys) {
+  static List<List<AiMeal>> _parseWeek(
+    String text,
+    Set<String> photoKeys,
+    List<String> slots,
+  ) {
     final Map<String, dynamic> j;
     try {
       j = jsonDecode(text) as Map<String, dynamic>;
@@ -169,7 +171,7 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
     }
     return [
       for (final d in days.take(7))
-        [for (final s in _slots) _parseMeal((d as Map)[s], photoKeys)],
+        [for (final s in slots) _parseMeal((d as Map)[s], photoKeys)],
     ];
   }
 
@@ -237,7 +239,7 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
         : r.avoidNames;
 
     return '''
-Create week ${r.week} of a ${r.totalWeeks}-week meal plan: 7 days, each with breakfast, lunch and dinner.
+Create week ${r.week} of a ${r.totalWeeks}-week meal plan: 7 days, each with exactly ${r.slots.length} meals: ${r.slots.map(_slotName).join(', ')}.
 
 Phase for this week: $phase
 
@@ -247,7 +249,7 @@ User profile:
 - Height: ${r.heightCm.toStringAsFixed(0)} cm, weight: ${r.weightKg.toStringAsFixed(1)} kg
 - BMI category: ${r.bmiCategory}
 - Health goal: ${_label(r.healthGoal)}
-- Activity level: ${_label(r.activity)}
+- Daily exercise / activity: ${_activity(r.activity)}. Scale portions, protein and carbohydrates to this activity.
 - Medical conditions: ${list(r.conditions, 'none')}
 - Food allergies (NEVER use): ${list(r.allergies, 'none')}
 - Diet type: ${_label(r.dietType)}
@@ -257,8 +259,10 @@ User profile:
 - Budget: ${_label(r.budget)}
 - Sleep: ${_label(r.sleep)}, water intake: ${_label(r.water)}
 - Meal timing: ${_label(r.mealTiming)}
+- Meals per day: ${r.slots.length}
 ${notes.isEmpty ? '' : '- User notes: ${notes.length > 300 ? notes.substring(0, 300) : notes}\n'}
-Calories: each day must total ${r.targetKcal} kcal (within 5%). Split roughly breakfast 25-30%, lunch 35%, dinner 35-40%.
+Calories: each day must total ${r.targetKcal} kcal (within 5%). Split roughly ${_split(r.slots)}.
+${r.slots.any(MealSlots.isSnack) ? 'Snacks are small, quick and need little or no cooking.\n' : ''}
 
 Rules:
 - Write every name, description, tag and ingredient in ${r.language}.
@@ -270,6 +274,41 @@ Rules:
 - Do not repeat a dish within this week. ${avoid.isEmpty ? '' : 'Avoid these dishes used in earlier weeks: ${avoid.join(', ')}.'}
 ''';
   }
+
+  static String _slotName(String slot) => slot.replaceAll('_', ' ');
+
+  /// Rough share of the day's calories for each meal.
+  static String _split(List<String> slots) {
+    const shares = {
+      2: {'breakfast': '40%', 'lunch': '40%', 'dinner': '60%'},
+      3: {'breakfast': '25-30%', 'lunch': '35%', 'dinner': '35-40%'},
+      4: {
+        'breakfast': '25%',
+        'lunch': '30-35%',
+        'snack': '10%',
+        'dinner': '30-35%',
+      },
+      5: {
+        'breakfast': '20-25%',
+        'morning_snack': '10%',
+        'lunch': '30%',
+        'afternoon_snack': '10%',
+        'dinner': '25-30%',
+      },
+    };
+    final s = shares[slots.length] ?? shares[3]!;
+    return slots.map((k) => '${_slotName(k)} ${s[k] ?? ''}'.trim()).join(', ');
+  }
+
+  /// Activity level with how often the user exercises.
+  static String _activity(String key) => switch (key) {
+    'sedentary' => 'sedentary (little or no exercise)',
+    'lightlyActive' => 'lightly active (exercise 1-3 days a week)',
+    'moderatelyActive' => 'moderately active (exercise 3-5 days a week)',
+    'veryActive' => 'very active (exercise 6-7 days a week)',
+    'extraActive' => 'extra active (hard daily exercise or a physical job)',
+    _ => _label(key),
+  };
 
   static String _phase(int week, int total) {
     final p = week / total;
@@ -329,7 +368,10 @@ Rules:
 
   // ── Response schema ──
 
-  static Map<String, dynamic> _schema(List<String> photoKeys) {
+  static Map<String, dynamic> _schema(
+    List<String> photoKeys,
+    List<String> slots,
+  ) {
     const str = {'type': 'STRING'};
     const integer = {'type': 'INTEGER'};
     final meal = {
@@ -386,14 +428,9 @@ Rules:
           'type': 'ARRAY',
           'items': {
             'type': 'OBJECT',
-            'properties': {
-              'day': integer,
-              'breakfast': meal,
-              'lunch': meal,
-              'dinner': meal,
-            },
-            'required': ['day', 'breakfast', 'lunch', 'dinner'],
-            'propertyOrdering': ['day', 'breakfast', 'lunch', 'dinner'],
+            'properties': {'day': integer, for (final s in slots) s: meal},
+            'required': ['day', ...slots],
+            'propertyOrdering': ['day', ...slots],
           },
         },
       },

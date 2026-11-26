@@ -202,6 +202,8 @@ abstract class MealSetupOptions {
     SetupOption('3', 'ms_meals_3'),
     SetupOption('4', 'ms_meals_4'),
     SetupOption('5_plus', 'ms_meals_5_plus'),
+    // No preference: the plan keeps the standard three meals.
+    SetupOption('none', 'ms_none'),
   ];
 
   static const cooking = [

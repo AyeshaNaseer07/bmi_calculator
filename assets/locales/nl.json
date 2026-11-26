@@ -996,5 +996,9 @@
   "ms_fill_other_dislike": "Je koos \"Anders\": typ het voedsel dat je niet lust.",
   "ms_fill_lifestyle": "Beantwoord alle vragen. Extra opmerkingen zijn optioneel.",
   "home_meal_plan_title": "Maaltijdplan om op gewicht te blijven",
-  "unlock_personalized_meals": "Ontgrendel persoonlijke maaltijden"
+  "unlock_personalized_meals": "Ontgrendel persoonlijke maaltijden",
+  "snack": "Tussendoortje",
+  "morning_snack": "Ochtendsnack",
+  "afternoon_snack": "Middagsnack",
+  "milestone_snack": "Goed zo! Je hebt je tussendoortje gehad en houdt je energie op peil tussen de maaltijden."
 }
