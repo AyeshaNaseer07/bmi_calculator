@@ -31,11 +31,6 @@ class ProfileController extends GetxController {
     await _storage.saveUserProfile(updated);
   }
 
-  Future<void> updateProfile(UserProfile updated) async {
-    userProfile.value = updated;
-    await _storage.saveUserProfile(updated);
-  }
-
   Future<void> pickProfileImage() async {
     if (isUploading.value) return;
     if (!await PhotoPermission.request()) return;

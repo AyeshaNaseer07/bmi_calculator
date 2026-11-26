@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../data/models/ai_meal_plan_model.dart';
 import '../../data/models/bmi_record_model.dart';
 import 'meal_plan_normal.dart';
 import 'meal_plan_obese.dart';
@@ -250,6 +251,60 @@ class MealPlanData {
   MealPlanData._();
 
   static int get days => 7;
+
+  /// Bundled dish photos an AI plan may pick from (file names, no extension).
+  static List<String> get photoKeys {
+    final keys = {
+      for (final p in _mealPhotos.values)
+        p.split('/').last.replaceAll('.webp', ''),
+    }.toList();
+    return keys..sort();
+  }
+
+  static List<MealInfo> aiMealsFor(
+    BMICategory cat,
+    String keyPrefix,
+    int day,
+    List<AiMeal> meals, {
+    int targetKcal = 0,
+  }) {
+    final info = _cats[cat]!;
+    final raw = [
+      for (final m in meals.take(3))
+        RawMeal(
+          m.name,
+          m.blurb,
+          m.kcal,
+          m.protein,
+          m.carbs,
+          m.fat,
+          m.tag,
+          m.ingredients.map((i) => '${i[0]}|${i[1]}').join(';'),
+        ),
+    ];
+    final dayTotal = raw.fold(0, (a, m) => a + m.kcal);
+    // Gemini already aims at the target; only nudge small misses.
+    final scale = targetKcal > 0 && dayTotal > 0
+        ? (targetKcal / dayTotal).clamp(0.75, 1.3).toDouble()
+        : 1.0;
+    return [
+      for (int i = 0; i < raw.length; i++)
+        _build(
+          cat,
+          info,
+          day,
+          _slots[i],
+          raw[i],
+          dayTotal,
+          scale,
+          keyPrefix: keyPrefix,
+          photo: meals[i].photo.isEmpty
+              ? null
+              : '$_meals/${meals[i].photo}.webp',
+        ),
+    ];
+  }
+
   static List<MealInfo> mealsFor(
     BMICategory cat,
     int day, {
@@ -307,12 +362,13 @@ class MealPlanData {
     String slot,
     RawMeal r,
     int dayTotal,
-    double scale,
-  ) {
-    final key = '${cat.name}_d${day}_$slot';
+    double scale, {
+    String? keyPrefix,
+    String? photo,
+  }) {
+    final key = '${keyPrefix ?? cat.name}_d${day}_$slot';
     final (clock, period) = _slotTimes[slot]!;
-    final photo =
-        kMealPhotoOverrides[key] ?? _mealPhotos[r.name] ?? _fallbackPhoto;
+    photo ??= kMealPhotoOverrides[key] ?? _mealPhotos[r.name] ?? _fallbackPhoto;
     return MealInfo(
       key: key,
       category: cat,

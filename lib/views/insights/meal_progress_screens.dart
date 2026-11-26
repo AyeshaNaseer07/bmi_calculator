@@ -179,7 +179,10 @@ class MealCompletedScreen extends StatelessWidget {
                             SizedBox(width: 6.w),
                             Flexible(
                               child: Text(
-                                'day_of_7'.trParams({'day': '${meal.day}'}),
+                                'day_of_total'.trParams({
+                                  'day': '${meal.day}',
+                                  'total': '${c.totalDays}',
+                                }),
                                 style: bodyStyle(
                                   14,
                                   color: _kDeep,
@@ -301,11 +304,7 @@ class MealCompletedScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      for (final m in MealPlanData.mealsFor(
-                        meal.category,
-                        meal.day,
-                        targetKcal: c.targetKcal,
-                      ))
+                      for (final m in c.mealsFor(meal.day) ?? const [])
                         _legend(m.slot, c.isEaten(m.key)),
                     ],
                   ),
@@ -372,9 +371,12 @@ class MealProgressScreen extends StatelessWidget {
     return InsightScaffold(
       title: 'your_progress'.tr,
       body: Obx(() {
-        final pct = (c.eatenInPlan / 21 * 100).round();
+        final totalDays = c.totalDays;
+        final totalMeals = totalDays * 3;
+        final pct = (c.eatenInPlan / totalMeals * 100).round();
         final cur = c.currentDay;
         final streak = c.streak;
+        final daysDone = c.daysCompleted;
         final phases = [
           'fresh_start_phase'.tr,
           'building_rhythm_phase'.tr,
@@ -418,7 +420,11 @@ class MealProgressScreen extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Flexible(
                           child: Text(
-                            'n_7_day_living_plan'.tr,
+                            c.totalWeeks <= 1
+                                ? 'n_7_day_living_plan'.tr
+                                : 'n_weeks_living_plan'.trParams({
+                                    'count': '${c.totalWeeks}',
+                                  }),
                             style: bodyStyle(
                               12,
                               color: _kDeep,
@@ -464,7 +470,7 @@ class MealProgressScreen extends StatelessWidget {
                     width: 190.w,
                     height: 190.w,
                     child: CustomPaint(
-                      painter: _RingPainter(c.daysCompleted / 7),
+                      painter: _RingPainter(daysDone / totalDays),
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -473,11 +479,11 @@ class MealProgressScreen extends StatelessWidget {
                               TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: '${c.daysCompleted} ',
+                                    text: '$daysDone ',
                                     style: headStyle(34),
                                   ),
                                   TextSpan(
-                                    text: '/ 7',
+                                    text: '/ $totalDays',
                                     style: headStyle(
                                       20,
                                       weight: FontWeight.w500,
@@ -549,7 +555,10 @@ class MealProgressScreen extends StatelessWidget {
                         child: Text(
                           'day_phase'.trParams({
                             'day': '$cur',
-                            'phase': phases[cur - 1],
+                            // 7 phases spread across the plan's length.
+                            'phase':
+                                phases[((cur - 1) * phases.length ~/ totalDays)
+                                    .clamp(0, phases.length - 1)],
                           }),
                           style: bodyStyle(
                             13.5,
@@ -575,7 +584,7 @@ class MealProgressScreen extends StatelessWidget {
                     tile: const Color(0xFFE8ECFB),
                     iconColor: _kDeep,
                     trailing: Text(
-                      'target_21'.tr,
+                      'target_count'.trParams({'count': '$totalMeals'}),
                       style: bodyStyle(
                         12.5,
                         color: kInk,
@@ -590,7 +599,7 @@ class MealProgressScreen extends StatelessWidget {
                         children: [
                           TextSpan(text: '$logged', style: headStyle(22)),
                           TextSpan(
-                            text: ' / 21',
+                            text: ' / $totalMeals',
                             style: headStyle(
                               15,
                               weight: FontWeight.w500,
@@ -691,7 +700,10 @@ class MealProgressScreen extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          'day_of_7'.trParams({'day': '$cur'}),
+                          'day_of_total'.trParams({
+                            'day': '$cur',
+                            'total': '$totalDays',
+                          }),
                           style: bodyStyle(
                             12.5,
                             color: AppPalette.textBody,
@@ -703,10 +715,10 @@ class MealProgressScreen extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          (7 - cur == 1
+                          (totalDays - cur == 1
                                   ? 'days_remaining_one'
                                   : 'days_remaining_many')
-                              .trParams({'count': '${7 - cur}'}),
+                              .trParams({'count': '${totalDays - cur}'}),
                           style: bodyStyle(
                             12.5,
                             color: AppPalette.textBody,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/ai_meal_plan_model.dart';
 import '../models/bmi_record_model.dart';
 import '../models/user_profile_model.dart';
 import '../models/weight_record_model.dart';
@@ -20,6 +21,7 @@ class StorageService {
   static const String _keyLastWeightEntry = 'last_weight_entry';
   static const String _keyEatenMeals = 'eaten_meals';
   static const String _keyMealSetup = 'meal_setup';
+  static const String _keyAiMealPlan = 'ai_meal_plan';
 
   late SharedPreferences _prefs;
 
@@ -53,8 +55,6 @@ class StorageService {
 
   // ── Notifications ──
   bool getNotificationsEnabled() => _prefs.getBool(_keyNotifications) ?? true;
-  Future<void> setNotificationsEnabled(bool enabled) =>
-      _prefs.setBool(_keyNotifications, enabled);
 
   // ── Premium ──
   bool getIsPremium() => _prefs.getBool(_keyIsPremium) ?? false;
@@ -176,4 +176,19 @@ class StorageService {
 
   Future<void> saveMealSetup(Map<String, dynamic> data) =>
       _prefs.setString(_keyMealSetup, jsonEncode(data));
+
+  // ── AI meal plan (generated weeks) ──
+
+  AiMealPlan? getAiMealPlan() {
+    final raw = _prefs.getString(_keyAiMealPlan);
+    if (raw == null) return null;
+    try {
+      return AiMealPlan.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> saveAiMealPlan(AiMealPlan plan) =>
+      _prefs.setString(_keyAiMealPlan, jsonEncode(plan.toJson()));
 }

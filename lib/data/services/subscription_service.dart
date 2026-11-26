@@ -36,7 +36,6 @@ class SubscriptionService {
   Completer<PremiumPurchaseResult>? _buying;
   final Set<String> _awaitingApproval = {};
   bool _busy = false;
-  bool get isBusy => _busy;
   void Function(bool isPremium)? onChanged;
   bool get isPremium => _storage.getIsPremium();
 

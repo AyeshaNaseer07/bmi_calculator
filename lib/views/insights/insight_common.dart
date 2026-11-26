@@ -7,7 +7,6 @@ import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/language_button.dart';
 import '../../core/theme/app_palette.dart';
-import '../../controllers/app_controller.dart';
 
 Color get kInk => AppPalette.textPrimary;
 const Color kGreen = Color(0xFF09B389);
@@ -39,55 +38,6 @@ TextStyle bodyStyle(
   color: color ?? kMuted,
   height: height,
 );
-
-/// White rounded card with the soft mint border/shadow used on every screen.
-class InsightCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry? padding;
-  final double radius;
-  final Color? color;
-  final Color? borderColor;
-  final Color? shadowColor;
-  final VoidCallback? onTap;
-
-  const InsightCard({
-    super.key,
-    required this.child,
-    this.padding,
-    this.radius = 18,
-    this.color,
-    this.borderColor,
-    this.shadowColor,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final card = Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: ShapeDecoration(
-        color: AppPalette.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        shadows: [
-          BoxShadow(
-            color: const Color(0x0A000000),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: child,
-    );
-    if (onTap == null) return card;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: card,
-    );
-  }
-}
 
 class AssetOrPlaceholder extends StatelessWidget {
   final String asset;
@@ -276,105 +226,6 @@ class SectionTitle extends StatelessWidget {
     padding: EdgeInsets.only(top: 6.h, bottom: 10.h),
     child: Text(text, style: headStyle(17, weight: FontWeight.w700)),
   );
-}
-
-/// Icon tile + title + subtitle (+ optional chevron) row card.
-class InfoRowCard extends StatelessWidget {
-  final IconData? icon;
-  final String? iconAsset;
-  final String title;
-  final String subtitle;
-  final VoidCallback? onTap;
-  final bool chevron;
-  final bool circleIcon;
-  final Color? tileColor;
-  final Color iconColor;
-  final Color? cardColor;
-  final Color? borderColor;
-  final Color? chevronColor;
-
-  /// Shows a gold "PRO" badge next to the title (premium-only feature).
-  final bool pro;
-
-  const InfoRowCard({
-    super.key,
-    this.icon,
-    this.iconAsset,
-    required this.title,
-    required this.subtitle,
-    this.onTap,
-    this.chevron = false,
-    this.circleIcon = false,
-    this.tileColor,
-    this.iconColor = kGreen,
-    this.cardColor,
-    this.borderColor,
-    this.chevronColor,
-    this.pro = false,
-  }) : assert(
-         icon != null || iconAsset != null,
-         'Provide either icon or iconAsset',
-       );
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: InsightCard(
-        onTap: onTap,
-        color: cardColor,
-        borderColor: borderColor,
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-        child: Row(
-          children: [
-            Image.asset(iconAsset!, height: 44.h, fit: BoxFit.contain),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            color: AppPalette.textPrimary,
-                            fontSize: 15.sp,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      if (pro)
-                        Obx(
-                          () => Get.find<AppController>().isPremium.value
-                              ? const SizedBox.shrink()
-                              : Padding(
-                                  padding: EdgeInsetsDirectional.only(
-                                    start: 6.w,
-                                  ),
-                                  child: const ProBadge(),
-                                ),
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(subtitle, style: bodyStyle(12, height: 1.35)),
-                ],
-              ),
-            ),
-            if (chevron)
-              Icon(
-                Icons.chevron_right_rounded,
-                color: chevronColor ?? AppPalette.textMuted,
-                size: 22.sp,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class PrecautionCard extends StatelessWidget {
@@ -638,48 +489,6 @@ class GradientActionButton extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ProBadge extends StatelessWidget {
-  const ProBadge({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFFD54F), Color(0xFFFFA000)],
-        ),
-        borderRadius: BorderRadius.circular(6.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.workspace_premium_rounded,
-            size: 11.sp,
-            color: Colors.white,
-          ),
-          SizedBox(width: 2.w),
-          Flexible(
-            child: Text(
-              'pro_badge'.tr,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 9.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.3,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
       ),
     );
   }

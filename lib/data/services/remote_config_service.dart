@@ -184,6 +184,12 @@ class RemoteConfigService extends GetxService {
 
   String get notificationFrequency => model.value.notificationFrequency;
 
+  String get geminiApiKey => model.value.geminiApiKey;
+  String get geminiModel => model.value.geminiModel;
+  List<String> get geminiModels => model.value.geminiModels;
+  int get mealPlanWeeks => model.value.mealPlanWeeks;
+  bool get isGeminiMealPlanEnabled => model.value.isGeminiMealPlanEnabled;
+
   AppLifecycleListener? _lifecycle;
 
   Future<RemoteConfigService> init() async {
@@ -259,7 +265,12 @@ class RemoteConfigService extends GetxService {
       'full_screen_native_ad=${m.fullScreenNativeAd}, '
       'app_open_ad=${m.appOpenAd}, '
       'local_notification=${m.localNotification}, '
-      'show_notification_frequency=${m.notificationFrequency}',
+      'show_notification_frequency=${m.notificationFrequency}, '
+      // Never print the key itself.
+      'gemini_api_key=${m.geminiApiKey.isEmpty ? 'unset' : 'set'}, '
+      'gemini_model=${m.geminiModel}, '
+      'gemini_fallback_model=${m.geminiFallbackModel}, '
+      'meal_plan_weeks=${m.mealPlanWeeks}',
     );
   }
 

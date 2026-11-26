@@ -16,20 +16,6 @@ import '../../core/utils/responsive.dart';
 import '../widgets/next_button.dart';
 import '../../core/utils/rtl.dart';
 
-class OnboardingItem {
-  final String imagePath;
-  final String titlePrefix;
-  final String titleHighlight;
-  final String subtitle;
-
-  const OnboardingItem({
-    required this.imagePath,
-    required this.titlePrefix,
-    required this.titleHighlight,
-    required this.subtitle,
-  });
-}
-
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 

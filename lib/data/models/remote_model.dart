@@ -34,6 +34,10 @@ class RemoteModel {
   String? _showAdsDebugger;
   String? _onbPaywallDefaultPlan;
   String? _weekPaywallDefaultPlan;
+  String? _geminiApiKey;
+  String? _geminiModel;
+  String? _geminiFallbackModel;
+  int? _mealPlanWeeks;
 
   // AppLovin MAX ad units; Remote Config overrides each one.
   static const String defaultWeeklyProductId = 'com.weekly.bmi.calculator.app';
@@ -46,6 +50,14 @@ class RemoteModel {
   static const String defaultFullScreenNativeAdId = '2854da2e9e4a2bc5';
   static const String defaultLanguageNativeAdId = '18189ba9818ddf0a';
   static const String defaultOnboardingNativeAdId = '99f2f2b2c1b0ca6a';
+
+  // Gemini meal plan. No key means the built-in 7-day plans are shown.
+  static const String defaultGeminiModel = 'gemini-3.8-flash';
+
+  /// Tried when the main model is overloaded (503), rate-limited (429) or
+  /// retired (404). Flash-Lite has its own, larger free quota.
+  static const String defaultGeminiFallbackModel = 'gemini-3.5-flash-lite';
+  static const int defaultMealPlanWeeks = 12;
 
   String get firstTimeOnboarding => _firstTimeOnboarding ?? 'on';
   set firstTimeOnboarding(String value) => _firstTimeOnboarding = value;
@@ -164,6 +176,38 @@ class RemoteModel {
   String get weekPaywallDefaultPlan => _weekPaywallDefaultPlan ?? 'yearly';
   set weekPaywallDefaultPlan(String value) => _weekPaywallDefaultPlan = value;
 
+  /// Gemini Developer API key (`gemini_api_key`). Empty turns AI plans off.
+  String get geminiApiKey => (_geminiApiKey ?? '').trim();
+  set geminiApiKey(String value) => _geminiApiKey = value;
+
+  /// Gemini model id (`gemini_model`), e.g. `gemini-3.8-flash`.
+  String get geminiModel {
+    final m = (_geminiModel ?? '').trim();
+    return m.isEmpty ? defaultGeminiModel : m;
+  }
+
+  set geminiModel(String value) => _geminiModel = value;
+
+  /// Backup model id (`gemini_fallback_model`).
+  String get geminiFallbackModel {
+    final m = (_geminiFallbackModel ?? '').trim();
+    return m.isEmpty ? defaultGeminiFallbackModel : m;
+  }
+
+  set geminiFallbackModel(String value) => _geminiFallbackModel = value;
+
+  /// Models to try in order: configured, backup, then the built-in default.
+  List<String> get geminiModels =>
+      {geminiModel, geminiFallbackModel, defaultGeminiModel}.toList();
+
+  /// Length of the AI meal plan in weeks (`meal_plan_weeks`): 8 ≈ 2 months,
+  /// 12 ≈ 3 months. Clamped to 1–13.
+  int get mealPlanWeeks =>
+      (_mealPlanWeeks ?? defaultMealPlanWeeks).clamp(1, 13).toInt();
+  set mealPlanWeeks(int value) => _mealPlanWeeks = value;
+
+  bool get isGeminiMealPlanEnabled => geminiApiKey.isNotEmpty;
+
   RemoteModel({
     this._firstTimeOnboarding,
     this._secondTimeOnboarding,
@@ -198,6 +242,10 @@ class RemoteModel {
     this._showAdsDebugger,
     this._onbPaywallDefaultPlan,
     this._weekPaywallDefaultPlan,
+    this._geminiApiKey,
+    this._geminiModel,
+    this._geminiFallbackModel,
+    this._mealPlanWeeks,
   });
 
   bool get isFirstTimeOnboarding => _isOn(firstTimeOnboarding);
@@ -453,6 +501,23 @@ class RemoteModel {
           remoteConfig['week_paywall_default_plan'],
           'yearly',
         ),
+        geminiApiKey: _parseString(
+          remoteConfig['gemini_api_key'] ?? remoteConfig['geminiApiKey'],
+          '',
+        ),
+        geminiModel: _parseString(
+          remoteConfig['gemini_model'] ?? remoteConfig['geminiModel'],
+          defaultGeminiModel,
+        ),
+        geminiFallbackModel: _parseString(
+          remoteConfig['gemini_fallback_model'] ??
+              remoteConfig['geminiFallbackModel'],
+          defaultGeminiFallbackModel,
+        ),
+        mealPlanWeeks: _parseInt(
+          remoteConfig['meal_plan_weeks'] ?? remoteConfig['mealPlanWeeks'],
+          defaultMealPlanWeeks,
+        ),
       );
     } catch (e, stackTrace) {
       if (kDebugMode || kProfileMode) {
@@ -498,6 +563,10 @@ class RemoteModel {
       showAdsDebugger: 'off',
       onbPaywallDefaultPlan: 'yearly',
       weekPaywallDefaultPlan: 'yearly',
+      geminiApiKey: '',
+      geminiModel: defaultGeminiModel,
+      geminiFallbackModel: defaultGeminiFallbackModel,
+      mealPlanWeeks: defaultMealPlanWeeks,
     );
   }
 
@@ -536,6 +605,10 @@ class RemoteModel {
       'show_ads_debugger': showAdsDebugger,
       'onb_paywall_default_plan': onbPaywallDefaultPlan,
       'week_paywall_default_plan': weekPaywallDefaultPlan,
+      'gemini_api_key': geminiApiKey,
+      'gemini_model': geminiModel,
+      'gemini_fallback_model': geminiFallbackModel,
+      'meal_plan_weeks': mealPlanWeeks,
     };
   }
 }

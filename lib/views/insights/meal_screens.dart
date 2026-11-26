@@ -7,6 +7,7 @@ import '../../controllers/meal_plan_controller.dart';
 import '../../core/constants/app_assets.dart';
 import '../meal_setup/meal_setup_flow.dart';
 import 'insight_common.dart';
+import 'meal_cooking_loader.dart';
 import 'meal_plan_data.dart';
 import 'meal_progress_screens.dart';
 import '../../core/theme/app_palette.dart';
@@ -24,8 +25,16 @@ class DailyMealPlanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    // Rebuilds the title when the AI plan loads or falls back.
+    return Obx(() => _build(c.totalWeeks));
+  }
+
+  Widget _build(int weeks) {
     return InsightScaffold(
-      title: 'n_1_week_meal_plan'.tr,
+      title: weeks <= 1
+          ? 'n_1_week_meal_plan'.tr
+          : 'n_weeks_meal_plan'.trParams({'count': '$weeks'}),
       trailing: Tooltip(
         message: 'ms_edit_preferences'.tr,
         child: GestureDetector(
@@ -100,6 +109,7 @@ class DailyMealPlanScreen extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           const _TargetBanner(),
+          const _AiFallbackBanner(),
           SizedBox(height: 12.h),
           const _DayMeals(),
           SizedBox(height: 4.h),
@@ -168,6 +178,190 @@ class _TargetBanner extends StatelessWidget {
         ),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+}
+
+/// Shown when the Gemini plan couldn't be made and the 7-day plan is used.
+class _AiFallbackBanner extends StatelessWidget {
+  const _AiFallbackBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    return Obx(() {
+      if (!c.aiFailed.value || c.isAiPlan) return const SizedBox.shrink();
+      return Padding(
+        padding: EdgeInsets.only(top: 8.h),
+        child: _StatusCard(text: 'ai_plan_fallback'.tr, onRetry: c.retryAiPlan),
+      );
+    });
+  }
+}
+
+/// Error / fallback card with a retry button.
+class _StatusCard extends StatelessWidget {
+  final String text;
+  final VoidCallback? onRetry;
+  const _StatusCard({required this.text, this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+      decoration: BoxDecoration(
+        color: AppPalette.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFDDF4EC)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              text,
+              style: bodyStyle(
+                13,
+                color: AppPalette.textBody,
+                weight: FontWeight.w500,
+              ),
+            ),
+          ),
+          if (onRetry != null) ...[
+            SizedBox(width: 10.w),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onRetry,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                decoration: BoxDecoration(
+                  color: _kDeepFill,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  'retry_btn'.tr,
+                  style: bodyStyle(
+                    13,
+                    color: Colors.white,
+                    weight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Placeholder while a generated week is loading or after it failed.
+class _WeekStatus extends StatelessWidget {
+  final int week;
+
+  /// The week's meals have arrived: let the loader finish its fill first.
+  final bool done;
+  final VoidCallback? onFinished;
+
+  const _WeekStatus({required this.week, this.done = false, this.onFinished});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    // One widget tree for every state, so the loader keeps its animation
+    // when [done] flips and can fill from where it was.
+    return Obx(() {
+      // Read both every time: Obx needs an observable even when [done].
+      final weekFailed = c.isWeekFailed(week);
+      final weekLoading = c.isWeekLoading(week);
+      final failed = !done && weekFailed;
+      if (!done && !failed && !weekLoading) {
+        // Not requested yet (e.g. a week picked far ahead).
+        WidgetsBinding.instance.addPostFrameCallback((_) => c.ensureWeek(week));
+      }
+      return Padding(
+        padding: EdgeInsets.only(bottom: 14.h),
+        child: failed
+            ? _StatusCard(
+                text: 'ai_week_failed'.tr,
+                onRetry: () => c.ensureWeek(week),
+              )
+            : MealCookingLoader(week: week, done: done, onFinished: onFinished),
+      );
+    });
+  }
+}
+
+/// Horizontal "Week 1 … Week N" selector for long AI plans.
+class _WeekSelector extends StatefulWidget {
+  const _WeekSelector();
+
+  @override
+  State<_WeekSelector> createState() => _WeekSelectorState();
+}
+
+class _WeekSelectorState extends State<_WeekSelector> {
+  final GlobalKey _selectedKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    // Bring the current week into view when the screen opens.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _selectedKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(ctx, alignment: 0.5);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = MealPlanController.to;
+    return Obx(() {
+      final selected = c.selectedWeek;
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (int w = 1; w <= c.totalWeeks; w++)
+              _chip(c, w, selected == w, w == selected ? _selectedKey : null),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _chip(MealPlanController c, int week, bool selected, Key? key) {
+    final first = (week - 1) * 7 + 1;
+    final done = [for (int d = first; d < first + 7; d++) c.eatenOnDay(d)]
+        .every((n) => n == 3);
+    return GestureDetector(
+      key: key,
+      behavior: HitTestBehavior.opaque,
+      onTap: () => c.selectWeek(week),
+      child: Container(
+        margin: EdgeInsetsDirectional.only(end: 6.w),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+        decoration: BoxDecoration(
+          color: selected
+              ? _kDeepFill
+              : (done ? const Color(0xFFC9F7E3) : AppPalette.surface),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: selected ? _kDeepFill : const Color(0xFFD5F2E8),
+            width: 1.2,
+          ),
+        ),
+        child: Text(
+          'week_n'.trParams({'n': '$week'}),
+          style: bodyStyle(
+            12.5,
+            color: selected ? Colors.white : _kDeep,
+            weight: FontWeight.w700,
+          ),
+        ),
       ),
     );
   }
@@ -245,21 +439,95 @@ class _DayMeals extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = MealPlanController.to;
     return Obx(() {
-      final day = c.selectedDay.value;
-      final meals = MealPlanData.mealsFor(
-        c.category,
-        day,
-        targetKcal: c.targetKcal,
-      );
+      final day = c.selectedDay.value.clamp(1, c.totalDays).toInt();
+      final week = c.selectedWeek;
+      final first = (week - 1) * 7 + 1;
+      final last = (first + 6).clamp(first, c.totalDays).toInt();
+      final meals = c.mealsFor(day);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [for (int d = 1; d <= 7; d++) _dayChip(c, d)]),
+          if (c.totalWeeks > 1) ...[
+            const _WeekSelector(),
+            SizedBox(height: 10.h),
+          ],
+          Row(children: [for (int d = first; d <= last; d++) _dayChip(c, d)]),
           SizedBox(height: 14.h),
-          for (final m in meals) _MealCard(meal: m),
+          _WeekMeals(week: week, meals: meals),
         ],
       );
     });
+  }
+}
+
+/// The day's meal cards, or the cooking loader while the week is generated.
+/// When the meals arrive the loader first fills to 100%, then fades into
+/// the plan, instead of vanishing mid-way.
+class _WeekMeals extends StatefulWidget {
+  final int week;
+  final List<MealInfo>? meals;
+  const _WeekMeals({required this.week, required this.meals});
+
+  @override
+  State<_WeekMeals> createState() => _WeekMealsState();
+}
+
+class _WeekMealsState extends State<_WeekMeals> {
+  /// Week whose loader is playing its finish before the meals show.
+  int? _finishing;
+
+  @override
+  void didUpdateWidget(covariant _WeekMeals old) {
+    super.didUpdateWidget(old);
+    if (old.week != widget.week) {
+      _finishing = null;
+    } else if (old.meals == null &&
+        widget.meals != null &&
+        MealPlanController.to.isAiPlan) {
+      _finishing = widget.week;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final meals = widget.meals;
+    final loading = meals == null || _finishing == widget.week;
+    final Widget child = loading
+        ? KeyedSubtree(
+            key: ValueKey('loader_${widget.week}'),
+            child: _WeekStatus(
+              week: widget.week,
+              done: meals != null,
+              onFinished: () {
+                if (mounted) setState(() => _finishing = null);
+              },
+            ),
+          )
+        : Column(
+            key: const ValueKey('meals'),
+            children: [for (final m in meals) _MealCard(meal: m)],
+          );
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 450),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeIn,
+      // Keep both children pinned to the top while they cross-fade.
+      layoutBuilder: (current, previous) => Stack(
+        alignment: Alignment.topCenter,
+        children: [...previous, ?current],
+      ),
+      transitionBuilder: (child, a) => FadeTransition(
+        opacity: a,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.04),
+            end: Offset.zero,
+          ).animate(a),
+          child: child,
+        ),
+      ),
+      child: child,
+    );
   }
 }
 

@@ -74,11 +74,6 @@ class AppController extends GetxController {
     _storage.setUnitSystem(system);
   }
 
-  void toggleNotifications(bool enabled) {
-    notificationsEnabled.value = enabled;
-    _storage.setNotificationsEnabled(enabled);
-  }
-
   Future<PremiumPurchaseResult> upgradeToPremium(
     SubscriptionPlan plan,
     PaywallType paywall,

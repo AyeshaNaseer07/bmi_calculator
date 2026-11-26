@@ -28,7 +28,6 @@ const Color kMsChipText = Color(0xFF334155);
 const Color kMsTextSecondary = Color(0xFF64748B);
 const Color kMsSubtitle = Color(0xFF475569);
 const Color kMsRequiredBg = Color(0xFFE2F7F0);
-const Color kMsStepChipBg = Color(0xFFDFF5EC);
 const Color kMsPlaceholder = Color(0xFF94A3B8);
 const Color kMsBlue = Color(0xFF1D63B8);
 const Color kMsBlueSoft = Color(0xFFE3F1FD);
@@ -321,53 +320,6 @@ class SetupHero extends StatelessWidget {
   );
 
   Widget _placeholder() => SizedBox(width: width, height: height);
-}
-
-class SetupProgressDots extends StatelessWidget {
-  final int step;
-  const SetupProgressDots({super.key, required this.step});
-
-  static const Color _off = Color(0xFFCDEFE3);
-
-  @override
-  Widget build(BuildContext context) {
-    if (step == 0) {
-      return ExcludeSemantics(
-        child: Padding(
-          padding: EdgeInsetsDirectional.only(start: 2.w),
-          child: Row(mainAxisSize: MainAxisSize.min),
-        ),
-      );
-    }
-    final children = <Widget>[];
-    for (int i = 1; i <= 5; i++) {
-      final current = i == step;
-      if (i > 1) {
-        children.add(
-          Container(
-            width: 12.w,
-            height: 2.h,
-            color: i <= step ? kMsGreen : _off,
-          ),
-        );
-      }
-      children.add(
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          width: (current ? 14 : 11).w,
-          height: (current ? 14 : 11).w,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: i <= step ? kMsGreen : _off,
-          ),
-        ),
-      );
-    }
-    return Semantics(
-      label: 'ms_step_x_of_y'.trParams({'x': '$step', 'y': '5'}),
-      child: Row(mainAxisSize: MainAxisSize.min, children: children),
-    );
-  }
 }
 
 /// White rounded card used for every row in the flow.

@@ -26,7 +26,6 @@ class BMIController extends GetxController {
 
   final RxBool isCm = true.obs;
   final RxBool isKg = true.obs;
-  final RxBool isCalculating = false.obs;
 
   final RxList<BMIRecord> bmiHistory = <BMIRecord>[].obs;
   final Rxn<BMIRecord> latestRecord = Rxn<BMIRecord>();

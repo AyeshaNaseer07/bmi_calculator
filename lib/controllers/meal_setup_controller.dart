@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import '../data/models/bmi_record_model.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/services/bmi_service.dart';
+import '../data/services/meal_plan_generator.dart';
+import '../data/services/remote_config_service.dart';
 import '../data/services/storage_service.dart';
+import '../views/insights/meal_plan_data.dart';
 import 'bmi_controller.dart';
 import 'meal_plan_controller.dart';
 import 'profile_controller.dart';
@@ -239,6 +242,50 @@ class MealSetupController extends GetxController {
         isKg: weightInKg.value,
         activity: activity.value!,
       ),
+    );
+    MealPlanController.to.usePlanRequest(_planRequest());
+  }
+
+  /// Setup answers in the shape the meal plan generator needs.
+  MealPlanRequest _planRequest() {
+    final plan = MealPlanController.to;
+    final otherCond = otherCondition.value.trim();
+    final otherAll = otherAllergy.value.trim();
+    final otherDis = otherDislikes.value.trim();
+    return MealPlanRequest(
+      week: 1,
+      totalWeeks: Get.isRegistered<RemoteConfigService>()
+          ? RemoteConfigService.to.mealPlanWeeks
+          : 12,
+      targetKcal: plan.targetKcal,
+      bmiCategory: plan.category.name,
+      age: age.value!,
+      gender: gender.value!.name,
+      heightCm: heightCm.value!,
+      weightKg: weightKg.value!,
+      activity: activity.value!.name,
+      healthGoal: goal.value?.name ?? '',
+      conditions: noConditions.value
+          ? const []
+          : [...conditions, if (otherCond.isNotEmpty) otherCond],
+      allergies: noAllergies.value
+          ? const []
+          : [...allergies, if (otherAll.isNotEmpty) otherAll],
+      dietType: dietType.value ?? '',
+      cuisine: cuisine.value ?? '',
+      dislikes: [
+        ...dislikes.where((d) => d != noDislikesKey && d != 'other'),
+        if (otherDis.isNotEmpty) otherDis,
+      ],
+      cooking: cooking.value ?? '',
+      budget: budget.value ?? '',
+      sleep: sleep.value ?? '',
+      water: water.value ?? '',
+      mealTiming: mealTiming.value ?? '',
+      notes: notes.value,
+      language: 'English',
+      avoidNames: const [],
+      photoKeys: MealPlanData.photoKeys,
     );
   }
 
