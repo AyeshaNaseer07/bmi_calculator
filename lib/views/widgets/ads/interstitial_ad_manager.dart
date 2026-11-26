@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../../controllers/app_controller.dart';
 import '../../../data/models/remote_model.dart';
 import '../../../data/services/remote_config_service.dart';
+import '../../../data/services/storage_service.dart';
 import '../../../main.dart';
 import 'app_open_ad_manager.dart';
 import 'applovin_sdk.dart';
@@ -65,15 +66,20 @@ class InterstitialAdManager {
       ? RemoteConfigService.to.current
       : remoteModel;
 
-  bool get _isOnboardingSeen =>
-      Get.isRegistered<AppController>() &&
-      Get.find<AppController>().onboardingSeen.value;
+  // Before AppController exists (the early splash load), read the saved flags.
+  StorageService? get _storage =>
+      Get.isRegistered<StorageService>() ? Get.find<StorageService>() : null;
+
+  bool get _isOnboardingSeen => Get.isRegistered<AppController>()
+      ? Get.find<AppController>().onboardingSeen.value
+      : _storage?.getOnboardingSeen() ?? false;
+
+  bool get _isPremium => Get.isRegistered<AppController>()
+      ? Get.find<AppController>().isPremium.value
+      : _storage?.getIsPremium() ?? false;
 
   bool _isEnabled(InterstitialPlacement placement) {
-    if (Get.isRegistered<AppController>() &&
-        Get.find<AppController>().isPremium.value) {
-      return false;
-    }
+    if (_isPremium) return false;
     return switch (placement) {
       InterstitialPlacement.splash =>
         _isOnboardingSeen

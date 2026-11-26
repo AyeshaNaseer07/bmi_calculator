@@ -30,6 +30,9 @@ class _SplashScreenState extends State<SplashScreen>
   /// The ad is shown as the bar passes this point.
   static const double _adAt = 0.99;
 
+  /// How long the bar may hold at [_adAt] for a splash ad still loading.
+  static const Duration _adMaxWait = Duration(seconds: 3);
+
   @override
   void initState() {
     super.initState();
@@ -121,9 +124,13 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
     final ads = InterstitialAdManager.instance;
-    // Load failed or still loading: no ad, so let the bar fill completely
+    // Still loading: hold at 99% a little longer for it.
+    await ads.waitForLoad(InterstitialPlacement.splash, timeout: _adMaxWait);
+    if (!mounted) return;
+    // Load failed or too slow: no ad, so let the bar fill completely
     // first, then open the language screen without a jump.
     if (!await ads.isReady(InterstitialPlacement.splash)) {
+      debugPrint('[SplashAd] skipped: not ready after the bar and the wait');
       await _openLanguage();
       return;
     }
