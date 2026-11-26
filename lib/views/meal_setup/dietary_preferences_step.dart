@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/meal_setup_controller.dart';
+import '../../core/constants/app_assets.dart';
 import 'meal_setup_common.dart';
 import 'meal_setup_flow.dart';
 
@@ -61,19 +62,19 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
       body: Column(
         children: [
           _section(
-            image: _ic('diet_type'),
+            image: AppAssets.msDietType,
             title: 'ms_diet_type'.tr,
             subtitle: 'ms_choose_diet_type'.tr,
             child: _single(MealSetupOptions.dietTypes, c.dietType),
           ),
           _section(
-            image: _ic('cuisine_globe'),
+            image: AppAssets.msDietCuisine,
             title: 'ms_cuisine_preference'.tr,
             subtitle: 'ms_select_favorite_cuisine'.tr,
             child: _single(MealSetupOptions.cuisines, c.cuisine),
           ),
           _section(
-            image: _ic('foods_dislike'),
+            image: AppAssets.msDietFoodsDislike,
             title: 'ms_foods_you_dislike'.tr,
             subtitle: 'ms_select_foods_dislike'.tr,
             child: Column(
@@ -109,19 +110,19 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
             ),
           ),
           _section(
-            image: _ic('meals_per_day'),
+            image: AppAssets.msDietMealsPerDay,
             title: 'ms_meals_per_day'.tr,
             subtitle: 'ms_how_many_meals'.tr,
             child: _single(MealSetupOptions.mealsPerDay, c.mealsPerDay),
           ),
           _section(
-            image: _ic('cooking_preference'),
+            image: AppAssets.msDietCookingPreference,
             title: 'ms_cooking_preference'.tr,
             subtitle: 'ms_preferred_cooking_style'.tr,
             child: _single(MealSetupOptions.cooking, c.cooking),
           ),
           _section(
-            image: _ic('budget_wallet'),
+            image: AppAssets.msDietBudget,
             title: 'ms_budget'.tr,
             subtitle: 'ms_select_budget'.tr,
             child: _single(MealSetupOptions.budget, c.budget),
@@ -185,9 +186,6 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
       ),
     );
   }
-
-  static String _ic(String name) =>
-      'assets/images/meal_setup/ic_3d_diet_$name.png';
 
   Widget _section({
     required String image,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/meal_setup_controller.dart';
+import '../../core/constants/app_assets.dart';
 import '../insights/meal_screens.dart';
 import 'dietary_preferences_step.dart';
 import 'food_allergies_step.dart';
@@ -110,89 +111,71 @@ class SetupOption {
 }
 
 abstract class MealSetupOptions {
-  static const String _cond = 'assets/images/meal_setup';
-
   static const medical = [
     SetupOption(
       'diabetes',
       'ms_diabetes',
       sub: 'ms_diabetes_sub',
-      image: '$_cond/ic_3d_cond_diabetes.png',
+      image: AppAssets.msCondDiabetes,
     ),
-    SetupOption(
-      'high_bp',
-      'ms_high_bp',
-      image: '$_cond/ic_3d_cond_high_bp.png',
-    ),
+    SetupOption('high_bp', 'ms_high_bp', image: AppAssets.msCondHighBp),
     SetupOption(
       'cholesterol',
       'ms_cholesterol',
-      image: '$_cond/ic_3d_cond_cholesterol.png',
+      image: AppAssets.msCondCholesterol,
     ),
     SetupOption(
       'heart',
       'ms_heart_disease',
-      image: '$_cond/ic_3d_cond_heart_disease.png',
+      image: AppAssets.msCondHeartDisease,
     ),
     SetupOption(
       'kidney',
       'ms_kidney_disease',
-      image: '$_cond/ic_3d_cond_kidney_disease.png',
+      image: AppAssets.msCondKidneyDisease,
     ),
     SetupOption(
       'liver',
       'ms_liver_disease',
-      image: '$_cond/ic_3d_cond_liver_disease.png',
+      image: AppAssets.msCondLiverDisease,
     ),
-    SetupOption(
-      'thyroid',
-      'ms_thyroid',
-      image: '$_cond/ic_3d_cond_thyroid.png',
-    ),
+    SetupOption('thyroid', 'ms_thyroid', image: AppAssets.msCondThyroid),
     SetupOption(
       'pcos',
       'ms_pcos',
       sub: 'ms_pcos_sub',
-      image: '$_cond/ic_3d_cond_pcos.png',
+      image: AppAssets.msCondPcos,
     ),
-    SetupOption('celiac', 'ms_celiac', image: '$_cond/ic_3d_cond_celiac.png'),
-    SetupOption('gout', 'ms_gout', image: '$_cond/ic_3d_cond_gout.png'),
+    SetupOption('celiac', 'ms_celiac', image: AppAssets.msCondCeliac),
+    SetupOption('gout', 'ms_gout', image: AppAssets.msCondGout),
     SetupOption(
       'gerd',
       'ms_acid_reflux',
       sub: 'ms_acid_reflux_sub',
-      image: '$_cond/ic_3d_cond_gerd.png',
+      image: AppAssets.msCondGerd,
     ),
-    SetupOption('anemia', 'ms_anemia', image: '$_cond/ic_3d_cond_anemia.png'),
+    SetupOption('anemia', 'ms_anemia', image: AppAssets.msCondAnemia),
   ];
 
   static const allergies = [
-    SetupOption(
-      'peanuts',
-      'ms_peanuts',
-      image: '$_cond/ic_3d_allergy_peanuts.png',
-    ),
-    SetupOption('dairy', 'ms_dairy', image: '$_cond/ic_3d_allergy_dairy.png'),
-    SetupOption('eggs', 'ms_eggs', image: '$_cond/ic_3d_allergy_eggs.png'),
-    SetupOption(
-      'gluten',
-      'ms_gluten',
-      image: '$_cond/ic_3d_allergy_gluten.png',
-    ),
+    SetupOption('peanuts', 'ms_peanuts', image: AppAssets.msAllergyPeanuts),
+    SetupOption('dairy', 'ms_dairy', image: AppAssets.msAllergyDairy),
+    SetupOption('eggs', 'ms_eggs', image: AppAssets.msAllergyEggs),
+    SetupOption('gluten', 'ms_gluten', image: AppAssets.msAllergyGluten),
     SetupOption(
       'shellfish',
       'ms_shellfish',
       sub: 'ms_shellfish_sub',
-      image: '$_cond/ic_3d_allergy_shellfish.png',
+      image: AppAssets.msAllergyShellfish,
     ),
     SetupOption(
       'tree_nuts',
       'ms_tree_nuts',
       sub: 'ms_tree_nuts_sub',
-      image: '$_cond/ic_3d_allergy_tree_nuts.png',
+      image: AppAssets.msAllergyTreeNuts,
     ),
-    SetupOption('soy', 'ms_soy', image: '$_cond/ic_3d_allergy_soy.png'),
-    SetupOption('fish', 'ms_fish', image: '$_cond/ic_3d_allergy_fish.png'),
+    SetupOption('soy', 'ms_soy', image: AppAssets.msAllergySoy),
+    SetupOption('fish', 'ms_fish', image: AppAssets.msAllergyFish),
   ];
 
   static const dietTypes = [

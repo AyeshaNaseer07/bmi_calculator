@@ -35,7 +35,6 @@ const Color kMsBlueSoft = Color(0xFFE3F1FD);
 
 /// Images and icons for the setup flow.
 abstract class MealSetupAssets {
-  static const String _img = 'assets/images/meal_setup';
   static const String _ic = 'assets/icons';
 
   /// Hero ids, one per screen.
@@ -56,11 +55,11 @@ abstract class MealSetupAssets {
   }
 
   // 3D section icons (mint tile baked in).
-  static const String icHealthProfile = '$_img/ic_3d_health_profile.png';
-  static const String icMedical = '$_img/ic_3d_medical_conditions.png';
-  static const String icAllergies = '$_img/ic_3d_food_allergies.png';
-  static const String icDiet = '$_img/ic_3d_dietary_preferences.png';
-  static const String icLifestyle = '$_img/ic_3d_lifestyle_info.png';
+  static const String icHealthProfile = AppAssets.msHealthProfile;
+  static const String icMedical = AppAssets.msMedicalConditions;
+  static const String icAllergies = AppAssets.msFoodAllergies;
+  static const String icDiet = AppAssets.msDietaryPreferences;
+  static const String icLifestyle = AppAssets.msLifestyleInfo;
 
   // Vector icons.
   static const String cardArrow = '$_ic/ms_card_arrow_right.svg';
@@ -88,12 +87,12 @@ abstract class MealSetupAssets {
   static const String genderOther = '$_ic/ms_gender_other.svg';
 
   // Health Profile field icons.
-  static const String icAge = '$_img/ic_3d_age.png';
-  static const String icGender = '$_img/ic_3d_gender.png';
-  static const String icHeight = '$_img/ic_3d_height.png';
-  static const String icWeight = '$_img/ic_3d_current_weight.png';
-  static const String icGoal = '$_img/ic_3d_health_goal.png';
-  static const String icActivity = '$_img/ic_3d_activity_level.png';
+  static const String icAge = AppAssets.msAge;
+  static const String icGender = AppAssets.msGender;
+  static const String icHeight = AppAssets.msHeight;
+  static const String icWeight = AppAssets.msCurrentWeight;
+  static const String icGoal = AppAssets.msHealthGoal;
+  static const String icActivity = AppAssets.msActivityLevel;
 }
 
 TextStyle msTitle(double size, {Color color = kMsNavy}) => TextStyle(

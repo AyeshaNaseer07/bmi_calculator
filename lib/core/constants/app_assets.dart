@@ -9,8 +9,7 @@ abstract class AppAssets {
   static const String foodCompleteLottie = '$_lottiesBase/food_complete.json';
   static const String statsLottie = '$_lottiesBase/stats.json';
   static const String navAddLottie = '$_lottiesBase/bmi_home.json';
-  static const String forwardArrowLottie =
-      '$_lottiesBase/forward_arrow.json';
+  static const String forwardArrowLottie = '$_lottiesBase/forward_arrow.json';
   static const String weightTrackingLottie =
       '$_lottiesBase/weight_tracking.json';
 
@@ -152,4 +151,76 @@ abstract class AppAssets {
   // ── Meal plan / hydration / activity screens ──
   static const String flowerIcon = '$_imagesBase/flower.webp';
   static const String tipBulbIcon = '$_imagesBase/tip.webp';
+
+  // ── Meal setup (3D icons) ──
+  static const String _mealSetupBase = '$_imagesBase/meal_setup';
+
+  // Step / section icons
+  static const String msHealthProfile =
+      '$_mealSetupBase/ic_3d_health_profile.webp';
+  static const String msMedicalConditions =
+      '$_mealSetupBase/ic_3d_medical_conditions.webp';
+  static const String msFoodAllergies =
+      '$_mealSetupBase/ic_3d_food_allergies.webp';
+  static const String msDietaryPreferences =
+      '$_mealSetupBase/ic_3d_dietary_preferences.webp';
+  static const String msLifestyleInfo =
+      '$_mealSetupBase/ic_3d_lifestyle_info.webp';
+
+  // Health profile fields
+  static const String msAge = '$_mealSetupBase/ic_3d_age.webp';
+  static const String msGender = '$_mealSetupBase/ic_3d_gender.webp';
+  static const String msHeight = '$_mealSetupBase/ic_3d_height.webp';
+  static const String msCurrentWeight =
+      '$_mealSetupBase/ic_3d_current_weight.webp';
+  static const String msHealthGoal = '$_mealSetupBase/ic_3d_health_goal.webp';
+  static const String msActivityLevel =
+      '$_mealSetupBase/ic_3d_activity_level.webp';
+
+  // Medical conditions
+  static const String msCondDiabetes =
+      '$_mealSetupBase/ic_3d_cond_diabetes.webp';
+  static const String msCondHighBp = '$_mealSetupBase/ic_3d_cond_high_bp.webp';
+  static const String msCondCholesterol =
+      '$_mealSetupBase/ic_3d_cond_cholesterol.webp';
+  static const String msCondHeartDisease =
+      '$_mealSetupBase/ic_3d_cond_heart_disease.webp';
+  static const String msCondKidneyDisease =
+      '$_mealSetupBase/ic_3d_cond_kidney_disease.webp';
+  static const String msCondLiverDisease =
+      '$_mealSetupBase/ic_3d_cond_liver_disease.webp';
+  static const String msCondThyroid = '$_mealSetupBase/ic_3d_cond_thyroid.webp';
+  static const String msCondPcos = '$_mealSetupBase/ic_3d_cond_pcos.webp';
+  static const String msCondCeliac = '$_mealSetupBase/ic_3d_cond_celiac.webp';
+  static const String msCondGout = '$_mealSetupBase/ic_3d_cond_gout.webp';
+  static const String msCondGerd = '$_mealSetupBase/ic_3d_cond_gerd.webp';
+  static const String msCondAnemia = '$_mealSetupBase/ic_3d_cond_anemia.webp';
+
+  // Food allergies
+  static const String msAllergyPeanuts =
+      '$_mealSetupBase/ic_3d_allergy_peanuts.webp';
+  static const String msAllergyDairy =
+      '$_mealSetupBase/ic_3d_allergy_dairy.webp';
+  static const String msAllergyEggs = '$_mealSetupBase/ic_3d_allergy_eggs.webp';
+  static const String msAllergyGluten =
+      '$_mealSetupBase/ic_3d_allergy_gluten.webp';
+  static const String msAllergyShellfish =
+      '$_mealSetupBase/ic_3d_allergy_shellfish.webp';
+  static const String msAllergyTreeNuts =
+      '$_mealSetupBase/ic_3d_allergy_tree_nuts.webp';
+  static const String msAllergySoy = '$_mealSetupBase/ic_3d_allergy_soy.webp';
+  static const String msAllergyFish = '$_mealSetupBase/ic_3d_allergy_fish.webp';
+
+  // Dietary preferences
+  static const String msDietType = '$_mealSetupBase/ic_3d_diet_diet_type.webp';
+  static const String msDietCuisine =
+      '$_mealSetupBase/ic_3d_diet_cuisine_globe.webp';
+  static const String msDietFoodsDislike =
+      '$_mealSetupBase/ic_3d_diet_foods_dislike.webp';
+  static const String msDietMealsPerDay =
+      '$_mealSetupBase/ic_3d_diet_meals_per_day.webp';
+  static const String msDietCookingPreference =
+      '$_mealSetupBase/ic_3d_diet_cooking_preference.webp';
+  static const String msDietBudget =
+      '$_mealSetupBase/ic_3d_diet_budget_wallet.webp';
 }
