@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/app_palette.dart';
+import 'language_button.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -13,12 +14,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBackPressed;
   final Widget? trailing;
 
+  /// Shows the language shortcut when no [trailing] widget is given.
+  final bool showLanguageButton;
+
   const CustomAppBar({
     super.key,
     required this.title,
     this.showBackButton = true,
     this.onBackPressed,
     this.trailing,
+    this.showLanguageButton = true,
   });
 
   @override
@@ -27,6 +32,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final canShowBack = showBackButton && Navigator.of(context).canPop();
+    final trailingWidget =
+        trailing ?? (showLanguageButton ? const LanguageButton() : null);
 
     return SafeArea(
       bottom: false,
@@ -58,10 +65,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-            if (trailing != null)
+            if (trailingWidget != null)
               Align(
                 alignment: AlignmentDirectional.centerEnd,
-                child: trailing!,
+                child: trailingWidget,
               ),
           ],
         ),

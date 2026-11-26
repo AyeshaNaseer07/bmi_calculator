@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../core/constants/app_assets.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/language_button.dart';
 import '../../core/theme/app_palette.dart';
 import '../../controllers/app_controller.dart';
 
@@ -156,6 +157,7 @@ class InsightHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trailingWidget = trailing ?? const LanguageButton();
     return Padding(
       padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 10.h),
       child: SizedBox(
@@ -197,11 +199,10 @@ class InsightHeader extends StatelessWidget {
                 ),
               ),
             ),
-            if (trailing != null)
-              Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: trailing!,
-              ),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: trailingWidget,
+            ),
           ],
         ),
       ),

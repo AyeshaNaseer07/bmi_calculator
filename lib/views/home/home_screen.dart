@@ -23,6 +23,7 @@ import '../insights/nutrition_screens.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_gradient_button.dart';
+import '../widgets/language_button.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/rtl.dart';
 import '../../core/utils/responsive.dart';
@@ -124,7 +125,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 4.h),
-                          _buildTopBar(),
+                          // Nudged up without moving the content below.
+                          Transform.translate(
+                            offset: Offset(0, -8.h),
+                            child: _buildTopBar(),
+                          ),
                           SizedBox(height: 28.h),
                           Obx(() {
                             final hasData = bmiController.bmiHistory.isNotEmpty;
@@ -234,37 +239,48 @@ class _HomeScreenState extends State<HomeScreen> {
             }),
           ),
         ),
-        Obx(() {
-          final appController = Get.find<AppController>();
-          if (appController.isPremium.value) {
-            return SizedBox(width: size, height: size);
-          }
-          return Semantics(
-            button: true,
-            label: 'upgrade_to_premium'.tr,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => Get.toNamed(AppRoutes.paywall),
-              child: Container(
-                width: 38.w,
-                height: 38.w,
-                alignment: AlignmentDirectional.centerEnd,
-                child: Transform.translate(
-                  offset: Offset(0, -3.5.w),
-                  child: Lottie.asset(
-                    AppAssets.premiumLottie,
-                    width: 38.w,
-                    height: 38.w,
-                    fit: BoxFit.contain,
-                    alignment: AlignmentDirectional.centerEnd,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildPremiumButton(size),
+            SizedBox(width: 10.w),
+            LanguageButton(size: 40.w),
+          ],
+        ),
       ],
     );
+  }
+
+  Widget _buildPremiumButton(double size) {
+    return Obx(() {
+      final appController = Get.find<AppController>();
+      if (appController.isPremium.value) {
+        return const SizedBox.shrink();
+      }
+      return Semantics(
+        button: true,
+        label: 'upgrade_to_premium'.tr,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Get.toNamed(AppRoutes.paywall),
+          child: Container(
+            width: 38.w,
+            height: 38.w,
+            alignment: AlignmentDirectional.centerEnd,
+            child: Transform.translate(
+              offset: Offset(0, -3.5.w),
+              child: Lottie.asset(
+                AppAssets.premiumLottie,
+                width: 38.w,
+                height: 38.w,
+                fit: BoxFit.contain,
+                alignment: AlignmentDirectional.centerEnd,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   String _categoryHeadline(BMICategory category) {
