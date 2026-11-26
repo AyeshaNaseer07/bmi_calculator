@@ -528,8 +528,8 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 18.w,
-          height: 9.h,
+          width: 8.5.w,
+          height: 8.5.h,
           decoration: BoxDecoration(
             color: _gaugeColors[c],
             borderRadius: BorderRadius.circular(5.r),

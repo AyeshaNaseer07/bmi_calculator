@@ -82,7 +82,7 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
                     ),
                   ),
                 ),
-                SizedBox(width: 14.w),
+                SizedBox(width: 12.w),
                 Expanded(
                   flex: 5,
                   child: Text('ms_other_food_allergy'.tr, style: _titleStyle),
@@ -131,21 +131,26 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
     fontWeight: FontWeight.w700,
   );
 
-  /// 72×42 mint pill holding the item icon.
+  static const Color _tileMint = Color(0xFFE7FCF5);
+
+  /// Same size, radius and mint as the baked allergen icon tiles.
   Widget _pill({required Widget child}) => Container(
-    width: 72.w,
-    height: 42.w,
+    width: _tileW,
+    height: _tileH,
     alignment: Alignment.center,
     decoration: BoxDecoration(
-      color: kMsMint,
-      borderRadius: BorderRadius.circular(12.r),
+      color: _tileMint,
+      borderRadius: BorderRadius.circular(14.r),
     ),
     child: child,
   );
 
+  double get _tileW => 52.w;
+  double get _tileH => 58.w / 1.38;
+
   Widget _row(SetupOption o) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 5.h),
       child: Obx(() {
         final on = c.allergies.contains(o.key);
         return Semantics(
@@ -157,19 +162,21 @@ class _FoodAllergiesStepState extends State<FoodAllergiesStep> {
             onTap: () => c.toggleAllergy(o.key),
             padding: EdgeInsetsDirectional.fromSTEB(10.w, 7.h, 16.w, 7.h),
             child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: 42.w),
+              constraints: BoxConstraints(minHeight: _tileH),
               child: Row(
                 children: [
-                  // 3D icon already has its mint pill baked in.
                   ExcludeSemantics(
-                    child: Image.asset(
-                      o.image!,
-                      width: 72.w,
-                      height: 42.w,
-                      fit: BoxFit.contain,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14.r),
+                      child: Image.asset(
+                        o.image!,
+                        width: _tileW,
+                        height: _tileH,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 14.w),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

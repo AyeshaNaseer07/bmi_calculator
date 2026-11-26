@@ -145,7 +145,7 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
   Widget _single(List<SetupOption> options, RxnString value) {
     return Obx(
       () => Wrap(
-        spacing: 8.w,
+        spacing: 6.w,
         runSpacing: 8.h,
         children: [
           for (final o in options)

@@ -283,8 +283,14 @@ class SetupHero extends StatelessWidget {
             shaderCallback: (r) => const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.black, Colors.black, Colors.transparent],
-              stops: [0, 0.84, 1],
+              colors: [
+                Colors.transparent,
+                Colors.black54,
+                Colors.black,
+                Colors.black,
+                Colors.transparent,
+              ],
+              stops: [0, 0.08, 0.18, 0.84, 1],
             ).createShader(r),
             child: _homeArtCrop(homeArt),
           ),
@@ -294,10 +300,6 @@ class SetupHero extends StatelessWidget {
   }
 
   static const double _homeArtZoom = 1125 / 780;
-
-  /// How far the avatar is raised inside the hero box (in .h units).
-  static const double _homeArtLift = 15;
-
   Widget _homeArtCrop(String asset) => ClipRect(
     child: SizedBox(
       width: width,
@@ -307,16 +309,13 @@ class SetupHero extends StatelessWidget {
         minWidth: width * _homeArtZoom,
         maxWidth: width * _homeArtZoom,
         maxHeight: double.infinity,
-        child: Transform.translate(
-          offset: Offset(0, -_homeArtLift.h),
-          child: Image.asset(
-            asset,
-            key: ValueKey(asset),
-            width: width * _homeArtZoom,
-            fit: BoxFit.fitWidth,
-            alignment: Alignment.topRight,
-            errorBuilder: (_, _, _) => _placeholder(),
-          ),
+        child: Image.asset(
+          asset,
+          key: ValueKey(asset),
+          width: width * _homeArtZoom,
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.topRight,
+          errorBuilder: (_, _, _) => _placeholder(),
         ),
       ),
     ),
