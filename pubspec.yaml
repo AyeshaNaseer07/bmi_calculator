@@ -40,6 +40,7 @@ dependencies:
   in_app_purchase: ^3.3.1
   in_app_purchase_storekit: ^0.4.15
   flutter_svg: ^2.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
