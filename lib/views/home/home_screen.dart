@@ -586,7 +586,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.scaleDown,
                       alignment: AlignmentDirectional.centerStart,
                       child: Text(
-                        'Meal Plan to Maintain Weight',
+                        'home_meal_plan_title'.tr,
                         maxLines: 1,
                         style: TextStyle(
                           color: _navy,
@@ -619,7 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: EatBalancedMealsScreen.openMealPlan,
             leading: _tintedSvg(AppAssets.dashCrown, 20.w, _mintDeep),
             label: Text(
-              'Unlock Personalized Meals',
+              'unlock_personalized_meals'.tr,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

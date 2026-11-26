@@ -1488,7 +1488,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
                                 ),
-                                child: Center(
+                                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                alignment: Alignment.center,
+                                // Fixed-width button: long translations
+                                // shrink to fit instead of being cut off.
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
                                   child: Text(
                                     'calculate_bmi'.tr,
                                     style: TextStyle(
@@ -1497,7 +1502,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       color: Colors.white,
                                     ),
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),

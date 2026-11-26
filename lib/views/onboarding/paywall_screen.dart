@@ -461,16 +461,21 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               ],
                             ),
                             child: Center(
-                              child: Text(
-                                'or_caps'.tr,
-                                style: TextStyle(
-                                  color: _green,
-                                  fontSize: 9.sp,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'or_caps'.tr,
+                                    style: TextStyle(
+                                      color: _green,
+                                      fontSize: 9.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 1,
+                                  ),
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),
@@ -544,18 +549,20 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           width: 32.w,
                           child: Divider(height: 1, color: _lineColor),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          child: Text(
-                            'cancel_anytime'.tr,
-                            style: TextStyle(
-                              color: AppPalette.textSecondary,
-                              fontSize: 12.sp,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
+                        Flexible(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            child: Text(
+                              'cancel_anytime'.tr,
+                              style: TextStyle(
+                                color: AppPalette.textSecondary,
+                                fontSize: 12.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         SizedBox(

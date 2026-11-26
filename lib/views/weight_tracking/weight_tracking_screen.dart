@@ -233,19 +233,23 @@ class WeightTrackingScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
-                              width: 120.w,
-                              child: Text(
-                                'weight_progress'.tr,
-                                style: TextStyle(
-                                  color: AppPalette.textPrimary,
-                                  fontSize: 15.sp,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600,
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  'weight_progress'.tr,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: AppPalette.textPrimary,
+                                    fontSize: 15.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            SizedBox(width: 8.w),
                             Flexible(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,

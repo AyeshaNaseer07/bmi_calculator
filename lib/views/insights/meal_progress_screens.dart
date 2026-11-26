@@ -349,7 +349,16 @@ class MealProgressScreen extends StatelessWidget {
                   ),
                   child: Icon(icon, size: 20.sp, color: iconColor),
                 ),
-                trailing,
+                SizedBox(width: 6.w),
+                // Long translations ("Obiettivo: 21") shrink instead of
+                // overflowing the half-width card.
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: trailing,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 10.h),

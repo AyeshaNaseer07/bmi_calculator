@@ -571,12 +571,16 @@ class SetupBadge extends StatelessWidget {
             height: 16.w,
           ),
           SizedBox(width: 5.w),
-          Text(
-            required ? 'ms_required'.tr : 'ms_recommended'.tr,
-            style: msBody(
-              11,
-              color: required ? kMsGreenDeep : kMsBlue,
-              weight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              required ? 'ms_required'.tr : 'ms_recommended'.tr,
+              style: msBody(
+                11,
+                color: required ? kMsGreenDeep : kMsBlue,
+                weight: FontWeight.w600,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -926,13 +930,19 @@ class SetupBackButton extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 8.w),
-              Text(
-                'ms_back'.tr,
-                style: TextStyle(
-                  color: kMsGreen,
-                  fontSize: 17.sp,
-                  fontFamily: 'Outfit',
-                  fontWeight: FontWeight.w700,
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'ms_back'.tr,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: kMsGreen,
+                      fontSize: 17.sp,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
               ),
             ],

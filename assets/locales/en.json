@@ -994,5 +994,7 @@
   "cook_slow": "Busy kitchen today, still cooking…",
   "cook_chip_no": "No @item",
   "cook_in_the_pot": "In the pot",
-  "cook_ready": "Your Week @week menu is ready!"
+  "cook_ready": "Your Week @week menu is ready!",
+  "home_meal_plan_title": "Meal Plan to Maintain Weight",
+  "unlock_personalized_meals": "Unlock Personalized Meals"
 }

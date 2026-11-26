@@ -229,7 +229,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                 child: Column(
                   children: [
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: AnimatedOpacity(
                         opacity: _showCloseButton ? 1.0 : 0.0,
                         duration: const Duration(milliseconds: 300),
@@ -313,15 +313,18 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                               shape: BoxShape.circle,
                               border: Border.all(color: _ringBorder, width: 1),
                             ),
-                            child: Text(
-                              'or_caps'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textSecondary,
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.w700,
+                            padding: EdgeInsets.symmetric(horizontal: 3.w),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'or_caps'.tr,
+                                style: TextStyle(
+                                  color: AppPalette.textSecondary,
+                                  fontSize: 8.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -390,17 +393,19 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
                           width: 32.w,
                           child: Divider(height: 1, color: _lineColor),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          child: Text(
-                            'cancel_anytime'.tr,
-                            style: TextStyle(
-                              color: AppPalette.textSecondary,
-                              fontSize: 11.sp,
-                              fontFamily: 'Inter',
+                        Flexible(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            child: Text(
+                              'cancel_anytime'.tr,
+                              style: TextStyle(
+                                color: AppPalette.textSecondary,
+                                fontSize: 11.sp,
+                                fontFamily: 'Inter',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         SizedBox(
@@ -562,7 +567,7 @@ class _SoftPaywallScreenState extends State<SoftPaywallScreen> {
           child: LayoutBuilder(
             builder: (context, constraints) => FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: SizedBox(
                 width: constraints.maxWidth,
                 child: _featureText(f),

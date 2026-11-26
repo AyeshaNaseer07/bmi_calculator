@@ -429,14 +429,23 @@ class ProfileScreen extends StatelessWidget {
                                               vertical: 9.h,
                                             ),
                                           ),
-                                          child: Text(
-                                            'go_premium'.tr,
-                                            style: TextStyle(
-                                              fontSize: 11.sp,
-                                              fontWeight: FontWeight.w800,
+                                          // Caps the pill so long translations
+                                          // shrink rather than crush the title.
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                              maxWidth: 96.w,
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                'go_premium'.tr,
+                                                style: TextStyle(
+                                                  fontSize: 11.sp,
+                                                  fontWeight: FontWeight.w800,
+                                                ),
+                                                maxLines: 1,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),

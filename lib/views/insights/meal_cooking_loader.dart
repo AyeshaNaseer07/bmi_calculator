@@ -326,7 +326,8 @@ class _MealCookingLoaderState extends State<MealCookingLoader>
               height: 24.h,
               child: Stack(
                 clipBehavior: Clip.none,
-                alignment: Alignment.centerLeft,
+                // Fills from the start edge, so right-to-left in ar/ur.
+                alignment: AlignmentDirectional.centerStart,
                 children: [
                   Container(
                     height: 10.h,
@@ -350,8 +351,8 @@ class _MealCookingLoaderState extends State<MealCookingLoader>
                             ),
                           ),
                           // Moving shine across the filled part.
-                          Positioned(
-                            left: shine * (fill + 40) - 40,
+                          PositionedDirectional(
+                            start: shine * (fill + 40) - 40,
                             top: 0,
                             bottom: 0,
                             width: 40,
@@ -372,8 +373,8 @@ class _MealCookingLoaderState extends State<MealCookingLoader>
                     ),
                   ),
                   // A little pan riding the end of the bar.
-                  Positioned(
-                    left: (fill - pan / 2).clamp(0.0, math.max(0.0, w - pan)),
+                  PositionedDirectional(
+                    start: (fill - pan / 2).clamp(0.0, math.max(0.0, w - pan)),
                     child: Transform.rotate(
                       angle: math.sin(t * 7) * 0.18,
                       child: Text('🍳', style: TextStyle(fontSize: 18.sp)),
