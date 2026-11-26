@@ -8,6 +8,7 @@ import '../../core/routes/app_routes.dart';
 import '../../data/models/remote_model.dart';
 import '../../data/services/remote_config_service.dart';
 import '../widgets/ads/full_screen_native_ad_page.dart';
+import '../widgets/ads/max_native_ad.dart';
 import '../widgets/ads/native_ad_card.dart';
 import '../widgets/app_background.dart';
 import '../widgets/animated_cta_button.dart';
@@ -43,6 +44,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   late final bool _showFullScreenAd = _resolveShowFullScreenAd();
 
+  /// The full-screen ad page is dropped (before leaving page 0) when its ad
+  /// has failed, so the user never lands on an empty or loading ad page.
+  late bool _includeAdPage = _showFullScreenAd;
+
+  @override
+  void initState() {
+    super.initState();
+    // Another try if it failed on the language screen; no-op if loading.
+    if (_showFullScreenAd) NativeAds.preload(NativeAdPlacement.fullScreen);
+  }
+
   bool _resolveShowFullScreenAd() {
     if (Get.isRegistered<AppController>() &&
         Get.find<AppController>().isPremium.value) {
@@ -54,11 +66,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return remoteModel.isFullScreenNativeAdEnabled;
   }
 
-  int get _totalPages => _showFullScreenAd ? 4 : 3;
-  int get _adPageIndex => _showFullScreenAd ? 1 : -1;
-  int get _firstContentIndex => _showFullScreenAd ? 2 : 1;
+  int get _totalPages => _includeAdPage ? 4 : 3;
+  int get _adPageIndex => _includeAdPage ? 1 : -1;
+  int get _firstContentIndex => _includeAdPage ? 2 : 1;
+
+  /// Dots stay as first laid out, so none appears or vanishes mid-flow.
+  int get _dotCount => _showFullScreenAd ? 4 : 3;
+  int get _activeDot =>
+      _showFullScreenAd && !_includeAdPage && _currentIndex >= 1
+      ? _currentIndex + 1
+      : _currentIndex;
 
   void _onNext() {
+    if (_currentIndex == 0 && _includeAdPage) {
+      final state = NativeAds.of(NativeAdPlacement.fullScreen).state.value;
+      final hasAd =
+          state == MaxNativeAdState.loaded || state == MaxNativeAdState.loading;
+      if (!hasAd) {
+        // Drop the ad page, then slide straight to the next content page.
+        setState(() => _includeAdPage = false);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _onNext();
+        });
+        return;
+      }
+    }
     if (_pageController.hasClients) {
       if (_currentIndex < _totalPages - 1) {
         _pageController.nextPage(
@@ -99,18 +131,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
               children: [
                 // Page 0: with bottom native ad when it loads, otherwise the
-                if (_bmiAdAvailable)
-                  _buildBmiAdSlide()
-                else
-                  _buildContentSlide(
-                    imagePath: AppAssets.onboarding1,
-                    titlePrefix: 'bmi'.tr,
-                    titleHighlight: 'calculator'.tr,
-                    subtitle: 'track_your_bmi_monitor_your_progress'.tr,
-                  ),
+                // plain slide. A failed ad crossfades to it, no jump.
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
+                  child: _bmiAdAvailable
+                      ? KeyedSubtree(
+                          key: const ValueKey('bmi_ad_slide'),
+                          child: _buildBmiAdSlide(),
+                        )
+                      : KeyedSubtree(
+                          key: const ValueKey('bmi_plain_slide'),
+                          child: _buildContentSlide(
+                            imagePath: AppAssets.onboarding1,
+                            titlePrefix: 'bmi'.tr,
+                            titleHighlight: 'calculator'.tr,
+                            subtitle: 'track_your_bmi_monitor_your_progress'.tr,
+                          ),
+                        ),
+                ),
 
                 // Page 1: Full-Screen Native Ad (iPhone 13 mini - 59)
-                if (_showFullScreenAd) FullScreenNativeAdPage(onNext: _onNext),
+                if (_includeAdPage) FullScreenNativeAdPage(onNext: _onNext),
 
                 // Page 2: Weight Tracking (iPhone 13 mini - 65)
                 _buildContentSlide(
@@ -146,8 +189,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         // Dot Indicator (4 dots matching Figma)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(_totalPages, (index) {
-                            final isActive = index == _currentIndex;
+                          children: List.generate(_dotCount, (index) {
+                            final isActive = index == _activeDot;
                             return AnimatedContainer(
                               duration: const Duration(milliseconds: 250),
                               curve: Curves.easeInOut,
@@ -239,7 +282,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 // Dot Indicator (4 circular dots)
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: List.generate(_totalPages, (index) {
+                  children: List.generate(_dotCount, (index) {
                     final isActive = index == 0;
                     return Container(
                       margin: EdgeInsets.symmetric(horizontal: 4.w),

@@ -129,9 +129,9 @@ class _FullScreenNativeAdPageState extends State<FullScreenNativeAdPage> {
             bottom: padding.bottom + 16,
             left: 16,
             right: 16,
-            child: _isFailed
-                ? const SizedBox.shrink()
-                : _isLoaded
+            // On a failed load the placeholder stays while the page slides
+            // on, rather than flashing an empty page first.
+            child: _isLoaded && !_isFailed
                 ? MaxNativeAdView(ad: _ad)
                 : const MediumNativeAdShimmer(height: double.infinity),
           ),

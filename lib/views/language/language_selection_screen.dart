@@ -489,29 +489,35 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
               ),
           ],
         ),
-        bottomNavigationBar: _bottomAdAvailable
-            ? Container(
-                width: double.infinity,
-                color: _adBackground,
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0),
-                    child: NativeAdCard(
-                      placement: NativeAdPlacement.language,
-                      height: 290.h,
-                      backgroundColor: Colors.transparent,
-                      onAdAvailabilityChanged: (available) {
-                        if (!mounted) return;
-                        if (_bottomAdAvailable != available) {
-                          setState(() => _bottomAdAvailable = available);
-                        }
-                      },
+        // Folds away smoothly if the ad fails, so the list doesn't jump.
+        bottomNavigationBar: AnimatedSize(
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: _bottomAdAvailable
+              ? Container(
+                  width: double.infinity,
+                  color: _adBackground,
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0),
+                      child: NativeAdCard(
+                        placement: NativeAdPlacement.language,
+                        height: 290.h,
+                        backgroundColor: Colors.transparent,
+                        onAdAvailabilityChanged: (available) {
+                          if (!mounted) return;
+                          if (_bottomAdAvailable != available) {
+                            setState(() => _bottomAdAvailable = available);
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-              )
-            : null,
+                )
+              : const SizedBox(width: double.infinity),
+        ),
       ),
     );
   }

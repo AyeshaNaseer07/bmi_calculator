@@ -157,17 +157,25 @@ class NativeAdCard extends StatefulWidget {
 class _NativeAdCardState extends State<NativeAdCard> {
   late final MaxNativeAd _ad = NativeAds.of(widget.placement);
   bool _isFailed = false;
+
+  /// Ads were off when the card was built: it never takes any space.
+  bool _off = false;
   int _retries = 0;
   Timer? _retryTimer;
 
   static const int _maxRetries = 2;
   static const Duration _retryDelay = Duration(seconds: 3);
 
+  /// On a failed load the placeholder folds away over this long, instead of
+  /// vanishing in one frame and making the screen jump.
+  static const Duration _collapseDuration = Duration(milliseconds: 320);
+
   @override
   void initState() {
     super.initState();
     if (!NativeAds.isEnabled(widget.placement)) {
       _isFailed = true;
+      _off = true;
       _notifyAvailability(false);
       return;
     }
@@ -215,7 +223,10 @@ class _NativeAdCardState extends State<NativeAdCard> {
   void _fail() {
     if (_isFailed) return;
     setState(() => _isFailed = true);
-    _notifyAvailability(false);
+    // Tell the screen once the fold is done, so its own change comes after.
+    Future.delayed(_collapseDuration, () {
+      if (mounted) _notifyAvailability(false);
+    });
   }
 
   void _notifyAvailability(bool available) {
@@ -234,7 +245,8 @@ class _NativeAdCardState extends State<NativeAdCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isFailed || !NativeAds.isEnabled(widget.placement)) {
+    // Off from the start (premium, remote config): nothing to fold away.
+    if (_off || !NativeAds.isEnabled(widget.placement)) {
       return const SizedBox.shrink();
     }
     final effectiveHeight = widget.height ?? _kDefaultNativeAdHeight.h;
@@ -249,9 +261,26 @@ class _NativeAdCardState extends State<NativeAdCard> {
             ),
     );
 
-    if (widget.margin != null) {
-      return Padding(padding: widget.margin!, child: content);
-    }
-    return content;
+    final card = widget.margin != null
+        ? Padding(padding: widget.margin!, child: content)
+        : content;
+    if (!_isFailed) return card;
+
+    // Failed: the placeholder fades and folds up smoothly, then is gone.
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 1, end: 0),
+      duration: _collapseDuration,
+      curve: Curves.easeInOut,
+      child: card,
+      builder: (context, t, child) => t == 0
+          ? const SizedBox(width: double.infinity)
+          : ClipRect(
+              child: Align(
+                alignment: Alignment.topCenter,
+                heightFactor: t,
+                child: Opacity(opacity: t, child: child),
+              ),
+            ),
+    );
   }
 }

@@ -29,6 +29,9 @@ class InterstitialAdManager {
   bool _listening = false;
   final Map<String, Completer<void>> _loading = {};
   VoidCallback? _onDone;
+
+  /// A show is being decided (ready check in flight); repeat calls are ignored.
+  bool _starting = false;
   final ValueNotifier<bool> _showingNotifier = ValueNotifier(false);
 
   bool get _showing => _showingNotifier.value;
@@ -192,6 +195,21 @@ class InterstitialAdManager {
   }
 
   Future<void> show(
+    InterstitialPlacement placement, {
+    required VoidCallback onDone,
+    Duration? waitFor,
+  }) async {
+    // Double tap on close, or a second trigger: one show, one onDone.
+    if (_starting || _showing) return;
+    _starting = true;
+    try {
+      await _show(placement, onDone: onDone, waitFor: waitFor);
+    } finally {
+      _starting = false;
+    }
+  }
+
+  Future<void> _show(
     InterstitialPlacement placement, {
     required VoidCallback onDone,
     Duration? waitFor,
