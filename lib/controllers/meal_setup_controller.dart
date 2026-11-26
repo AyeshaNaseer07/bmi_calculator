@@ -109,8 +109,7 @@ class MealSetupController extends GetxController {
       activity.value != null &&
       sleep.value != null &&
       water.value != null &&
-      mealTiming.value != null &&
-      notes.value.trim().isNotEmpty;
+      mealTiming.value != null;
 
   bool isStepValid(int step) => switch (step) {
     1 => healthProfileValid,

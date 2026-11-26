@@ -514,6 +514,9 @@ class SetupChip extends StatelessWidget {
     this.icon,
   });
 
+  /// How much wider a chip gets when its check mark shows.
+  static double get checkExtraWidth => (6 + 16 + 4 - 10).w;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -526,9 +529,9 @@ class SetupChip extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           constraints: BoxConstraints(minHeight: 32.h),
           padding: EdgeInsetsDirectional.fromSTEB(
-            selected ? 7.w : 13.w,
+            selected ? 6.w : 10.w,
             5.h,
-            13.w,
+            10.w,
             5.h,
           ),
           decoration: BoxDecoration(
@@ -545,40 +548,44 @@ class SetupChip extends StatelessWidget {
               if (selected) ...[
                 SvgPicture.asset(
                   MealSetupAssets.checkActive,
-                  width: 19.w,
-                  height: 19.w,
+                  width: 16.w,
+                  height: 16.w,
                 ),
-                SizedBox(width: 6.w),
+                SizedBox(width: 4.w),
               ] else if (icon != null) ...[
                 Icon(icon, size: 18.w, color: AppPalette.textSecondary),
                 SizedBox(width: 6.w),
               ],
-              Flexible(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+              // No Flexible: chips sit in one-line rows that are scaled to
+              // fit, where the row's width is unbounded.
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: msBody(
+                      12.5,
+                      color: selected ? kMsGreenDeep : kMsChipText,
+                      weight: selected ? FontWeight.w600 : FontWeight.w500,
+                    ),
+                  ),
+                  if (sublabel != null)
                     Text(
-                      label,
+                      sublabel!,
                       textAlign: TextAlign.center,
+                      maxLines: 1,
+                      softWrap: false,
                       style: msBody(
-                        12.5,
-                        color: selected ? kMsGreenDeep : kMsChipText,
-                        weight: selected ? FontWeight.w600 : FontWeight.w500,
+                        10,
+                        color: selected
+                            ? kMsGreenDeep
+                            : AppPalette.textSecondary,
                       ),
                     ),
-                    if (sublabel != null)
-                      Text(
-                        sublabel!,
-                        textAlign: TextAlign.center,
-                        style: msBody(
-                          10,
-                          color: selected
-                              ? kMsGreenDeep
-                              : AppPalette.textSecondary,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
             ],
           ),

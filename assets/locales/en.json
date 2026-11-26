@@ -1153,5 +1153,5 @@
   "ms_fill_allergies": "Select your allergies, type one, or choose \"No food allergies\".",
   "ms_fill_diet": "Please answer every question on this page. Choose \"None\" if there are no foods you dislike.",
   "ms_fill_other_dislike": "You chose \"Other\" — please type the foods you dislike.",
-  "ms_fill_lifestyle": "Please answer every question, including Additional Notes."
+  "ms_fill_lifestyle": "Please answer every question. Additional Notes are optional."
 }

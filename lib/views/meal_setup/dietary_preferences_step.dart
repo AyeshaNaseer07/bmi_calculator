@@ -80,17 +80,10 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Obx(
-                  () => Wrap(
-                    spacing: 8.w,
-                    runSpacing: 8.h,
-                    children: [
-                      for (final o in MealSetupOptions.dislikes)
-                        SetupChip(
-                          label: o.label.tr,
-                          selected: c.dislikes.contains(o.key),
-                          onTap: () => c.toggleDislike(o.key),
-                        ),
-                    ],
+                  () => _chipLine(
+                    MealSetupOptions.dislikes,
+                    isOn: c.dislikes.contains,
+                    onTap: c.toggleDislike,
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -144,16 +137,50 @@ class _DietaryPreferencesStepState extends State<DietaryPreferencesStep> {
   /// Single-choice chips; tapping the selected chip clears it.
   Widget _single(List<SetupOption> options, RxnString value) {
     return Obx(
-      () => Wrap(
-        spacing: 6.w,
-        runSpacing: 8.h,
+      () => _chipLine(
+        options,
+        isOn: (k) => value.value == k,
+        onTap: (k) => value.value = value.value == k ? null : k,
+      ),
+    );
+  }
+
+  /// All chips on one line, scaled down when they don't fit the card.
+  /// An invisible copy (with room for one check mark) sets the size, so
+  /// the row doesn't rescale when a chip is selected.
+  Widget _chipLine(
+    List<SetupOption> options, {
+    required bool Function(String key) isOn,
+    required void Function(String key) onTap,
+  }) {
+    Widget row({required bool ghost}) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < options.length; i++) ...[
+          if (i > 0) SizedBox(width: 5.w),
+          SetupChip(
+            label: options[i].label.tr,
+            selected: !ghost && isOn(options[i].key),
+            onTap: () => onTap(options[i].key),
+          ),
+        ],
+        if (ghost) SizedBox(width: SetupChip.checkExtraWidth),
+      ],
+    );
+
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: AlignmentDirectional.centerStart,
+      child: Stack(
         children: [
-          for (final o in options)
-            SetupChip(
-              label: o.label.tr,
-              selected: value.value == o.key,
-              onTap: () => value.value = value.value == o.key ? null : o.key,
-            ),
+          Visibility(
+            visible: false,
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            child: row(ghost: true),
+          ),
+          row(ghost: false),
         ],
       ),
     );

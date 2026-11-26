@@ -94,7 +94,8 @@ class _LifestyleStepState extends State<LifestyleStep> {
             icon: MealSetupAssets.secSleep,
             title: 'ms_sleep_duration'.tr,
             subtitle: 'ms_hours_sleep'.tr,
-            child: Obx(
+            // Header row (icon, title, subtitle), then the picker below it.
+            fullWidth: Obx(
               () => SetupDropdown<SetupOption>(
                 hint: 'ms_select_hours'.tr,
                 height: 48,
@@ -112,7 +113,7 @@ class _LifestyleStepState extends State<LifestyleStep> {
             icon: MealSetupAssets.secWater,
             title: 'ms_daily_water_intake'.tr,
             subtitle: 'ms_how_much_water'.tr,
-            child: Obx(
+            fullWidth: Obx(
               () => _optionRow([
                 for (final o in MealSetupOptions.water)
                   _OptionTile(
@@ -147,7 +148,7 @@ class _LifestyleStepState extends State<LifestyleStep> {
             icon: MealSetupAssets.secNotes,
             title: 'ms_additional_notes'.tr,
             subtitle: 'ms_additional_notes_hint'.tr,
-            child: _notesBox(),
+            fullWidth: _notesBox(),
           ),
         ],
       ),
@@ -251,12 +252,12 @@ class _LifestyleStepState extends State<LifestyleStep> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ExcludeSemantics(
                   child: Container(
-                    width: 56.w,
-                    height: 56.w,
+                    width: 48.w,
+                    height: 42.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: kMsMint,
@@ -309,7 +310,6 @@ class _OptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showMark = checkbox || selected;
     return Semantics(
       button: true,
       selected: selected,
@@ -333,10 +333,6 @@ class _OptionTile extends StatelessWidget {
                 ? MainAxisAlignment.start
                 : MainAxisAlignment.center,
             children: [
-              if (showMark) ...[
-                SetupCheckBox(checked: selected, size: big ? 22 : 19),
-                SizedBox(width: 5.w),
-              ],
               Flexible(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

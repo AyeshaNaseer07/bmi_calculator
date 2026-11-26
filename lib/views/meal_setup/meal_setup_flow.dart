@@ -202,8 +202,6 @@ abstract class MealSetupOptions {
   ];
 
   static const cuisines = [
-    SetupOption('pakistani', 'ms_pakistani'),
-    SetupOption('indian', 'ms_indian'),
     SetupOption('asian', 'ms_asian'),
     SetupOption('mediterranean', 'ms_mediterranean'),
     SetupOption('other', 'other'),
@@ -212,8 +210,6 @@ abstract class MealSetupOptions {
   static const dislikes = [
     SetupOption('meat', 'ms_meat'),
     SetupOption('seafood', 'ms_seafood'),
-    SetupOption('spicy', 'ms_spicy_food'),
-    SetupOption('vegetables', 'ms_vegetables'),
     SetupOption('other', 'other'),
     SetupOption(MealSetupController.noDislikesKey, 'ms_none'),
   ];
