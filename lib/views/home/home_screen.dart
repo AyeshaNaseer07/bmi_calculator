@@ -1153,8 +1153,9 @@ class _AnimatedUnlockPillState extends State<_AnimatedUnlockPill>
                 borderRadius: radius,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF17B890)
-                        .withValues(alpha: 0.10 + 0.14 * pulse.value),
+                    color: AppColors.primaryTeal.withValues(
+                      alpha: 0.10 + 0.14 * pulse.value,
+                    ),
                     blurRadius: 8.r + 6.r * pulse.value,
                     offset: Offset(0, 3.h),
                   ),
@@ -1168,11 +1169,16 @@ class _AnimatedUnlockPillState extends State<_AnimatedUnlockPill>
             child: Stack(
               children: [
                 Container(
-                  height: 44.h,
+                  height: 46.h,
                   padding: EdgeInsets.symmetric(horizontal: 14.w),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFC8F3E2), Color(0xFFDDF8EC)],
+                  decoration: BoxDecoration(
+                    borderRadius: radius,
+                    border: Border.all(color: AppPalette.mintBorder),
+                    gradient: const LinearGradient(
+                      colors: [
+                        AppPalette.surfaceMintDeep,
+                        AppPalette.surfaceMint,
+                      ],
                     ),
                   ),
                   child: Row(

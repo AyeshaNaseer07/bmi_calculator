@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,21 +25,17 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _progressController;
-  late Animation<double> _progressAnimation;
-  static const int _splashSeconds = 3;
-  static const Duration _splashAdWait = Duration(seconds: 4);
+  static const Duration _barDuration = Duration(seconds: 6);
+
+  /// The ad is shown as the bar passes this point.
+  static const double _adAt = 0.99;
 
   @override
   void initState() {
     super.initState();
-
     _progressController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: _splashSeconds),
-    );
-
-    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
+      duration: _barDuration,
     );
   }
 
@@ -64,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen>
     }
     _allowFirstFrame();
     if (!mounted) return;
-    _progressController.forward();
     _startUp();
   }
 
@@ -74,38 +71,80 @@ class _SplashScreenState extends State<SplashScreen>
     WidgetsBinding.instance.allowFirstFrame();
   }
 
+  /// Completes when the bar reaches [point].
+  Future<void> _barReaches(double point) {
+    final reached = Completer<void>();
+    void check() {
+      if (_progressController.value >= point && !reached.isCompleted) {
+        reached.complete();
+        _progressController.removeListener(check);
+      }
+    }
+
+    _progressController.addListener(check);
+    check();
+    return reached.future;
+  }
+
+  /// Time the bar still needs to reach [_adAt].
+  Duration get _barTimeLeft {
+    final left = (_adAt - _progressController.value).clamp(0.0, 1.0);
+    return _barDuration * left;
+  }
+
   Future<void> _startUp() async {
-    await Future.wait([
-      AppStartup.run(),
-      Future<void>.delayed(const Duration(seconds: _splashSeconds)),
-    ]);
+    // Linear: the same speed from start to end.
+    final barDone = _barReaches(_adAt);
+    _progressController.forward();
+    await AppStartup.run();
     if (!mounted) return;
+    // Waits for the language native at most until the bar is done.
+    _languageAd = NativeAds.waitForLoad(
+      NativeAdPlacement.language,
+      timeout: _barTimeLeft,
+    );
     if (Get.isRegistered<AppController>()) {
       await Get.find<AppController>().subscriptionVerified.timeout(
-        const Duration(seconds: 4),
+        _barTimeLeft,
         onTimeout: () {},
       );
     }
+    await barDone;
     if (!mounted) return;
     final isPremium =
         Get.isRegistered<AppController>() &&
         Get.find<AppController>().isPremium.value;
     if (isPremium) {
+      await _barReaches(1);
+      if (!mounted) return;
       Get.offAllNamed(AppRoutes.home);
       return;
     }
-    await InterstitialAdManager.instance.show(
+    final ads = InterstitialAdManager.instance;
+    // Load failed or still loading: no ad, so let the bar fill completely
+    // first, then open the language screen without a jump.
+    if (!await ads.isReady(InterstitialPlacement.splash)) {
+      await _openLanguage();
+      return;
+    }
+    // Ready: shows now, as the bar passes 99%.
+    await ads.show(
       InterstitialPlacement.splash,
-      waitFor: _splashAdWait,
       onDone: _openLanguage,
     );
   }
 
+  Future<void>? _languageAd;
+
+  bool _leaving = false;
+
+  /// Also the ad's onDone: runs on close, on a failed show, or on timeout.
   Future<void> _openLanguage() async {
-    await NativeAds.waitForLoad(
-      NativeAdPlacement.language,
-      timeout: _splashAdWait,
-    );
+    if (_leaving) return;
+    _leaving = true;
+    // Behind a shown ad the bar is already full; after a failed show it
+    // finishes its last sliver first, so the screen never cuts away early.
+    await Future.wait([_barReaches(1), ?_languageAd]);
     if (!mounted) return;
     Get.offAllNamed(AppRoutes.languageSelection);
   }
@@ -184,12 +223,12 @@ class _SplashScreenState extends State<SplashScreen>
                               ],
                             ),
                             child: AnimatedBuilder(
-                              animation: _progressAnimation,
+                              animation: _progressController,
                               builder: (context, child) {
                                 return Align(
                                   alignment: AlignmentDirectional.centerStart,
                                   child: Container(
-                                    width: 140.w * _progressAnimation.value,
+                                    width: 140.w * _progressController.value,
                                     height: 8.h,
                                     decoration: BoxDecoration(
                                       gradient: AppColors.buttonGradient,

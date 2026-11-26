@@ -94,14 +94,24 @@ class AppStartup {
     _loadAds();
   }
 
+  /// How long the other ads wait for the splash interstitial before loading.
+  static const Duration _splashAdHeadStart = Duration(seconds: 12);
+
   static void _loadAds() {
-    // The language screen comes straight after the splash.
+    final inter = InterstitialAdManager.instance;
+    inter.initialize();
+    inter.load(InterstitialPlacement.splash);
     NativeAds.preload(NativeAdPlacement.language);
-    InterstitialAdManager.instance.initialize();
-    for (final placement in InterstitialPlacement.values) {
-      InterstitialAdManager.instance.load(placement);
-    }
-    AppOpenAdManager.instance.start();
+    inter
+        .waitForLoad(InterstitialPlacement.splash, timeout: _splashAdHeadStart)
+        .then((_) {
+          for (final placement in InterstitialPlacement.values) {
+            if (placement != InterstitialPlacement.splash) {
+              inter.load(placement);
+            }
+          }
+          AppOpenAdManager.instance.start();
+        });
   }
 
   static Future<void> _initializeFirebase() async {

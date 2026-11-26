@@ -51,6 +51,11 @@ class InterstitialAdManager {
 
   static const Duration _navigateBehindAdDelay = Duration(milliseconds: 350);
 
+  /// If MAX reports neither "displayed" nor "failed" by then, move on anyway
+  /// rather than leave the screen stuck under an ad that never came.
+  static const Duration _showTimeout = Duration(seconds: 4);
+  Timer? _showWatchdog;
+
   bool get isShowing => _showing;
 
   RemoteModel get _config => Get.isRegistered<RemoteConfigService>()
@@ -119,6 +124,7 @@ class InterstitialAdManager {
           _loading.remove(adUnitId)?.complete();
         },
         onAdDisplayedCallback: (_) {
+          _showWatchdog?.cancel();
           if (_onDone == null) return;
           Future.delayed(_navigateBehindAdDelay, _runDone);
         },
@@ -161,6 +167,30 @@ class InterstitialAdManager {
     }
   }
 
+  /// Completes when the load for [placement] reports back (loaded or failed),
+  /// or after [timeout]. Completes at once if nothing is loading.
+  Future<void> waitForLoad(
+    InterstitialPlacement placement, {
+    required Duration timeout,
+  }) async {
+    final pending = _loading[_adUnitId(placement)];
+    if (pending == null) return;
+    await pending.future.timeout(timeout, onTimeout: () {});
+  }
+
+  /// Whether [show] would display an ad for [placement] right now.
+  Future<bool> isReady(InterstitialPlacement placement) async {
+    if (_showing || !_isEnabled(placement)) return false;
+    try {
+      if (!await AppLovinSdk.ready) return false;
+      return await AppLovinMAX.isInterstitialReady(_adUnitId(placement)) ??
+          false;
+    } catch (e) {
+      debugPrint('[InterstitialAd] ready check error: $e');
+      return false;
+    }
+  }
+
   Future<void> show(
     InterstitialPlacement placement, {
     required VoidCallback onDone,
@@ -188,11 +218,17 @@ class InterstitialAdManager {
 
     _showing = true;
     _onDone = onDone;
+    _showWatchdog?.cancel();
+    _showWatchdog = Timer(_showTimeout, () {
+      debugPrint('[InterstitialAd] show gave no result, moving on');
+      _finish();
+    });
     AppLovinMAX.showInterstitial(adUnitId, placement: placement.name);
   }
 
   /// The ad is gone; moves on now if that hasn't already happened behind it.
   void _finish() {
+    _showWatchdog?.cancel();
     _showing = false;
     // So the return that follows isn't mistaken for coming back from background.
     AppOpenAdManager.instance.noteFullScreenAdClosed();
