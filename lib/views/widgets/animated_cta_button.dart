@@ -108,18 +108,33 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
   @override
   void didUpdateWidget(covariant AnimatedCtaButton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isLoading != oldWidget.isLoading) {
-      if (widget.isLoading) {
-        _pulseController.stop();
-        _shimmerController.stop();
-      } else {
-        if (widget.enablePulse && !_pulseController.isAnimating) {
-          _pulseController.repeat(reverse: true);
-        }
-        if (widget.enableShimmer && !_shimmerController.isAnimating) {
-          _shimmerController.repeat();
-        }
-      }
+    // Re-sync whenever loading or the enable flags change, so a button that
+    // starts disabled (e.g. a setup step not filled in yet) begins animating
+    // as soon as it becomes enabled, and stops again if it is disabled.
+    if (widget.isLoading != oldWidget.isLoading ||
+        widget.enablePulse != oldWidget.enablePulse ||
+        widget.enableShimmer != oldWidget.enableShimmer) {
+      _syncAnimations();
+    }
+  }
+
+  void _syncAnimations() {
+    final pulse = widget.enablePulse && !widget.isLoading;
+    if (pulse && !_pulseController.isAnimating) {
+      _pulseController.repeat(reverse: true);
+    } else if (!pulse) {
+      _pulseController
+        ..stop()
+        ..value = 0;
+    }
+
+    final shimmer = widget.enableShimmer && !widget.isLoading;
+    if (shimmer && !_shimmerController.isAnimating) {
+      _shimmerController.repeat();
+    } else if (!shimmer) {
+      _shimmerController
+        ..stop()
+        ..value = 0;
     }
   }
 

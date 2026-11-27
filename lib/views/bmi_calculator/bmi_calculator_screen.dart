@@ -13,6 +13,7 @@ import '../widgets/app_background.dart';
 import '../widgets/bordered_slider_thumb_shape.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_card.dart';
+import '../widgets/animated_cta_button.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/mandatory_label.dart';
 import 'dialogs/calculating_dialog.dart';
@@ -548,9 +549,11 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      // Calculate BMI Button
-                      CustomGradientButton(
+                      // Calculate BMI Button: animates while it can be used.
+                      AnimatedCtaButton(
                         text: 'calculate_bmi'.tr,
+                        enablePulse: controller.canCalculate,
+                        enableShimmer: controller.canCalculate,
                         leadingIcon: Image.asset(
                           AppAssets.calcilatorIcon,
                           width: 18.w,

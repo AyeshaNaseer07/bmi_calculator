@@ -22,6 +22,7 @@ import '../widgets/app_background.dart';
 import '../insights/nutrition_screens.dart';
 import '../widgets/bmi_gauge_widget.dart';
 import '../widgets/custom_card.dart';
+import '../widgets/animated_cta_button.dart';
 import '../widgets/custom_gradient_button.dart';
 import '../widgets/language_button.dart';
 import '../../core/theme/app_palette.dart';
@@ -59,12 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            Positioned(
-              top: isTablet(context)
-                  ? 10.h + MediaQuery.paddingOf(context).top - 44.h
-                  : 10.h,
-              left: 0,
-              right: 0,
+            Positioned.fill(
               child: IgnorePointer(
                 child: Obx(() {
                   final latestRecord = bmiController.latestRecord.value;
@@ -105,11 +101,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: art,
                     );
                   }
-                  return MirrorOnRtl(
+                  Widget artBox() => MirrorOnRtl(
                     child: Align(
                       alignment: Alignment.topRight,
                       child: SizedBox(width: 375.w, child: art),
                     ),
+                  );
+
+                  final artTop = isTablet(context)
+                      ? 10.h + MediaQuery.paddingOf(context).top - 44.h
+                      : MediaQuery.paddingOf(context).top;
+                  final gap = math.max(0.0, artTop);
+                  return Stack(
+                    children: [
+                      if (gap > 0)
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          top: 0,
+                          height: gap + 1,
+                          child: ClipRect(
+                            child: OverflowBox(
+                              alignment: Alignment.topCenter,
+                              maxHeight: double.infinity,
+                              child: Transform.scale(
+                                alignment: Alignment.topCenter,
+                                scaleX: 1,
+                                scaleY: (gap + 1) / 2,
+                                child: artBox(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: artTop,
+                        child: artBox(),
+                      ),
+                    ],
                   );
                 }),
               ),
@@ -156,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Padding(
                             padding: EdgeInsets.fromLTRB(
                               18.w,
-                              2.h,
+                              24.h,
                               18.w,
                               isPremium ? 145.h : 24.h,
                             ),
@@ -346,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : 'welcome_lets_begin_your_health_journey'.tr,
               style: dashboard
                   ? TextStyle(
-                      color: _navy,
+                      color: _navy.withValues(alpha: 0.7),
                       fontSize: 15.sp,
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w500,
@@ -425,7 +455,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Calculated state (BMI dashboard design) ──
 
   static const Color _navy = Color(0xFF1D2B3A);
-  static const Color _mintDeep = Color(0xFF0E7C5B);
   static const Color _muted = Color(0xFF64748B);
 
   /// Gauge card, meal plan card and health profile card.
@@ -571,6 +600,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return CustomCard(
       padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 14.h),
       borderRadius: 24.r,
+      // Clearly visible teal outline (the card default is transparent).
+      borderColor: AppColors.primaryTealLight.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -616,42 +647,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           SizedBox(height: 12.h),
-          _AnimatedUnlockPill(
-            onTap: EatBalancedMealsScreen.openMealPlan,
-            leading: _tintedSvg(AppAssets.dashCrown, 20.w, _mintDeep),
-            label: Text(
-              'unlock_personalized_meals'.tr,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: _mintDeep,
-                fontSize: 15.sp,
-                fontFamily: 'Outfit',
-                fontWeight: FontWeight.w700,
-              ),
+          // Same look as every other CTA in the app.
+          AnimatedCtaButton(
+            text: 'unlock_personalized_meals'.tr,
+            height: 52.h,
+            width: double.infinity,
+            borderRadius: BorderRadius.circular(28.r),
+            gradient: AppColors.ctaGradient,
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 16.sp,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
             ),
-            // Animated arrow, tinted to the app theme colour.
-            trailing: MirrorOnRtl(
-              child: Lottie.asset(
-                AppAssets.forwardArrowLottie,
-                width: 26.w,
-                height: 26.w,
-                fit: BoxFit.contain,
-                animate: !MediaQuery.disableAnimationsOf(context),
-                delegates: LottieDelegates(
-                  values: [
-                    ValueDelegate.color(const [
-                      '**',
-                    ], value: AppColors.primaryTeal),
-                  ],
-                ),
-                errorBuilder: (_, _, _) => _tintedSvg(
-                  AppAssets.dashArrowRight,
-                  18.w,
-                  AppColors.primaryTeal,
-                ),
-              ),
-            ),
+            alignTrailingToEnd: false,
+            leadingIcon: _tintedSvg(AppAssets.dashCrown, 20.w, Colors.white),
+            trailingIcon: CtaArrowLottie(size: 28.w),
+            onPressed: EatBalancedMealsScreen.openMealPlan,
           ),
         ],
       ),
@@ -995,7 +1007,7 @@ class _UpgradeButtonState extends State<_UpgradeButton>
       'upgrade_to_premium'.tr,
       style: TextStyle(
         color: _onGold,
-        fontSize: 14.sp,
+        fontSize: 16.sp,
         fontFamily: 'Inter',
         fontWeight: FontWeight.w800,
       ),
@@ -1060,15 +1072,20 @@ class _UpgradeButtonState extends State<_UpgradeButton>
                             ),
                           ),
                         ),
+                      // Label centred; padded so it never runs under the arrow.
                       Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            label,
-                            SizedBox(width: 2.w),
-                            // The arrow animates itself (Lottie).
-                            CtaArrowLottie(size: 26.w, color: _onGold),
-                          ],
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 44.w),
+                          child: label,
+                        ),
+                      ),
+                      // Arrow pinned to the end corner (left in RTL).
+                      PositionedDirectional(
+                        end: 14.w,
+                        top: 0,
+                        bottom: 0,
+                        child: Center(
+                          child: CtaArrowLottie(size: 26.w, color: _onGold),
                         ),
                       ),
                     ],
@@ -1079,162 +1096,6 @@ class _UpgradeButtonState extends State<_UpgradeButton>
           ),
         );
       },
-    );
-  }
-}
-
-class _AnimatedUnlockPill extends StatefulWidget {
-  final VoidCallback onTap;
-  final Widget leading;
-  final Widget label;
-  final Widget trailing;
-
-  const _AnimatedUnlockPill({
-    required this.onTap,
-    required this.leading,
-    required this.label,
-    required this.trailing,
-  });
-
-  @override
-  State<_AnimatedUnlockPill> createState() => _AnimatedUnlockPillState();
-}
-
-class _AnimatedUnlockPillState extends State<_AnimatedUnlockPill>
-    with TickerProviderStateMixin {
-  // Pulse + arrow nudge, back and forth.
-  late final AnimationController _pulse = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1400),
-  );
-  // Light sweep: crosses in the first 55%, then pauses.
-  late final AnimationController _sweep = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 3000),
-  );
-  bool _pressed = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _pulse.stop();
-      _sweep.stop();
-    } else {
-      if (!_pulse.isAnimating) _pulse.repeat(reverse: true);
-      if (!_sweep.isAnimating) _sweep.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _pulse.dispose();
-    _sweep.dispose();
-    super.dispose();
-  }
-
-  void _setPressed(bool v) {
-    if (_pressed != v) setState(() => _pressed = v);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(30.r);
-    final pulse = CurvedAnimation(parent: _pulse, curve: Curves.easeInOutSine);
-    final sweep = CurvedAnimation(
-      parent: _sweep,
-      curve: const Interval(0, 0.55, curve: Curves.easeInOutCubic),
-    );
-
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: widget.onTap,
-        onTapDown: (_) => _setPressed(true),
-        onTapUp: (_) => _setPressed(false),
-        onTapCancel: () => _setPressed(false),
-        child: AnimatedBuilder(
-          animation: pulse,
-          builder: (context, child) => Transform.scale(
-            scale: _pressed ? 0.97 : 1 + 0.02 * pulse.value,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: radius,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primaryTeal.withValues(
-                      alpha: 0.10 + 0.14 * pulse.value,
-                    ),
-                    blurRadius: 8.r + 6.r * pulse.value,
-                    offset: Offset(0, 3.h),
-                  ),
-                ],
-              ),
-              child: child,
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: radius,
-            child: Stack(
-              children: [
-                Container(
-                  height: 46.h,
-                  padding: EdgeInsets.symmetric(horizontal: 14.w),
-                  decoration: BoxDecoration(
-                    borderRadius: radius,
-                    border: Border.all(color: AppPalette.mintBorder),
-                    gradient: const LinearGradient(
-                      colors: [
-                        AppPalette.surfaceMintDeep,
-                        AppPalette.surfaceMint,
-                      ],
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      widget.leading,
-                      SizedBox(width: 10.w),
-                      Flexible(child: widget.label),
-                      SizedBox(width: 10.w),
-                      // The arrow animates itself (Lottie), so no nudge here.
-                      widget.trailing,
-                    ],
-                  ),
-                ),
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: AnimatedBuilder(
-                      animation: sweep,
-                      builder: (context, _) {
-                        if (_sweep.value > 0.55) return const SizedBox.shrink();
-                        final x = -1.6 + 3.2 * sweep.value;
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment(x - 0.6, -1),
-                              end: Alignment(x + 0.6, 1),
-                              stops: const [0, 0.4, 0.5, 0.6, 1],
-                              colors: [
-                                Colors.white.withValues(alpha: 0),
-                                Colors.white.withValues(alpha: 0.08),
-                                Colors.white.withValues(alpha: 0.55),
-                                Colors.white.withValues(alpha: 0.08),
-                                Colors.white.withValues(alpha: 0),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -7,7 +7,6 @@ import '../../core/theme/app_palette.dart';
 import '../../core/constants/app_typography.dart';
 import '../../core/utils/responsive.dart';
 
-/// The same left-to-right teal-to-blue fill as [AppAssets.btnRectangle].
 class CustomGradientButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -82,7 +81,11 @@ class CustomGradientButton extends StatelessWidget {
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           softWrap: false,
-                          style: effectiveTextStyle,
+                          // A touch larger than the base style.
+                          style: effectiveTextStyle.copyWith(
+                            fontSize:
+                                (effectiveTextStyle.fontSize ?? 16.sp) + 5.sp,
+                          ),
                         ),
                       ),
                     ),

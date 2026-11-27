@@ -184,7 +184,7 @@ class SetupScaffold extends StatelessWidget {
   Widget _titleLine(String text, Color color) => FittedBox(
     fit: BoxFit.scaleDown,
     alignment: AlignmentDirectional.centerStart,
-    child: Text(text, maxLines: 1, style: msTitle(26, color: color)),
+    child: Text(text, maxLines: 1, style: msTitle(28, color: color)),
   );
 
   Widget _header() {
