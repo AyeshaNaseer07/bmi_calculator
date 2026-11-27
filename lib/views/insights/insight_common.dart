@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../core/constants/app_colors.dart';
+
 import '../../core/constants/app_assets.dart';
 import '../widgets/app_background.dart';
 import '../widgets/custom_app_bar.dart';
@@ -450,10 +452,13 @@ class GradientActionButton extends StatelessWidget {
         height: 52.h,
         width: double.infinity,
         decoration: BoxDecoration(
+          // The app-wide CTA colours (teal → blue), faded when disabled.
           gradient: LinearGradient(
+            begin: AppColors.ctaGradient.begin,
+            end: AppColors.ctaGradient.end,
             colors: [
-              const Color(0xFF1BD19E).withValues(alpha: enabled ? 1 : 0.45),
-              const Color(0xFF0AA37D).withValues(alpha: enabled ? 1 : 0.45),
+              for (final c in AppColors.ctaGradient.colors)
+                c.withValues(alpha: enabled ? 1 : 0.45),
             ],
           ),
           borderRadius: BorderRadius.circular(28.r),

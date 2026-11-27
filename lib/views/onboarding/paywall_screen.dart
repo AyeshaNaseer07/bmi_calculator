@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 
@@ -245,8 +246,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
           children: [
             Image.asset(AppAssets.premiumBg, fit: BoxFit.cover),
             SafeArea(
+              bottom: false,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -495,7 +497,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 28.h),
+                    SizedBox(height: 16.h),
                     Row(
                       children: [
                         Image.asset(
@@ -514,7 +516,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               ),
                               gradient: AppColors.ctaGradient,
                               borderRadius: BorderRadius.circular(28.r),
-                              height: 52.h,
+                              height: 54.h, // Same height as the onboarding Next button.
                               isLoading: _isLoading,
                               leadingIcon: Image.asset(
                                 AppAssets.premiumCrown,
@@ -537,60 +539,76 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10.h),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 32.w,
-                          child: Divider(height: 1, color: _lineColor),
-                        ),
-                        Flexible(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            child: Text(
-                              'cancel_anytime'.tr,
-                              style: TextStyle(
-                                color: AppPalette.textSecondary,
-                                fontSize: 12.sp,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w400,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 32.w,
-                          child: Divider(height: 1, color: _lineColor),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12.h),
-
-                    // Footer links
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                    // Exactly as tall as the onboarding gap under its Next button
+                    // (safe area + 20.h), so the CTA lands in the same spot. The
+                    // cancel line and links sit inside it.
+                    SizedBox(
+                      height: math.max(
+                        MediaQuery.paddingOf(context).bottom + 20.h,
+                        52.h,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          _buildFooterLink(
-                            'privacy_policy'.tr,
-                            () => openUrl(AppStrings.privacyPolicyUrl),
+                          SizedBox(height: 8.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 32.w,
+                                child: Divider(height: 1, color: _lineColor),
+                              ),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                  ),
+                                  child: Text(
+                                    'cancel_anytime'.tr,
+                                    style: TextStyle(
+                                      color: AppPalette.textSecondary,
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 32.w,
+                                child: Divider(height: 1, color: _lineColor),
+                              ),
+                            ],
                           ),
-                          _buildFooterDivider(),
-                          _buildFooterLink('restore_purchase'.tr, _onRestore),
-                          _buildFooterDivider(),
-                          _buildFooterLink(
-                            'terms_of_use'.tr,
-                            () => openUrl(AppStrings.termsUrl),
+                          SizedBox(height: 6.h),
+                          // Footer links
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _buildFooterLink(
+                                  'privacy_policy'.tr,
+                                  () => openUrl(AppStrings.privacyPolicyUrl),
+                                ),
+                                _buildFooterDivider(),
+                                _buildFooterLink(
+                                  'restore_purchase'.tr,
+                                  _onRestore,
+                                ),
+                                _buildFooterDivider(),
+                                _buildFooterLink(
+                                  'terms_of_use'.tr,
+                                  () => openUrl(AppStrings.termsUrl),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 12.h),
                   ],
                 ),
               ),

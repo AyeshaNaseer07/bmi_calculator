@@ -947,139 +947,65 @@ class _RemoveAdsCard extends StatelessWidget {
   }
 }
 
-/// Gold CTA that gently pulses and has a shine sweeping across it.
-class _UpgradeButton extends StatefulWidget {
+/// Gold CTA on the premium card. Static: no pulse or shine.
+class _UpgradeButton extends StatelessWidget {
   const _UpgradeButton();
 
-  @override
-  State<_UpgradeButton> createState() => _UpgradeButtonState();
-}
-
-class _UpgradeButtonState extends State<_UpgradeButton>
-    with SingleTickerProviderStateMixin {
   static const Color _gold = _RemoveAdsCard._gold;
   static const Color _goldDeep = _RemoveAdsCard._goldDeep;
   static const Color _onGold = _RemoveAdsCard._onGold;
 
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2400),
-  );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Honour the system "reduce motion" setting.
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _controller.stop();
-      _controller.value = 0;
-    } else if (!_controller.isAnimating) {
-      _controller.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(22.r);
-    final label = Text(
-      'upgrade_to_premium'.tr,
-      style: TextStyle(
-        color: _onGold,
-        fontSize: 16.sp,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
+    return Container(
+      width: double.infinity,
+      height: 46.h,
+      decoration: BoxDecoration(
+        borderRadius: radius,
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFFFE08A), _gold, _goldDeep],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: _goldDeep.withValues(alpha: 0.3),
+            blurRadius: 8.r,
+            offset: Offset(0, 3.h),
+          ),
+        ],
       ),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) {
-        final t = _controller.value;
-        // 0 → 1 → 0 once per cycle.
-        final pulse = 0.5 - 0.5 * math.cos(t * 2 * math.pi);
-        // Shine crosses during the first half, then rests.
-        final shine = (t / 0.5).clamp(0.0, 1.0);
-
-        return Transform.scale(
-          scale: 1 + 0.03 * pulse,
-          child: Container(
-            width: double.infinity,
-            height: 46.h,
-            decoration: BoxDecoration(
-              borderRadius: radius,
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFFFE08A), _gold, _goldDeep],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: _goldDeep.withValues(alpha: 0.3 + 0.3 * pulse),
-                  blurRadius: (8 + 8 * pulse).r,
-                  offset: Offset(0, 3.h),
+      child: Stack(
+        children: [
+          // Label centred; padded so it never runs under the arrow.
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 44.w),
+              child: Text(
+                'upgrade_to_premium'.tr,
+                style: TextStyle(
+                  color: _onGold,
+                  fontSize: 16.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w800,
                 ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: radius,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final width = constraints.maxWidth;
-                  final bandWidth = width * 0.35;
-                  return Stack(
-                    children: [
-                      if (shine < 1)
-                        Positioned(
-                          top: 0,
-                          bottom: 0,
-                          width: bandWidth,
-                          left: -bandWidth + (width + bandWidth) * shine,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: const Alignment(-1, -0.4),
-                                end: const Alignment(1, 0.4),
-                                colors: [
-                                  Colors.white.withValues(alpha: 0),
-                                  Colors.white.withValues(alpha: 0.6),
-                                  Colors.white.withValues(alpha: 0),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      // Label centred; padded so it never runs under the arrow.
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 44.w),
-                          child: label,
-                        ),
-                      ),
-                      // Arrow pinned to the end corner (left in RTL).
-                      PositionedDirectional(
-                        end: 14.w,
-                        top: 0,
-                        bottom: 0,
-                        child: Center(
-                          child: CtaArrowLottie(size: 26.w, color: _onGold),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
-        );
-      },
+          // Arrow pinned to the end corner (left in RTL).
+          PositionedDirectional(
+            end: 14.w,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: CtaArrowLottie(size: 26.w, color: _onGold),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

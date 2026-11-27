@@ -126,7 +126,9 @@ class AppStartup {
   static Future<void> _initializeFirebase() async {
     try {
       await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
+        options: defaultTargetPlatform == TargetPlatform.iOS
+            ? DefaultFirebaseOptions.currentPlatform
+            : null,
       );
       log("Firebase initialized");
 
