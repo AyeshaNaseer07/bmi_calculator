@@ -681,7 +681,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       (AppAssets.dashWeight, 'weight'.tr, weight),
       (AppAssets.dashHeight, 'height'.tr, record.heightDisplay),
-      (AppAssets.dashGoal, 'goal'.tr, _goalShort(profile.healthGoal)),
     ];
 
     return CustomCard(
@@ -769,21 +768,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  }
-
-  String _goalShort(HealthGoal? goal) {
-    switch (goal) {
-      case HealthGoal.loseWeight:
-        return 'goal_short_lose'.tr;
-      case HealthGoal.buildMuscle:
-        return 'goal_short_build'.tr;
-      case HealthGoal.maintainWeight:
-        return 'goal_short_maintain'.tr;
-      case HealthGoal.improveHealth:
-        return 'goal_short_improve'.tr;
-      case null:
-        return '—';
-    }
   }
 
   Widget _tintedSvg(String asset, double size, Color color) {

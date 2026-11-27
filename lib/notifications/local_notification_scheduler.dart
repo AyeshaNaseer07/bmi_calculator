@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
@@ -19,7 +18,6 @@ class LocalNotificationScheduler {
 
   static const String _tag = 'LocalNotifScheduler';
   static const int _baseId = 9000;
-  static const int _debugTestId = _baseId + 49;
   static NotificationDetails get _details => NotificationDetails(
     iOS: DarwinNotificationDetails(
       presentAlert: true,
@@ -206,19 +204,6 @@ class LocalNotificationScheduler {
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: null,
       );
-    }
-
-    if (kDebugMode) {
-      final testDate = now.add(const Duration(minutes: 1));
-      await _plugin.zonedSchedule(
-        id: _debugTestId,
-        title: '🔔 Test reminder (debug build)',
-        body: 'Local notifications are working.',
-        scheduledDate: testDate,
-        notificationDetails: _details,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      );
-      log('Debug test notification scheduled for $testDate', name: _tag);
     }
 
     log(
