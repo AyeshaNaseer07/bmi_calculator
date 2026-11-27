@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/app_controller.dart';
 import '../../core/constants/app_contants.dart';
+import '../../firebase_options.dart';
 import '../../notifications/notification_service.dart';
 import '../../views/widgets/ads/app_open_ad_manager.dart';
 import '../../views/widgets/ads/applovin_sdk.dart';
@@ -124,7 +125,9 @@ class AppStartup {
 
   static Future<void> _initializeFirebase() async {
     try {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       log("Firebase initialized");
 
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
