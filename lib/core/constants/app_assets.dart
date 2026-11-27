@@ -26,7 +26,6 @@ abstract class AppAssets {
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   // ── Home dashboard (SVG icons from the BMI dashboard developer kit) ──
   static const String _dashIcons = 'assets/icons';
-  static const String dashCrown = '$_dashIcons/ic_crown_pro.svg';
   static const String dashMeal = '$_dashIcons/ic_meal_utensils.svg';
   static const String dashProfile = '$_dashIcons/ic_profile_outline.svg';
   static const String dashAge = '$_dashIcons/ic_stat_age.svg';
