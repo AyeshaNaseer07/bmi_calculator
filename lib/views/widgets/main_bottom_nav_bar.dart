@@ -8,8 +8,6 @@ import '../../core/theme/app_palette.dart';
 import '../../core/utils/responsive.dart';
 
 const Color _kActiveNavColor = Color(0xFF2EC4B6);
-
-/// Circle layers in `bmi_home.json` (the + itself is layer `jia`).
 const List<String> _addCircleLayers = ['oo', 'o11', 'o12', 'o13'];
 
 class MainBottomNavBar extends StatelessWidget {
@@ -106,14 +104,10 @@ class MainBottomNavBar extends StatelessWidget {
                 onTap: onAddTap,
                 child: Lottie.asset(
                   AppAssets.navAddLottie,
-                  // Square, so the tap area is only the + button and doesn't
-                  // cover (and steal taps from) the other nav items.
                   width: 76.w,
                   height: 76.w,
                   fit: BoxFit.contain,
                   repeat: true,
-                  // Circles in the nav's teal (#2EC4B6) instead of the
-                  // file's own colours; the white + stays as it is.
                   delegates: LottieDelegates(
                     values: [
                       for (final layer in _addCircleLayers)

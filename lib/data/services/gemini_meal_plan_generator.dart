@@ -7,12 +7,8 @@ import 'package:http/http.dart' as http;
 import '../models/ai_meal_plan_model.dart';
 import 'meal_plan_generator.dart';
 
-/// Writes meal weeks with the Gemini Developer API (REST, no Firebase AI).
 class GeminiMealPlanGenerator implements MealPlanGenerator {
   final String apiKey;
-
-  /// Model ids tried in order. The next one is used when a model is
-  /// retired (404) or still overloaded / rate-limited after retries.
   final List<String> models;
   final http.Client _client;
 

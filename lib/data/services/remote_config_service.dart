@@ -266,7 +266,6 @@ class RemoteConfigService extends GetxService {
       'app_open_ad=${m.appOpenAd}, '
       'local_notification=${m.localNotification}, '
       'show_notification_frequency=${m.notificationFrequency}, '
-      // Never print the key itself.
       'gemini_api_key=${m.geminiApiKey.isEmpty ? 'unset' : 'set'}, '
       'gemini_model=${m.geminiModel}, '
       'gemini_fallback_model=${m.geminiFallbackModel}, '

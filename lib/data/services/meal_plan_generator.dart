@@ -3,9 +3,6 @@ import '../models/ai_meal_plan_model.dart';
 /// The meals of one plan day, from the "Meals per day" answer.
 abstract class MealSlots {
   static const List<String> standard = ['breakfast', 'lunch', 'dinner'];
-
-  /// Slot keys in eating order. "None" (or no answer) keeps the standard
-  /// three meals. Two meals skip breakfast for late eaters, lunch otherwise.
   static List<String> of(String mealsPerDay, {String mealTiming = ''}) =>
       switch (mealsPerDay) {
         '2' when mealTiming == 'late' => const ['lunch', 'dinner'],
@@ -126,8 +123,6 @@ class MealPlanRequest {
   /// Meal slots of every day in this plan.
   List<String> get slots => MealSlots.of(mealsPerDay, mealTiming: mealTiming);
 
-  // The slots only join the signature when they differ from the standard
-  // three, so plans made before this answer was used are kept.
   String get signature => [
     targetKcal,
     bmiCategory,

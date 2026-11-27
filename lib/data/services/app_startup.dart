@@ -29,9 +29,6 @@ class AppStartup {
   static Future<void> _start() async {
     AppLovinSdk.initialize();
 
-    // Start the splash interstitial now, with the cached remote config, so it
-    // has the whole splash to load instead of only what is left after
-    // Firebase, AppsFlyer and notifications.
     final storageService = Get.find<StorageService>();
     final remoteConfigService = RemoteConfigService(storageService)
       ..loadCachedConfig();
@@ -111,8 +108,6 @@ class AppStartup {
 
   static void _loadAds() {
     final inter = InterstitialAdManager.instance;
-    // Same unit as the early load: no-op. If the fetched config changed the
-    // splash unit or turned it on, this starts the right one.
     inter.load(InterstitialPlacement.splash);
     NativeAds.preload(NativeAdPlacement.language);
     inter
