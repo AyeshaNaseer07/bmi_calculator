@@ -50,9 +50,14 @@ class AssetOrPlaceholder extends StatelessWidget {
   final bool circle;
   final IconData icon;
 
+  /// Network photo shown over [asset]. While it loads, or if it fails, the
+  /// asset is shown instead.
+  final String url;
+
   const AssetOrPlaceholder({
     super.key,
     required this.asset,
+    this.url = '',
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -63,7 +68,31 @@ class AssetOrPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Image.asset(
+    final fallback = _asset();
+    final image = url.isEmpty
+        ? fallback
+        : Image.network(
+            url,
+            width: width,
+            height: height,
+            fit: fit,
+            // Decode at display size, not the photo's full 1024px.
+            cacheWidth: width == null
+                ? 640
+                : (width! * MediaQuery.devicePixelRatioOf(context)).round(),
+            frameBuilder: (_, child, frame, sync) =>
+                sync || frame != null ? child : fallback,
+            errorBuilder: (_, _, _) => fallback,
+          );
+    if (circle) return ClipOval(child: image);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius.r),
+      child: image,
+    );
+  }
+
+  Widget _asset() {
+    return Image.asset(
       asset,
       width: width,
       height: height,
@@ -85,11 +114,6 @@ class AssetOrPlaceholder extends StatelessWidget {
           size: ((width ?? height ?? 60) * 0.38).clamp(18.0, 60.0),
         ),
       ),
-    );
-    if (circle) return ClipOval(child: image);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius.r),
-      child: image,
     );
   }
 }

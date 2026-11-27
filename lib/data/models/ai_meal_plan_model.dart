@@ -12,7 +12,14 @@ class AiMeal {
   final List<List<String>> ingredients;
 
   /// File name (without extension) of a bundled meal photo, or empty.
+  /// Shown while [imageUrl] loads, or when it's empty or fails.
   final String photo;
+
+  /// Short English search words for a photo of this dish, e.g. "lentil soup".
+  final String imageQuery;
+
+  /// Network URL of a real photo of this dish from a public site, or empty.
+  final String imageUrl;
 
   const AiMeal({
     required this.name,
@@ -24,7 +31,23 @@ class AiMeal {
     required this.tag,
     required this.ingredients,
     this.photo = '',
+    this.imageQuery = '',
+    this.imageUrl = '',
   });
+
+  AiMeal withImageUrl(String url) => AiMeal(
+    name: name,
+    blurb: blurb,
+    kcal: kcal,
+    protein: protein,
+    carbs: carbs,
+    fat: fat,
+    tag: tag,
+    ingredients: ingredients,
+    photo: photo,
+    imageQuery: imageQuery,
+    imageUrl: url,
+  );
 
   Map<String, dynamic> toJson() => {
     'n': name,
@@ -36,6 +59,8 @@ class AiMeal {
     't': tag,
     'i': ingredients,
     'ph': photo,
+    if (imageQuery.isNotEmpty) 'iq': imageQuery,
+    if (imageUrl.isNotEmpty) 'iu': imageUrl,
   };
 
   factory AiMeal.fromJson(Map<String, dynamic> j) => AiMeal(
@@ -51,6 +76,8 @@ class AiMeal {
         if (e is List && e.length >= 2) [e[0].toString(), e[1].toString()],
     ],
     photo: j['ph'] as String? ?? '',
+    imageQuery: j['iq'] as String? ?? '',
+    imageUrl: j['iu'] as String? ?? '',
   );
 }
 

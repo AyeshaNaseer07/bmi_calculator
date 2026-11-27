@@ -563,7 +563,11 @@ class _MealCard extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   Positioned.fill(
-                    child: AssetOrPlaceholder(asset: meal.photo, circle: true),
+                    child: AssetOrPlaceholder(
+                      asset: meal.photo,
+                      url: meal.imageUrl,
+                      circle: true,
+                    ),
                   ),
                   PositionedDirectional(
                     end: -4.w,
@@ -896,6 +900,7 @@ class MealDetailScreen extends StatelessWidget {
                 children: [
                   AssetOrPlaceholder(
                     asset: meal.photo,
+                    url: meal.imageUrl,
                     fit: BoxFit.cover,
                     radius: 0,
                   ),

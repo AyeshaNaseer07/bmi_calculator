@@ -159,6 +159,10 @@ class MealInfo {
   final String blurb;
   final int kcal;
   final String photo;
+
+  /// Network photo from a public site (AI plans), or empty. [photo] is shown
+  /// while it loads or if it fails.
+  final String imageUrl;
   final String badge;
   final String tag;
   final IconData tagIcon;
@@ -182,6 +186,7 @@ class MealInfo {
     required this.blurb,
     required this.kcal,
     required this.photo,
+    this.imageUrl = '',
     required this.badge,
     required this.tag,
     required this.tagIcon,
@@ -312,6 +317,7 @@ class MealPlanData {
           photo: meals[i].photo.isEmpty
               ? null
               : '$_meals/${meals[i].photo}.webp',
+          imageUrl: meals[i].imageUrl,
         ),
     ];
   }
@@ -376,6 +382,7 @@ class MealPlanData {
     double scale, {
     String? keyPrefix,
     String? photo,
+    String imageUrl = '',
   }) {
     final key = '${keyPrefix ?? cat.name}_d${day}_$slot';
     final (clock, period) = _slotTimes[slot] ?? _slotTimes['lunch']!;
@@ -389,6 +396,7 @@ class MealPlanData {
       blurb: r.blurb.tr,
       kcal: _scaled(r.kcal, scale, step: 5),
       photo: photo,
+      imageUrl: imageUrl,
       badge: _badgeFor(photo),
       tag: r.tag.tr,
       tagIcon: info.tagIcon,

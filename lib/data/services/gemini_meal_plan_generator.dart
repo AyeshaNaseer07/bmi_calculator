@@ -5,18 +5,22 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/ai_meal_plan_model.dart';
+import 'meal_image_finder.dart';
 import 'meal_plan_generator.dart';
 
 class GeminiMealPlanGenerator implements MealPlanGenerator {
   final String apiKey;
   final List<String> models;
   final http.Client _client;
+  final MealImageFinder _images;
 
   GeminiMealPlanGenerator({
     required this.apiKey,
     required this.models,
     http.Client? client,
-  }) : _client = client ?? http.Client();
+    MealImageFinder? images,
+  }) : _client = client ?? http.Client(),
+       _images = images ?? MealImageFinder(client: client);
 
   // Gemini 3 models think before answering; a full week can take a while.
   static const Duration _timeout = Duration(seconds: 120);
@@ -39,7 +43,7 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
       }
       for (int attempt = 1; attempt <= _backoff.length + 1; attempt++) {
         try {
-          return await _generateOnce(request, model);
+          return await _withImages(await _generateOnce(request, model));
         } on MealPlanException catch (e) {
           last = e;
           debugPrint('[Gemini] $model week ${request.week} #$attempt: $e');
@@ -140,6 +144,24 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
     return _parseWeek(text, r.photoKeys.toSet(), r.slots);
   }
 
+  /// Adds a public photo URL to each meal. Meals without one keep their
+  /// bundled photo, so a slow or failed lookup never fails the week.
+  Future<List<List<AiMeal>>> _withImages(List<List<AiMeal>> week) async {
+    final urls = await _images.findAll([
+      for (final day in week)
+        for (final m in day) m.imageQuery,
+    ]);
+    return [
+      for (final day in week)
+        [
+          for (final m in day)
+            (urls[m.imageQuery] ?? '').isEmpty
+                ? m
+                : m.withImageUrl(urls[m.imageQuery]!),
+        ],
+    ];
+  }
+
   static String _errorMessage(String body) {
     try {
       return (jsonDecode(body)['error']?['message'] as String?) ?? body;
@@ -193,6 +215,7 @@ class GeminiMealPlanGenerator implements MealPlanGenerator {
       tag: _clean(str('tag')),
       ingredients: ingredients,
       photo: photoKeys.contains(str('photo')) ? str('photo') : '',
+      imageQuery: str('photo_query').toLowerCase(),
     );
     if (meal.name.isEmpty ||
         meal.kcal < 80 ||
@@ -267,6 +290,7 @@ Rules:
 - "amount": always start with a number, e.g. "150g", "1/2 cup", "2 slices".
 - 3 to 7 ingredients per meal.
 - "photo": the closest matching photo name from the allowed list, or "none".
+- "photo_query": ALWAYS in English, whatever the language above. The common English name of the dish in 1-3 words, used to search a photo website, e.g. "lentil soup", "avocado toast", "chicken curry", "yogurt parfait". Name the main food, not the cooking details.
 - Do not repeat a dish within this week. ${avoid.isEmpty ? '' : 'Avoid these dishes used in earlier weeks: ${avoid.join(', ')}.'}
 ''';
   }
@@ -384,6 +408,7 @@ Rules:
           'type': 'STRING',
           'enum': [...photoKeys, 'none'],
         },
+        'photo_query': str,
         'ingredients': {
           'type': 'ARRAY',
           'items': {
@@ -403,6 +428,7 @@ Rules:
         'fat_g',
         'tag',
         'photo',
+        'photo_query',
         'ingredients',
       ],
       'propertyOrdering': [
@@ -415,6 +441,7 @@ Rules:
         'carbs_g',
         'fat_g',
         'photo',
+        'photo_query',
       ],
     };
     return {
