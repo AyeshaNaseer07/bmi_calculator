@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/constants/app_assets.dart';
 import 'custom_gradient_button.dart';
 import '../../core/utils/rtl.dart';
+import 'cta_arrow_lottie.dart';
 
 class AnimatedCtaButton extends StatefulWidget {
   final String text;
@@ -138,6 +139,7 @@ class _AnimatedCtaButtonState extends State<AnimatedCtaButton>
     Widget? effectiveTrailing = widget.trailingIcon;
     if (widget.enableArrowNudge &&
         widget.trailingIcon != null &&
+        widget.trailingIcon is! CtaArrowLottie &&
         !widget.isLoading) {
       effectiveTrailing = AnimatedBuilder(
         animation: _arrowOffsetAnimation,

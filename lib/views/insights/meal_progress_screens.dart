@@ -12,6 +12,7 @@ import 'insight_common.dart';
 import 'meal_screens.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/constants/app_colors.dart';
+import '../widgets/cta_arrow_lottie.dart';
 
 Color get _kDeep => const Color(0xFF006B4E);
 Color get _kTrack => const Color(0xFFE3E8FB);
@@ -103,11 +104,7 @@ class MealCompletedScreen extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
         alignTrailingToEnd: false,
-        trailingIcon: Icon(
-          Icons.arrow_forward_rounded,
-          color: Colors.white,
-          size: 20.sp,
-        ),
+        trailingIcon: CtaArrowLottie(size: 28.w),
         onPressed: () => Get.off(() => const StatsLoadingScreen()),
       ),
       body: Column(

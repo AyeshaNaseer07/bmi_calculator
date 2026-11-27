@@ -14,7 +14,7 @@ import '../widgets/app_background.dart';
 import '../widgets/animated_cta_button.dart';
 import '../../core/utils/responsive.dart';
 import '../widgets/next_button.dart';
-import '../../core/utils/rtl.dart';
+import '../widgets/cta_arrow_lottie.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -29,9 +29,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   bool _bmiAdAvailable = true;
 
   late final bool _showFullScreenAd = _resolveShowFullScreenAd();
-
-  /// The full-screen ad page is dropped (before leaving page 0) when its ad
-  /// has failed, so the user never lands on an empty or loading ad page.
   late bool _includeAdPage = _showFullScreenAd;
 
   @override
@@ -116,8 +113,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 setState(() => _currentIndex = index);
               },
               children: [
-                // Page 0: with bottom native ad when it loads, otherwise the
-                // plain slide. A failed ad crossfades to it, no jump.
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   switchInCurve: Curves.easeOut,
@@ -415,14 +410,7 @@ class _AnimatedGradientNextButtonState
       text: 'next'.tr,
       backgroundImage: AppAssets.btnRectangle,
       borderRadius: BorderRadius.circular(isTablet(context) ? 999 : 12.r),
-      trailingIcon: MirrorOnRtl(
-        child: Image.asset(
-          AppAssets.arrowIcon,
-          width: 18.w,
-          height: 18.w,
-          color: Colors.white,
-        ),
-      ),
+      trailingIcon: CtaArrowLottie(size: 26.w),
       onPressed: _handleTap,
     );
   }

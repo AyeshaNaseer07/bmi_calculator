@@ -21,6 +21,7 @@ import '../widgets/ads/interstitial_ad_manager.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/premium_congrats_dialog.dart';
 import '../../core/constants/app_colors.dart';
+import '../widgets/cta_arrow_lottie.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -522,11 +523,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                 color: Colors.white,
                                 fit: BoxFit.contain,
                               ),
-                              trailingIcon: Icon(
-                                Icons.arrow_forward_rounded,
-                                color: Colors.white,
-                                size: 20.sp,
-                              ),
+                              trailingIcon: CtaArrowLottie(size: 28.w),
                               onPressed: _isLoading ? null : _onSubscribe,
                             ),
                           ),

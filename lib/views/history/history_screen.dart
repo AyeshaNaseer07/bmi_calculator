@@ -15,6 +15,7 @@ import '../widgets/custom_card.dart';
 import 'widgets/calendar_bottom_sheet.dart';
 import '../../core/theme/app_palette.dart';
 import '../../controllers/app_controller.dart';
+import '../widgets/cta_arrow_lottie.dart';
 
 enum HistorySortOption {
   newest('newest_first_date'),
@@ -1718,10 +1719,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                           ),
                           SizedBox(width: 2.w),
-                          Icon(
-                            Icons.chevron_right_rounded,
+                          CtaArrowLottie(
+                            size: 20.w,
                             color: const Color(0xFF00946F),
-                            size: 15.sp,
                           ),
                         ],
                       ),

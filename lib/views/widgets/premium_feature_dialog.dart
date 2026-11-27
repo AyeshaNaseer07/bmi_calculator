@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/responsive.dart';
+import 'cta_arrow_lottie.dart';
 
 class PremiumFeatureDialog extends StatelessWidget {
   final String message;
@@ -292,15 +293,8 @@ class _UnlockButtonState extends State<_UnlockButton>
                             children: [
                               SizedBox(width: 22.sp),
                               Expanded(child: label),
-                              // Arrow nudges forward with the pulse.
-                              Transform.translate(
-                                offset: Offset(5.w * pulse, 0),
-                                child: Icon(
-                                  Icons.arrow_forward_rounded,
-                                  color: Colors.white,
-                                  size: 22.5.sp,
-                                ),
-                              ),
+                              // The arrow animates itself (Lottie).
+                              CtaArrowLottie(size: 30.w),
                             ],
                           ),
                         ),

@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../core/constants/app_assets.dart';
 import 'animated_cta_button.dart';
-import '../../core/utils/rtl.dart';
 import '../../core/constants/app_colors.dart';
+import 'cta_arrow_lottie.dart';
 
 class NextButton extends StatefulWidget {
   final VoidCallback onNext;
@@ -44,14 +43,7 @@ class _NextButtonState extends State<NextButton> {
       ),
       alignTrailingToEnd: false,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-      trailingIcon: MirrorOnRtl(
-        child: Image.asset(
-          AppAssets.arrowIcon,
-          width: 18.w,
-          height: 18.w,
-          color: Colors.white,
-        ),
-      ),
+      trailingIcon: CtaArrowLottie(size: 26.w),
       onPressed: _handleTap,
     );
   }

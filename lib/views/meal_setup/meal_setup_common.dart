@@ -14,6 +14,7 @@ import '../../data/models/user_profile_model.dart';
 import '../widgets/animated_cta_button.dart';
 import '../widgets/custom_app_bar.dart';
 import '../../core/constants/app_colors.dart';
+import '../widgets/cta_arrow_lottie.dart';
 
 // ── Design tokens (Personalized Meal Plan developer kit) ──
 const Color kMsBg = Color(0xFFF3FAF8);
@@ -507,8 +508,6 @@ class SetupChip extends StatelessWidget {
                 Icon(icon, size: 18.w, color: AppPalette.textSecondary),
                 SizedBox(width: 6.w),
               ],
-              // No Flexible: chips sit in one-line rows that are scaled to
-              // fit, where the row's width is unbounded.
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -839,13 +838,7 @@ class SetupCta extends StatelessWidget {
           fontWeight: FontWeight.w700,
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 22.w),
-        trailingIcon: MirrorOnRtl(
-          child: SvgPicture.asset(
-            MealSetupAssets.whiteArrow,
-            width: 22.w,
-            height: 22.w,
-          ),
-        ),
+        trailingIcon: CtaArrowLottie(size: 30.w),
         onPressed: onPressed,
       ),
     );

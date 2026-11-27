@@ -27,6 +27,7 @@ import '../widgets/language_button.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/utils/rtl.dart';
 import '../../core/utils/responsive.dart';
+import '../widgets/cta_arrow_lottie.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -1065,15 +1066,8 @@ class _UpgradeButtonState extends State<_UpgradeButton>
                           children: [
                             label,
                             SizedBox(width: 2.w),
-                            // Arrow nudges forward with the pulse.
-                            Transform.translate(
-                              offset: Offset(3.w * pulse * dirSign(context), 0),
-                              child: Icon(
-                                Icons.chevron_right_rounded,
-                                color: _onGold,
-                                size: 20.sp,
-                              ),
-                            ),
+                            // The arrow animates itself (Lottie).
+                            CtaArrowLottie(size: 26.w, color: _onGold),
                           ],
                         ),
                       ),
