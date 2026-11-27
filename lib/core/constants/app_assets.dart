@@ -26,7 +26,6 @@ abstract class AppAssets {
   static const String wreathRight = '$_imagesBase/wreath_right.webp';
   // ── Home dashboard (SVG icons from the BMI dashboard developer kit) ──
   static const String _dashIcons = 'assets/icons';
-  static const String dashArrowRight = '$_dashIcons/ic_arrow_right.svg';
   static const String dashCrown = '$_dashIcons/ic_crown_pro.svg';
   static const String dashMeal = '$_dashIcons/ic_meal_utensils.svg';
   static const String dashProfile = '$_dashIcons/ic_profile_outline.svg';
@@ -34,7 +33,6 @@ abstract class AppAssets {
   static const String dashGender = '$_dashIcons/ic_stat_gender.svg';
   static const String dashWeight = '$_dashIcons/ic_stat_weight.svg';
   static const String dashHeight = '$_dashIcons/ic_stat_height.svg';
-  static const String dashGoal = '$_dashIcons/ic_stat_goal.svg';
 
   static const String homeAvatar = '$_imagesBase/home_img.webp';
   static const String homeAvatarDefault = '$_imagesBase/home_avatar.webp';
@@ -92,7 +90,6 @@ abstract class AppAssets {
   static const String weighticon = '$_imagesBase/weight.webp';
   static const String heighticon = '$_imagesBase/height.webp';
   static const String ageicon = '$_imagesBase/age.webp';
-  static const String arrowIcon = '$_imagesBase/arrow.webp';
   static const String gendericon = '$_imagesBase/gender.webp';
   static const String bmiHearticon = '$_imagesBase/bmi_heart.webp';
   static const String weightTrackingicon = '$_imagesBase/weight_icon.webp';

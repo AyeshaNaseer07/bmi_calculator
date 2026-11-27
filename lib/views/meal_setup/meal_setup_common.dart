@@ -63,7 +63,6 @@ abstract class MealSetupAssets {
 
   // Vector icons.
   static const String cardArrow = '$_ic/ms_card_arrow_right.svg';
-  static const String whiteArrow = '$_ic/ms_arrow_right_white.svg';
   static const String badgeRequired = '$_ic/ms_badge_required_check.svg';
   static const String badgeRecommended = '$_ic/ms_badge_recommended_info.svg';
   static const String chevronDown = '$_ic/ms_chevron_down.svg';
